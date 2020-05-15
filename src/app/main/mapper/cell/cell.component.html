@@ -1,0 +1,30 @@
+<div cdkDrag class="mapping-cell mapping-subject mr-12"> 
+    <div *ngIf="isTypeProperty">
+        a
+    </div>
+    <div *ngIf="firstChild && !isTypeProperty">
+        <div>
+            <b>Source:</b>
+            <span *ngIf="getSourceType() === 'column'">
+                @Col:{{getSource().columnName}}
+            </span>
+            <span *ngIf="getSourceType() === 'constant'">
+                Constant:{{getSource().constant}}
+            </span>
+            <span *ngIf="getSourceType() === 'row_index' || getSourceType() === 'record_id'">
+                {{getSource().source}}
+            </span>
+        </div>
+
+        <div *ngIf="getTransformation()">
+            <b>Transformation:</b>
+            <div>{{getTransformation().expression}}</div>
+            <div><b>Transformation Language:</b>: {{getTransformation().language}}</div>
+        </div>
+        <div *ngIf="getValueType()">
+            <b>Value Type: </b>
+            <span *ngIf="getValueType().type !== 'iri'; else elseBlock">{{getValueType() | json}}</span>
+            <ng-template #elseBlock>{{'IRI'}}</ng-template>
+        </div>
+    </div>
+</div>

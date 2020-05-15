@@ -12,6 +12,8 @@ import {FormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {DirectivesModule} from 'src/app/directives/directives.module';
+import {CellComponent} from 'src/app/main/mapper/cell/cell.component';
+import {IterationComponent} from 'src/app/main/mapper/iteration/iteration.component';
 
 
 @NgModule({
@@ -19,9 +21,14 @@ import {DirectivesModule} from 'src/app/directives/directives.module';
     HeaderComponent,
     SourceComponent,
     RdfValueDialog,
+    CellComponent,
+    IterationComponent,
+    RdfValueDialog
   ],
   exports: [
     HeaderComponent,
+    CellComponent,
+    IterationComponent,
     SourceComponent,
     RdfValueDialog,
   ],

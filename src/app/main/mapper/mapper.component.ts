@@ -40,8 +40,8 @@ export class MapperComponent implements OnInit {
 
   ngOnInit(): void {
     this.sources = this.tabularDataService.getData();
-    const md = new MappingSubject('');
-    this.mappings.push(md);
+    this.mapping = Convert.toMappingDefinition(JSON.stringify(amsterdamMapping));
+    console.log(this.mapping);
   }
 }
 
