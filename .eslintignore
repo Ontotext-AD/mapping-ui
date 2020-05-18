@@ -1,0 +1,3 @@
+# Ignore tests
+src/**/*.spec.ts
+src/**/*.ico
