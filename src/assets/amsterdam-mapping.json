@@ -1,0 +1,163 @@
+{
+    "baseIRI" : "http://amsterdam.com/resource/",
+    "namespaces" : {
+      "geo" : "http://www.opengis.net/ont/geosparql#",
+      "sf" : "http://www.opengis.net/ont/sf#"
+    },
+    "subjectMappings" : [ {
+      "subject" : {
+        "valueSource" : {
+          "source" : "column",
+          "columnName" : "Trcid"
+        },
+        "transformation" : {
+          "language" : "grel",
+          "expression" : "\"https://data.amsterdam.nl/resource/restaurant/\" + value"
+        }
+      },
+      "typeMappings" : [ {
+        "valueSource" : {
+          "source" : "constant",
+          "constant" : "Restaurant"
+        }
+      }, {
+        "valueSource" : {
+          "source" : "constant",
+          "constant" : "Feature"
+        },
+        "transformation" : {
+          "language" : "prefix",
+          "expression" : "geo"
+        }
+      } ],
+      "propertyMappings" : [ {
+        "property" : {
+          "valueSource" : {
+            "source" : "constant",
+            "constant" : "name"
+          }
+        },
+        "values" : [ {
+          "valueType" : {
+            "type" : "language_literal",
+            "language" : {
+              "valueSource" : {
+                "source" : "constant",
+                "constant" : "nl"
+              }
+            }
+          },
+          "valueSource" : {
+            "source" : "column",
+            "columnName" : "Title"
+          }
+        }, {
+          "valueType" : {
+            "type" : "literal"
+          },
+          "valueSource" : {
+            "source" : "column",
+            "columnName" : "TitleEN"
+          }
+        } ]
+      }, {
+        "property" : {
+          "valueSource" : {
+            "source" : "constant",
+            "constant" : "description"
+          }
+        },
+        "values" : [ {
+          "valueType" : {
+            "type" : "language_literal",
+            "language" : {
+              "valueSource" : {
+                "source" : "constant",
+                "constant" : "nl"
+              }
+            }
+          },
+          "valueSource" : {
+            "source" : "column",
+            "columnName" : "Shortdescription"
+          }
+        }, {
+          "valueType" : {
+            "type" : "literal"
+          },
+          "valueSource" : {
+            "source" : "column",
+            "columnName" : "ShortdescriptionEN"
+          }
+        } ]
+      }, {
+        "property" : {
+          "valueSource" : {
+            "source" : "constant",
+            "constant" : "hasGeometry"
+          },
+          "transformation" : {
+            "language" : "prefix",
+            "expression" : "geo"
+          }
+        },
+        "values" : [ {
+          "valueType" : {
+            "type" : "iri",
+            "typeMappings" : [ {
+              "valueSource" : {
+                "source" : "constant",
+                "constant" : "Point"
+              },
+              "transformation" : {
+                "language" : "prefix",
+                "expression" : "sf"
+              }
+            } ],
+            "propertyMappings" : [ {
+              "property" : {
+                "valueSource" : {
+                  "source" : "constant",
+                  "constant" : "asWKT"
+                },
+                "transformation" : {
+                  "language" : "prefix",
+                  "expression" : "geo"
+                }
+              },
+              "values" : [ {
+                "valueType" : {
+                  "type" : "datatype_literal",
+                  "datatype" : {
+                    "valueSource" : {
+                      "source" : "constant",
+                      "constant" : "wktLiteral"
+                    },
+                    "transformation" : {
+                      "language" : "prefix",
+                      "expression" : "geo"
+                    }
+                  }
+                },
+                "valueSource" : {
+                  "source" : "row_index"
+                },
+                "transformation" : {
+                  "language" : "grel",
+                  "expression" : "\"<http://www.opengis.net/def/crs/OGC/1.3/CRS84> POINT (\" +\n   cells[\"Longitude\"].value.replace(\",\", \".\") + \" \" +\n   cells[\"Latitude\"].value.replace(\",\", \".\") + \")\"\n"
+                }
+              } ]
+            } ]
+          },
+          "valueSource" : {
+            "source" : "column",
+            "columnName" : "Trcid"
+          },
+          "transformation" : {
+            "language" : "grel",
+            "expression" : "\"https://data.amsterdam.nl/resource/geometry/\" + value"
+          }
+        } ]
+      } ]
+    } ]
+  }
