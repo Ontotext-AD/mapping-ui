@@ -1,12 +1,13 @@
-.mapping-subject {
+.mapping-cell {
   width: fit-content;
-  max-width: 100%;
-  min-width: 400px;
+  max-width: 30%;
+  min-width: 300px;
   border: solid 1px #ccc;
   min-height: 120px;
-  display: block;
+  display: inline-block;
   background: floralwhite;
   border-radius: 4px;
+  cursor: move;
   overflow: hidden;
 }
 
