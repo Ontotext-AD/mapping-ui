@@ -1,25 +1,27 @@
-// This file is required by karma.conf.js and loads recursively all the .spec and framework files
+// This file is required by jest.config.js and does two things:
+// 1. Import the jest-preset-angular JavaScript module to set up our Angular testing environment.
+// 2. Mock some properties and functions of the global window object to make sure our tests can run in a JSDOM environment.
 
-import 'zone.js/dist/zone-testing';
-import {getTestBed} from '@angular/core/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
+import 'jest-preset-angular';
 
-declare const require: {
-  context(path: string, deep?: boolean, filter?: RegExp): {
-    keys(): string[];
-    <T>(id: string): T;
-  };
-};
+Object.defineProperty(window, 'CSS', {value: null});
+Object.defineProperty(window, 'getComputedStyle', {
+  value: () => {
+    return {
+      display: 'none',
+      appearance: ['-webkit-appearance'],
+    };
+  },
+});
 
-// First, initialize the Angular testing environment.
-getTestBed().initTestEnvironment(
-    BrowserDynamicTestingModule,
-    platformBrowserDynamicTesting(),
-);
-// Then we find all the tests.
-const context = require.context('./', true, /\.spec\.ts$/);
-// And load the modules.
-context.keys().map(context);
+Object.defineProperty(document, 'doctype', {
+  value: '<!DOCTYPE html>',
+});
+Object.defineProperty(document.body.style, 'transform', {
+  value: () => {
+    return {
+      enumerable: true,
+      configurable: true,
+    };
+  },
+});
