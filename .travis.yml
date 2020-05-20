@@ -17,9 +17,29 @@ addons:
     packages:
       - libgconf-2-4
 
+
+## Cache NPM folder and Cypress binary
+## to avoid downloading Cypress again and again
+cache:
+  directories:
+    - ~/.npm
+    - ~/.cache
+
+#before_script:
+#  ## runs the 'start' script which
+#  ## boots our local app server on port 4200
+#  ## which cypress expects to be running
+#  ## -----------------------------------
+#  ## we use the '&' ampersand which tells
+#  ## travis to run this process in the background
+#  ## else it would block execution and hang travis
+#  - npm run start
+
 script:
   - npm run lint
   - npm run test
+  - npm run start
+  - npm run cy:run
   - npm run build
 
 deploy:
