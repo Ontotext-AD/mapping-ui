@@ -1,0 +1,15 @@
+<div cdkDrag class="mapping-cell mapping-subject mr-12"> 
+    {{position}}
+    <div *ngIf="(position === 'subject' && predicateIndex === 0 && objectIndex === 0) || (position === 'predicate' && objectIndex === 0) || position === 'object'">
+        <div *ngIf="cellMapping.valueSource.source === 'column'">
+            @Col:{{cellMapping.valueSource.columnName}}
+        </div>
+        <div *ngIf="cellMapping.valueSource.source === 'constant'">
+                Constant:{{cellMapping.valueSource.constant}}
+            </div>
+        <div *ngIf="cellMapping.transformation">
+        <div>{{cellMapping.transformation.expression}}</div>
+        <div>{{cellMapping.transformation.language}}</div>
+        </div>
+    </div>
+</div>

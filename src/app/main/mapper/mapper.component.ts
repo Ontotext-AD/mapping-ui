@@ -3,7 +3,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag
 import {TabularDataService} from "src/app/services/tabular-data.service";
 import { Convert, MappingDefinition } from "src/app/models/mapping-definition";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import amsterdamMapping from "src/assets/amsterdam-mapping.json";
+import amsterdamMapping from "src/app/models/amsterdam-mapping.json";
 
 export interface RdfDialogData {
   rdf: string;
