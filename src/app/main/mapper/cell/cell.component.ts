@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 
-import {SimpleIRIValueMapping, ValueMapping} from 'src/app/models/mapping-definition';
+import {SimpleIRIValueMapping, ValueMapping, IRI} from 'src/app/models/mapping-definition';
 
 @Component({
     selector: 'mapper-cell',
@@ -12,6 +12,13 @@ export class CellComponent {
     @Input() predicateIndex: Number;
     @Input() objectIndex: Number;
     @Input() position: string;
+
+    valueType() : IRI {
+        if ((this.cellMapping as ValueMapping).valueType) {
+            return (this.cellMapping as ValueMapping).valueType;
+        }
+        return null;
+    }
 
     constructor() { }
 

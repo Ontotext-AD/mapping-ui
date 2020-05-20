@@ -1,15 +1,28 @@
 <div cdkDrag class="mapping-cell mapping-subject mr-12"> 
-    {{position}}
     <div *ngIf="(position === 'subject' && predicateIndex === 0 && objectIndex === 0) || (position === 'predicate' && objectIndex === 0) || position === 'object'">
-        <div *ngIf="cellMapping.valueSource.source === 'column'">
-            @Col:{{cellMapping.valueSource.columnName}}
-        </div>
-        <div *ngIf="cellMapping.valueSource.source === 'constant'">
+        <div>
+            <b>Source:</b>
+            <span *ngIf="cellMapping.valueSource.source === 'column'">
+                @Col:{{cellMapping.valueSource.columnName}}
+            </span>
+            <span *ngIf="cellMapping.valueSource.source === 'constant'">
                 Constant:{{cellMapping.valueSource.constant}}
-            </div>
-        <div *ngIf="cellMapping.transformation">
-        <div>{{cellMapping.transformation.expression}}</div>
-        <div>{{cellMapping.transformation.language}}</div>
+            </span>
+            <span *ngIf="cellMapping.valueSource.source === 'row_index' || cellMapping.valueSource.source === 'record_id'">
+                {{cellMapping.valueSource.source}}
+            </span>
         </div>
+
+        <div *ngIf="cellMapping.transformation">
+            <b>Transformation:</b>
+            <div>{{cellMapping.transformation.expression}}</div>
+            <div><b>Transformation Language:</b>: {{cellMapping.transformation.language}}</div>
+        </div>
+        <div *ngIf="valueType(); let valueType">
+            <b>Value Type:</b>
+            <span *ngIf="valueType.type !== 'iri'; else elseBlock">{{valueType | json}}</span>
+            <ng-template #elseBlock>{{'IRI'}}</ng-template>
+        </div>
+
     </div>
 </div>
