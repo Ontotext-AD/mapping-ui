@@ -6,6 +6,6 @@
   <div class="mr-12 ml-12 mb-12">Namespaces: {{mapping.namespaces | json}}</div>
   <div cdkDropList>  
     <div *ngFor="let subject of mapping.subjectMappings" class="mr-12 ml-12 mb-12">
-        <iteration [subject]="subject.subject" [propertyMappings]="subject.propertyMappings"></iteration>
+        <iteration [subject]="subject"></iteration>
     </div>
 </div>
