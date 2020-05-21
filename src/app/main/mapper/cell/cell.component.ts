@@ -70,7 +70,7 @@ export class CellComponent {
      * Get value Type. Returns the ValueType but only when the cellMapping is a ValueMapping
      * Only ValueMappings have such a type
      */
-    valueType() : IRI {
+    getValueType() : IRI {
         if ((this.cellMapping as ValueMapping).valueType) {
             return (this.cellMapping as ValueMapping).valueType;
         }

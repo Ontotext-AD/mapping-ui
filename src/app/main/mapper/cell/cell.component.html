@@ -18,9 +18,9 @@
             <div>{{getTransformation().expression}}</div>
             <div><b>Transformation Language:</b>: {{getTransformation().language}}</div>
         </div>
-        <div *ngIf="valueType(); let valueType">
+        <div *ngIf="getValueType()">
             <b>Value Type: </b>
-            <span *ngIf="valueType.type !== 'iri'; else elseBlock">{{valueType | json}}</span>
+            <span *ngIf="getValueType().type !== 'iri'; else elseBlock">{{getValueType() | json}}</span>
             <ng-template #elseBlock>{{'IRI'}}</ng-template>
         </div>
     </div>
