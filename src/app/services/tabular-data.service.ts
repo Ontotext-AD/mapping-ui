@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
-import {Source} from "src/app/models/source";
+import {Injectable} from '@angular/core';
+import {Source} from 'src/app/models/source';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TabularDataService {
-
   constructor() { }
 
   getData(): any {
@@ -18,8 +17,7 @@ export class TabularDataService {
       new Source('Episode VI - Return of the Jedi'),
       new Source('Episode VII - The Force Awakens'),
       new Source('Episode VIII - The Last Jedi'),
-      new Source('Episode IX – The Rise of Skywalker')
+      new Source('Episode IX – The Rise of Skywalker'),
     ];
   }
-
 }

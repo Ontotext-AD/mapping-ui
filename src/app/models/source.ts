@@ -4,5 +4,4 @@ export class Source {
   constructor(title) {
     this.title = title;
   }
-
 }

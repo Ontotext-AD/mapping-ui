@@ -4,13 +4,13 @@
 
   <div *ngFor="let mapping of mappings" class="mr-12 ml-12 mb-12">
     <div fxLayout="row" fxLayoutAlign="">
-      <div cdkDropList class="mapping-subject mr-12" (cdkDropListDropped)="drop($event)" [cdkDropListData]="mappings" appCypressData="subject">
+      <div cdkDropList class="mapping-subject mr-12" (cdkDropListDropped)="drop()" [cdkDropListData]="mappings" appCypressData="subject">
         <div cdkDrag>{{mapping.mapping}}</div>
       </div>
-      <div cdkDropList class="mapping-subject mr-12" (cdkDropListDropped)="drop($event)" [cdkDropListData]="mappings" appCypressData="predicate">
+      <div cdkDropList class="mapping-subject mr-12" (cdkDropListDropped)="drop()" [cdkDropListData]="mappings" appCypressData="predicate">
         <div cdkDrag>{{mapping.mapping}}</div>
       </div>
-      <div cdkDropList class="mapping-subject mr-12" (cdkDropListDropped)="drop($event)" [cdkDropListData]="mappings" appCypressData="object">
+      <div cdkDropList class="mapping-subject mr-12" (cdkDropListDropped)="drop()" [cdkDropListData]="mappings" appCypressData="object">
         <div cdkDrag>{{mapping.mapping}}</div>
       </div>
     </div>

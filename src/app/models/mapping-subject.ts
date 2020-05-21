@@ -1,4 +1,4 @@
-import {MappingDefinition} from "./mapping-definition";
+import {MappingDefinition} from './mapping-definition';
 
 export class MappingSubject implements MappingDefinition {
   mapping: string;
