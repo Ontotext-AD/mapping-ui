@@ -11,6 +11,8 @@ import {RdfValueDialog} from "src/app/main/mapper/mapper.component";
 import {FormsModule} from "@angular/forms";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatInputModule} from "@angular/material/input";
+import {CypressDataDirective} from "src/app/directives/cypress-data.directive";
+import {DirectivesModule} from "src/app/directives/directives.module";
 
 
 
@@ -35,7 +37,8 @@ import {MatInputModule} from "@angular/material/input";
     DragDropModule,
     FormsModule,
     MatDialogModule,
-    MatInputModule
+    MatInputModule,
+    DirectivesModule
   ]
 })
 export class MapperModule { }

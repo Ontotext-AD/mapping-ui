@@ -1,6 +1,8 @@
 <div class="m-12 sources">
   <div cdkDropList cdkDropListOrientation="horizontal" fxLayoutAlign="start end " fxLayout="row wrap" class="sources-list"
-       [cdkDropListData]="sources" cdkDropListSortingDisabled>
-    <div class="source-box m-8 p-8" *ngFor="let source of sources" cdkDrag>{{source.title}}</div>
+       [cdkDropListData]="sources" cdkDropListSortingDisabled appCypressData="source-box">
+    <div class="source-box m-8 p-8" *ngFor="let source of sources;let i = index" cdkDrag [attr.appCypressData]="'source-' + i">
+      {{source.title}}
+    </div>
   </div>
 </div>
