@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {HeaderComponent} from "src/app/main/mapper/header/header.component";
 import { SourceComponent } from 'src/app/main/mapper/sources/source.component';
 import {CellComponent} from 'src/app/main/mapper/cell/cell.component';
+import {IterationComponent} from 'src/app/main/mapper/iteration/iteration.component';
 import {TranslateModule} from "@ngx-translate/core";
 import {MatButtonModule} from "@angular/material/button";
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -20,11 +21,13 @@ import {MatInputModule} from "@angular/material/input";
     HeaderComponent,
     SourceComponent,
     CellComponent,
+    IterationComponent,
     RdfValueDialog
   ],
   exports: [
     HeaderComponent,
     CellComponent,
+    IterationComponent,
     SourceComponent,
     RdfValueDialog
   ],

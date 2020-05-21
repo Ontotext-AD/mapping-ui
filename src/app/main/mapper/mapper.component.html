@@ -6,12 +6,6 @@
   <div class="mr-12 ml-12 mb-12">Namespaces: {{mapping.namespaces | json}}</div>
   <div cdkDropList>  
     <div *ngFor="let subject of mapping.subjectMappings; let sIdx = index" class="mr-12 ml-12 mb-12">
-        <div *ngFor="let property of subject.propertyMappings; let pIdx = index" class="mr-12 ml-12 mb-12">
-            <div *ngFor="let object of property.values; let oIdx = index" class="mr-12 ml-12 mb-12">
-                <mapper-cell [cellMapping]="subject.subject" [predicateIndex] = "pIdx" [objectIndex] = "oIdx" [position]="'subject'"></mapper-cell>
-                <mapper-cell [cellMapping]="property.property" [predicateIndex] = "pIdx" [objectIndex] = "oIdx" [position]="'predicate'"></mapper-cell>
-                <mapper-cell [cellMapping]="object" [position]="'object'"></mapper-cell>
-            </div>
-        </div>
+        <iteration [subject]="subject.subject" [propertyMappings]="subject.propertyMappings"></iteration>
     </div>
 </div>

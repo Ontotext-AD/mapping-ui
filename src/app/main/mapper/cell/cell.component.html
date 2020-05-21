@@ -19,7 +19,7 @@
             <div><b>Transformation Language:</b>: {{cellMapping.transformation.language}}</div>
         </div>
         <div *ngIf="valueType(); let valueType">
-            <b>Value Type:</b>
+            <b>Value Type: </b>
             <span *ngIf="valueType.type !== 'iri'; else elseBlock">{{valueType | json}}</span>
             <ng-template #elseBlock>{{'IRI'}}</ng-template>
         </div>
