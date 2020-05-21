@@ -9,15 +9,8 @@ import {SimpleIRIValueMapping, ValueTransformation, Column, SubjectMapping, Valu
 })
 export class CellComponent {
     @Input() cellMapping: SubjectMapping | PropertyMapping | ValueMapping | SimpleIRIValueMapping ;
-    @Input() isFirstCell: Boolean;
+    @Input() firstChild: Boolean;
     @Input() isTypeProperty: Boolean;
-
-    /**
-     * When the subject/predicate is the same as the one before, we show an empty box.
-     */
-    showValue(): Boolean {
-       return this.isFirstCell;
-    }
 
     /**
      * Get the value source for the cell depending on the cellMapping type
@@ -77,7 +70,7 @@ export class CellComponent {
     }
 
     constructor() { 
-        this.isFirstCell = true;
+        this.firstChild = true;
         this.isTypeProperty = false;
     }
 

@@ -5,8 +5,8 @@
 </div>
 <div *ngFor="let property of getPropertyMappings(); let pIdx = index" class="mr-12 ml-12 mb-12">
     <div *ngFor="let object of property.values; let oIdx = index" class="mr-12 ml-12 mb-12">
-        <mapper-cell [cellMapping]="subject" [isFirstCell] = "pIdx === oIdx && pIdx === 0"></mapper-cell>
-        <mapper-cell [cellMapping]="property" [isFirstCell] = "oIdx === 0"></mapper-cell>
+        <mapper-cell [cellMapping]="subject" [firstChild] = "pIdx === oIdx && pIdx === 0"></mapper-cell>
+        <mapper-cell [cellMapping]="property" [firstChild] = "oIdx === 0"></mapper-cell>
         <mapper-cell [cellMapping]="object"></mapper-cell>
         <!--TODO--> 
         <div *ngIf="object.valueType.type === 'iri'">

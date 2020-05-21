@@ -2,7 +2,7 @@
     <div *ngIf="isTypeProperty">
         a
     </div>
-    <div *ngIf="showValue() && !isTypeProperty">
+    <div *ngIf="firstChild && !isTypeProperty">
         <div>
             <b>Source:</b>
             <span *ngIf="getSourceType() === 'column'">
