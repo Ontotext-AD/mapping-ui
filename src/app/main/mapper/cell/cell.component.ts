@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 
-import {ValueTransformation, Column, SubjectMapping, ValueMapping, IRI, PropertyMapping} from 'src/app/models/mapping-definition';
+import {SimpleIRIValueMapping, ValueTransformation, Column, SubjectMapping, ValueMapping, IRI, PropertyMapping} from 'src/app/models/mapping-definition';
 
 @Component({
     selector: 'mapper-cell',
@@ -8,8 +8,9 @@ import {ValueTransformation, Column, SubjectMapping, ValueMapping, IRI, Property
     styleUrls: ['./cell.component.scss']
 })
 export class CellComponent {
-    @Input() cellMapping: SubjectMapping | PropertyMapping | ValueMapping;
+    @Input() cellMapping: SubjectMapping | PropertyMapping | ValueMapping | SimpleIRIValueMapping ;
     @Input() isFirstCell: Boolean;
+    @Input() isTypeProperty: Boolean;
 
     /**
      * When the subject/predicate is the same as the one before, we show an empty box.
@@ -31,6 +32,9 @@ export class CellComponent {
         if ((this.cellMapping as ValueMapping).valueType) {
             return (this.cellMapping as ValueMapping).valueSource;
         }
+        if ((this.cellMapping as SimpleIRIValueMapping)) {
+            return ((this.cellMapping) as SimpleIRIValueMapping).valueSource;
+        }
     }
 
     /**
@@ -38,15 +42,7 @@ export class CellComponent {
      * one of column, constanct, row_index and record_id
      */
     getSourceType(): String {
-        if ((this.cellMapping as SubjectMapping).subject) {
-            return (this.cellMapping as SubjectMapping).subject.valueSource.source;
-        }
-        if ((this.cellMapping as PropertyMapping).property) {
-            return (this.cellMapping as PropertyMapping).property.valueSource.source;
-        }
-        if ((this.cellMapping as ValueMapping).valueType) {
-            return (this.cellMapping as ValueMapping).valueSource.source;
-        }
+        return this.getSource().source;
     }
 
     /**
@@ -61,6 +57,9 @@ export class CellComponent {
         }
         if ((this.cellMapping as ValueMapping).valueType) {
             return (this.cellMapping as ValueMapping).transformation;
+        }
+        if ((this.cellMapping as SimpleIRIValueMapping)) {
+            return ((this.cellMapping) as SimpleIRIValueMapping).transformation;
         }
     }
 
@@ -77,8 +76,12 @@ export class CellComponent {
         return null;
     }
 
-    constructor() { }
+    constructor() { 
+        this.isFirstCell = true;
+        this.isTypeProperty = false;
+    }
 
     ngOnInit(): void {
+
     }
 }

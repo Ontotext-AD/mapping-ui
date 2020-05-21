@@ -1,5 +1,8 @@
 <div cdkDrag class="mapping-cell mapping-subject mr-12"> 
-    <div *ngIf="showValue()">
+    <div *ngIf="isTypeProperty">
+        a
+    </div>
+    <div *ngIf="showValue() && !isTypeProperty">
         <div>
             <b>Source:</b>
             <span *ngIf="getSourceType() === 'column'">

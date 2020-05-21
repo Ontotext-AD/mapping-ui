@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 
-import {PropertyMapping, SubjectMapping, ValueMapping} from 'src/app/models/mapping-definition';
+import {PropertyMapping, SubjectMapping, ValueMapping, SimpleIRIValueMapping} from 'src/app/models/mapping-definition';
 
 @Component({
     selector: 'iteration',
@@ -16,6 +16,15 @@ export class IterationComponent {
         }
         if ((this.subject as SubjectMapping).propertyMappings) {
             return (this.subject as SubjectMapping).propertyMappings;
+        }
+    }
+
+    getTypeMappings(): Array<SimpleIRIValueMapping> {
+        if ((this.subject as ValueMapping).valueType) {
+            return (this.subject as ValueMapping).valueType.typeMappings;
+        }
+        if ((this.subject as SubjectMapping).propertyMappings) {
+            return (this.subject as SubjectMapping).typeMappings;
         }
     }
     constructor() {
