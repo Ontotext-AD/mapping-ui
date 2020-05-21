@@ -17,10 +17,18 @@ addons:
     packages:
       - libgconf-2-4
 
+
+## Cache NPM folder and Cypress binary
+## to avoid downloading Cypress again and again
+cache:
+  directories:
+    - ~/.npm
+    - ~/.cache
+
 script:
   - npm run lint
   - npm run test
-  - npm run build
+  - npm run cy:ci
 
 deploy:
   - provider: npm
