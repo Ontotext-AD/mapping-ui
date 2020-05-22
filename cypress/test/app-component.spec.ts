@@ -1,4 +1,4 @@
-import {AppComponentSelectors} from '../utils/selectors/app.component.selectors';
+import {AppComponentSelectors} from '../../cypress/utils/selectors/app-component.selectors';
 
 describe('AppComponent', () => {
 
@@ -10,6 +10,6 @@ describe('AppComponent', () => {
     // I see page title
     cy.title().should('eq', 'MappingUi');
     // I see page content
-    cy.cypressData(AppComponentSelectors.APP_CONTENT_SELECTOR).contains('mapping-ui app is running!');
+    cy.cypressData(AppComponentSelectors.APP_CONTENT_SELECTOR).should('be.visible');
   });
 });

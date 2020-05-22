@@ -1,0 +1,40 @@
+/*
+  Spacing helpers
+
+  Generates margin and padding helper classes. For each size from 0 to 256 with 2px step.
+  Classes start with letter m or p, optional direction letter - t (top), r (right), b (bottom), l (left) and size.
+  E.g.: m-0 (margin: 0px), pl-16 (padding-left: 16px), etc.
+*/
+$sides: (top: t, bottom: b, left: l, right: r);
+@each $prop, $abbrev in (margin: m, padding: p) {
+  @for $index from 0 through 64 {
+    $size: $index * 2;
+    $length: #{$size}px;
+
+    .#{$abbrev}-#{$size} {
+        #{$prop}: $length !important;
+    }
+
+    @each $side, $sideAbbrev in $sides {
+      .#{$abbrev}#{$sideAbbrev}-#{$size} {
+        #{$prop}-#{$side}: $length !important;
+      }
+    }
+  }
+}
+
+// Generate cursor classes. Add additional cursors if needed. E.g. cursor-pointer
+$cursors: grab, help, move, no-drop, not-allowed, pointer;
+@each $cursor in $cursors {
+  .cursor-#{$cursor} {
+    cursor: #{$cursor};
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+.user-select-none {
+  user-select: none;
+}

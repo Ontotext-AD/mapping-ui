@@ -1,0 +1,39 @@
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { MapperComponent } from './mapper.component';
+import {HeaderComponent} from "src/app/main/mapper/header/header.component";
+import {SourceComponent} from "src/app/main/mapper/sources/source.component";
+import {DragDropModule} from "@angular/cdk/drag-drop";
+import {TranslateModule} from "@ngx-translate/core";
+import {MatDialogModule} from "@angular/material/dialog";
+
+describe('MapperComponent', () => {
+  let component: MapperComponent;
+  let fixture: ComponentFixture<MapperComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        MapperComponent,
+        HeaderComponent,
+        SourceComponent
+      ],
+      imports: [
+        DragDropModule,
+        TranslateModule.forRoot(),
+        MatDialogModule
+      ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(MapperComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
