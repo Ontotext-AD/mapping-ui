@@ -1,16 +1,16 @@
 <div *ngFor="let typeMapping of getTypeMappings();">
-    <mapper-cell [cellMapping]="subject"></mapper-cell>
-    <mapper-cell [isTypeProperty]="true"></mapper-cell>
-    <mapper-cell [cellMapping]="typeMapping"></mapper-cell>
+    <app-mapper-cell [cellMapping]="subject"></app-mapper-cell>
+    <app-mapper-cell [isTypeProperty]="true"></app-mapper-cell>
+    <app-mapper-cell [cellMapping]="typeMapping"></app-mapper-cell>
 </div>
 <div *ngFor="let property of getPropertyMappings(); let pIdx = index" class="mr-12 ml-12 mb-12">
     <div *ngFor="let object of property.values; let oIdx = index" class="mr-12 ml-12 mb-12">
-        <mapper-cell [cellMapping]="subject" [firstChild] = "pIdx === oIdx && pIdx === 0"></mapper-cell>
-        <mapper-cell [cellMapping]="property" [firstChild] = "oIdx === 0"></mapper-cell>
-        <mapper-cell [cellMapping]="object"></mapper-cell>
-        <!--TODO--> 
+        <app-mapper-cell [cellMapping]="subject" [firstChild] = "pIdx === oIdx && pIdx === 0" appCypressData="subject"></app-mapper-cell>
+        <app-mapper-cell [cellMapping]="property" [firstChild] = "oIdx === 0" appCypressData="predicate"></app-mapper-cell>
+        <app-mapper-cell [cellMapping]="object" appCypressData="object"></app-mapper-cell>
+        <!--TODO-->
         <div *ngIf="object.valueType.type === 'iri'">
-            <iteration [subject]="object"></iteration>
+            <app-iteration [subject]="object"></app-iteration>
         </div>
     </div>
 </div>

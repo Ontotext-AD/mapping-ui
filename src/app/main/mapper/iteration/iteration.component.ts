@@ -1,36 +1,29 @@
 import {Component, Input} from '@angular/core';
-
-import {PropertyMapping, SubjectMapping, ValueMapping, SimpleIRIValueMapping} from 'src/app/models/mapping-definition';
+import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
+import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
+import {ModelManagementService} from 'src/app/services/model-management.service';
+import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
+import {SimpleIRIValueMappingImpl} from 'src/app/models/simple-iri-value-mapping-impl';
 
 @Component({
-    selector: 'iteration',
-    templateUrl: './iteration.component.html',
-    styleUrls: ['./iteration.component.scss']
+  selector: 'app-iteration',
+  templateUrl: './iteration.component.html',
+  styleUrls: ['./iteration.component.scss'],
 })
 export class IterationComponent {
-    @Input() subject: SubjectMapping | ValueMapping;
+    @Input() subject: SubjectMappingImpl | ValueMappingImpl;
 
-    getPropertyMappings(): Array<PropertyMapping> {
-        if ((this.subject as ValueMapping).valueType) {
-            return (this.subject as ValueMapping).valueType.propertyMappings;
-        }
-        if ((this.subject as SubjectMapping).propertyMappings) {
-            return (this.subject as SubjectMapping).propertyMappings;
-        }
-    }
-
-    getTypeMappings(): Array<SimpleIRIValueMapping> {
-        if ((this.subject as ValueMapping).valueType) {
-            return (this.subject as ValueMapping).valueType.typeMappings;
-        }
-        if ((this.subject as SubjectMapping).propertyMappings) {
-            return (this.subject as SubjectMapping).typeMappings;
-        }
-    }
-    constructor() {
-
+    constructor(private modelManagementService: ModelManagementService) {
     }
 
     ngOnInit(): void {
+    }
+
+    getPropertyMappings(): PropertyMappingImpl[] {
+      return this.modelManagementService.getPropertyMappings(this.subject);
+    }
+
+    getTypeMappings(): SimpleIRIValueMappingImpl[] {
+      return this.modelManagementService.getTypeMappings(this.subject);
     }
 }

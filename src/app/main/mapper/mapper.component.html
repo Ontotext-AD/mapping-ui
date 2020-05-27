@@ -1,11 +1,12 @@
-<div fxLayout="column" fxLayoutAlign="end stretch" cdkDropListGroup>
+<div fxLayout="column" fxLayoutAlign="end stretch" cdkDropListGroup appCypressData="mapper">
   <app-header></app-header>
   <app-definitions [sources]="sources"></app-definitions>
 
-  <div class="mr-12 ml-12 mb-12">Base IRI: {{mapping.baseIRI}}</div>
-  <div class="mr-12 ml-12 mb-12">Namespaces: {{mapping.namespaces | json}}</div>
+  <div class="mr-12 ml-12 mb-12">Base IRI: {{mapping.getBaseIRI()}}</div>
+  <div class="mr-12 ml-12 mb-12">Namespaces: {{mapping.getNamespaces() | json}}</div>
   <div cdkDropList>
-    <div *ngFor="let subject of mapping.subjectMappings; let sIdx = index" class="mr-12 ml-12 mb-12">
-        <iteration [subject]="subject.subject" [propertyMappings]="subject.propertyMappings"></iteration>
+    <div *ngFor="let subject of mapping.getSubjectMappings()" class="mr-12 ml-12 mb-12">
+      <app-iteration [subject]="subject"></app-iteration>
     </div>
+  </div>
 </div>

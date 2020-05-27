@@ -3,3 +3,4 @@ src/**/*.spec.ts
 src/**/*.ico
 src/**/*.scss
 src/**/*.json
+src/app/models/mapping-definition.ts

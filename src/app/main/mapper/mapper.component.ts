@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {TabularDataService} from 'src/app/services/tabular-data.service';
-import {MappingDefinition} from 'src/app/models/mapping-definition';
-import {MappingSubject} from 'src/app/models/mapping-subject';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
+import {ModelManagementService} from 'src/app/services/model-management.service';
 
 export interface RdfDialogData {
   rdf: string;
@@ -15,10 +15,11 @@ export interface RdfDialogData {
 })
 export class MapperComponent implements OnInit {
   sources: [];
-  mappings = new Array<MappingDefinition>();
+  mapping: MappingDefinitionImpl;
   rdf: string;
 
   constructor(private tabularDataService: TabularDataService,
+              private modelManagementService: ModelManagementService,
               public dialog: MatDialog) {
   }
 
@@ -40,8 +41,7 @@ export class MapperComponent implements OnInit {
 
   ngOnInit(): void {
     this.sources = this.tabularDataService.getData();
-    this.mapping = Convert.toMappingDefinition(JSON.stringify(amsterdamMapping));
-    console.log(this.mapping);
+    this.mapping = this.modelManagementService.getStoredModelMapping();
   }
 }
 

@@ -7,7 +7,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {RdfValueDialog} from 'src/app/main/mapper/mapper.component';
+import {MapperComponent, RdfValueDialog} from 'src/app/main/mapper/mapper.component';
 import {FormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
@@ -18,14 +18,16 @@ import {IterationComponent} from 'src/app/main/mapper/iteration/iteration.compon
 
 @NgModule({
   declarations: [
+    MapperComponent,
     HeaderComponent,
     SourceComponent,
     RdfValueDialog,
     CellComponent,
     IterationComponent,
-    RdfValueDialog
+    RdfValueDialog,
   ],
   exports: [
+    MapperComponent,
     HeaderComponent,
     CellComponent,
     IterationComponent,

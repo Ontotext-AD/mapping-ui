@@ -1,4 +1,4 @@
-<div cdkDrag class="mapping-cell mapping-subject mr-12"> 
+<div cdkDrag class="mapping-cell mapping-subject mr-12">
     <div *ngIf="isTypeProperty">
         a
     </div>
@@ -6,13 +6,13 @@
         <div>
             <b>Source:</b>
             <span *ngIf="getSourceType() === 'column'">
-                @Col:{{getSource().columnName}}
+                @Col:{{getValueSource().columnName}}
             </span>
             <span *ngIf="getSourceType() === 'constant'">
-                Constant:{{getSource().constant}}
+                Constant:{{getValueSource().constant}}
             </span>
             <span *ngIf="getSourceType() === 'row_index' || getSourceType() === 'record_id'">
-                {{getSource().source}}
+                {{getValueSource().source}}
             </span>
         </div>
 

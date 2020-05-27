@@ -1,80 +1,63 @@
 import {Component, Input} from '@angular/core';
-
-import {SimpleIRIValueMapping, ValueTransformation, Column, SubjectMapping, ValueMapping, IRI, PropertyMapping} from 'src/app/models/mapping-definition';
+import {SimpleIRIValueMapping, SubjectMapping, ValueMapping, PropertyMapping} from 'src/app/models/mapping-definition';
+import {ModelManagementService} from 'src/app/services/model-management.service';
+import {ColumnImpl} from 'src/app/models/column-impl';
+import {IRIImpl} from 'src/app/models/iri-impl';
+import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl';
 
 @Component({
-    selector: 'mapper-cell',
-    templateUrl: './cell.component.html',
-    styleUrls: ['./cell.component.scss']
+  selector: 'app-mapper-cell',
+  templateUrl: './cell.component.html',
+  styleUrls: ['./cell.component.scss'],
 })
 export class CellComponent {
-    @Input() cellMapping: SubjectMapping | PropertyMapping | ValueMapping | SimpleIRIValueMapping ;
-    @Input() firstChild: Boolean;
-    @Input() isTypeProperty: Boolean;
+    @Input() cellMapping: SubjectMapping | PropertyMapping | ValueMapping | SimpleIRIValueMapping;
+    @Input() firstChild: boolean;
+    @Input() isTypeProperty: boolean;
 
-    /**
-     * Get the value source for the cell depending on the cellMapping type
-     */
-    getSource(): Column {
-        if ((this.cellMapping as SubjectMapping).subject) {
-            return (this.cellMapping as SubjectMapping).subject.valueSource;
-        }
-        if ((this.cellMapping as PropertyMapping).property) {
-            return (this.cellMapping as PropertyMapping).property.valueSource;
-        }
-        if ((this.cellMapping as ValueMapping).valueType) {
-            return (this.cellMapping as ValueMapping).valueSource;
-        }
-        if ((this.cellMapping as SimpleIRIValueMapping)) {
-            return ((this.cellMapping) as SimpleIRIValueMapping).valueSource;
-        }
+    constructor(private modelManagementService: ModelManagementService) {
+    }
+
+    ngOnInit(): void {
+      this.firstChild = true;
+      this.isTypeProperty = false;
     }
 
     /**
-     * Get the source type for the cell depending on the cellMapping type, 
+     * Get the value source for the cell depending on the cellMapping type
+     *
+     * @return value source
+     */
+    getValueSource(): ColumnImpl {
+      return this.modelManagementService.getSource(this.cellMapping);
+    }
+
+    /**
+     * Get the source type for the cell depending on the cellMapping type,
      * one of column, constanct, row_index and record_id
+     *
+     * @return source type
      */
     getSourceType(): String {
-        return this.getSource().source;
+      return this.getValueSource() && this.getValueSource().getSource();
     }
 
     /**
      * Get the transformation for the cell depending on the cellMapping type
+     *
+     * @return value transornmation
      */
-    getTransformation(): ValueTransformation {
-        if ((this.cellMapping as SubjectMapping).subject) {
-            return (this.cellMapping as SubjectMapping).subject.transformation;
-        }
-        if ((this.cellMapping as PropertyMapping).property) {
-            return (this.cellMapping as PropertyMapping).property.transformation;
-        }
-        if ((this.cellMapping as ValueMapping).valueType) {
-            return (this.cellMapping as ValueMapping).transformation;
-        }
-        if ((this.cellMapping as SimpleIRIValueMapping)) {
-            return ((this.cellMapping) as SimpleIRIValueMapping).transformation;
-        }
+    getTransformation(): ValueTransformationImpl {
+      return this.modelManagementService.getTransformation(this.cellMapping);
     }
-
-
 
     /**
      * Get value Type. Returns the ValueType but only when the cellMapping is a ValueMapping
      * Only ValueMappings have such a type
+     *
+     * @return iri
      */
-    getValueType() : IRI {
-        if ((this.cellMapping as ValueMapping).valueType) {
-            return (this.cellMapping as ValueMapping).valueType;
-        }
-        return null;
-    }
-
-    constructor() { 
-        this.firstChild = true;
-        this.isTypeProperty = false;
-    }
-
-    ngOnInit(): void {
-
+    getValueType() : IRIImpl {
+      return this.modelManagementService.getValueType(this.cellMapping);
     }
 }
