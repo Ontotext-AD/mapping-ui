@@ -11,5 +11,6 @@ module.exports = {
   coverageDirectory: 'coverage/app',
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, {
     prefix: '<rootDir>/'
-  })
+  }),
+  setupFiles: ["<rootDir>/jest-setup.ts"]
 };

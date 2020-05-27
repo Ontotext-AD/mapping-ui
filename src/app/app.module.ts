@@ -6,7 +6,6 @@ import {AppComponent} from './app.component';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
-import {MapperComponent} from './main/mapper/mapper.component';
 import {MapperModule} from 'src/app/main/mapper/mapper.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -17,15 +16,15 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {FormsModule} from '@angular/forms';
 import {DirectivesModule} from 'src/app/directives/directives.module';
+import {environment} from 'src/environments/environment';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(httpClient);
+  return new TranslateHttpLoader(httpClient, environment.httpLoaderPrefix, environment.httpLoaderSuffix);
 }
 
 @NgModule({
   declarations: [
     AppComponent,
-    MapperComponent,
   ],
   imports: [
     BrowserModule,

@@ -6,6 +6,8 @@ import {SourceComponent} from "src/app/main/mapper/sources/source.component";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {TranslateModule} from "@ngx-translate/core";
 import {MatDialogModule} from "@angular/material/dialog";
+import {IterationComponent} from "src/app/main/mapper/iteration/iteration.component";
+import {CellComponent} from "src/app/main/mapper/cell/cell.component";
 
 describe('MapperComponent', () => {
   let component: MapperComponent;
@@ -16,7 +18,9 @@ describe('MapperComponent', () => {
       declarations: [
         MapperComponent,
         HeaderComponent,
-        SourceComponent
+        SourceComponent,
+        IterationComponent,
+        CellComponent
       ],
       imports: [
         DragDropModule,

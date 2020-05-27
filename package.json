@@ -5,11 +5,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --prod && mv dist/mapping-ui/assets/i18n/en.json dist/mapping-ui/assets/i18n/en.js",
     "test": "npx jest",
     "lint": "eslint 'src/**'",
     "lint:fix": "eslint --fix 'src/**'",
     "start:ci": "http-server ./dist/mapping-ui -a localhost -p 4200 -c-1",
-    "cy:ci": "ng build --prod && run-p --race start:ci cy:run",
+    "cy:ci": "ng build --prod && mv dist/mapping-ui/assets/i18n/en.json dist/mapping-ui/assets/i18n/en.js && run-p --race start:ci cy:run",
     "cy:open": "cypress open",
     "cy:run": "cypress run --spec cypress/test/**/*.spec.ts"
   },
@@ -30,11 +31,13 @@
     "@ngx-translate/http-loader": "^4.0.0",
     "@w11k/ngx-componentdestroyed": "^5.0.2",
     "rxjs": "^6.5.4",
+    "class-transformer": "^0.2.3",
+    "reflect-metadata": "^0.1.13",
     "tslib": "^1.10.0",
     "zone.js": "^0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.901.5",
+    "@angular-devkit/build-angular": "^0.901.7",
     "@angular/cli": "^9.1.5",
     "@angular/compiler-cli": "^9.1.6",
     "@cypress/webpack-preprocessor": "^5.4.1",

@@ -7,21 +7,30 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {RdfValueDialog} from 'src/app/main/mapper/mapper.component';
+import {MapperComponent, RdfValueDialog} from 'src/app/main/mapper/mapper.component';
 import {FormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {DirectivesModule} from 'src/app/directives/directives.module';
+import {CellComponent} from 'src/app/main/mapper/cell/cell.component';
+import {IterationComponent} from 'src/app/main/mapper/iteration/iteration.component';
 
 
 @NgModule({
   declarations: [
+    MapperComponent,
     HeaderComponent,
     SourceComponent,
     RdfValueDialog,
+    CellComponent,
+    IterationComponent,
+    RdfValueDialog,
   ],
   exports: [
+    MapperComponent,
     HeaderComponent,
+    CellComponent,
+    IterationComponent,
     SourceComponent,
     RdfValueDialog,
   ],

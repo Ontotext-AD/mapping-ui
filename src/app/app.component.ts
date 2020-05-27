@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
+import 'reflect-metadata';
 
 @Component({
   selector: 'app-root',
@@ -7,8 +8,6 @@ import {TranslateService} from '@ngx-translate/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'mapping-ui';
-
   constructor(public translate: TranslateService) {
     this.initTranslation();
   }
