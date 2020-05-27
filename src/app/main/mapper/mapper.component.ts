@@ -1,9 +1,12 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {TabularDataService} from "src/app/services/tabular-data.service";
+import {ColumnsService} from "src/app/services/rest/columns.service";
 import { Convert, MappingDefinition } from "src/app/models/mapping-definition";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import amsterdamMapping from "src/app/models/amsterdam-mapping.json";
+import {Source} from "src/app/models/source";
+
 
 export interface RdfDialogData {
   rdf: string;
@@ -16,11 +19,11 @@ export interface RdfDialogData {
 })
 export class MapperComponent implements OnInit {
 
-  sources: [];
+  sources: Array<Source>;
   mapping: MappingDefinition;
   rdf: string;
 
-  constructor(private tabularDataService: TabularDataService,
+  constructor(private columnService: ColumnsService,
               public dialog: MatDialog) {
   }
 
@@ -41,7 +44,8 @@ export class MapperComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.sources = this.tabularDataService.getData();
+    debugger;
+    this.columnService.getColumns().subscribe((data) => this.sources = data);
     this.mapping = Convert.toMappingDefinition(JSON.stringify(amsterdamMapping));
     console.log(this.mapping);
   }

@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: '',
+  baseHref: '/orefine/extension/mapping-editor/',
+  apiUrl: '/rest/rdf-mapper/columns/ontorefine:test',
 };
