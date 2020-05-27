@@ -2,14 +2,14 @@
     <div *ngIf="isTypeProperty">
         a
     </div>
-    <div *ngIf="firstChild && !isTypeProperty">
+    <div *ngIf="isFirstChild && !isTypeProperty">
         <div>
             <b>Source:</b>
             <span *ngIf="getSourceType() === 'column'">
-                @Col:{{getValueSource().columnName}}
+                @Col:{{getValueSource().getColumnName()}}
             </span>
             <span *ngIf="getSourceType() === 'constant'">
-                Constant:{{getValueSource().constant}}
+                Constant:{{getValueSource().getConstant()}}
             </span>
             <span *ngIf="getSourceType() === 'row_index' || getSourceType() === 'record_id'">
                 {{getValueSource().source}}
@@ -18,8 +18,8 @@
 
         <div *ngIf="getTransformation()">
             <b>Transformation:</b>
-            <div>{{getTransformation().expression}}</div>
-            <div><b>Transformation Language:</b>: {{getTransformation().language}}</div>
+            <div>{{getTransformation().getExpression()}}</div>
+            <div><b>Transformation Language:</b>: {{getTransformation().getLanguage()}}</div>
         </div>
         <div *ngIf="getValueType()">
             <b>Value Type: </b>

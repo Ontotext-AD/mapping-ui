@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
 import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 import {ModelManagementService} from 'src/app/services/model-management.service';
@@ -10,20 +10,24 @@ import {SimpleIRIValueMappingImpl} from 'src/app/models/simple-iri-value-mapping
   templateUrl: './iteration.component.html',
   styleUrls: ['./iteration.component.scss'],
 })
-export class IterationComponent {
-    @Input() subject: SubjectMappingImpl | ValueMappingImpl;
+export class IterationComponent implements OnInit {
+  @Input() subject: SubjectMappingImpl | ValueMappingImpl;
 
-    constructor(private modelManagementService: ModelManagementService) {
-    }
+  constructor(private modelManagementService: ModelManagementService) {
+  }
 
-    ngOnInit(): void {
-    }
+  ngOnInit(): void {
+  }
 
-    getPropertyMappings(): PropertyMappingImpl[] {
-      return this.modelManagementService.getPropertyMappings(this.subject);
-    }
+  getPropertyMappings(): PropertyMappingImpl[] {
+    return this.modelManagementService.getPropertyMappings(this.subject);
+  }
 
-    getTypeMappings(): SimpleIRIValueMappingImpl[] {
-      return this.modelManagementService.getTypeMappings(this.subject);
-    }
+  getTypeMappings(): SimpleIRIValueMappingImpl[] {
+    return this.modelManagementService.getTypeMappings(this.subject);
+  }
+
+  trackByIndex(index: number): number {
+    return index;
+  }
 }

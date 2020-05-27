@@ -12,15 +12,13 @@ import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl'
 })
 export class CellComponent {
     @Input() cellMapping: SubjectMapping | PropertyMapping | ValueMapping | SimpleIRIValueMapping;
-    @Input() firstChild: boolean;
-    @Input() isTypeProperty: boolean;
+    @Input() isFirstChild: boolean = true;
+    @Input() isTypeProperty: boolean = false;
 
     constructor(private modelManagementService: ModelManagementService) {
     }
 
     ngOnInit(): void {
-      this.firstChild = true;
-      this.isTypeProperty = false;
     }
 
     /**

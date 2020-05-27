@@ -1,17 +1,17 @@
-<div *ngFor="let typeMapping of getTypeMappings();">
+<div>
+  <div *ngFor="let typeMapping of getTypeMappings();">
     <app-mapper-cell [cellMapping]="subject"></app-mapper-cell>
     <app-mapper-cell [isTypeProperty]="true"></app-mapper-cell>
     <app-mapper-cell [cellMapping]="typeMapping"></app-mapper-cell>
-</div>
-<div *ngFor="let property of getPropertyMappings(); let pIdx = index" class="mr-12 ml-12 mb-12">
-    <div *ngFor="let object of property.values; let oIdx = index" class="mr-12 ml-12 mb-12">
-        <app-mapper-cell [cellMapping]="subject" [firstChild] = "pIdx === oIdx && pIdx === 0" appCypressData="subject"></app-mapper-cell>
-        <app-mapper-cell [cellMapping]="property" [firstChild] = "oIdx === 0" appCypressData="predicate"></app-mapper-cell>
-        <app-mapper-cell [cellMapping]="object" appCypressData="object"></app-mapper-cell>
-        <!--TODO-->
-        <div *ngIf="object.valueType.type === 'iri'">
-            <app-iteration [subject]="object"></app-iteration>
-        </div>
+  </div>
+  <div *ngFor="let property of getPropertyMappings(); let pIdx = index; trackBy: trackByIndex" class="mr-12 ml-12 mb-12">
+    <div *ngFor="let object of property.getValues(); let oIdx = index" class="mr-12 ml-12 mb-12">
+      <app-mapper-cell [cellMapping]="subject" [isFirstChild]="pIdx === oIdx && pIdx === 0" appCypressData="subject"></app-mapper-cell>
+      <app-mapper-cell [cellMapping]="property" [isFirstChild]="oIdx === 0" appCypressData="predicate"></app-mapper-cell>
+      <app-mapper-cell [cellMapping]="object" appCypressData="object"></app-mapper-cell>
+      <div *ngIf="object.valueType.type === 'iri'">
+        <app-iteration [subject]="object"></app-iteration>
+      </div>
     </div>
+  </div>
 </div>
-
