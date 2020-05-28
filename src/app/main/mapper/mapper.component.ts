@@ -3,6 +3,9 @@ import {TabularDataService} from 'src/app/services/tabular-data.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {ModelManagementService} from 'src/app/services/model-management.service';
+import {Source} from 'src/app/models/source';
+import {ColumnsService} from 'src/app/services/rest/columns.service';
+import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 
 export interface RdfDialogData {
   rdf: string;
@@ -13,14 +16,16 @@ export interface RdfDialogData {
   templateUrl: './mapper.component.html',
   styleUrls: ['./mapper.component.scss'],
 })
-export class MapperComponent implements OnInit {
-  sources: [];
+export class MapperComponent extends OnDestroyMixin implements OnInit {
+  sources: Array<Source>;
   mapping: MappingDefinitionImpl;
   rdf: string;
 
   constructor(private tabularDataService: TabularDataService,
               private modelManagementService: ModelManagementService,
+              private columnService: ColumnsService,
               public dialog: MatDialog) {
+    super();
   }
 
   drop() {
@@ -40,7 +45,12 @@ export class MapperComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.sources = this.tabularDataService.getData();
+    this.columnService.getColumns()
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(
+            (data) => {
+              this.sources = data;
+            });
     this.mapping = this.modelManagementService.getStoredModelMapping();
   }
 }

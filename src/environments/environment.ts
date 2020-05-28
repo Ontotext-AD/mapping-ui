@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: '',
+  apiUrl: 'http://localhost:7200/rest/rdf-mapper',
   httpLoaderPrefix: './assets/i18n/',
   httpLoaderSuffix: '.json',
 };

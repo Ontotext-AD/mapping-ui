@@ -5,6 +5,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {TranslateModule} from "@ngx-translate/core";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MapperModule} from "src/app/main/mapper/mapper.module";
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 
 describe('AppComponent', () => {
@@ -12,6 +13,7 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
+        HttpClientTestingModule,
         DragDropModule,
         TranslateModule.forRoot(),
         MatDialogModule,
