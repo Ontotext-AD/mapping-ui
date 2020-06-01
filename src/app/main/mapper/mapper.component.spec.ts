@@ -8,6 +8,10 @@ import {TranslateModule} from "@ngx-translate/core";
 import {MatDialogModule} from "@angular/material/dialog";
 import {IterationComponent} from "src/app/main/mapper/iteration/iteration.component";
 import {CellComponent} from "src/app/main/mapper/cell/cell.component";
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
+
+
 
 describe('MapperComponent', () => {
   let component: MapperComponent;
@@ -25,7 +29,9 @@ describe('MapperComponent', () => {
       imports: [
         DragDropModule,
         TranslateModule.forRoot(),
-        MatDialogModule
+        MatDialogModule,
+        HttpClientTestingModule,
+        RouterTestingModule
       ]
     })
     .compileComponents();
