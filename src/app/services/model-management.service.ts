@@ -303,11 +303,10 @@ export class ModelManagementService {
 
   setValueType(cellMapping: MappingBase, type: string) {
     if (!this.getValueType(cellMapping)) {
-      console.log(cellMapping);
       this.addValueType(cellMapping);
     }
 
-    return cellMapping.getValueType().setType(Type[Helper.getEnumKeyByEnumValue(Type, type)]);
+    return cellMapping.getValueType() && cellMapping.getValueType().setType(Type[Helper.getEnumKeyByEnumValue(Type, type)]);
   }
 
   getExpression(cellMapping: MappingBase): string {
