@@ -1,5 +1,5 @@
 <div cdkDrag class="mapping-cell mapping-subject mr-12">
-    <div *ngIf="isTypeProperty">
+    <div *ngIf="isFirstChild && isTypeProperty">
         a
     </div>
     <div *ngIf="isFirstChild && !isTypeProperty">
@@ -23,7 +23,7 @@
         </div>
         <div *ngIf="getValueType()">
             <b>Value Type: </b>
-            <span *ngIf="getValueType().type !== 'iri'; else elseBlock">{{getValueType() | json}}</span>
+            <span *ngIf="getValueType().getType() !== 'iri'; else elseBlock">{{getValueType() | json}}</span>
             <ng-template #elseBlock>{{'IRI'}}</ng-template>
         </div>
     </div>

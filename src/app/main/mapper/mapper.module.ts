@@ -8,12 +8,15 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MapperComponent, RdfValueDialog} from 'src/app/main/mapper/mapper.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {DirectivesModule} from 'src/app/directives/directives.module';
 import {CellComponent} from 'src/app/main/mapper/cell/cell.component';
 import {IterationComponent} from 'src/app/main/mapper/iteration/iteration.component';
+import {MapperDialogComponent} from './mapper-dialog/mapper-dialog.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatRadioModule} from '@angular/material/radio';
 
 
 @NgModule({
@@ -25,6 +28,7 @@ import {IterationComponent} from 'src/app/main/mapper/iteration/iteration.compon
     CellComponent,
     IterationComponent,
     RdfValueDialog,
+    MapperDialogComponent,
   ],
   exports: [
     MapperComponent,
@@ -43,9 +47,12 @@ import {IterationComponent} from 'src/app/main/mapper/iteration/iteration.compon
     MatButtonModule,
     DragDropModule,
     FormsModule,
+    ReactiveFormsModule,
     MatDialogModule,
     MatInputModule,
     DirectivesModule,
+    MatCheckboxModule,
+    MatRadioModule,
   ],
 })
 export class MapperModule { }

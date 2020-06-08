@@ -2,106 +2,350 @@ import {Injectable} from '@angular/core';
 import {
   Convert,
   MappingDefinition,
-  PropertyMapping,
-  SimpleIRIValueMapping,
-  SubjectMapping,
-  ValueMapping,
+  Source,
+  Type,
 } from '../models/mapping-definition';
-import {plainToClass} from 'class-transformer';
+import {classToPlain, plainToClass} from 'class-transformer';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import amsterdamMapping from 'src/app/models/amsterdam-mapping.json';
-import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
-import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
 import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {SimpleIRIValueMappingImpl} from 'src/app/models/simple-iri-value-mapping-impl';
 import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl';
+import {SimpleLiteralValueMappingImpl} from 'src/app/models/simple-literal-value-mapping-impl';
+import {Helper} from 'src/app/utils/helper';
+import {MappingBase} from 'src/app/models/mapping-base';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModelManagementService {
-  constructor() { }
+  constructor() {
+  }
 
-  getPropertyMappings(subject: ValueMappingImpl | SubjectMappingImpl): PropertyMappingImpl[] {
-    if (subject instanceof ValueMappingImpl) {
-      return subject.getValueType().getPropertyMappings();
+  getPropertyMappings(subject: MappingBase): PropertyMappingImpl[] {
+    return subject.getPropertyMappings();
+  }
+
+  getTypeMappings(subject: MappingBase): SimpleIRIValueMappingImpl[] {
+    return subject.getTypeMappings();
+  }
+
+  getValueSource(cellMapping: MappingBase): ColumnImpl {
+    return cellMapping && cellMapping.getValueSource();
+  }
+
+  getTransformation(cellMapping: MappingBase): ValueTransformationImpl {
+    return cellMapping && cellMapping.getValueTransformation();
+  }
+
+  getValueType(cellMapping: MappingBase): IRIImpl {
+    return cellMapping && cellMapping.getValueType();
+  }
+
+  getValueTypeDatatype(cellMapping: MappingBase): SimpleIRIValueMappingImpl {
+    return this.getValueType(cellMapping) && this.getValueType(cellMapping).getDatatype();
+  }
+
+  getValueTypeDatatypeTransformation(cellMapping: MappingBase) {
+    return this.getValueTypeDatatype(cellMapping) && this.getValueTypeDatatype(cellMapping).getValueTransformation();
+  }
+
+  getValueTypeDatatypeTransformationExpression(cellMapping: MappingBase): string {
+    return this.getValueTypeDatatypeTransformation(cellMapping) && this.getValueTypeDatatypeTransformation(cellMapping).getExpression();
+  }
+
+  setValueTypeDatatypeTransformationExpression(cellMapping: MappingBase, expression: string): void {
+    if (!this.getValueType(cellMapping)) {
+      this.addValueType(cellMapping);
     }
 
-    if (subject instanceof SubjectMappingImpl) {
-      return subject.getPropertyMappings();
+    if (!this.getValueTypeDatatype(cellMapping)) {
+      this.addValueTypeDatatype(cellMapping);
+    }
+
+    if (!this.getValueTypeDatatypeTransformation(cellMapping)) {
+      this.addValueTypeDatatypeValueTransformation(cellMapping);
+    }
+
+    this.getValueTypeDatatypeTransformation(cellMapping).setExpression(expression);
+  }
+
+  private addValueTypeDatatype(cellMapping) {
+    if (!this.getValueType(cellMapping)) {
+      this.addValueType(cellMapping);
+    }
+
+    this.getValueType(cellMapping).setDatatype(new SimpleIRIValueMappingImpl(undefined, undefined));
+  }
+
+  private addValueTypeDatatypeValueTransformation(cellMapping) {
+    this.getValueTypeDatatype(cellMapping).setValueTransformation(new ValueTransformationImpl(undefined, undefined));
+  }
+
+  getValueTypeDatatypeTransformationLanguage(cellMapping: MappingBase): string {
+    return this.getValueTypeDatatypeTransformation(cellMapping) && this.getValueTypeDatatypeTransformation(cellMapping).getLanguage();
+  }
+
+  setDatatypeTransformationLanguage(cellMapping: MappingBase, language: string): void {
+    if (!this.getValueTypeDatatype(cellMapping)) {
+      this.addValueTypeDatatype(cellMapping);
+    }
+
+    if (!this.getValueTypeDatatypeTransformation(cellMapping)) {
+      this.addValueTypeDatatypeValueTransformation(cellMapping);
+    }
+
+    this.getValueTypeDatatypeTransformation(cellMapping).setLanguage(language);
+  }
+
+  getValueTypeDatatypeValueSource(cellMapping: MappingBase): ColumnImpl {
+    return this.getValueTypeDatatype(cellMapping) && this.getValueTypeDatatype(cellMapping).getValueSource() && this.getValueTypeDatatype(cellMapping).getValueSource();
+  }
+
+  setValueTypeDatatypeValueSource(cellMapping: MappingBase, source: string): void {
+    if (!this.getValueTypeDatatype(cellMapping)) {
+      this.addValueTypeDatatype(cellMapping);
+    }
+
+    this.addValueTypeDatatypeValueSource(cellMapping);
+    this.getValueTypeDatatype(cellMapping).getValueSource().setSource(Source[Helper.getEnumKeyByEnumValue(Source, source)]);
+  }
+
+  private addValueTypeDatatypeValueSource(cellMapping: MappingBase) {
+    if (!this.getValueTypeDatatype(cellMapping).getValueSource()) {
+      this.getValueTypeDatatype(cellMapping).setValueSource(new ColumnImpl(undefined, undefined, undefined));
     }
   }
 
-  getTypeMappings(subject: ValueMappingImpl|SubjectMappingImpl): SimpleIRIValueMappingImpl[] {
-    if (subject instanceof ValueMappingImpl) {
-      return subject.getValueType().getTypeMappings();
-    }
-
-    if (subject instanceof SubjectMappingImpl) {
-      return subject.getTypeMappings();
-    }
+  getValueTypeDatatypeValueColumnName(cellMapping: MappingBase): string {
+    return this.getValueTypeDatatype(cellMapping) && this.getValueTypeDatatype(cellMapping).getValueSource() && this.getValueTypeDatatype(cellMapping).getValueSource().getColumnName();
   }
 
-  /**
-   * Get the value source for the cell depending on the cellMapping type
-   *
-   * @return value source
-   */
-  getSource(cellMapping: SubjectMapping | PropertyMapping | ValueMapping | SimpleIRIValueMapping): ColumnImpl {
-    if (cellMapping instanceof SubjectMappingImpl) {
-      return cellMapping.getSubject().getValueSource();
-    }
-    if (cellMapping instanceof PropertyMappingImpl) {
-      return cellMapping.getProperty().getValueSource();
-    }
-    if (cellMapping instanceof ValueMappingImpl) {
-      return cellMapping.getValueSource();
-    }
-    if (cellMapping instanceof SimpleIRIValueMappingImpl) {
-      return cellMapping.getValueSource();
-    }
+  setValueTypeDatatypeValueColumnName(cellMapping: MappingBase, name: string): void {
+    this.addValueTypeDatatype(cellMapping);
+    this.addValueTypeDatatypeValueSource(cellMapping);
+
+    this.getValueTypeDatatype(cellMapping).getValueSource().setColumnName(name);
   }
 
-  /**
-   * Get the transformation for the cell depending on the cellMapping type
-   *
-   * @return value transformation
-   */
-  getTransformation(cellMapping: SubjectMapping | PropertyMapping | ValueMapping | SimpleIRIValueMapping): ValueTransformationImpl {
-    if (cellMapping instanceof SubjectMappingImpl) {
-      return cellMapping.getSubject().getTransformation();
-    }
-
-    if (cellMapping instanceof PropertyMappingImpl) {
-      return cellMapping.getProperty().getTransformation();
-    }
-
-    if (cellMapping instanceof ValueMappingImpl) {
-      return cellMapping.getTransformation();
-    }
-
-    if (cellMapping instanceof SimpleIRIValueMappingImpl) {
-      return cellMapping.getTransformation();
-    }
+  getValueTypeDatatypeValueConstant(cellMapping: MappingBase): string {
+    return this.getValueTypeDatatype(cellMapping) && this.getValueTypeDatatype(cellMapping).getValueSource() && this.getValueTypeDatatype(cellMapping).getValueSource().getConstant();
   }
 
-  /**
-   * Get value Type. Returns the ValueType but only when the cellMapping is a ValueMapping
-   * Only ValueMappings have such a type
-   *
-   * @return value type
-   */
-  getValueType(cellMapping: SubjectMapping | PropertyMapping | ValueMapping | SimpleIRIValueMapping): IRIImpl {
-    if (cellMapping instanceof ValueMappingImpl) {
-      return cellMapping.getValueType();
+  setValueTypeDatatypeValueConstant(cellMapping: MappingBase, constant: string): void {
+    this.addValueTypeDatatype(cellMapping);
+    this.addValueTypeDatatypeValueSource(cellMapping);
+
+    this.getValueTypeDatatype(cellMapping).getValueSource().setConstant(constant);
+  }
+
+  getValueTypeLanguage(cellMapping: MappingBase): SimpleLiteralValueMappingImpl {
+    return this.getValueType(cellMapping) && this.getValueType(cellMapping).getLanguage();
+  }
+
+  getValueTypeLanguageTransformation(cellMapping: MappingBase): ValueTransformationImpl {
+    return this.getValueTypeLanguage(cellMapping) && this.getValueTypeLanguage(cellMapping).getTransformation();
+  }
+
+  getValueTypeLanguageTransformationExpression(cellMapping: MappingBase): string {
+    return this.getValueTypeLanguageTransformation(cellMapping) && this.getValueTypeLanguageTransformation(cellMapping).getExpression();
+  }
+
+  setValueTypeLanguageTransformationExpression(cellMapping: MappingBase, expression: string): void {
+    if (!this.getValueType(cellMapping)) {
+      this.addValueType(cellMapping);
     }
-    return null;
+
+    if (!this.getValueTypeLanguage(cellMapping)) {
+      this.addLanguage(cellMapping);
+    }
+
+    if (!this.getValueTypeLanguageTransformation(cellMapping)) {
+      this.addLanguageTransformation(cellMapping);
+    }
+
+    this.getValueTypeLanguageTransformation(cellMapping).setExpression(expression);
+  }
+
+  private addValueType(cellMapping: MappingBase) {
+    return cellMapping.setValueType(new IRIImpl(undefined, undefined, undefined, undefined, undefined));
+  }
+
+  private addLanguage(cellMapping: MappingBase) {
+    return cellMapping.getValueType().setLanguage(new SimpleLiteralValueMappingImpl(undefined, undefined));
+  }
+
+  private addLanguageTransformation(cellMapping: MappingBase) {
+    return cellMapping.getValueType().getLanguage().setTransformation(new ValueTransformationImpl(undefined, undefined));
+  }
+
+  getValueTypeLanguageTransformationLanguage(cellMapping: MappingBase): string {
+    return this.getValueTypeLanguageTransformation(cellMapping) && this.getValueTypeLanguageTransformation(cellMapping).getLanguage();
+  }
+
+  setValueTypeLanguageTransformationLanguage(cellMapping: MappingBase, lang: string): void {
+    if (!this.getValueType(cellMapping)) {
+      this.addValueType(cellMapping);
+    }
+
+    if (!this.getValueTypeLanguage(cellMapping)) {
+      this.addLanguage(cellMapping);
+    }
+
+    if (!this.getValueTypeLanguageTransformation(cellMapping)) {
+      this.addLanguageTransformation(cellMapping);
+    }
+
+    this.getValueTypeLanguageTransformation(cellMapping).setLanguage(lang);
+  }
+
+  getValueTypeLanguageValueSource(cellMapping: MappingBase): ColumnImpl {
+    return this.getValueTypeLanguage(cellMapping) && this.getValueTypeLanguage(cellMapping).getValueSource();
+  }
+
+  setValueTypeLanguageValueSource(cellMapping: MappingBase, source: string): void {
+    if (!this.getValueType(cellMapping)) {
+      this.addValueType(cellMapping);
+    }
+
+    if (!this.getValueTypeLanguage(cellMapping)) {
+      this.addLanguage(cellMapping);
+    }
+
+    if (!this.getValueTypeLanguageValueSource(cellMapping)) {
+      this.addLanguageValueSource(cellMapping);
+    }
+
+    this.getValueTypeLanguageValueSource(cellMapping).setSource(Source[Helper.getEnumKeyByEnumValue(Source, source)]);
+  }
+
+  private addLanguageValueSource(cellMapping: MappingBase) {
+    return cellMapping.getValueType().getLanguage().setValueSource(new ColumnImpl(undefined, undefined, undefined));
+  }
+
+  getValueTypeLanguageColumnName(cellMapping: MappingBase): string {
+    return this.getValueTypeLanguageValueSource(cellMapping) && this.getValueTypeLanguageValueSource(cellMapping).getColumnName();
+  }
+
+  setValueTypeLanguageColumnName(cellMapping: MappingBase, name: string): void {
+    if (!this.getValueType(cellMapping)) {
+      this.addValueType(cellMapping);
+    }
+
+    if (!this.getValueTypeLanguage(cellMapping)) {
+      this.addLanguage(cellMapping);
+    }
+
+    if (!this.getValueTypeLanguageValueSource(cellMapping)) {
+      this.addLanguageValueSource(cellMapping);
+    }
+
+    this.getValueTypeLanguageValueSource(cellMapping).setColumnName(name);
+  }
+
+  getValueTypeLanguageConstant(cellMapping: MappingBase): string {
+    return this.getValueTypeLanguageValueSource(cellMapping) && this.getValueTypeLanguageValueSource(cellMapping).getConstant();
+  }
+
+  setValueTypeLanguageConstant(cellMapping: MappingBase, constant: string): void {
+    if (!this.getValueType(cellMapping)) {
+      this.addValueType(cellMapping);
+    }
+
+    if (!this.getValueTypeLanguage(cellMapping)) {
+      this.addLanguage(cellMapping);
+    }
+
+    if (!this.getValueTypeLanguageValueSource(cellMapping)) {
+      this.addLanguageValueSource(cellMapping);
+    }
+
+    this.getValueTypeLanguageValueSource(cellMapping).setConstant(constant);
+  }
+
+  getColumnName(cellMapping: MappingBase): string {
+    return this.getValueSource(cellMapping) && this.getValueSource(cellMapping).getColumnName();
+  }
+
+  setColumnName(cellMapping: MappingBase, name: string): void {
+    this.getValueSource(cellMapping).setColumnName(name);
+  }
+
+  getTypeSource(cellMapping: MappingBase): Source {
+    return this.getValueSource(cellMapping) && this.getValueSource(cellMapping).getSource();
+  }
+
+  setTypeSource(cellMapping: MappingBase, source: string): void {
+    if (!this.getValueSource(cellMapping)) {
+      this.addValueSource(cellMapping);
+    }
+    this.getValueSource(cellMapping).setSource(Source[Helper.getEnumKeyByEnumValue(Source, source)]);
+  }
+
+
+  private addValueSource(cellMapping: MappingBase) {
+    return cellMapping.setValueSource(new ColumnImpl(undefined, undefined, undefined));
+  }
+
+  getConstant(cellMapping: MappingBase): string {
+    return this.getValueSource(cellMapping) && this.getValueSource(cellMapping).getConstant();
+  }
+
+  setConstant(cellMapping: MappingBase, constant: string): void {
+    this.getValueSource(cellMapping).setConstant(constant);
+  }
+
+  getType(cellMapping: MappingBase): string {
+    return this.getValueType(cellMapping) && this.getValueType(cellMapping).getType();
+  }
+
+  setValueType(cellMapping: MappingBase, type: string) {
+    if (!this.getValueType(cellMapping)) {
+      console.log(cellMapping);
+      this.addValueType(cellMapping);
+    }
+
+    return cellMapping.getValueType().setType(Type[Helper.getEnumKeyByEnumValue(Type, type)]);
+  }
+
+  getExpression(cellMapping: MappingBase): string {
+    return this.getTransformation(cellMapping) && this.getTransformation(cellMapping).getExpression();
+  }
+
+  setExpression(cellMapping: MappingBase, transformation: string): void {
+    if (!this.getTransformation(cellMapping)) {
+      this.addValueTransformation(cellMapping);
+    }
+    this.getTransformation(cellMapping) && this.getTransformation(cellMapping).setExpression(transformation);
+  }
+
+  getTransformationLanguage(cellMapping: MappingBase): string {
+    return this.getTransformation(cellMapping) && this.getTransformation(cellMapping).getLanguage();
+  }
+
+  setTransformationLanguage(cellMapping: MappingBase, lang: string): void {
+    if (!this.getTransformation(cellMapping)) {
+      this.addValueTransformation(cellMapping);
+    }
+    this.getTransformation(cellMapping).setLanguage(lang);
+  }
+
+  addValueTransformation(cellMapping: MappingBase) {
+    cellMapping.setValueTransformation(new ValueTransformationImpl(undefined, undefined));
+  }
+
+  clearMapping(cellMapping: MappingBase): void {
+    cellMapping.clearMapping();
   }
 
   getStoredModelMapping(): MappingDefinitionImpl {
     return plainToClass(MappingDefinitionImpl, amsterdamMapping, {excludeExtraneousValues: true});
+  }
+
+  getModelMapping(mapping): {} {
+    return classToPlain(mapping);
   }
 
   mappingDefinitionToJson(mapping: MappingDefinition): JSON {

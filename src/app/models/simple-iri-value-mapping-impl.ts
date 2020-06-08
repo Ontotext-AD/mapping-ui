@@ -2,8 +2,10 @@ import {Column, SimpleIRIValueMapping, ValueTransformation} from 'src/app/models
 import {Expose, Type} from 'class-transformer';
 import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl';
 import {ColumnImpl} from 'src/app/models/column-impl';
+import {MappingBase} from 'src/app/models/mapping-base';
+import {IRIImpl} from 'src/app/models/iri-impl';
 
-export class SimpleIRIValueMappingImpl implements SimpleIRIValueMapping {
+export class SimpleIRIValueMappingImpl implements SimpleIRIValueMapping, MappingBase {
   @Expose() @Type(() => ValueTransformationImpl) transformation?: ValueTransformation;
   @Expose() @Type(() => ColumnImpl) valueSource: Column;
 
@@ -12,11 +14,11 @@ export class SimpleIRIValueMappingImpl implements SimpleIRIValueMapping {
     this.valueSource = valueSource;
   }
 
-  public getTransformation(): ValueTransformationImpl {
+  public getValueTransformation(): ValueTransformationImpl {
     return this.transformation as ValueTransformationImpl;
   }
 
-  public setTransformation(value: ValueTransformation) {
+  public setValueTransformation(value: ValueTransformation) {
     this.transformation = value;
   }
 
@@ -26,5 +28,26 @@ export class SimpleIRIValueMappingImpl implements SimpleIRIValueMapping {
 
   public setValueSource(value: Column) {
     this.valueSource = value;
+  }
+
+  public getPropertyMappings() {
+    return undefined;
+  }
+
+  public getTypeMappings(): SimpleIRIValueMappingImpl[] {
+    return undefined;
+  }
+
+  public getValueType(): IRIImpl {
+    return undefined;
+  }
+
+  public clearMapping() {
+    this.setValueTransformation(undefined);
+    this.setValueSource(undefined);
+    return this;
+  }
+
+  public setValueType(iri: IRIImpl): void { // eslint-disable-line @typescript-eslint/no-unused-vars
   }
 }

@@ -1,0 +1,168 @@
+<div class="subject-dialog" appCypressData="subject-dialog">
+  <h1 mat-dialog-title>{{"LABELS.RDF_VALUE" | translate}}</h1>
+  <div mat-dialog-content>
+    <form *ngIf="mapperForm$ | async as mapperForm" [formGroup]="mapperForm" fxLayout="column" fxLayoutAlign="start"
+          fxFlex="200">
+      <div class="typeProperty-section">
+        <div *ngIf="checkIsTypeProperty()">
+          <mat-label></mat-label>
+          <mat-checkbox formControlName="typeMapping" name="typeMapping"
+                        labelPosition="after"> {{"LABELS.TYPE_PROPERTY" | translate}} </mat-checkbox>
+        </div>
+      </div>
+
+      <div *ngIf="showOptions">
+        <div class="type-section">
+          <div fxLayout="row" fxLayoutAlign="start start">
+            <mat-radio-group class="types-radio-group" aria-label="Select an option" formControlName="type"
+                             fxLayout="column"
+                             fxLayoutAlign="space-between start">
+              <strong>{{'LABELS.TYPE' | translate}}</strong>
+              <mat-radio-button class="type-radio-button" *ngFor="let type of types" [value]="type">
+                {{getType(type)}}
+              </mat-radio-button>
+            </mat-radio-group>
+            <div class="ml-16" fxLayout="row" fxLayoutAlign="space-between start">
+              <div *ngIf="hasDatatype">
+                <strong>{{'LABELS.TYPE_SOURCE' | translate}}</strong>
+                <div fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-radio-group class="datatype-sources-radio-group" formControlName="dataTypeValueSource"
+                                   fxLayout="column"
+                                   fxLayoutAlign="space-evenly start">
+                    <mat-radio-button class="type-radio-button" *ngFor="let source of sources" [value]="source">
+                      {{getType(source)}}
+                    </mat-radio-button>
+                  </mat-radio-group>
+
+                  <mat-form-field class="ml-16" *ngIf="isDatatypeConstant">
+                    <mat-label>{{'LABELS.CONSTANT' | translate}}</mat-label>
+                    <textarea matInput formControlName="dataTypeConstant" name="dataTypeConstant" cdkTextareaAutosize
+                              cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                  </mat-form-field>
+
+                  <mat-form-field class="ml-16" *ngIf="isDatatypeColumn" style="width: 100%">
+                    <mat-label>{{'LABELS.COLUMN_NAME' | translate}}</mat-label>
+                    <textarea matInput formControlName="dataTypeColumnName" name="dataTypeColumnName"
+                              cdkTextareaAutosize
+                              cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                  </mat-form-field>
+                </div>
+
+                <strong>{{'LABELS.TYPE_TRANSFORMATION' | translate}}</strong>
+                <div fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-radio-group class="types-radio-group" formControlName="datatypeLanguage" name="datatypeLanguage"
+                                   fxLayout="column"
+                                   fxLayoutAlign="space-evenly start">
+                    <mat-radio-button class="type-radio-button" *ngFor="let lang of typeTransformationLangs"
+                                      [value]="lang">
+                      {{getType(lang)}}
+                    </mat-radio-button>
+                  </mat-radio-group>
+
+                  <mat-form-field class="ml-16" style="width: 100%;">
+                    <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
+                    <textarea matInput formControlName="datatypeTransformation" name="datatypeTransformation"
+                              cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div *ngIf="hasLanguage">
+                <strong>{{'LABELS.SOURCE' | translate}}</strong>
+                <div fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-radio-group class="datatype-sources-radio-group" formControlName="languageValueSource"
+                                   fxLayout="column"
+                                   fxLayoutAlign="space-evenly start">
+                    <mat-radio-button class="type-radio-button" *ngFor="let source of sources" [value]="source">
+                      {{getType(source)}}
+                    </mat-radio-button>
+                  </mat-radio-group>
+
+                  <mat-form-field class="ml-16" style="width: 300px;" *ngIf="isLanguageConstant">
+                    <mat-label>{{'LABELS.CONSTANT' | translate}}</mat-label>
+                    <textarea matInput formControlName="languageConstant" name="languageConstant" cdkTextareaAutosize
+                              cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                  </mat-form-field>
+
+                  <mat-form-field class="ml-16" style="width: 300px;" *ngIf="isLanguageColumn">
+                    <mat-label>{{'LABELS.COLUMN_NAME' | translate}}</mat-label>
+                    <textarea matInput formControlName="languageColumnName" name="languageColumnName"
+                              cdkTextareaAutosize
+                              cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                  </mat-form-field>
+                </div>
+
+                <strong>{{'LABELS.TRANSFORMATION' | translate}}</strong>
+                <div fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-radio-group class="types-radio-group" formControlName="languageTransformationLanguage"
+                                   name="languageTransformationLanguage"
+                                   fxLayout="column"
+                                   fxLayoutAlign="space-evenly start">
+                    <mat-radio-button class="type-radio-button" *ngFor="let lang of typeTransformationLangs"
+                                      [value]="lang">
+                      {{getType(lang)}}
+                    </mat-radio-button>
+                  </mat-radio-group>
+
+                  <mat-form-field class="ml-16" style="width: 300px;">
+                    <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
+                    <textarea matInput formControlName="languageTransformation" name="languageTransformation"
+                              cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div fxLayout="column" fxLayoutAlign="space-between start">
+          <div class="source-section">
+            <strong>{{'LABELS.SOURCE' | translate}}</strong>
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+              <mat-radio-group class="types-radio-group" formControlName="source" fxLayout="column"
+                               fxLayoutAlign="space-evenly start">
+                <mat-radio-button class="type-radio-button" *ngFor="let source of sources" [value]="source">
+                  {{getType(source)}}
+                </mat-radio-button>
+              </mat-radio-group>
+
+              <mat-form-field class="ml-16" style="width: 300px;" *ngIf="isConstant">
+                <mat-label>{{'LABELS.CONSTANT' | translate}}</mat-label>
+                <textarea matInput formControlName="constant" name="constant" cdkTextareaAutosize
+                          cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+              </mat-form-field>
+
+              <mat-form-field class="ml-16" style="width: 300px;" *ngIf="isColumn">
+                <mat-label>{{'LABELS.COLUMN_NAME' | translate}}</mat-label>
+                <textarea matInput formControlName="columnName" name="columnName" cdkTextareaAutosize
+                          cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="transformation-section">
+            <strong>{{'LABELS.TRANSFORMATION' | translate}}</strong>
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+              <mat-radio-group class="types-radio-group" formControlName="language" name="language" fxLayout="column"
+                               fxLayoutAlign="space-evenly start">
+                <mat-radio-button class="type-radio-button" *ngFor="let lang of typeTransformationLangs" [value]="lang">
+                  {{getType(lang)}}
+                </mat-radio-button>
+              </mat-radio-group>
+
+              <mat-form-field class="ml-16" style="width: 300px;" *ngIf="isTransformation">
+                <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
+                <textarea matInput formControlName="expression" name="expression"
+                          cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center end">
+    <button mat-button [mat-dialog-close]="data" (click)="save()" cdkFocusInitial>Ok</button>
+  </div>
+
+</div>
