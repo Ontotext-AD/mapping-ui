@@ -50,7 +50,7 @@ export class IRIImpl implements IRI {
   }
 
   public getLanguage(): SimpleLiteralValueMappingImpl {
-    return this.language as SimpleIRIValueMappingImpl;
+    return this.language as SimpleLiteralValueMappingImpl;
   }
 
   public setLanguage(value: SimpleLiteralValueMapping) {

@@ -1,5 +1,17 @@
 {
   "BUTTONS": {
     "DONE": "Done"
+  },
+  "LABELS": {
+    "RDF_VALUE": "RDF value",
+    "CONSTANT": "Constant",
+    "COLUMN_NAME": "Column",
+    "TYPE_PROPERTY": "a",
+    "SOURCE": "Source",
+    "TRANSFORMATION": "Transformation",
+    "EXPRESSION": "Expression",
+    "TYPE": "Type",
+    "TYPE_TRANSFORMATION": "Type transformation",
+    "TYPE_SOURCE": "Type source"
   }
 }

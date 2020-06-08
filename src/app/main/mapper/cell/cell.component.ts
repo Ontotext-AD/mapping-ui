@@ -1,9 +1,9 @@
 import {Component, Input} from '@angular/core';
-import {SimpleIRIValueMapping, SubjectMapping, ValueMapping, PropertyMapping} from 'src/app/models/mapping-definition';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
 import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl';
+import {MappingBase} from 'src/app/models/mapping-base';
 
 @Component({
   selector: 'app-mapper-cell',
@@ -11,7 +11,7 @@ import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl'
   styleUrls: ['./cell.component.scss'],
 })
 export class CellComponent {
-    @Input() cellMapping: SubjectMapping | PropertyMapping | ValueMapping | SimpleIRIValueMapping;
+    @Input() cellMapping: MappingBase;
     @Input() isFirstChild: boolean = true;
     @Input() isTypeProperty: boolean = false;
 
@@ -27,7 +27,7 @@ export class CellComponent {
      * @return value source
      */
     getValueSource(): ColumnImpl {
-      return this.modelManagementService.getSource(this.cellMapping);
+      return this.modelManagementService.getValueSource(this.cellMapping);
     }
 
     /**

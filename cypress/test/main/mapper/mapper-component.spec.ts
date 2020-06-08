@@ -32,7 +32,7 @@ describe('MapperComponent', () => {
 
     // THEN:
     // I see popup dialog
-    cy.cypressData(MapperComponentSelectors.OBJECT_MAPPER_DIALOG_SELECTOR).should('be.visible');
+    cy.cypressData(MapperComponentSelectors.SUBJECT_MAPPER_DIALOG_SELECTOR).should('be.visible');
 
   });
 
