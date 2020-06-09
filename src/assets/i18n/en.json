@@ -1,6 +1,7 @@
 {
   "BUTTONS": {
-    "DONE": "Done"
+    "DONE": "Done",
+    "SAVE": "Save"
   },
   "LABELS": {
     "RDF_VALUE": "RDF value",

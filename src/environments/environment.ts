@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:7200/rest/rdf-mapper',
+  restApiUrl: 'http://localhost:7200/rest/rdf-mapper',
+  mappingApiUrl: 'http://localhost:7200/orefine/command',
   httpLoaderPrefix: './assets/i18n/',
   httpLoaderSuffix: '.json',
 };

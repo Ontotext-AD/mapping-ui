@@ -9,6 +9,10 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {Triple} from "src/app/models/triple";
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
+
+
 
 describe('MapperDialogComponent', () => {
   let component: MapperDialogComponent;
@@ -24,7 +28,9 @@ describe('MapperDialogComponent', () => {
         MatCheckboxModule,
         ReactiveFormsModule,
         MatButtonModule,
-        MatDialogModule
+        MatDialogModule,
+        HttpClientTestingModule,
+        RouterTestingModule
       ],
       providers: [
         TranslateService,

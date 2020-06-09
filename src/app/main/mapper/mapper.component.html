@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutAlign="end stretch" cdkDropListGroup appCypressData="mapper">
-  <app-header></app-header>
+  <app-header (savedMapping)="onSavedMapping()"></app-header>
   <app-definitions [sources]="sources"></app-definitions>
 
   <div class="mr-12 ml-12 mb-12">Base IRI: {{mapping.getBaseIRI()}}</div>

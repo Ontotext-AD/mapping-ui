@@ -51,7 +51,17 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
             (data) => {
               this.sources = data;
             });
-    this.mapping = this.modelManagementService.getStoredModelMapping();
+    this.modelManagementService.getStoredModelMapping()
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((data) => {
+          this.mapping = data;
+        });
+  }
+
+  onSavedMapping() {
+    this.modelManagementService.storeModelMapping(this.mapping)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe();
   }
 }
 
