@@ -1,13 +1,13 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {HeaderComponent} from 'src/app/main/mapper/header/header.component';
+import {HeaderComponent, JSONValueDialog} from 'src/app/main/mapper/header/header.component';
 import {SourceComponent} from 'src/app/main/mapper/sources/source.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {MapperComponent, RdfValueDialog} from 'src/app/main/mapper/mapper.component';
+import {MapperComponent} from 'src/app/main/mapper/mapper.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
@@ -24,10 +24,9 @@ import {MatRadioModule} from '@angular/material/radio';
     MapperComponent,
     HeaderComponent,
     SourceComponent,
-    RdfValueDialog,
+    JSONValueDialog,
     CellComponent,
     IterationComponent,
-    RdfValueDialog,
     MapperDialogComponent,
   ],
   exports: [
@@ -36,7 +35,7 @@ import {MatRadioModule} from '@angular/material/radio';
     CellComponent,
     IterationComponent,
     SourceComponent,
-    RdfValueDialog,
+    JSONValueDialog,
   ],
   imports: [
     CommonModule,

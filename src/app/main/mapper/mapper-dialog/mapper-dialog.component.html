@@ -4,7 +4,7 @@
     <form *ngIf="mapperForm$ | async as mapperForm" [formGroup]="mapperForm" fxLayout="column" fxLayoutAlign="start"
           fxFlex="200">
       <div class="typeProperty-section">
-        <div *ngIf="checkIsTypeProperty()">
+        <div *ngIf="isPredicate()">
           <mat-label></mat-label>
           <mat-checkbox formControlName="typeMapping" name="typeMapping"
                         labelPosition="after"> {{"LABELS.TYPE_PROPERTY" | translate}} </mat-checkbox>
@@ -17,7 +17,7 @@
             <mat-radio-group class="types-radio-group" aria-label="Select an option" formControlName="type"
                              fxLayout="column"
                              fxLayoutAlign="space-between start">
-              <strong>{{'LABELS.TYPE' | translate}}</strong>
+              <strong *ngIf="isTypes()">{{'LABELS.TYPE' | translate}}</strong>
               <mat-radio-button class="type-radio-button" *ngFor="let type of types" [value]="type">
                 {{getType(type)}}
               </mat-radio-button>

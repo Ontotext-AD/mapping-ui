@@ -12,6 +12,12 @@ import {MappingDetails} from 'src/app/models/mapping-details';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {Language} from 'src/app/models/language';
 import {MappingBase} from 'src/app/models/mapping-base';
+import {SimpleIRIValueMappingImpl} from 'src/app/models/simple-iri-value-mapping-impl';
+import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
+import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
+import {TypeMapping} from 'src/app/models/type-mapping';
+import {IRIImpl} from 'src/app/models/iri-impl';
+import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
 
 export interface SubjectMapperData {
   mappingData: Triple,
@@ -73,20 +79,30 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   private setSelected() {
-    if (this.SUBJECT === this.data.selected) {
+    if (this.isSubject()) {
       this.selected = this.data.mappingData.getSubject();
-    } else if (this.PREDICATE === this.data.selected) {
+    } else if (this.isPredicate()) {
       this.selected = this.data.mappingData.getPredicate();
-    } else if (this.OBJECT === this.data.selected) {
+    } else if (this.isObject()) {
       this.selected = this.data.mappingData.getObject();
     }
   }
 
   private setTypes() {
     this.isTypeProperty = this.data.mappingData.typeProperty();
+    this.types = [];
+    this.typeKeys = [];
 
-    this.types = Helper.enumToArray(Type);
-    this.typeKeys = Helper.enumKeysToArray(Type);
+
+    if (this.data.selected === this.OBJECT) {
+      this.types.push(...Helper.enumToArray(TypeMapping));
+      this.typeKeys.push(...Helper.enumToArray(TypeMapping));
+      this.types.push(...Helper.enumToArray(Type));
+      this.typeKeys.push(...Helper.enumKeysToArray(Type));
+    } else if (this.data.selected === this.SUBJECT && this.data.mappingData.getSubject() instanceof ValueMappingImpl) {
+      this.types.push(...Helper.enumToArray(Type));
+      this.typeKeys.push(...Helper.enumKeysToArray(Type));
+    }
 
     this.sources = Helper.enumToArray(Source);
     this.typeKeys.push(...Helper.enumKeysToArray(Source));
@@ -100,7 +116,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     mappingDetails.columnName = this.modelManagementService.getColumnName(selected);
     mappingDetails.source = this.modelManagementService.getTypeSource(selected);
     mappingDetails.constant = this.modelManagementService.getConstant(selected);
-    mappingDetails.type = this.modelManagementService.getType(selected);
+    mappingDetails.type = this.checkIsTypePropertyObject() ? TypeMapping.a : this.modelManagementService.getType(selected);
     mappingDetails.expression = this.modelManagementService.getExpression(selected);
     mappingDetails.language = this.modelManagementService.getTransformationLanguage(selected);
 
@@ -218,87 +234,178 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.mapperForm$
         .pipe(takeUntil(componentDestroyed(this)))
         .subscribe((form) => {
-          this.modelManagementService.clearMapping(this.selected);
-          this.modelManagementService.setValueType(this.selected, form.value.type);
-          this.modelManagementService.setTypeSource(this.selected, form.value.source);
-
-          const constant = form.value.constant;
-          if (this.isConstant && !Helper.isBlank(constant)) {
-            this.modelManagementService.setConstant(this.selected, constant);
-          }
-
-          const columnName = form.value.columnName;
-          if (this.isColumn && !Helper.isBlank(columnName)) {
-            this.modelManagementService.setColumnName(this.selected, columnName);
-          }
-
-          const expression = form.value.expression;
-          if (this.isTransformation && !Helper.isBlank(expression)) {
-            this.modelManagementService.setExpression(this.selected, expression);
-            this.modelManagementService.setTransformationLanguage(this.selected, form.value.language);
-          }
-
-          if (this.hasDatatype) {
-            const dataTypeColumnName = form.value.dataTypeColumnName;
-            const dataTypeConstant = form.value.dataTypeConstant;
-
-            if (this.isDatatypeColumn && !Helper.isBlank(dataTypeColumnName)) {
-              this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, undefined);
-              this.modelManagementService.setValueTypeDatatypeValueColumnName(this.selected, dataTypeColumnName);
-              this.modelManagementService.setValueTypeDatatypeValueSource(this.selected, form.value.dataTypeValueSource);
-            } else if (this.isDatatypeConstant && !Helper.isBlank(dataTypeConstant)) {
-              this.modelManagementService.setValueTypeDatatypeValueColumnName(this.selected, undefined);
-              this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, dataTypeConstant);
-              this.modelManagementService.setValueTypeDatatypeValueSource(this.selected, form.value.dataTypeValueSource);
-            } else if (!this.isDatatypeConstant && !this.isDatatypeColumn) {
-              this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, undefined);
-              this.modelManagementService.setValueTypeDatatypeValueColumnName(this.selected, undefined);
-              this.modelManagementService.setValueTypeDatatypeValueSource(this.selected, form.value.dataTypeValueSource);
-            }
-
-            const datatypeTransformation = form.value.datatypeTransformation;
-            if (!Helper.isBlank(datatypeTransformation)) {
-              this.modelManagementService.setValueTypeDatatypeTransformationExpression(this.selected, datatypeTransformation);
-              this.modelManagementService.setDatatypeTransformationLanguage(this.selected, form.value.datatypeLanguage);
-            }
-          }
-
-          if (this.hasLanguage) {
-            const languageColumnName = form.value.languageColumnName;
-            const languageConstant = form.value.languageConstant;
-
-            if (this.isLanguageColumn && !Helper.isBlank(languageColumnName)) {
-              this.modelManagementService.setValueTypeLanguageConstant(this.selected, undefined);
-              this.modelManagementService.setValueTypeLanguageColumnName(this.selected, languageColumnName);
-              this.modelManagementService.setValueTypeLanguageValueSource(this.selected, form.value.languageValueSource);
-            } else if (this.isLanguageConstant && !Helper.isBlank(languageConstant)) {
-              this.modelManagementService.setValueTypeLanguageColumnName(this.selected, undefined);
-              this.modelManagementService.setValueTypeLanguageConstant(this.selected, languageConstant);
-              this.modelManagementService.setValueTypeLanguageValueSource(this.selected, form.value.languageValueSource);
-            } else if (!this.isLanguageConstant && !this.isLanguageColumn) {
-              this.modelManagementService.setValueTypeLanguageConstant(this.selected, undefined);
-              this.modelManagementService.setValueTypeLanguageColumnName(this.selected, undefined);
-              this.modelManagementService.setValueTypeLanguageValueSource(this.selected, form.value.languageValueSource);
-            }
-
-            const languageTransformation = form.value.languageTransformation;
-            if (!Helper.isBlank(languageTransformation)) {
-              this.modelManagementService.setValueTypeLanguageTransformationExpression(this.selected, languageTransformation);
-              this.modelManagementService.setValueTypeLanguageTransformationLanguage(this.selected, form.value.languageTransformationLanguage);
-            }
+          if (this.selected) {
+            this.modelManagementService.clearMapping(this.selected);
+            this.setData(form);
+          } else {
+            this.createMappingObject(form);
+            this.setData(form);
+            this.setMappingObjectInModel(form);
           }
         });
   }
 
-  public ngOnDestroy(): void {
+  private setData(form: FormGroup) {
+    this.setValueType(form);
+    this.setTypeSource(form);
+    this.setTypeTransformation(form);
   }
 
-  public checkIsTypeProperty(): boolean {
-    return this.isTypeProperty && this.PREDICATE === this.data.selected;
+  private setValueType(form: FormGroup): void {
+    this.modelManagementService.setValueType(this.selected, form.value.type);
+
+    if (this.hasDatatype) {
+      const dataTypeColumnName = form.value.dataTypeColumnName;
+      const dataTypeConstant = form.value.dataTypeConstant;
+
+      if (this.isDatatypeColumn && !Helper.isBlank(dataTypeColumnName)) {
+        this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, undefined);
+        this.modelManagementService.setValueTypeDatatypeValueColumnName(this.selected, dataTypeColumnName);
+        this.modelManagementService.setValueTypeDatatypeValueSource(this.selected, form.value.dataTypeValueSource);
+      } else if (this.isDatatypeConstant && !Helper.isBlank(dataTypeConstant)) {
+        this.modelManagementService.setValueTypeDatatypeValueColumnName(this.selected, undefined);
+        this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, dataTypeConstant);
+        this.modelManagementService.setValueTypeDatatypeValueSource(this.selected, form.value.dataTypeValueSource);
+      } else if (!this.isDatatypeConstant && !this.isDatatypeColumn) {
+        this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, undefined);
+        this.modelManagementService.setValueTypeDatatypeValueColumnName(this.selected, undefined);
+        this.modelManagementService.setValueTypeDatatypeValueSource(this.selected, form.value.dataTypeValueSource);
+      }
+
+      const datatypeTransformation = form.value.datatypeTransformation;
+      if (!Helper.isBlank(datatypeTransformation)) {
+        this.modelManagementService.setValueTypeDatatypeTransformationExpression(this.selected, datatypeTransformation);
+        this.modelManagementService.setDatatypeTransformationLanguage(this.selected, form.value.datatypeLanguage);
+      }
+    }
+
+    if (this.hasLanguage) {
+      const languageColumnName = form.value.languageColumnName;
+      const languageConstant = form.value.languageConstant;
+
+      if (this.isLanguageColumn && !Helper.isBlank(languageColumnName)) {
+        this.modelManagementService.setValueTypeLanguageConstant(this.selected, undefined);
+        this.modelManagementService.setValueTypeLanguageColumnName(this.selected, languageColumnName);
+        this.modelManagementService.setValueTypeLanguageValueSource(this.selected, form.value.languageValueSource);
+      } else if (this.isLanguageConstant && !Helper.isBlank(languageConstant)) {
+        this.modelManagementService.setValueTypeLanguageColumnName(this.selected, undefined);
+        this.modelManagementService.setValueTypeLanguageConstant(this.selected, languageConstant);
+        this.modelManagementService.setValueTypeLanguageValueSource(this.selected, form.value.languageValueSource);
+      } else if (!this.isLanguageConstant && !this.isLanguageColumn) {
+        this.modelManagementService.setValueTypeLanguageConstant(this.selected, undefined);
+        this.modelManagementService.setValueTypeLanguageColumnName(this.selected, undefined);
+        this.modelManagementService.setValueTypeLanguageValueSource(this.selected, form.value.languageValueSource);
+      }
+
+      const languageTransformation = form.value.languageTransformation;
+      if (!Helper.isBlank(languageTransformation)) {
+        this.modelManagementService.setValueTypeLanguageTransformationExpression(this.selected, languageTransformation);
+        this.modelManagementService.setValueTypeLanguageTransformationLanguage(this.selected, form.value.languageTransformationLanguage);
+      }
+    }
+  }
+
+  private setTypeSource(form: FormGroup): void {
+    this.modelManagementService.setTypeSource(this.selected, form.value.source);
+
+    const constant = form.value.constant;
+    if (this.isConstant && !Helper.isBlank(constant)) {
+      this.modelManagementService.setConstant(this.selected, constant);
+    }
+
+    const columnName = form.value.columnName;
+    if (this.isColumn && !Helper.isBlank(columnName)) {
+      this.modelManagementService.setColumnName(this.selected, columnName);
+    }
+  }
+
+  private setTypeTransformation(form: FormGroup): void {
+    const expression = form.value.expression;
+    if (this.isTransformation && !Helper.isBlank(expression)) {
+      this.modelManagementService.setExpression(this.selected, expression);
+      this.modelManagementService.setTransformationLanguage(this.selected, form.value.language);
+    }
+  }
+
+  private createMappingObject(form: FormGroup): void {
+    if (this.isSubject()) {
+      this.createSubject();
+    } else if (this.isPredicate() && form.value.type !== TypeMapping.a) {
+      this.createPredicate();
+    } else if (this.isObject()) {
+      this.createObject(form);
+    }
+  }
+
+  private createSubject() {
+    if (this.data.mappingData.isRoot) {
+      this.selected = new SubjectMappingImpl([], new SimpleIRIValueMappingImpl(undefined, undefined), []);
+    }
+  }
+
+  private createPredicate() {
+    this.selected = new PropertyMappingImpl(undefined, undefined);
+  }
+
+  private createObject(form) {
+    if (form.value.type !== TypeMapping.a && form.value.type !== Type.IRI) {
+      this.selected = new ValueMappingImpl(undefined, undefined, undefined);
+    } else if (form.value.type === Type.IRI) {
+      this.selected = new ValueMappingImpl(undefined, undefined, new IRIImpl([], undefined, [], undefined, undefined));
+    } else if (form.value.type === TypeMapping.a) {
+      this.selected = new SimpleIRIValueMappingImpl(undefined, undefined);
+    }
+  }
+
+  private setMappingObjectInModel(form: FormGroup): void {
+    if (this.isSubject()) {
+      this.data.mappingData.setSubject(this.selected);
+    } else if (this.isPredicate()) {
+      if (form.value.typeMapping) {
+        this.data.mappingData.setTypeProperty(true);
+        this.selected = undefined;
+      } else {
+        const subject = this.data.mappingData.getSubject();
+        this.modelManagementService.setPropertyMapping(subject, this.selected as PropertyMappingImpl);
+      }
+      this.data.mappingData.setPredicate(this.selected);
+    } else if (this.isObject()) {
+      const subject = this.data.mappingData.getSubject();
+      if (form.value.type === TypeMapping.a) {
+        this.modelManagementService.setTypeMapping(subject, this.selected as SimpleIRIValueMappingImpl);
+      } else {
+        const predicate = this.data.mappingData.getPredicate();
+        this.modelManagementService.setValueMapping(subject, predicate, this.selected as ValueMappingImpl);
+      }
+      this.data.mappingData.setObject(this.selected);
+    }
+  }
+
+  public isSubject(): boolean {
+    return this.SUBJECT === this.data.selected;
+  }
+
+  public isPredicate(): boolean {
+    return this.PREDICATE === this.data.selected;
+  }
+
+  public isObject(): boolean {
+    return this.OBJECT === this.data.selected;
+  }
+
+  public checkIsTypePropertyObject(): boolean {
+    return this.isTypeProperty && this.isObject();
   }
 
   public getType(typ: string) {
     return Helper.getEnumKeyByEnumValue(Type, typ) || Helper.getEnumKeyByEnumValue(Source, typ) ||
-      Helper.getEnumKeyByEnumValue(Language, typ);
+      Helper.getEnumKeyByEnumValue(Language, typ) || Helper.getEnumKeyByEnumValue(TypeMapping, typ);
+  }
+
+  public isTypes() {
+    return this.types.length > 0;
+  }
+
+  public ngOnDestroy(): void {
   }
 }

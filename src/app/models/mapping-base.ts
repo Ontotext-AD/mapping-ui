@@ -13,11 +13,25 @@ export interface MappingBase {
   getTypeMappings(): SimpleIRIValueMappingImpl[] ;
 
   /**
+   * Setes type mappings array
+   *
+   * @param mappings
+   */
+  setTypeMappings(mappings: SimpleIRIValueMappingImpl[]);
+
+  /**
    * Get the property mappings for the cell
    *
    * @return array of property mappings
    */
   getPropertyMappings(): PropertyMappingImpl[];
+
+  /**
+   * Sets property mappings array
+   *
+   * @param mappings
+   */
+  setPropertyMappings(mappings: PropertyMappingImpl[]);
 
   /**
    * Get the value source for the cell depending on the cellMapping type

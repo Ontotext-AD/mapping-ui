@@ -15,6 +15,7 @@ import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl'
 import {SimpleLiteralValueMappingImpl} from 'src/app/models/simple-literal-value-mapping-impl';
 import {Helper} from 'src/app/utils/helper';
 import {MappingBase} from 'src/app/models/mapping-base';
+import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 import {MappingDefinitionService} from './rest/mapping-definition.service';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -357,5 +358,31 @@ export class ModelManagementService {
 
   mappingDefinitionToJson(mapping: MappingDefinition): JSON {
     return JSON.parse(Convert.mappingDefinitionToJson(mapping));
+  }
+
+  public setTypeMapping(subject: MappingBase, selected: SimpleIRIValueMappingImpl) {
+    if (!subject.getTypeMappings()) {
+      subject.setTypeMappings([]);
+    }
+    subject.getTypeMappings().push(selected);
+  }
+
+  public setValueMapping(subject: MappingBase, predicate: PropertyMappingImpl, selected: ValueMappingImpl) {
+    subject.getPropertyMappings().forEach((mapping) => {
+      if (mapping === predicate) {
+        if (!predicate.getValues()) {
+          predicate.setValues([]);
+        }
+        predicate.getValues().push(selected);
+        return;
+      }
+    });
+  }
+
+  public setPropertyMapping(subject: MappingBase, predicate: PropertyMappingImpl) {
+    if (!subject.getPropertyMappings()) {
+      subject.setPropertyMappings([]);
+    }
+    subject.getPropertyMappings().push(predicate);
   }
 }

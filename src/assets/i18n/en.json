@@ -1,6 +1,8 @@
 {
   "BUTTONS": {
     "DONE": "Done",
+    "VIEW_JSON": "View JSON",
+    "NEW": "New mapping",
     "SAVE": "Save"
   },
   "LABELS": {

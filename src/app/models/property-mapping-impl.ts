@@ -72,4 +72,10 @@ export class PropertyMappingImpl implements PropertyMapping, MappingBase {
   public setValueTransformation(transformation: ValueTransformationImpl) {
     this.getProperty().setValueTransformation(transformation);
   }
+
+  public setPropertyMappings(mappings: PropertyMappingImpl[]) { // eslint-disable-line @typescript-eslint/no-unused-vars
+  }
+
+  public setTypeMappings(mappings: SimpleIRIValueMappingImpl[]) { // eslint-disable-line @typescript-eslint/no-unused-vars
+  }
 }
