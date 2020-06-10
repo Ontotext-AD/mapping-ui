@@ -20,7 +20,7 @@ export class MappingDefinitionService extends RestService {
   getExtendedAPIURL(extension: string) : Observable<string> {
     return this.dataProviderID.pipe(switchMap((dataProviderID) => {
       if (dataProviderID) {
-        return of(`${this.apiUrl}` + extension + '?project=' + dataProviderID.substring('ontorefine:'.length));
+        return of(`${this.apiUrl}${extension}?project=${dataProviderID.substring('ontorefine:'.length)}`);
       } else {
         return EMPTY;
       }
