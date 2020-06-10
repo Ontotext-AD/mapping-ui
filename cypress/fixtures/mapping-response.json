@@ -1,0 +1,49 @@
+{
+  "overlayModels": {
+    "mappingDefinition": {
+      "mappingDefinition": {
+        "baseIRI": "http://amsterdam.com/resource/",
+        "namespaces": {
+          "geo": "http://www.opengis.net/ont/geosparql#",
+          "sf": "http://www.opengis.net/ont/sf#"
+        },
+        "subjectMappings": [
+          {
+            "subject": {
+              "valueSource": {
+                "source": "column",
+                "columnName": "Trcid"
+              },
+              "transformation": {
+                "language": "grel",
+                "expression": "\"https://data.amsterdam.nl/resource/restaurant/\" + value"
+              }
+            },
+            "typeMappings": [],
+            "propertyMappings": [
+              {
+                "property": {
+                  "valueSource": {
+                    "source": "constant",
+                    "constant": "name"
+                  }
+                },
+                "values": [
+                  {
+                    "valueType": {
+                      "type": "literal"
+                    },
+                    "valueSource": {
+                      "source": "column",
+                      "columnName": "TitleEN"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

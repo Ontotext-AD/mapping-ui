@@ -10,12 +10,17 @@ import {IterationComponent} from "src/app/main/mapper/iteration/iteration.compon
 import {CellComponent} from "src/app/main/mapper/cell/cell.component";
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
-
-
+import {of} from 'rxjs';
+import { ModelManagementService } from 'src/app/services/model-management.service';
+import amsterdamMapping from 'src/app/models/amsterdam-mapping.json';
+import {plainToClass} from 'class-transformer';
+import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 
 describe('MapperComponent', () => {
   let component: MapperComponent;
   let fixture: ComponentFixture<MapperComponent>;
+  let model: ModelManagementService;
+  let spy;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -38,6 +43,8 @@ describe('MapperComponent', () => {
   }));
 
   beforeEach(() => {
+    model = TestBed.get(ModelManagementService);
+    spy = jest.spyOn(model, 'getStoredModelMapping').mockReturnValue(of(plainToClass(MappingDefinitionImpl, amsterdamMapping)));
     fixture = TestBed.createComponent(MapperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

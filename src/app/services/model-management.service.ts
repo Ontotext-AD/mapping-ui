@@ -7,7 +7,6 @@ import {
 } from '../models/mapping-definition';
 import {classToPlain, plainToClass} from 'class-transformer';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
-import amsterdamMapping from 'src/app/models/amsterdam-mapping.json';
 import {IRIImpl} from 'src/app/models/iri-impl';
 import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
 import {ColumnImpl} from 'src/app/models/column-impl';
@@ -16,13 +15,16 @@ import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl'
 import {SimpleLiteralValueMappingImpl} from 'src/app/models/simple-literal-value-mapping-impl';
 import {Helper} from 'src/app/utils/helper';
 import {MappingBase} from 'src/app/models/mapping-base';
+import {MappingDefinitionService} from './rest/mapping-definition.service';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModelManagementService {
-  constructor() {
-  }
+  constructor(private mappingDefinitionService: MappingDefinitionService) { }
 
   getPropertyMappings(subject: MappingBase): PropertyMappingImpl[] {
     return subject.getPropertyMappings();
@@ -339,8 +341,14 @@ export class ModelManagementService {
     cellMapping.clearMapping();
   }
 
-  getStoredModelMapping(): MappingDefinitionImpl {
-    return plainToClass(MappingDefinitionImpl, amsterdamMapping, {excludeExtraneousValues: true});
+  getStoredModelMapping(): Observable<MappingDefinitionImpl> {
+    return this.mappingDefinitionService.getMappingDefinition().pipe(map((md) => {
+      return plainToClass(MappingDefinitionImpl, md, {excludeExtraneousValues: true});
+    }));
+  }
+
+  storeModelMapping(mappingDefinition: MappingDefinitionImpl): Observable<void> {
+    return this.mappingDefinitionService.saveMappingDefinition(this.mappingDefinitionToJson(mappingDefinition));
   }
 
   getModelMapping(mapping): {} {

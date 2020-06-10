@@ -9,6 +9,7 @@ import {Triple} from 'src/app/models/triple';
 import {OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
 import {Type} from 'src/app/models/mapping-definition';
 
+
 @Component({
   selector: 'app-iteration',
   templateUrl: './iteration.component.html',
@@ -16,6 +17,9 @@ import {Type} from 'src/app/models/mapping-definition';
 })
 export class IterationComponent implements OnInit {
   @Input() mapping: MappingDefinitionImpl;
+  ngOnChanges() {
+    this.init();
+  }
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;

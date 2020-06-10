@@ -4,6 +4,8 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {Source} from 'src/app/models/source';
+import {environment} from 'src/environments/environment';
+
 
 import {ActivatedRoute} from '@angular/router';
 
@@ -15,6 +17,7 @@ export class ColumnsService extends RestService {
               protected route: ActivatedRoute) {
     super(route);
     this.apiName = '/columns/';
+    this.apiUrl = environment.restApiUrl;
   }
 
   getColumns(): Observable<Array<Source>> {

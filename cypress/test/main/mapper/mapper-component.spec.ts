@@ -1,12 +1,24 @@
 import {MapperComponentSelectors} from "../../../../cypress/utils/selectors/mapper-component.selectors";
 
-
 describe('MapperComponent', () => {
 
   it('should render mapper', () => {
     // GIVEN:
     // I visit home page
-    cy.visit('');
+    cy.fixture('mapping-response').as('mappingResponse'); 
+    cy.server();    
+    cy.route({
+      method: 'GET',      
+      url: '/rest/rdf-mapper/columns/ontorefine:123',
+      response: ['col1', 'col2']        
+    });
+    cy.route({
+      method: 'GET',      
+      url: '/orefine/command/core/get-models/?project=123',
+      response: '@mappingResponse'
+    });
+    cy.visit('?dataProviderID=ontorefine:123');
+
     // THEN:
     // I see header content
     cy.cypressData(MapperComponentSelectors.MAPPER_SELECTOR).should('be.visible');

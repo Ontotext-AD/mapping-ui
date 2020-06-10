@@ -1,17 +1,17 @@
 import {environment} from 'src/environments/environment';
 import {HttpHeaders} from '@angular/common/http';
 import {ActivatedRoute, Params} from '@angular/router';
-import {Observable, of} from 'rxjs';
+import {Observable, of, EMPTY} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
 export class RestService {
   dataProviderID: Observable<string>;
   apiName: String = '';
-  apiUrl = environment.apiUrl;
+  apiUrl = environment.restApiUrl;
 
   constructor(protected route: ActivatedRoute) {
     this.dataProviderID = this.route.queryParams.pipe(switchMap((params: Params) => {
-      return (params.dataProviderID) ? of(params.dataProviderID) : of('');
+      return (params.dataProviderID) ? of(params.dataProviderID) : EMPTY;
     }));
   }
 
