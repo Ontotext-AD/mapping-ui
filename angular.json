@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "mapping-ui": {
+    "rdf-mapping-editor": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/mapping-ui",
+            "outputPath": "dist/rdf-mapping-editor",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -68,18 +68,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "mapping-ui:build"
+            "browserTarget": "rdf-mapping-editor:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "mapping-ui:build:production"
+              "browserTarget": "rdf-mapping-editor:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mapping-ui:build"
+            "browserTarget": "rdf-mapping-editor:build"
           }
         },
         "lint": {
@@ -97,5 +97,5 @@
       }
     }
   },
-  "defaultProject": "mapping-ui"
+  "defaultProject": "rdf-mapping-editor"
 }
