@@ -6,6 +6,9 @@ import {ModelManagementService} from 'src/app/services/model-management.service'
 import {Source} from 'src/app/models/source';
 import {ColumnsService} from 'src/app/services/rest/columns.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
+import {EMPTY_MAPPING} from 'src/app/utils/constants';
+import {plainToClass} from 'class-transformer';
+
 
 export interface RdfDialogData {
   rdf: string;
@@ -18,7 +21,7 @@ export interface RdfDialogData {
 })
 export class MapperComponent extends OnDestroyMixin implements OnInit {
   sources: Array<Source>;
-  mapping: MappingDefinitionImpl;
+  mapping: MappingDefinitionImpl = plainToClass(MappingDefinitionImpl, EMPTY_MAPPING);
   rdf: string;
 
   constructor(private tabularDataService: TabularDataService,
