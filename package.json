@@ -1,6 +1,7 @@
 {
-  "name": "mapping-ui",
-  "version": "0.0.0",
+  "name": "rdf-mapping-editor",
+  "version": "1.0.0-TR1",
+  "description": "A web component to create a table to RDF data mapping.",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -14,7 +15,27 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run --spec cypress/test/**/*.spec.ts"
   },
-  "private": true,
+  "files": [
+    "dist/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ontotext-AD/mapping-ui.git"
+  },
+  "keywords": [
+    "graphdb",
+    "mapping",
+    "refine"
+  ],
+  "author": {
+    "name": "\"Sirma AI\" JSC, trading as Ontotext",
+    "url": "https://www.ontotext.com/"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Ontotext-AD/mapping-ui/issues"
+  },
+  "homepage": "https://github.com/Ontotext-AD/mapping-ui#readme",
   "dependencies": {
     "@angular/animations": "^9.1.6",
     "@angular/cdk": "^9.2.3",
