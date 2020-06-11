@@ -11,6 +11,7 @@ import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/
 import {Triple} from "src/app/models/triple";
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 
 
@@ -30,7 +31,8 @@ describe('MapperDialogComponent', () => {
         MatButtonModule,
         MatDialogModule,
         HttpClientTestingModule,
-        RouterTestingModule
+        RouterTestingModule,
+        MatAutocompleteModule
       ],
       providers: [
         TranslateService,

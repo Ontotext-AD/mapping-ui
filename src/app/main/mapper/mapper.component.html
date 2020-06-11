@@ -4,5 +4,5 @@
 
   <div class="mr-12 ml-12 mb-12">Base IRI: {{mapping.getBaseIRI()}}</div>
   <div class="mr-12 ml-12 mb-12">Namespaces: {{mapping.getNamespaces() | json}}</div>
-  <app-iteration [mapping]="mapping"></app-iteration>
+  <app-iteration [mapping]="mapping" [sources]="sources"></app-iteration>
 </div>

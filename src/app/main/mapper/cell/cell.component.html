@@ -1,4 +1,4 @@
-<div cdkDrag class="mapping-cell mapping-subject mr-12">
+<div cdkDrag class="mapping-cell mapping-subject mr-12" cdkDropList (cdkDropListDropped)="drop($event)">
     <div *ngIf="isFirstChild && isTypeProperty">
         a
     </div>

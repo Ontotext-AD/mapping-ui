@@ -1,12 +1,12 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {Observable, of} from 'rxjs';
+import {merge, Observable, of} from 'rxjs';
 import {Triple} from 'src/app/models/triple';
 import {OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
 import {Source, Type} from 'src/app/models/mapping-definition';
 import {Helper} from 'src/app/utils/helper';
-import {takeUntil} from 'rxjs/operators';
+import {map, startWith, takeUntil} from 'rxjs/operators';
 import {componentDestroyed, OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {MappingDetails} from 'src/app/models/mapping-details';
 import {ModelManagementService} from 'src/app/services/model-management.service';
@@ -21,7 +21,9 @@ import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
 
 export interface SubjectMapperData {
   mappingData: Triple,
-  selected: string
+  selected: string,
+  mappingDetails: MappingDetails,
+  sources: string[];
 }
 
 @Component({
@@ -54,6 +56,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   isTransformation: boolean;
   hasDatatype: boolean;
   hasLanguage: boolean
+  filteredColumnNames: Observable<string[]>;
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
@@ -63,8 +66,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   ngOnInit(): void {
-    this.mappingDetails = {} as MappingDetails;
-
+    this.mappingDetails = {...this.data.mappingDetails, ...{} as MappingDetails};
     this.init();
     this.mapperForm$ = of(this.createMapperForm(this.mappingDetails));
 
@@ -94,11 +96,12 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.typeKeys = [];
 
 
-    if (this.data.selected === this.OBJECT) {
-      this.types.push(...Helper.enumToArray(TypeMapping));
-      this.typeKeys.push(...Helper.enumToArray(TypeMapping));
+    if (this.data.selected === this.OBJECT && !this.data.mappingData.isTypeProperty) {
       this.types.push(...Helper.enumToArray(Type));
       this.typeKeys.push(...Helper.enumKeysToArray(Type));
+    } else if (this.data.selected === this.OBJECT && this.data.mappingData.isTypeProperty) {
+      this.types.push(...Helper.enumToArray(TypeMapping));
+      this.typeKeys.push(...Helper.enumToArray(TypeMapping));
     } else if (this.data.selected === this.SUBJECT && this.data.mappingData.getSubject() instanceof ValueMappingImpl) {
       this.types.push(...Helper.enumToArray(Type));
       this.typeKeys.push(...Helper.enumKeysToArray(Type));
@@ -113,8 +116,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
   private setMappingData(selected, mappingDetails) {
     mappingDetails.typeMapping = this.isTypeProperty;
-    mappingDetails.columnName = this.modelManagementService.getColumnName(selected);
-    mappingDetails.source = this.modelManagementService.getTypeSource(selected);
+    mappingDetails.columnName = mappingDetails.columnName || this.modelManagementService.getColumnName(selected);
+    mappingDetails.source = mappingDetails.source || this.modelManagementService.getTypeSource(selected);
     mappingDetails.constant = this.modelManagementService.getConstant(selected);
     mappingDetails.type = this.checkIsTypePropertyObject() ? TypeMapping.a : this.modelManagementService.getType(selected);
     mappingDetails.expression = this.modelManagementService.getExpression(selected);
@@ -228,6 +231,17 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           this.isTransformation = value === Language.GREL || value === Language.Prefix;
         });
+
+    this.filteredColumnNames = merge(this.mapperForm.get('columnName').valueChanges, this.mapperForm.get('dataTypeColumnName').valueChanges)
+        .pipe(untilComponentDestroyed(this),
+            startWith(''),
+            map((value) => this.filter(value)));
+  }
+
+  private filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.data.sources.filter((source) => source.toLowerCase().includes(filterValue));
   }
 
   public save() {
