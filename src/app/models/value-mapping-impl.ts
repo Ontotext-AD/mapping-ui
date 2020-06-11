@@ -56,4 +56,12 @@ export class ValueMappingImpl implements ValueMapping, MappingBase {
     this.setValueSource(undefined);
     return this;
   }
+
+  public setTypeMappings(mappings: SimpleIRIValueMappingImpl[]) {
+    this.getValueType().setTypeMappings(mappings);
+  }
+
+  public setPropertyMappings(mappings: PropertyMappingImpl[]) {
+    this.getValueType().setPropertyMappings(mappings);
+  }
 }

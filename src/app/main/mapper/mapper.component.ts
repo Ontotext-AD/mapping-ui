@@ -1,6 +1,5 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TabularDataService} from 'src/app/services/tabular-data.service';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {Source} from 'src/app/models/source';
@@ -9,10 +8,6 @@ import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestro
 import {EMPTY_MAPPING} from 'src/app/utils/constants';
 import {plainToClass} from 'class-transformer';
 
-
-export interface RdfDialogData {
-  rdf: string;
-}
 
 @Component({
   selector: 'app-mapper',
@@ -26,26 +21,12 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
 
   constructor(private tabularDataService: TabularDataService,
               private modelManagementService: ModelManagementService,
-              private columnService: ColumnsService,
-              public dialog: MatDialog) {
+              private columnService: ColumnsService) {
     super();
   }
 
   drop() {
-    this.openDialog();
   }
-
-  openDialog(): void {
-    const dialogRef = this.dialog.open(RdfValueDialog, {
-      width: '250px',
-      data: {name: this.rdf},
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      this.rdf = result;
-    });
-  }
-
 
   ngOnInit(): void {
     this.columnService.getColumns()
@@ -66,19 +47,8 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe();
   }
-}
 
-@Component({
-  selector: 'rdf-value-dialog',
-  templateUrl: 'rdf-value-dialog.html',
-})
-export class RdfValueDialog {
-  constructor(
-    public dialogRef: MatDialogRef<RdfValueDialog>,
-    @Inject(MAT_DIALOG_DATA) public rdf: RdfDialogData) {
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
+  public onNewMapping() {
+    this.mapping = new MappingDefinitionImpl(undefined, undefined, []);
   }
 }

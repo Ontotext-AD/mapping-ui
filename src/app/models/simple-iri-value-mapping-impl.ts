@@ -4,6 +4,7 @@ import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl'
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {MappingBase} from 'src/app/models/mapping-base';
 import {IRIImpl} from 'src/app/models/iri-impl';
+import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
 
 export class SimpleIRIValueMappingImpl implements SimpleIRIValueMapping, MappingBase {
   @Expose() @Type(() => ValueTransformationImpl) transformation?: ValueTransformation;
@@ -49,5 +50,11 @@ export class SimpleIRIValueMappingImpl implements SimpleIRIValueMapping, Mapping
   }
 
   public setValueType(iri: IRIImpl): void { // eslint-disable-line @typescript-eslint/no-unused-vars
+  }
+
+  public setPropertyMappings(mappings: PropertyMappingImpl[]) { // eslint-disable-line @typescript-eslint/no-unused-vars
+  }
+
+  public setTypeMappings(mappings: SimpleIRIValueMappingImpl[]) { // eslint-disable-line @typescript-eslint/no-unused-vars
   }
 }
