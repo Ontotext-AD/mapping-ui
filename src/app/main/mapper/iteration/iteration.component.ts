@@ -189,7 +189,7 @@ export class IterationComponent implements OnInit {
   }
 
   public onDrop(dropped, triple: Triple, selected, index) {
-    this.mappingDetails.columnName = this.sources[dropped.previousIndex].title;
+    this.mappingDetails.columnName = dropped.item.data.title;
     this.mappingDetails.source = SourceEnum.Column;
     this.openMapperDialog(undefined, triple, selected, index);
   }
