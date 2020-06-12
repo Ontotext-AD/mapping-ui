@@ -11,8 +11,10 @@ import {
   PREDICATE_SELECTOR,
   SUBJECT_SELECTOR,
 } from 'src/app/utils/constants';
-import {Type} from 'src/app/models/mapping-definition';
+import {Source as SourceEnum, Type} from 'src/app/models/mapping-definition';
+import {Source} from 'src/app/models/source';
 import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
+import {MappingDetails} from 'src/app/models/mapping-details';
 
 
 @Component({
@@ -22,12 +24,13 @@ import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 })
 export class IterationComponent implements OnInit {
   @Input() mapping: MappingDefinitionImpl;
-
+  @Input() sources: Array<Source>;
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
   OBJECT = OBJECT_SELECTOR;
   triples: Triple[];
+  mappingDetails: MappingDetails;
 
   constructor(private modelManagementService: ModelManagementService,
               public dialog: MatDialog) {
@@ -45,6 +48,7 @@ export class IterationComponent implements OnInit {
     this.triples = [];
     this.convertToTriples(this.mapping);
     this.triples.push(new Triple(undefined, undefined, undefined));
+    this.initMappingDetails();
   }
 
   convertToTriples(mapping) {
@@ -52,6 +56,10 @@ export class IterationComponent implements OnInit {
       this.setTypeMappings(subject);
       this.setPropertyMappings(subject);
     });
+  }
+
+  private initMappingDetails() {
+    this.mappingDetails = {} as MappingDetails;
   }
 
   private setTypeMappings(subject) {
@@ -95,11 +103,11 @@ export class IterationComponent implements OnInit {
   }
 
   public openMapperDialog($event, triple: Triple, selected, index?) {
-    const subject = triple.getSubject();
-    const predicate = triple.getPredicate();
-    const object = triple.getObject();
+    const subject = triple && triple.getSubject();
+    const predicate = triple && triple.getPredicate();
+    const object = triple && triple.getObject();
 
-    if (!subject && ! predicate && !object) {
+    if (!subject && !predicate && !object) {
       triple = this.createNewTriple(triple, selected, index);
     }
 
@@ -107,10 +115,13 @@ export class IterationComponent implements OnInit {
       data: {
         mappingData: triple,
         selected,
+        mappingDetails: this.mappingDetails,
+        sources: this.sources.map((source) => source.title),
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
+      this.initMappingDetails();
       if (result && result.mappingData.isRoot && result.mappingData.getObject()) {
         this.mapping.getSubjectMappings().push(result.mappingData.getSubject());
         this.init();
@@ -175,5 +186,11 @@ export class IterationComponent implements OnInit {
 
   public insertMapping($event: MouseEvent, mapping: Triple, index: number) {
     this.triples.splice(index + 1, 0, new Triple(undefined, undefined, undefined));
+  }
+
+  public onDrop(dropped, triple: Triple, selected, index) {
+    this.mappingDetails.columnName = dropped.item.data.title;
+    this.mappingDetails.source = SourceEnum.Column;
+    this.openMapperDialog(undefined, triple, selected, index);
   }
 }

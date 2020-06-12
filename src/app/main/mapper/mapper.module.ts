@@ -17,6 +17,7 @@ import {IterationComponent} from 'src/app/main/mapper/iteration/iteration.compon
 import {MapperDialogComponent} from './mapper-dialog/mapper-dialog.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import {MatRadioModule} from '@angular/material/radio';
     DirectivesModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatAutocompleteModule,
   ],
 })
 export class MapperModule { }

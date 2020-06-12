@@ -1,9 +1,11 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
 import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl';
 import {MappingBase} from 'src/app/models/mapping-base';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {Source} from 'src/app/models/source';
 
 @Component({
   selector: 'app-mapper-cell',
@@ -14,6 +16,7 @@ export class CellComponent {
     @Input() cellMapping: MappingBase;
     @Input() isFirstChild: boolean = true;
     @Input() isTypeProperty: boolean = false;
+    @Output() onDrop = new EventEmitter<any>();
 
     constructor(private modelManagementService: ModelManagementService) {
     }
@@ -57,5 +60,9 @@ export class CellComponent {
      */
     getValueType() : IRIImpl {
       return this.modelManagementService.getValueType(this.cellMapping);
+    }
+
+    public drop($event: CdkDragDrop<Source, any>) {
+      this.onDrop.emit($event);
     }
 }
