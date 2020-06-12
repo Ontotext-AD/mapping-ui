@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {TabularDataService} from 'src/app/services/tabular-data.service';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {Source} from 'src/app/models/source';
-import {ColumnsService} from 'src/app/services/rest/columns.service';
+import {MapperService} from 'src/app/services/rest/mapper.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
-import {EMPTY_MAPPING} from 'src/app/utils/constants';
+import {EMPTY_MAPPING, DOWNLOAD_RDF_FILE} from 'src/app/utils/constants';
 import {plainToClass} from 'class-transformer';
 
 
@@ -19,9 +18,8 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   mapping: MappingDefinitionImpl = plainToClass(MappingDefinitionImpl, EMPTY_MAPPING);
   rdf: string;
 
-  constructor(private tabularDataService: TabularDataService,
-              private modelManagementService: ModelManagementService,
-              private columnService: ColumnsService) {
+  constructor(private modelManagementService: ModelManagementService,
+              private mapperService: MapperService) {
     super();
   }
 
@@ -29,7 +27,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   }
 
   ngOnInit(): void {
-    this.columnService.getColumns()
+    this.mapperService.getColumns()
         .pipe(untilComponentDestroyed(this))
         .subscribe(
             (data) => {
@@ -46,6 +44,17 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     this.modelManagementService.storeModelMapping(this.mapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe();
+  }
+
+  onGetRDF() {
+    this.mapperService.getRDF(this.mapping)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((data) => {
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(data);
+          link.download = DOWNLOAD_RDF_FILE;
+          link.click();
+        });
   }
 
   public onNewMapping() {

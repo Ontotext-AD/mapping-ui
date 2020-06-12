@@ -17,10 +17,10 @@ export class MappingDefinitionService extends RestService {
     this.apiUrl = environment.mappingApiUrl;
   }
 
-  getExtendedAPIURL(extension: string) : Observable<string> {
+  getAPIURL(apiName: string) : Observable<string> {
     return this.dataProviderID.pipe(switchMap((dataProviderID) => {
       if (dataProviderID) {
-        return of(`${this.apiUrl}${extension}?project=${dataProviderID.substring('ontorefine:'.length)}`);
+        return of(`${this.apiUrl}${apiName}?project=${dataProviderID.substring('ontorefine:'.length)}`);
       } else {
         return EMPTY;
       }
@@ -28,7 +28,7 @@ export class MappingDefinitionService extends RestService {
   }
 
   getMappingDefinition(): Observable<JSON> {
-    return this.getExtendedAPIURL('/core/get-models/').pipe(switchMap((fullUrl) => {
+    return this.getAPIURL('/core/get-models/').pipe(switchMap((fullUrl) => {
       return this.httpClient.get<JSON>(fullUrl, this.httpOptions).pipe(map((json) => {
         if (!json['overlayModels']['mappingDefinition']) {
           return EMPTY_MAPPING;
@@ -39,7 +39,7 @@ export class MappingDefinitionService extends RestService {
   }
 
   saveMappingDefinition(mappingDefinition: JSON): Observable<void> {
-    return this.getExtendedAPIURL('/mapping-editor/save-rdf-mapping/').pipe(switchMap((fullUrl) => {
+    return this.getAPIURL('/mapping-editor/save-rdf-mapping/').pipe(switchMap((fullUrl) => {
       const payload = new HttpParams()
           .set('mapping', JSON.stringify(mappingDefinition));
       return this.httpClient.post<any>(fullUrl, payload);

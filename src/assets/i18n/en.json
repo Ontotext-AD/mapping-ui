@@ -2,6 +2,7 @@
   "BUTTONS": {
     "DONE": "Done",
     "VIEW_JSON": "View JSON",
+    "RDF": "RDF",
     "NEW": "New mapping",
     "SAVE": "Save"
   },
