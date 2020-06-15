@@ -4,7 +4,7 @@ import {ColumnImpl} from 'src/app/models/column-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
 import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl';
 import {MappingBase} from 'src/app/models/mapping-base';
-import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragDrop, CdkDropList} from '@angular/cdk/drag-drop';
 import {Source} from 'src/app/models/source';
 
 @Component({
@@ -64,5 +64,17 @@ export class CellComponent {
 
     public drop($event: CdkDragDrop<Source, any>) {
       this.onDrop.emit($event);
+    }
+
+    public canDrop() {
+      if (!!this.getSourceType() || this.isFirstChild && this.isTypeProperty) {
+        return function(drag: CdkDrag, drop: CdkDropList) { // eslint-disable-line @typescript-eslint/no-unused-vars
+          return false;
+        };
+      }
+
+      return function(drag: CdkDrag, drop: CdkDropList) { // eslint-disable-line @typescript-eslint/no-unused-vars
+        return true;
+      };
     }
 }
