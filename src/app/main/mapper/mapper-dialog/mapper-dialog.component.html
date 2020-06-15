@@ -46,8 +46,8 @@
                               cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="autoc"></textarea>
                     <mat-autocomplete #autoc="matAutocomplete">
-                      <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option">
-                        {{option}}
+                      <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title">
+                        {{option.title}}
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
@@ -93,7 +93,12 @@
                     <mat-label>{{'LABELS.COLUMN_NAME' | translate}}</mat-label>
                     <textarea matInput formControlName="languageColumnName" name="languageColumnName"
                               cdkTextareaAutosize
-                              cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                              cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="autoc"></textarea>
+                    <mat-autocomplete #autoc="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title">
+                      {{option.title}}
+                    </mat-option>
+                    </mat-autocomplete>
                   </mat-form-field>
                 </div>
 
@@ -142,8 +147,8 @@
                 <textarea matInput formControlName="columnName" name="columnName" cdkTextareaAutosize
                           cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="auto"></textarea>
                 <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option">
-                    {{option}}
+                  <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title">
+                    {{option.title}}
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>

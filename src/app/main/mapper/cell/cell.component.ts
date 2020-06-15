@@ -6,6 +6,7 @@ import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl'
 import {MappingBase} from 'src/app/models/mapping-base';
 import {CdkDrag, CdkDragDrop, CdkDropList} from '@angular/cdk/drag-drop';
 import {Source} from 'src/app/models/source';
+import {classToClass} from 'class-transformer';
 
 @Component({
   selector: 'app-mapper-cell',
@@ -76,5 +77,9 @@ export class CellComponent {
       return function(drag: CdkDrag, drop: CdkDropList) { // eslint-disable-line @typescript-eslint/no-unused-vars
         return true;
       };
+    }
+
+    public deepCopy() {
+      return classToClass(this.cellMapping);
     }
 }

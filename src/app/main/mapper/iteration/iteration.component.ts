@@ -102,7 +102,7 @@ export class IterationComponent implements OnInit {
     return this.modelManagementService.getTypeMappings(subject);
   }
 
-  public openMapperDialog($event, triple: Triple, selected, index?) {
+  public openMapperDialog($event, triple: Triple, selected, index?, dropped?) {
     const subject = triple && triple.getSubject();
     const predicate = triple && triple.getPredicate();
     const object = triple && triple.getObject();
@@ -116,7 +116,8 @@ export class IterationComponent implements OnInit {
         mappingData: triple,
         selected,
         mappingDetails: this.mappingDetails,
-        sources: this.sources.map((source) => source.title),
+        sources: this.sources,
+        dropped,
       },
     });
 
@@ -189,6 +190,14 @@ export class IterationComponent implements OnInit {
   }
 
   public onDrop(dropped, triple: Triple, selected, index) {
+    if (dropped.item.data instanceof Source) {
+      this.handleDroppedSource(dropped, triple, selected, index);
+    } else {
+      this.openMapperDialog(undefined, triple, selected, index, dropped.item.data);
+    }
+  }
+
+  private handleDroppedSource(dropped, triple: Triple, selected, index) {
     this.mappingDetails.columnName = dropped.item.data.title;
     this.mappingDetails.source = SourceEnum.Column;
     this.openMapperDialog(undefined, triple, selected, index);

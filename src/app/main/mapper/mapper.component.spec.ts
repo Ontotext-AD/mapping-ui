@@ -18,6 +18,7 @@ import amsterdamMapping from 'src/app/models/amsterdam-mapping.json';
 import {plainToClass} from 'class-transformer';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatIconModule} from "@angular/material/icon";
 
 describe('MapperComponent', () => {
   let component: MapperComponent;
@@ -42,7 +43,8 @@ describe('MapperComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
         FormsModule,
-        MatInputModule
+        MatInputModule,
+        MatIconModule
       ]
     })
     .compileComponents();

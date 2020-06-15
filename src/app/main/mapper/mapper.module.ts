@@ -18,6 +18,7 @@ import {MapperDialogComponent} from './mapper-dialog/mapper-dialog.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatIconModule} from '@angular/material/icon';
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatCheckboxModule,
     MatRadioModule,
     MatAutocompleteModule,
+    MatIconModule,
   ],
 })
 export class MapperModule { }
