@@ -6,7 +6,6 @@ import {switchMap} from 'rxjs/operators';
 
 export class RestService {
   dataProviderID: Observable<string>;
-  apiName: String = '';
   apiUrl = environment.restApiUrl;
 
   constructor(protected route: ActivatedRoute) {
@@ -14,13 +13,6 @@ export class RestService {
       return (params.dataProviderID) ? of(params.dataProviderID) : EMPTY;
     }));
   }
-
-  getAPIURL() : Observable<string> {
-    return this.dataProviderID.pipe(switchMap((dataProviderID) => {
-      return of(`${this.apiUrl}` + this.apiName + ((dataProviderID) ? dataProviderID : ''));
-    }));
-  }
-
 
   httpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',

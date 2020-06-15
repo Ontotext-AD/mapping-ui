@@ -6,15 +6,18 @@ import {SourceComponent} from "src/app/main/mapper/sources/source.component";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {TranslateModule} from "@ngx-translate/core";
 import {MatDialogModule} from "@angular/material/dialog";
+import {MatInputModule} from "@angular/material/input";
+import {FormsModule} from '@angular/forms';
 import {IterationComponent} from "src/app/main/mapper/iteration/iteration.component";
 import {CellComponent} from "src/app/main/mapper/cell/cell.component";
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {of} from 'rxjs';
-import { ModelManagementService } from 'src/app/services/model-management.service';
+import {ModelManagementService} from 'src/app/services/model-management.service';
 import amsterdamMapping from 'src/app/models/amsterdam-mapping.json';
 import {plainToClass} from 'class-transformer';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MapperComponent', () => {
   let component: MapperComponent;
@@ -29,14 +32,17 @@ describe('MapperComponent', () => {
         HeaderComponent,
         SourceComponent,
         IterationComponent,
-        CellComponent
+        CellComponent,
       ],
       imports: [
         DragDropModule,
         TranslateModule.forRoot(),
         MatDialogModule,
         HttpClientTestingModule,
-        RouterTestingModule
+        RouterTestingModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        MatInputModule
       ]
     })
     .compileComponents();

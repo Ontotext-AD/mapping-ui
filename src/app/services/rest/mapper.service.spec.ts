@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ColumnsService } from './columns.service';
+import { MapperService } from './mapper.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 
 describe('ColumnsService', () => {
-  let service: ColumnsService;
+  let service: MapperService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -14,7 +14,7 @@ describe('ColumnsService', () => {
         RouterTestingModule
       ]
     });
-    service = TestBed.inject(ColumnsService);
+    service = TestBed.inject(MapperService);
   });
 
   it('should be created', () => {

@@ -17,6 +17,7 @@ export interface JSONDialogData {
 export class HeaderComponent implements OnInit {
   @Output() savedMapping = new EventEmitter<void>();
   @Output() onNewMapping = new EventEmitter<void>();
+  @Output() onGetRDF = new EventEmitter<void>();
   @Input() mapping: MappingDefinitionImpl;
 
 
@@ -38,6 +39,10 @@ export class HeaderComponent implements OnInit {
         mapping: this.mapping,
       },
     });
+  }
+
+  getRDF(): void {
+    this.onGetRDF.emit();
   }
 
   public isDevEnv() {
