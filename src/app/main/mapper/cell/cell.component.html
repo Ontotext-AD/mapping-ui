@@ -1,5 +1,8 @@
 <div cdkDrag class="mapping-cell mapping-subject mr-12" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
      (cdkDropListDropped)="drop($event)">
+  <div>
+    <mat-icon *ngIf="!!this.getSourceType()" cdkDrag [cdkDragData]="cellMapping" cdkDragHandle>file_copy</mat-icon>
+  </div>
     <div *ngIf="isFirstChild && isTypeProperty">
         a
     </div>
@@ -9,23 +12,23 @@
             <span *ngIf="getSourceType() === 'column'">
                 @Col:{{getValueSource().getColumnName()}}
             </span>
-            <span *ngIf="getSourceType() === 'constant'">
+      <span *ngIf="getSourceType() === 'constant'">
                 Constant:{{getValueSource().getConstant()}}
             </span>
-            <span *ngIf="getSourceType() === 'row_index' || getSourceType() === 'record_id'">
+      <span *ngIf="getSourceType() === 'row_index' || getSourceType() === 'record_id'">
                 {{getValueSource().source}}
             </span>
-        </div>
-
-        <div *ngIf="getTransformation()">
-            <b>Transformation:</b>
-            <div>{{getTransformation().getExpression()}}</div>
-            <div><b>Transformation Language:</b>: {{getTransformation().getLanguage()}}</div>
-        </div>
-        <div *ngIf="getValueType()">
-            <b>Value Type: </b>
-            <span *ngIf="getValueType().getType() !== 'iri'; else elseBlock">{{getValueType() | json}}</span>
-            <ng-template #elseBlock>{{'IRI'}}</ng-template>
-        </div>
     </div>
+
+    <div *ngIf="getTransformation()">
+      <b>Transformation:</b>
+      <div>{{getTransformation().getExpression()}}</div>
+      <div><b>Transformation Language:</b>: {{getTransformation().getLanguage()}}</div>
+    </div>
+    <div *ngIf="getValueType()">
+      <b>Value Type: </b>
+      <span *ngIf="getValueType().getType() !== 'iri'; else elseBlock">{{getValueType() | json}}</span>
+      <ng-template #elseBlock>{{'IRI'}}</ng-template>
+    </div>
+  </div>
 </div>

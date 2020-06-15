@@ -23,7 +23,8 @@ export interface SubjectMapperData {
   mappingData: Triple,
   selected: string,
   mappingDetails: MappingDetails,
-  sources: string[];
+  sources: any[],
+  dropped;
 }
 
 @Component({
@@ -77,7 +78,11 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   private init(): void {
     this.setSelected();
     this.setTypes();
-    this.setMappingData(this.selected, this.mappingDetails);
+    if (this.data.dropped) {
+      this.setMappingData(this.data.dropped, this.mappingDetails);
+    } else {
+      this.setMappingData(this.selected, this.mappingDetails);
+    }
   }
 
   private setSelected() {
@@ -241,7 +246,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   private filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return this.data.sources.filter((source) => source.toLowerCase().includes(filterValue));
+    return this.data.sources.filter((source) => source.title.toLowerCase().includes(filterValue));
   }
 
   public save() {
