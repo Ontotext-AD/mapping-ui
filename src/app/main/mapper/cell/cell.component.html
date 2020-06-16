@@ -1,15 +1,18 @@
 <div cdkDrag class="mapping-cell mapping-subject mr-12" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
      (cdkDropListDropped)="drop($event)">
-  <div>
-    <mat-icon *ngIf="!!this.getSourceType()" cdkDrag [cdkDragData]="cellMapping" cdkDragHandle>file_copy</mat-icon>
+
+  <div *ngIf="!!this.getSourceType() && isFirstChild">
+    <mat-icon cdkDrag [cdkDragData]="cellMapping" cdkDragHandle>file_copy</mat-icon>
+    <mat-icon (click)="deleteMapping($event)">delete_forever</mat-icon>
   </div>
-    <div *ngIf="isFirstChild && isTypeProperty">
-        a
-    </div>
-    <div *ngIf="isFirstChild && !isTypeProperty">
-        <div>
-            <b>Source:</b>
-            <span *ngIf="getSourceType() === 'column'">
+
+  <div *ngIf="isFirstChild && isTypeProperty">
+    a
+  </div>
+  <div *ngIf="isFirstChild && !isTypeProperty">
+    <div>
+      <b>Source:</b>
+      <span *ngIf="getSourceType() === 'column'">
                 @Col:{{getValueSource().getColumnName()}}
             </span>
       <span *ngIf="getSourceType() === 'constant'">

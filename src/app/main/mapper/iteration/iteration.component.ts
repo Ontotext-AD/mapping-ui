@@ -15,6 +15,9 @@ import {Source as SourceEnum, Type} from 'src/app/models/mapping-definition';
 import {Source} from 'src/app/models/source';
 import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 import {MappingDetails} from 'src/app/models/mapping-details';
+import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
+import {of} from 'rxjs';
+import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 
 
 @Component({
@@ -22,7 +25,7 @@ import {MappingDetails} from 'src/app/models/mapping-details';
   templateUrl: './iteration.component.html',
   styleUrls: ['./iteration.component.scss'],
 })
-export class IterationComponent implements OnInit {
+export class IterationComponent extends OnDestroyMixin implements OnInit {
   @Input() mapping: MappingDefinitionImpl;
   @Input() sources: Array<Source>;
 
@@ -34,6 +37,7 @@ export class IterationComponent implements OnInit {
 
   constructor(private modelManagementService: ModelManagementService,
               public dialog: MatDialog) {
+    super();
   }
 
   ngOnChanges() {
@@ -53,8 +57,16 @@ export class IterationComponent implements OnInit {
 
   convertToTriples(mapping) {
     mapping.getSubjectMappings().forEach((subject) => {
-      this.setTypeMappings(subject);
-      this.setPropertyMappings(subject);
+      const isRoot = true;
+      if (subject.getTypeMappings().length > 0 || subject.getPropertyMappings().length > 0) {
+        this.setTypeMappings(subject, isRoot)
+            .pipe(untilComponentDestroyed(this))
+            .subscribe((isRoot) => {
+              this.setPropertyMappings(subject, isRoot);
+            });
+      } else {
+        this.triples.push(new Triple(subject, undefined, undefined, false, isRoot));
+      }
     });
   }
 
@@ -62,19 +74,22 @@ export class IterationComponent implements OnInit {
     this.mappingDetails = {} as MappingDetails;
   }
 
-  private setTypeMappings(subject) {
+  private setTypeMappings(subject, isRoot) {
     this.getTypeMappings(subject) && this.getTypeMappings(subject).forEach((mapping) => {
-      this.triples.push(new Triple(subject, undefined, mapping, true));
+      this.triples.push(new Triple(subject, undefined, mapping, true, isRoot));
+      isRoot = false;
     });
+    return of(isRoot);
   }
 
-  private setPropertyMappings(subject) {
+  private setPropertyMappings(subject, isRoot) {
     this.getPropertyMappings(subject) && this.getPropertyMappings(subject).forEach((property) => {
       property.getValues().forEach((object) => {
-        this.triples.push(new Triple(subject, property, object));
-        if (object.getValueType().getType() === Type.IRI) {
-          this.setTypeMappings(object);
-          this.setPropertyMappings(object);
+        this.triples.push(new Triple(subject, property, object, false, isRoot));
+        isRoot = false;
+        if (object.getValueType() && object.getValueType().getType() === Type.IRI) {
+          this.setTypeMappings(object, false);
+          this.setPropertyMappings(object, false);
         }
       });
     });
@@ -175,6 +190,10 @@ export class IterationComponent implements OnInit {
     return object && subject !== object && object.getValueType() && object.getValueType().getType() === Type.IRI;
   }
 
+  public isDeleteApplicable(index) {
+    return !!this.getTripleByIndex(index).getSubject();
+  }
+
   private getTripleByIndex(index: number): Triple {
     if (index > -1 && index < this.triples.length) {
       return this.triples[index];
@@ -201,5 +220,74 @@ export class IterationComponent implements OnInit {
     this.mappingDetails.columnName = dropped.item.data.title;
     this.mappingDetails.source = SourceEnum.Column;
     this.openMapperDialog(undefined, triple, selected, index);
+  }
+
+  public onDelete($event: any, mapping: Triple, selected: string) {
+    if (selected === this.OBJECT && mapping.isTypeProperty) {
+      this.deleteObjectTypeMapping(mapping, true);
+    } else if (selected === this.OBJECT) {
+      this.deleteObjectPropertyMapping(mapping, false);
+    } else if (selected === this.PREDICATE) {
+      const propertyMappings = mapping.getSubject().getPropertyMappings();
+      const index = propertyMappings.indexOf(mapping.getPredicate());
+      if (index > -1) {
+        propertyMappings.splice(index, 1);
+      }
+    } else if (selected === this.SUBJECT) {
+      const subject = mapping.getSubject();
+      subject.setPropertyMappings([]);
+      subject.setTypeMappings([]);
+    }
+    this.init();
+  }
+
+  private deleteObjectTypeMapping(mapping: Triple, hardDelete: boolean) {
+    const typeMappings = mapping.getSubject().getTypeMappings();
+    const index = typeMappings.indexOf(mapping.getObject());
+    if (index > -1 && hardDelete) {
+      typeMappings.splice(index, 1);
+    } else if (index > -1 && !hardDelete) {
+      typeMappings.splice(index, 1, new SimpleIRIValueMappingImpl(undefined, undefined));
+    }
+  }
+
+  private deleteObjectPropertyMapping(mapping: Triple, hardDelete: boolean) {
+    const propertyMappings = mapping.getSubject().getPropertyMappings();
+    propertyMappings.forEach((propertyMapping) => {
+      const values = propertyMapping.getValues();
+      const index = values.indexOf(mapping.getObject() as ValueMappingImpl);
+      if (index > -1 && hardDelete) {
+        values.splice(index, 1);
+        if (values.length === 0) {
+          const propertyMappingIndex = propertyMappings.indexOf(propertyMapping);
+          propertyMappings.splice(propertyMappingIndex, 1);
+        }
+      } else if (index > -1 && !hardDelete) {
+        values.splice(index, 1, new ValueMappingImpl(undefined, undefined, undefined));
+      }
+    });
+  }
+
+  public deleteTripleMapping(mapping: Triple) {
+    if (mapping.isTypeProperty) {
+      this.deleteObjectTypeMapping(mapping, true);
+    } else {
+      this.deleteObjectPropertyMapping(mapping, true);
+    }
+
+    if (mapping.isRoot) {
+      let countMappings = mapping.getSubject().getTypeMappings().length;
+      mapping.getSubject().getPropertyMappings().forEach((propertyMapping) => {
+        countMappings += propertyMapping.getValues().length;
+      });
+
+      if (countMappings === 0) {
+        const subjectMappings = this.mapping.getSubjectMappings();
+        const index = subjectMappings.indexOf(mapping.getSubject() as SubjectMappingImpl);
+        subjectMappings.splice(index, 1);
+      }
+    }
+
+    this.init();
   }
 }

@@ -41,7 +41,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   mapperForm$: Observable<FormGroup>;
   selected: MappingBase;
   clone: MappingBase;
-  isTypeProperty: boolean
+  isTypeProperty: boolean;
   typeKeys: string[];
   types: string[];
   typeTransformationLangs: string[];
