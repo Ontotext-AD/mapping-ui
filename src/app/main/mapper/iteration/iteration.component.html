@@ -3,19 +3,23 @@
     <app-mapper-cell [cellMapping]="mapping.getSubject()"
                      [isFirstChild]="isFirstSubject(mapping, index)"
                      (onDrop)="onDrop($event, mapping, SUBJECT, index)"
+                     (onDelete)="onDelete($event, mapping, SUBJECT)"
                      (click)="openMapperDialog($event, mapping, SUBJECT, index)"
                      appCypressData="subject"></app-mapper-cell>
     <app-mapper-cell [cellMapping]="mapping.getPredicate()"
                      [isTypeProperty]="mapping.isTypeProperty"
                      [isFirstChild]="isFirstPredicate(mapping, index)"
                      (onDrop)="onDrop($event, mapping, PREDICATE, index)"
+                     (onDelete)="onDelete($event, mapping, PREDICATE)"
                      (click)="openMapperDialog($event, mapping, PREDICATE, index)"
                      appCypressData="predicate"></app-mapper-cell>
     <app-mapper-cell [cellMapping]="mapping.getObject()"
                      (onDrop)="onDrop($event, mapping, OBJECT, index)"
+                     (onDelete)="onDelete($event, mapping, OBJECT)"
                      (click)="openMapperDialog($event, mapping, OBJECT, index)"
                      appCypressData="object"></app-mapper-cell>
     <div class="plus-cell" *ngIf="isPlusApplicable(index)" (click)="continueMapping($event, mapping, index)">+</div>
+    <div class="plus-cell" *ngIf="isDeleteApplicable(index)"><mat-icon (click)="deleteTripleMapping(mapping)">delete_forever</mat-icon></div>
     <div class="insert" *ngIf="isInsertApplicable(index)" (click)="insertMapping($event, mapping, index)"></div>
   </div>
 </div>
