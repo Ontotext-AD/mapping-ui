@@ -6,6 +6,8 @@ import {MapperService} from 'src/app/services/rest/mapper.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {EMPTY_MAPPING, DOWNLOAD_RDF_FILE} from 'src/app/utils/constants';
 import {plainToClass} from 'class-transformer';
+import {MatChipInputEvent} from '@angular/material/chips/chip-input';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 
 @Component({
@@ -59,5 +61,28 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
 
   public onNewMapping() {
     this.mapping = new MappingDefinitionImpl(undefined, undefined, []);
+  }
+
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  addOnBlur = true;
+
+  addNamespace(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    if ((value.split('=').length > 1)) {
+      const split = value.split(/=(.+)/);
+      const key = split[0];
+      const val = split[1];
+      this.mapping.namespaces[key] = val;
+    }
+
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  removeNamespace(key: string): void {
+    delete this.mapping.namespaces[key];
   }
 }

@@ -117,6 +117,7 @@ export class IterationComponent implements OnInit {
         selected,
         mappingDetails: this.mappingDetails,
         sources: this.sources,
+        namespaces: this.mapping.namespaces,
         dropped,
       },
     });
