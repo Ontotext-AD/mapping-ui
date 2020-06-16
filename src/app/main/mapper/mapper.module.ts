@@ -11,6 +11,7 @@ import {MapperComponent} from 'src/app/main/mapper/mapper.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
+import {MatChipsModule} from '@angular/material/chips';
 import {DirectivesModule} from 'src/app/directives/directives.module';
 import {CellComponent} from 'src/app/main/mapper/cell/cell.component';
 import {IterationComponent} from 'src/app/main/mapper/iteration/iteration.component';
@@ -51,6 +52,7 @@ import {MatIconModule} from '@angular/material/icon';
     ReactiveFormsModule,
     MatDialogModule,
     MatInputModule,
+    MatChipsModule,
     DirectivesModule,
     MatCheckboxModule,
     MatRadioModule,

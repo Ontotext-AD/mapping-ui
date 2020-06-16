@@ -67,7 +67,14 @@
                   <mat-form-field class="ml-16" style="width: 100%;">
                     <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
                     <textarea matInput formControlName="datatypeTransformation" name="datatypeTransformation"
-                              cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                              cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="datatypePrefixAuto"></textarea>
+                    <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
+                      <div *ngIf="isDataTypePrefixTransformation">
+                        <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
+                          {{namespace.prefix}}={{namespace.value}}
+                        </mat-option>
+                      </div>
+                    </mat-autocomplete>          
                   </mat-form-field>
                 </div>
               </div>
@@ -117,7 +124,14 @@
                   <mat-form-field class="ml-16" style="width: 300px;">
                     <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
                     <textarea matInput formControlName="languageTransformation" name="languageTransformation"
-                              cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                      cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="languagePrefixAuto"></textarea>
+                    <mat-autocomplete #languagePrefixAuto="matAutocomplete">
+                      <div *ngIf="isLanguagePrefixTransformation">
+                        <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
+                          {{namespace.prefix}}={{namespace.value}}
+                        </mat-option>
+                      </div>
+                    </mat-autocomplete> 
                   </mat-form-field>
                 </div>
               </div>
@@ -168,7 +182,14 @@
               <mat-form-field class="ml-16" style="width: 300px;" *ngIf="isTransformation">
                 <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
                 <textarea matInput formControlName="expression" name="expression"
-                          cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"></textarea>
+                          cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10" [matAutocomplete]="prefixAuto"></textarea>
+                <mat-autocomplete #prefixAuto="matAutocomplete" >
+                  <div *ngIf="isPrefixTransformation">
+                    <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
+                      {{namespace.prefix}}={{namespace.value}}
+                    </mat-option>
+                  </div>
+                </mat-autocomplete>
               </mat-form-field>
             </div>
           </div>

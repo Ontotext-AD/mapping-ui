@@ -24,6 +24,7 @@ export interface SubjectMapperData {
   selected: string,
   mappingDetails: MappingDetails,
   sources: any[],
+  namespaces: { [p: string]: string },
   dropped;
 }
 
@@ -50,14 +51,19 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   showOptions: boolean;
   isConstant: boolean;
   isColumn: boolean;
+  isDataTypePrefixTransformation: boolean;
   isDatatypeConstant: boolean;
   isDatatypeColumn: boolean;
   isLanguageConstant: boolean;
   isLanguageColumn: boolean;
+  isLanguagePrefixTransformation: boolean;
   isTransformation: boolean;
+  isPrefixTransformation: boolean;
   hasDatatype: boolean;
   hasLanguage: boolean
   filteredColumnNames: Observable<string[]>;
+  filteredNamespaces: Observable<any>;
+
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
@@ -188,12 +194,16 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.hasDatatype = !!this.mappingDetails.hasDatatype;
     this.isDatatypeConstant = !!this.mappingDetails.dataTypeConstant;
     this.isDatatypeColumn = !!this.mappingDetails.dataTypeColumnName;
+    this.isDataTypePrefixTransformation = this.hasDatatype && !!this.mappingDetails.datatypeLanguage && this.mappingDetails.datatypeLanguage === Language.Prefix;
+
 
     this.hasLanguage = !!this.mappingDetails.hasLanguage;
     this.isLanguageColumn = !!this.mappingDetails.languageColumnName;
     this.isLanguageConstant = !!this.mappingDetails.languageConstant;
+    this.isLanguagePrefixTransformation = this.hasLanguage && !!this.mappingDetails.languageTransformationLanguage && this.mappingDetails.languageTransformationLanguage === Language.Prefix;
 
     this.isTransformation = !!this.mappingDetails.language;
+    this.isPrefixTransformation = this.isTransformation && this.mappingDetails.language === Language.Prefix;
   }
 
   private subscribeToValueChanges() {
@@ -235,18 +245,39 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
           this.isTransformation = value === Language.GREL || value === Language.Prefix;
+          this.isPrefixTransformation = this.isTransformation && value === Language.Prefix;
+        });
+
+    this.mapperForm.get('datatypeLanguage').valueChanges
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((value) => {
+          this.isDataTypePrefixTransformation = value === Language.Prefix;
+        });
+
+    this.mapperForm.get('languageTransformationLanguage').valueChanges
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((value) => {
+          this.isLanguagePrefixTransformation = value === Language.Prefix;
         });
 
     this.filteredColumnNames = merge(this.mapperForm.get('columnName').valueChanges, this.mapperForm.get('dataTypeColumnName').valueChanges)
         .pipe(untilComponentDestroyed(this),
             startWith(''),
-            map((value) => this.filter(value)));
+            map((value) => this.filterColumn(value)));
+
+    this.filteredNamespaces = merge(this.mapperForm.get('expression').valueChanges, this.mapperForm.get('datatypeTransformation').valueChanges, this.mapperForm.get('languageTransformation').valueChanges)
+        .pipe(untilComponentDestroyed(this),
+            startWith(''),
+            map((value) => this.filterNamespace(value)));
   }
 
-  private filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
+  private filterNamespace(value: string): object[] {
+    return Object.entries(this.data.namespaces).map(([prefix, value]) => ({prefix, value}))
+        .filter((namespace) => namespace.prefix.toLowerCase().startsWith(value.toLowerCase()));
+  }
 
-    return this.data.sources.filter((source) => source.title.toLowerCase().includes(filterValue));
+  private filterColumn(value: string): string[] {
+    return this.data.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase()));
   }
 
   public save() {

@@ -19,6 +19,8 @@ import {plainToClass} from 'class-transformer';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from "@angular/material/icon";
+import {MatChipsModule} from "@angular/material/chips";
+
 
 describe('MapperComponent', () => {
   let component: MapperComponent;
@@ -44,7 +46,8 @@ describe('MapperComponent', () => {
         BrowserAnimationsModule,
         FormsModule,
         MatInputModule,
-        MatIconModule
+        MatIconModule,
+        MatChipsModule
       ]
     })
     .compileComponents();

@@ -14,6 +14,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {MatChipsModule} from '@angular/material/chips';
 import {FormsModule} from '@angular/forms';
 import {DirectivesModule} from 'src/app/directives/directives.module';
 import {environment} from 'src/environments/environment';
@@ -45,6 +46,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatChipsModule,
     FormsModule,
     DirectivesModule,
   ],
