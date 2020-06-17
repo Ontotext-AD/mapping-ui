@@ -59,6 +59,14 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         });
   }
 
+  onSPARQL() {
+    this.mapperService.getSPARQL(this.mapping)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((data) => {
+          window.parent.open(window.parent.location.origin + '/sparql?query=' + encodeURIComponent(data));
+        });
+  }
+
   public onNewMapping() {
     this.mapping = new MappingDefinitionImpl(undefined, undefined, []);
   }

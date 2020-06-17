@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
   @Output() savedMapping = new EventEmitter<void>();
   @Output() onNewMapping = new EventEmitter<void>();
   @Output() onGetRDF = new EventEmitter<void>();
+  @Output() onSPARQL = new EventEmitter<void>();
   @Input() mapping: MappingDefinitionImpl;
 
 
@@ -43,6 +44,10 @@ export class HeaderComponent implements OnInit {
 
   getRDF(): void {
     this.onGetRDF.emit();
+  }
+
+  getSPARQL(): void {
+    this.onSPARQL.emit();
   }
 
   public isDevEnv() {

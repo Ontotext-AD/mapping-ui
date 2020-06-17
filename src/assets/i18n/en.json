@@ -3,6 +3,7 @@
     "DONE": "Done",
     "VIEW_JSON": "View JSON",
     "RDF": "RDF",
+    "SPARQL": "SPARQL",
     "NEW": "New mapping",
     "SAVE": "Save"
   },

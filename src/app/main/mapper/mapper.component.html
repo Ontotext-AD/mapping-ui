@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutAlign="end stretch" cdkDropListGroup appCypressData="mapper">
-  <app-header [mapping]="mapping" (onNewMapping)="onNewMapping()" (savedMapping)="onSavedMapping()" (onGetRDF)="onGetRDF()"></app-header>
+  <app-header [mapping]="mapping" (onNewMapping)="onNewMapping()" (savedMapping)="onSavedMapping()" (onGetRDF)="onGetRDF()" (onSPARQL)="onSPARQL()"></app-header>
   <app-definitions [sources]="sources"></app-definitions>
 
   <div class="mr-12 ml-12 mb-12">
