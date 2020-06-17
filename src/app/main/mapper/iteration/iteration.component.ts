@@ -140,7 +140,14 @@ export class IterationComponent extends OnDestroyMixin implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       this.initMappingDetails();
       if (result && result.mappingData.isRoot && result.mappingData.getObject()) {
-        this.mapping.getSubjectMappings().push(result.mappingData.getSubject());
+        const subjectMappings = this.mapping.getSubjectMappings();
+        const subject = result.mappingData.getSubject();
+        const index = subjectMappings.indexOf(subject);
+        if (index > -1) {
+          subjectMappings.splice(index, 1, subject);
+        } else {
+          subjectMappings.push(result.mappingData.getSubject());
+        }
         this.init();
       } else if (result && result.mappingData.isRoot && result.selected === this.SUBJECT) {
         this.openMapperDialog(undefined, result.mappingData, this.PREDICATE);
