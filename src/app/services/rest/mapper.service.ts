@@ -46,4 +46,12 @@ export class MapperService extends RestService {
       return this.httpClient.post(fullUrl, mappingDefinition, httpOptions);
     }));
   }
+
+  getSPARQL(mappingDefinition: MappingDefinitionImpl): Observable<string> {
+    const httpOptions = this.httpOptions;
+    httpOptions['reponseType'] = 'text';
+    return this.getAPIURL('/sparql/').pipe(switchMap((fullUrl) => {
+      return this.httpClient.post<string>(fullUrl, mappingDefinition, httpOptions);
+    }));
+  }
 }
