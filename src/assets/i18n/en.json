@@ -17,6 +17,21 @@
     "EXPRESSION": "Expression",
     "TYPE": "Type",
     "TYPE_TRANSFORMATION": "Type transformation",
-    "TYPE_SOURCE": "Type source"
+    "TYPE_SOURCE": "Type source",
+    "DATATYPE_LITERAL": "Datatype",
+    "LANGUAGE_LITERAL": "Language",
+    "LITERAL": "Literal",
+    "UNIQUE_BNODE": "Unique BNode",
+    "VALUE_BNODE": "BNode",
+    "IRI": "IRI",
+    "GREL": "GREL"
+  },
+  "CONSTANTS": {
+    "COLUMN": "@",
+    "CONSTANT": "C",
+    "INDEX": "#",
+    "SUBJECT": "+ Subject",
+    "PREDICATE": "+ Predicate",
+    "OBJECT": "+ Object"
   }
 }

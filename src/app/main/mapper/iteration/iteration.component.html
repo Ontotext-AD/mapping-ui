@@ -1,25 +1,48 @@
 <div>
-  <div *ngFor="let mapping of triples; let index = index" class="mr-12 ml-12 ">
+  <div *ngFor="let mapping of triples; let index = index" fxLayout="row" fxLayoutAlign="start stretch">
+    <div  class="triples-block" [fxFlex]="97">
     <app-mapper-cell [cellMapping]="mapping.getSubject()"
                      [isFirstChild]="isFirstSubject(mapping, index)"
+                     [cellType]="SUBJECT"
                      (onDrop)="onDrop($event, mapping, SUBJECT, index)"
                      (onDelete)="onDelete($event, mapping, SUBJECT)"
                      (click)="openMapperDialog($event, mapping, SUBJECT, index)"
-                     appCypressData="subject"></app-mapper-cell>
+                     appCypressData="subject" [fxFlex]="33"></app-mapper-cell>
     <app-mapper-cell [cellMapping]="mapping.getPredicate()"
                      [isTypeProperty]="mapping.isTypeProperty"
                      [isFirstChild]="isFirstPredicate(mapping, index)"
+                     [cellType]="PREDICATE"
                      (onDrop)="onDrop($event, mapping, PREDICATE, index)"
                      (onDelete)="onDelete($event, mapping, PREDICATE)"
                      (click)="openMapperDialog($event, mapping, PREDICATE, index)"
-                     appCypressData="predicate"></app-mapper-cell>
+                     appCypressData="predicate" [fxFlex]="33"></app-mapper-cell>
     <app-mapper-cell [cellMapping]="mapping.getObject()"
+                     [cellType]="OBJECT"
                      (onDrop)="onDrop($event, mapping, OBJECT, index)"
                      (onDelete)="onDelete($event, mapping, OBJECT)"
                      (click)="openMapperDialog($event, mapping, OBJECT, index)"
-                     appCypressData="object"></app-mapper-cell>
-    <div class="plus-cell" *ngIf="isPlusApplicable(index)" (click)="continueMapping($event, mapping, index)">+</div>
-    <div class="plus-cell" *ngIf="isDeleteApplicable(index)"><mat-icon (click)="deleteTripleMapping(mapping)">delete_forever</mat-icon></div>
-    <div class="insert" *ngIf="isInsertApplicable(index)" (click)="insertMapping($event, mapping, index)"></div>
+                     appCypressData="object" [fxFlex]="33"></app-mapper-cell>
+    </div>
+
+    <div [fxFlex]="3">
+      <div>
+        <span class="btn btn-link text-muted" *ngIf="isDeleteApplicable(index)">
+			    <span class="icon-trash" (click)="deleteTripleMapping(mapping)"></span>
+			  </span>
+      </div>
+
+      <div>
+        <span class="btn btn-link text-muted" *ngIf="isInsertApplicable(index)">
+			    <span class="icon-plus" (click)="insertMapping($event, mapping, index)"></span>
+			  </span>
+      </div>
+
+      <div>
+        <span class="btn btn-link text-muted" *ngIf="isPlusApplicable(index)">
+			    <span class="icon-arrow-right" (click)="continueMapping($event, mapping, index)"></span>
+			  </span>
+      </div>
+      &nbsp;
+    </div>
   </div>
 </div>

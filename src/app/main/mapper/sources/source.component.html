@@ -1,9 +1,11 @@
-<div class="m-12 sources">
-  <div cdkDropList cdkDropListOrientation="horizontal" fxLayoutAlign="start end " fxLayout="row wrap" class="sources-list"
-       [cdkDropListData]="sources" cdkDropListSortingDisabled appCypressData="source-box">
-    <div class="source-box m-8 p-8" *ngFor="let source of sources;let i = index" cdkDrag
-         [attr.appCypressData]="'source-' + i" [cdkDragData]="source">
-      {{source.title}}
+<div class="card">
+  <div class="m-12 card-block">
+    <div cdkDropList cdkDropListOrientation="horizontal" class="rdfm-columns-container"
+         [cdkDropListData]="sources" cdkDropListSortingDisabled appCypressData="source-box">
+      <div class="rdfm-column-item m-8 p-8 cursor-move" *ngFor="let source of sources;let i = index" cdkDrag
+           [attr.appCypressData]="'source-' + i" [cdkDragData]="source">
+        {{source.title}}
+      </div>
     </div>
   </div>
 </div>

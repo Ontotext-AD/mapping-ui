@@ -1,7 +1,7 @@
 <div fxLayout="row" fxLayoutAlign="end end" appCypressData="header">
-  <button (click)="saveMapping()" mat-flat-button color="warn" class="mr-12">{{"BUTTONS.SAVE" | translate}}</button>
-  <button mat-flat-button color="warn" class="mr-12" (click)="openDialog()">{{"BUTTONS.VIEW_JSON" | translate}}</button>
-  <button mat-flat-button color="warn" class="mr-12" (click)="getRDF()">{{"BUTTONS.RDF" | translate}}</button>
-  <button mat-flat-button color="warn" class="mr-12" (click)="getSPARQL()">{{"BUTTONS.SPARQL" | translate}}</button>
-  <button *ngIf="isDevEnv()" mat-flat-button color="warn" class="mr-12" (click)="newMapping()">{{"BUTTONS.NEW" | translate}}</button>
+  <button (click)="saveMapping()" class="mr-12 btn-primary">{{"BUTTONS.SAVE" | translate}}</button>
+  <button class="mr-12 btn-primary" (click)="openDialog()">{{"BUTTONS.VIEW_JSON" | translate}}</button>
+  <button class="mr-12 btn-primary" (click)="getRDF()">{{"BUTTONS.RDF" | translate}}</button>
+  <button class="mr-12 btn-primary" (click)="getSPARQL()">{{"BUTTONS.SPARQL" | translate}}</button>
+  <button *ngIf="isDevEnv()" class="mr-12 btn-primary" (click)="newMapping()">{{"BUTTONS.NEW" | translate}}</button>
 </div>

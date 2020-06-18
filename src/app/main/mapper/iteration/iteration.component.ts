@@ -281,21 +281,21 @@ export class IterationComponent extends OnDestroyMixin implements OnInit {
       this.deleteObjectTypeMapping(mapping, true);
     } else {
       this.deleteObjectPropertyMapping(mapping, true);
-    }
 
-    if (mapping.isRoot) {
-      let countMappings = mapping.getSubject().getTypeMappings().length;
-      mapping.getSubject().getPropertyMappings().forEach((propertyMapping) => {
-        countMappings += propertyMapping.getValues().length;
-      });
 
-      if (countMappings === 0) {
-        const subjectMappings = this.mapping.getSubjectMappings();
-        const index = subjectMappings.indexOf(mapping.getSubject() as SubjectMappingImpl);
-        subjectMappings.splice(index, 1);
+      if (mapping.isRoot) {
+        let countMappings = mapping.getSubject().getTypeMappings().length;
+        mapping.getSubject().getPropertyMappings().forEach((propertyMapping) => {
+          countMappings += propertyMapping.getValues().length;
+        });
+
+        if (countMappings === 0) {
+          const subjectMappings = this.mapping.getSubjectMappings();
+          const index = subjectMappings.indexOf(mapping.getSubject() as SubjectMappingImpl);
+          subjectMappings.splice(index, 1);
+        }
       }
     }
-
     this.init();
   }
 }

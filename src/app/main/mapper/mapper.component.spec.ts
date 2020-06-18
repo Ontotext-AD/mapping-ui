@@ -20,6 +20,7 @@ import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from "@angular/material/icon";
 import {MatChipsModule} from "@angular/material/chips";
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 
 describe('MapperComponent', () => {
@@ -47,7 +48,8 @@ describe('MapperComponent', () => {
         FormsModule,
         MatInputModule,
         MatIconModule,
-        MatChipsModule
+        MatChipsModule,
+        FlexLayoutModule
       ]
     })
     .compileComponents();
