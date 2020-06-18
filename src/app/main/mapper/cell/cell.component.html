@@ -1,37 +1,163 @@
-<div cdkDrag class="mapping-cell mapping-subject mr-12" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
-     (cdkDropListDropped)="drop($event)">
-
-  <div *ngIf="!!this.getSourceType() && isFirstChild">
-    <mat-icon cdkDrag [cdkDragData]="cellMapping" cdkDragHandle>file_copy</mat-icon>
-    <mat-icon (click)="deleteMapping($event)">delete_forever</mat-icon>
+<div cdkDrag class="mr-12" fxFill>
+  <div class="triple-item" *ngIf="isEmpty(); else notEmptyBlock">
+    <span class="ti-placeholder" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
+          (cdkDropListDropped)="drop($event)">{{getCellType()}}</span>
   </div>
 
-  <div *ngIf="isFirstChild && isTypeProperty">
-    a
-  </div>
-  <div *ngIf="isFirstChild && !isTypeProperty">
-    <div>
-      <b>Source:</b>
-      <span *ngIf="getSourceType() === 'column'">
-                @Col:{{getValueSource().getColumnName()}}
-            </span>
-      <span *ngIf="getSourceType() === 'constant'">
-                Constant:{{getValueSource().getConstant()}}
-            </span>
-      <span *ngIf="getSourceType() === 'row_index' || getSourceType() === 'record_id'">
-                {{getValueSource().source}}
-            </span>
-    </div>
+  <ng-template #notEmptyBlock>
+    <div class="triple-item" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
+         (cdkDropListDropped)="drop($event)" fxFill>
+      <div class="ti-row">
 
-    <div *ngIf="getTransformation()">
-      <b>Transformation:</b>
-      <div>{{getTransformation().getExpression()}}</div>
-      <div><b>Transformation Language:</b>: {{getTransformation().getLanguage()}}</div>
+        <div *ngIf="isFirstChild && isTypeProperty">
+          a
+        </div>
+
+        <div *ngIf="isFirstChild && !isTypeProperty; else emptyBlock" fxFill>
+          <div>
+            <div class="ti-type" [fxFlex]="25" [ngClass]="{
+              'type-iri': getType() === IRI,
+              'type-literal': getType() === LITERAL,
+              'type-node': getType() === UNIQUE_BNODE || getType() === VALUE_BNODE
+              }">
+              <span *ngIf="getType()">{{getValueTypeLabel()}}</span>
+            </div>
+
+            <div [fxFlex]="25">
+              <div *ngIf="getTransformationType()">
+                <span class="ti-transform" [ngClass]="{
+                  'type-grel': getTransformationType() === GREL,
+                  'type-prefix': getTransformationType() === PREFIX
+                  }">
+                  {{getTransformationLabel()}}
+                </span>
+              </div>
+            </div>
+
+            <div [fxFlex]="25">
+              <div class="ti-type" [fxFlex]="25" [ngClass]="{
+                'type-datatype': getType() === DATATYPE_LITERAL,
+                'type-language-literal': getType() === LANGUAGE_LITERAL
+                }">
+                <span *ngIf="isSecondaryType()">
+                  {{getSecondaryTypeLabel()}}
+                </span>
+              </div>
+            </div>
+
+            <div [fxFlex]="25">
+              <div *ngIf="getSecondaryTransformationType()">
+                <span class="ti-transform" [ngClass]="{
+                  'type-grel': getSecondaryTransformationType().getLanguage() === GREL,
+                  'type-prefix': getSecondaryTransformationType().getLanguage() === PREFIX
+                  }">
+                  {{getSecondaryTransformationLabel()}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div fxFill>
+            <div [fxFlex]="50">
+              <span class="ti-source">
+                <span *ngIf="getSourceType() === 'column'">
+                  <span class="ti-source-type type-col" title="column">
+                    {{'CONSTANTS.COLUMN' | translate}}
+                  </span>
+                  {{getValueSource().getColumnName()}}
+                </span>
+
+                <span *ngIf="getSourceType() === 'constant'">
+                  <span class="ti-source-type type-const" title="Const">
+                    {{'CONSTANTS.CONSTANT' | translate}}
+                  </span>
+                  {{getValueSource().getConstant()}}
+                </span>
+
+                <span *ngIf="getSourceType() === 'row_index' || getSourceType() === 'record_id'">
+                  <span class="ti-source-type index" title="Const">
+                   {{'CONSTANTS.INDEX' | translate}}
+                  </span>
+                  {{getValueSource().source}}
+                </span>
+              </span>
+            </div>
+
+            <div [fxFlex]="50">
+              <span class="ti-source">
+                <div *ngIf="getDatatypeSource()">
+                  <span *ngIf="getDatatypeSourceType() === 'column'">
+                    <span class="ti-source-type type-col" title="column">
+                      {{'CONSTANTS.COLUMN' | translate}}
+                    </span>
+                    {{getDatatypeSource().getColumnName()}}
+                  </span>
+
+                  <span *ngIf="getDatatypeSourceType() === 'constant'">
+                    <span class="ti-source-type type-const" title="Const">
+                      {{'CONSTANTS.CONSTANT' | translate}}
+                    </span>
+                    {{getDatatypeSource().getConstant()}}
+                  </span>
+
+                  <span *ngIf="getDatatypeSourceType() === 'row_index' || getDatatypeSourceType() === 'record_id'">
+                    <span class="ti-source-type index" title="Const">
+                      {{'CONSTANTS.INDEX' | translate}}
+                    </span>
+                    {{getDatatypeSource().source}}
+                  </span>
+                </div>
+
+                <div *ngIf="getValueTypeLanguageSource()">
+                  <span *ngIf="getValueTypeLanguageSourceType() === 'column'">
+                    <span class="ti-source-type type-col" title="column">
+                      {{'CONSTANTS.COLUMN' | translate}}
+                    </span>
+                    {{getValueTypeLanguageSource().getColumnName()}}
+                  </span>
+
+                  <span *ngIf="getValueTypeLanguageSourceType() === 'constant'">
+                    <span class="ti-source-type type-const" title="Const">
+                      {{'CONSTANTS.CONSTANT' | translate}}
+                    </span>
+                    {{getValueTypeLanguageSource().getConstant()}}
+                  </span>
+
+                  <span *ngIf="getValueTypeLanguageSourceType() === 'row_index' || getValueTypeLanguageSourceType() === 'record_id'">
+                    <span class="ti-source-type index" title="Const">
+                      {{'CONSTANTS.INDEX' | translate}}
+                    </span>
+                    {{getValueTypeLanguageSource().source}}
+                  </span>
+                </div>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ti-footer" *ngIf="!!this.getSourceType() && isFirstChild">
+        <div class="ti-preview">
+          <!-- empty -->
+        </div>
+        <div class="ti-actions">
+          <span class="btn btn-link text-muted">
+            <span cdkDrag [cdkDragData]="cellMapping" cdkDragHandle>
+						  <span class="icon-copy"></span>
+            </span>
+          </span>
+
+          <span class="btn btn-link text-muted">
+					  <span class="icon-trash" (click)="deleteMapping($event)"></span>
+          </span>
+        </div>
+      </div>
     </div>
-    <div *ngIf="getValueType()">
-      <b>Value Type: </b>
-      <span *ngIf="getValueType().getType() !== 'iri'; else elseBlock">{{getValueType() | json}}</span>
-      <ng-template #elseBlock>{{'IRI'}}</ng-template>
-    </div>
-  </div>
+  </ng-template>
 </div>
+
+<ng-template #emptyBlock>
+  <div class="ti-row">
+    <!-- empty -->
+  </div>
+</ng-template>

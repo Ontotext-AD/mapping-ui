@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 import {HeaderComponent, JSONValueDialog} from 'src/app/main/mapper/header/header.component';
 import {SourceComponent} from 'src/app/main/mapper/sources/source.component';
 import {TranslateModule} from '@ngx-translate/core';
-import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {DragDropModule} from '@angular/cdk/drag-drop';
@@ -46,7 +45,6 @@ import {MatIconModule} from '@angular/material/icon';
 
     FlexLayoutModule,
     MatFormFieldModule,
-    MatButtonModule,
     DragDropModule,
     FormsModule,
     ReactiveFormsModule,

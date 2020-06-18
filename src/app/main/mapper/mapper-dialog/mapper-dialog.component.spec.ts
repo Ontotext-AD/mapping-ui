@@ -6,7 +6,6 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {ReactiveFormsModule} from "@angular/forms";
-import {MatButtonModule} from "@angular/material/button";
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {Triple} from "src/app/models/triple";
 import {HttpClientTestingModule} from '@angular/common/http/testing';
@@ -28,7 +27,6 @@ describe('MapperDialogComponent', () => {
         MatRadioModule,
         MatCheckboxModule,
         ReactiveFormsModule,
-        MatButtonModule,
         MatDialogModule,
         HttpClientTestingModule,
         RouterTestingModule,

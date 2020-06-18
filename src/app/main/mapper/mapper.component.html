@@ -1,28 +1,34 @@
-<div fxLayout="column" fxLayoutAlign="end stretch" cdkDropListGroup appCypressData="mapper">
-  <app-header [mapping]="mapping" (onNewMapping)="onNewMapping()" (savedMapping)="onSavedMapping()" (onGetRDF)="onGetRDF()" (onSPARQL)="onSPARQL()"></app-header>
-  <app-definitions [sources]="sources"></app-definitions>
+<div class="row mb-3">
+  <div class="col-lg-12" cdkDropListGroup appCypressData="mapper">
+    <app-header [mapping]="mapping" (onNewMapping)="onNewMapping()" (savedMapping)="onSavedMapping()"
+                (onGetRDF)="onGetRDF()" (onSPARQL)="onSPARQL()"></app-header>
+    <app-definitions [sources]="sources"></app-definitions>
 
-  <div class="mr-12 ml-12 mb-12">
-    <mat-form-field appearance="fill">
-      <mat-label>Base IRI</mat-label>
-      <input matInput [(ngModel)]="mapping.baseIRI">
-    </mat-form-field>
+    <div class="mr-12 ml-12 mb-12">
+      <mat-form-field appearance="fill">
+        <mat-label>Base IRI</mat-label>
+        <input matInput [(ngModel)]="mapping.baseIRI">
+      </mat-form-field>
+    </div>
+
+    <div class="mr-12 ml-12 mb-12">
+      <mat-form-field>
+        <mat-chip-list #namespaces area-label="Namespaces management">
+          <mat-chip *ngFor="let namespace of mapping.namespaces | keyvalue" (removed)="removeNamespace(namespace.key)">
+            {{namespace.key}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input placeholder="Add new prefix by typing prefix=value, i.e owl=http://www.w3.org/2002/07/owl#"
+                 [matChipInputFor]="namespaces"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [matChipInputAddOnBlur]="addOnBlur"
+                 (matChipInputTokenEnd)="addNamespace($event)">
+        </mat-chip-list>
+      </mat-form-field>
+    </div>
+
+    <div class="mr-12 ml-12 mb-12">Namespaces: {{mapping.getNamespaces() | json}}</div>
+
+    <app-iteration [mapping]="mapping" [sources]="sources"></app-iteration>
   </div>
-  <div class="mr-12 ml-12 mb-12">
-    <mat-form-field>
-      <mat-chip-list #namespaces area-label="Namespaces management">
-        <mat-chip *ngFor="let namespace of mapping.namespaces | keyvalue" (removed)="removeNamespace(namespace.key)">
-        {{namespace.key}}
-          <mat-icon matChipRemove>cancel</mat-icon>
-        </mat-chip>
-        <input placeholder="Add new prefix by typing prefix=value, i.e owl=http://www.w3.org/2002/07/owl#"
-        [matChipInputFor]="namespaces"
-        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        [matChipInputAddOnBlur]="addOnBlur"
-        (matChipInputTokenEnd)="addNamespace($event)">
-      </mat-chip-list>
-    </mat-form-field>
-  </div>
-  <div class="mr-12 ml-12 mb-12">Namespaces: {{mapping.getNamespaces() | json}}</div>
-  <app-iteration [mapping]="mapping" [sources]="sources"></app-iteration>
 </div>

@@ -25,3 +25,11 @@ Object.defineProperty(document.body.style, 'transform', {
     };
   },
 });
+
+Object.defineProperty(window, 'getComputedStyle', {
+  value: () => ({
+    getPropertyValue: (prop) => {
+      return '';
+    }
+  })
+});

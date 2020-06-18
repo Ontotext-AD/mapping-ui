@@ -1,0 +1,203 @@
+
+/*-------------------------------------------------------------
+    add this line to bootstrap-graphdb-theme.css
+-------------------------------------------------------------*/
+.breadcrumb {
+  border-radius: 0;
+}
+
+
+/*-------------------------------------------------------------
+    RDF mapping
+-------------------------------------------------------------*/
+
+.rdfm-columns-container {
+  max-height: 144px;
+  overflow-y: scroll;
+}
+
+.rdfm-column-item {
+  font-size: 1rem;
+  display: inline-block;
+  border: 1px solid rgba(0,0,0,.125);
+  padding: 0.25rem 0.5rem;
+  margin: 0 0.1rem 0.5rem;
+}
+.rdfm-column-item:hover {
+  background-color: rgba(237, 79, 47, 0.05);
+}
+
+.triples-block {
+  display: flex;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  background-color: #fff;
+}
+
+.triples-block::after {
+  content: ";";
+  font-size: 2.5rem;
+  padding: 0 0.3rem;
+  color: #ccc;
+  align-self: center;
+  margin-top: -0.4rem;
+}
+.triple-item {
+  flex-grow: 1;
+  flex-basis: 0;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #eee;
+}
+.triple-item:hover {
+  background-color: rgba(237, 79, 47, 0.05);
+}
+
+.ti-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 2;
+  margin-bottom: 0.25rem;
+}
+.ti-row > :nth-child(1) {
+    min-width: 60%;
+}
+.ti-row > :nth-child(2) {
+    min-width: 20%;
+}
+.ti-row > :nth-child(3) {
+    margin-left: 0.5rem;
+    min-width: 15%;
+}
+
+.ti-a {
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1rem;
+}
+
+.ti-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0 0 0;
+  margin-top: 0.5rem;
+  border-top:1px solid #eee
+}
+.ti-preview {
+  font-size: 0.85em;
+  word-break: break-all;
+  margin-right: 0.5rem;
+}
+.ti-source {
+  font-weight: 400;
+  font-size: 1rem;
+  display: block;
+  word-break: break-all;
+  padding-right: 1rem;
+}
+.ti-prefix {
+  display: block;
+}
+
+.ti-source-type {
+  background-color: gray;
+  border-radius: 20rem;
+  color: #fff;
+  font-size: 0.875rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  display: inline-block;
+  text-align: center;
+  line-height: 1.2rem;
+  font-weight: 300;
+}
+.ti-source-type.type-col { background-color: red }
+.ti-source-type.type-const { background-color: #c92d39 }
+
+
+/* Transformations */
+.ti-transform {
+  background-color: #ED4F2F;
+  color: #fff;
+  padding: 0.125rem 0.5rem 0.1rem 0.5rem;
+  border-radius: 20rem;
+  font-weight: 400;
+}
+
+.ti-transform-block {
+  text-align: right;
+  max-width: 50%;
+}
+.ti-transform.type-grel {background-color: rgb(255, 0, 255)}
+.ti-transform.type-prefix {background-color: rgb(70, 189, 198)}
+
+
+/* Types */
+.ti-type {
+  font-weight: 700;
+}
+.ti-type.type-iri {color: rgb(66, 133, 244)}
+.ti-type.type-bnode {color: rgb(191, 144, 0)}
+.ti-type.type-literal {color: rgb(52, 168, 83)}
+.ti-type.type-datatype {color: rgb(160, 190, 0)}
+.ti-type.type-language-literal {color: rgb(160, 190, 0)}
+
+
+/* empty row */
+.ti-placeholder {
+  border: 1px dashed #ddd;
+  padding: 0.5rem;
+  font-size: 1.125rem;
+  color: #ccc;
+  background-color: #fff
+}
+
+.ti-footer .btn-link {
+  padding: .25rem;
+}
+.ti-actions {
+  white-space: nowrap;
+}
+
+
+/* inline drilldown / triples subrow */
+.triples-blocks-subrow {
+  background-color: rgba(45, 186, 171, 0.3);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+.triples-blocks-subrow .triples-block:last-of-type {
+ margin-bottom: 0;
+}
+
+.triples-blocks-subrow::before {
+  content: "";
+  border-width: 1rem;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: #CFE9E6;
+  position: absolute;
+  top: -0.75rem;
+  right: 16.66666666666%;
+  margin-right: -0.5rem;
+  display: block;
+  content: "";
+  border-style: solid;
+  border-top-width: 0;
+}
+
+.triples-blocks-subrow.right-arrow::before {
+  right: 16.66666666666%;
+}
+.triples-blocks-subrow.center-arrow::before {
+  right: 50%;
+}
+.triples-blocks-subrow.center-arrow::before {
+  right: auto;
+  left: 16.66666666666%;
+}
