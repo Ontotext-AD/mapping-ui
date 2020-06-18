@@ -73,6 +73,14 @@ export class PropertyMappingImpl implements PropertyMapping, MappingBase {
     this.getProperty().setValueTransformation(transformation);
   }
 
+  public getPreview(): string[] {
+    return this.getProperty() && this.getProperty().getPreview();
+  }
+
+  clearPreview(): void {
+    delete this.getProperty().preview;
+  }
+
   public setPropertyMappings(mappings: PropertyMappingImpl[]) { // eslint-disable-line @typescript-eslint/no-unused-vars
   }
 

@@ -9,6 +9,7 @@ import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
 export class SimpleIRIValueMappingImpl implements SimpleIRIValueMapping, MappingBase {
   @Expose() @Type(() => ValueTransformationImpl) transformation?: ValueTransformation;
   @Expose() @Type(() => ColumnImpl) valueSource: Column;
+  preview: string[];
 
   constructor(transformation: ValueTransformation, valueSource: Column) {
     this.transformation = transformation;
@@ -41,6 +42,14 @@ export class SimpleIRIValueMappingImpl implements SimpleIRIValueMapping, Mapping
 
   public getValueType(): IRIImpl {
     return undefined;
+  }
+
+  public getPreview(): string[] {
+    return this.preview;
+  }
+
+  clearPreview(): void {
+    delete this.preview;
   }
 
   public clearMapping() {

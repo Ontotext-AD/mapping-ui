@@ -138,7 +138,9 @@
 
       <div class="ti-footer" *ngIf="!!this.getSourceType() && isFirstChild">
         <div class="ti-preview">
-          <!-- empty -->
+          <div *ngFor="let previewItem of getPreview();">
+            {{previewItem}}
+          </div>
         </div>
         <div class="ti-actions">
           <span class="btn btn-link text-muted">

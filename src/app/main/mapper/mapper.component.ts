@@ -67,6 +67,15 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         });
   }
 
+  onPreview() {
+    this.modelManagementService.removePreview(this.mapping);
+    this.mapperService.preview(this.mapping)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((data) => {
+          this.mapping = plainToClass(MappingDefinitionImpl, data);
+        });
+  }
+
   public onNewMapping() {
     this.mapping = new MappingDefinitionImpl(undefined, undefined, []);
   }

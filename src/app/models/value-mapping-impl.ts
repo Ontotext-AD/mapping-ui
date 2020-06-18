@@ -11,6 +11,7 @@ export class ValueMappingImpl implements ValueMapping, MappingBase {
   @Expose() @Type(() => ValueTransformationImpl) transformation?: ValueTransformation;
   @Expose() @Type(() => ColumnImpl) valueSource: Column;
   @Expose() @Type(() => IRIImpl) valueType: IRI;
+  preview: string[];
 
   constructor(transformation: ValueTransformationImpl, valueSource: ColumnImpl, valueType: IRI) {
     this.transformation = transformation;
@@ -63,5 +64,13 @@ export class ValueMappingImpl implements ValueMapping, MappingBase {
 
   public setPropertyMappings(mappings: PropertyMappingImpl[]) {
     this.getValueType().setPropertyMappings(mappings);
+  }
+
+  public getPreview(): string[] {
+    return this.preview;
+  }
+
+  clearPreview(): void {
+    delete this.preview;
   }
 }

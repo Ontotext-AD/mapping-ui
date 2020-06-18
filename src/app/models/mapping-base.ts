@@ -72,6 +72,16 @@ export interface MappingBase {
   setValueTransformation(transformation: ValueTransformationImpl);
 
   /**
+   * Gets the cell's preview
+   */
+  getPreview(): string[];
+
+  /**
+   * Clears the preview metadata
+   */
+  clearPreview(): void;
+
+  /**
    * Clears the cells mapping, not altering type nor property mappings
    */
   clearMapping(): void;

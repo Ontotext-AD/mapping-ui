@@ -5,7 +5,8 @@
     "RDF": "RDF",
     "SPARQL": "SPARQL",
     "NEW": "New mapping",
-    "SAVE": "Save"
+    "SAVE": "Save",
+    "PREVIEW": "Preview"
   },
   "LABELS": {
     "RDF_VALUE": "RDF value",

@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   @Output() onNewMapping = new EventEmitter<void>();
   @Output() onGetRDF = new EventEmitter<void>();
   @Output() onSPARQL = new EventEmitter<void>();
+  @Output() onPreview = new EventEmitter<void>();
   @Input() mapping: MappingDefinitionImpl;
 
 
@@ -50,6 +51,10 @@ export class HeaderComponent implements OnInit {
     this.onSPARQL.emit();
   }
 
+  preview(): void {
+    this.onPreview.emit();
+  }
+
   public isDevEnv() {
     return !environment.production;
   }
@@ -71,6 +76,7 @@ export class JSONValueDialog {
   }
 
   public passTest() {
+    this.modelManagementService.removePreview(this.data.mapping);
     return Convert.mappingDefinitionToJson(this.data.mapping);
   }
 }
