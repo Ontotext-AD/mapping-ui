@@ -19,13 +19,15 @@ import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 import {MappingDefinitionService} from './rest/mapping-definition.service';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {SubjectMappingImpl} from '../models/subject-mapping-impl';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModelManagementService {
-  constructor(private mappingDefinitionService: MappingDefinitionService) { }
+  constructor(private mappingDefinitionService: MappingDefinitionService) {
+  }
 
   getPropertyMappings(subject: MappingBase): PropertyMappingImpl[] {
     return subject.getPropertyMappings();
@@ -349,6 +351,7 @@ export class ModelManagementService {
   }
 
   storeModelMapping(mappingDefinition: MappingDefinitionImpl): Observable<void> {
+    this.removePreview(mappingDefinition);
     return this.mappingDefinitionService.saveMappingDefinition(this.mappingDefinitionToJson(mappingDefinition));
   }
 
@@ -384,5 +387,35 @@ export class ModelManagementService {
       subject.setPropertyMappings([]);
     }
     subject.getPropertyMappings().push(predicate);
+  }
+
+  removePreview(mapping: MappingDefinition): void {
+    mapping.subjectMappings.forEach((s) => {
+      const smImpl = (s as SubjectMappingImpl);
+      smImpl.clearPreview();
+      this.removeFromTypesAndProperties(smImpl);
+    });
+  }
+
+  private removeFromTypesAndProperties(mappingBase: MappingBase) {
+    if (mappingBase.getPropertyMappings()) {
+      mappingBase.getPropertyMappings().forEach((pm) => {
+        pm.clearPreview();
+        pm.getValues().forEach((vm) => {
+          vm.clearPreview();
+          this.removeFromTypesAndProperties(vm);
+        });
+      });
+    }
+
+    if (mappingBase.getTypeMappings()) {
+      mappingBase.getTypeMappings().forEach((tm) => {
+        tm.clearPreview();
+      });
+    }
+  }
+
+  getPreview(cellMapping: MappingBase) {
+    return cellMapping && cellMapping.getPreview();
   }
 }

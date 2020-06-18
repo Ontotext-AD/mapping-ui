@@ -1,7 +1,7 @@
 <div class="row mb-3">
   <div class="col-lg-12" cdkDropListGroup appCypressData="mapper">
     <app-header [mapping]="mapping" (onNewMapping)="onNewMapping()" (savedMapping)="onSavedMapping()"
-                (onGetRDF)="onGetRDF()" (onSPARQL)="onSPARQL()"></app-header>
+                (onGetRDF)="onGetRDF()" (onSPARQL)="onSPARQL()" (onPreview)="onPreview()"></app-header>
     <app-definitions [sources]="sources"></app-definitions>
 
     <div class="mr-12 ml-12 mb-12">

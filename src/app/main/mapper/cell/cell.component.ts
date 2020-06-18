@@ -106,6 +106,10 @@ export class CellComponent {
       this.modelManagementService.getValueTypeLanguage(this.cellMapping).getValueSource();
   }
 
+  getPreview(): string[] {
+    return this.modelManagementService.getPreview(this.cellMapping);
+  }
+
   public drop($event: CdkDragDrop<Source, any>) {
     this.onDrop.emit($event);
   }

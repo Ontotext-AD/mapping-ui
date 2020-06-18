@@ -58,6 +58,14 @@ export class SubjectMappingImpl implements SubjectMapping, MappingBase {
     // do nothing
   }
 
+  getPreview() {
+    return this.getSubject() && this.getSubject().getPreview();
+  }
+
+  clearPreview() {
+    delete this.getSubject().preview;
+  }
+
   public clearMapping() {
     this.setSubject(undefined);
     return this;
