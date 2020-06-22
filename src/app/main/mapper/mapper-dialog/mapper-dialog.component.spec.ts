@@ -11,12 +11,19 @@ import {Triple} from "src/app/models/triple";
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {Observable} from "rxjs";
 
 
 
 describe('MapperDialogComponent', () => {
   let component: MapperDialogComponent;
   let fixture: ComponentFixture<MapperDialogComponent>;
+  const dialogMock = {
+    backdropClick: () => {
+      return new Observable<any>()},
+    keydownEvents: () => {
+      return new Observable<any>()}
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -34,7 +41,7 @@ describe('MapperDialogComponent', () => {
       ],
       providers: [
         TranslateService,
-        {provide: MatDialogRef, useValue: {}},
+        {provide: MatDialogRef,  useValue: dialogMock},
         {
           provide: MAT_DIALOG_DATA,
           useValue: {

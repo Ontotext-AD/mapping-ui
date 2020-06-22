@@ -4,6 +4,9 @@ import {ModelManagementService} from 'src/app/services/model-management.service'
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {environment} from 'src/environments/environment';
 import {Convert} from 'src/app/models/mapping-definition';
+import {DialogService} from 'src/app/main/components/dialog/dialog.service';
+import {TranslateService} from '@ngx-translate/core';
+import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 
 export interface JSONDialogData {
   mapping
@@ -14,7 +17,7 @@ export interface JSONDialogData {
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent extends OnDestroyMixin implements OnInit {
   @Output() savedMapping = new EventEmitter<void>();
   @Output() onNewMapping = new EventEmitter<void>();
   @Output() onGetRDF = new EventEmitter<void>();
@@ -24,7 +27,11 @@ export class HeaderComponent implements OnInit {
 
 
   constructor(public dialog: MatDialog,
-              private modelManagementService: ModelManagementService) { }
+              private modelManagementService: ModelManagementService,
+              private dialogService: DialogService,
+              private translateService: TranslateService) {
+    super();
+  }
 
   ngOnInit(): void {
   }
@@ -60,7 +67,14 @@ export class HeaderComponent implements OnInit {
   }
 
   public newMapping() {
-    this.onNewMapping.emit();
+    this.dialogService.confirm({
+      content: this.translateService.instant('MESSAGES.CONFIRM_NEW_MAPPING'),
+    }).pipe(untilComponentDestroyed(this))
+        .subscribe((result) => {
+          if (result) {
+            this.onNewMapping.emit();
+          }
+        });
   }
 }
 

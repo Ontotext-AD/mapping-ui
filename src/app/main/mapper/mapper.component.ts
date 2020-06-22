@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {Source} from 'src/app/models/source';
@@ -19,6 +19,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   sources: Array<Source>;
   mapping: MappingDefinitionImpl = plainToClass(MappingDefinitionImpl, EMPTY_MAPPING);
   rdf: string;
+  onSave = new EventEmitter<any>();
 
   constructor(private modelManagementService: ModelManagementService,
               private mapperService: MapperService) {
@@ -45,7 +46,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   onSavedMapping() {
     this.modelManagementService.storeModelMapping(this.mapping)
         .pipe(untilComponentDestroyed(this))
-        .subscribe();
+        .subscribe( () => this.onSave.emit());
   }
 
   onGetRDF() {

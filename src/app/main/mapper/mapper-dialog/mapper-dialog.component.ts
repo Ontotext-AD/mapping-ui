@@ -18,6 +18,8 @@ import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 import {TypeMapping} from 'src/app/models/type-mapping';
 import {IRIImpl} from 'src/app/models/iri-impl';
 import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
+import {DialogService} from 'src/app/main/components/dialog/dialog.service';
+import {TranslateService} from '@ngx-translate/core';
 
 export interface SubjectMapperData {
   mappingData: Triple,
@@ -64,11 +66,12 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   filteredColumnNames: Observable<string[]>;
   filteredNamespaces: Observable<any>;
 
-
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
               private formBuilder: FormBuilder,
-              private modelManagementService: ModelManagementService) {
+              private modelManagementService: ModelManagementService,
+              private dialogService: DialogService,
+              private translateService: TranslateService) {
     super();
   }
 
@@ -79,6 +82,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
     this.showAppropriateFields();
     this.subscribeToValueChanges();
+
+    this.subscribeToCheckDirty();
   }
 
   private init(): void {
@@ -280,6 +285,23 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     return this.data.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase()));
   }
 
+  private subscribeToCheckDirty() {
+    this.dialogRef.disableClose = true;
+    this.dialogRef.backdropClick()
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.checkDirty();
+        });
+
+    this.dialogRef.keydownEvents()
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((event) => {
+          if (event.key === 'Escape' || event.key === 'Esc') {
+            this.checkDirty();
+          }
+        });
+  }
+
   public save() {
     this.mapperForm$
         .pipe(takeUntil(componentDestroyed(this)))
@@ -457,5 +479,24 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   public ngOnDestroy(): void {
+  }
+
+  private checkDirty(event?) {
+    if (this.mapperForm.dirty) {
+      if (event) {
+        event.preventDefault();
+        event.returnValue = '';
+      }
+      this.dialogService.confirm({
+        content: this.translateService.instant('MESSAGES.DISCARD_CHANGES'),
+      }).pipe(untilComponentDestroyed(this))
+          .subscribe((result) => {
+            if (result) {
+              this.dialogRef.close();
+            }
+          });
+    } else {
+      this.dialogRef.close();
+    }
   }
 }

@@ -1,0 +1,22 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0" [ngClass]="data.styleClass">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <mat-icon>{{data.icon}}</mat-icon>
+      <span class="title dialog-title">{{data.title}}</span>
+      <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-16 pb-0 m-0" [innerHTML]="data.content"></div>
+  <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+    <button class="mr-8 btn-outline-primary" (click)="matDialogRef.close()" aria-label="Cancel">
+      {{ (data.type === 'confirm' ? 'DIALOG.CANCEL' : 'DIALOG.CLOSE') | translate}}
+    </button>
+    <button class="btn-primary" *ngIf="isConfirm()" (click)="matDialogRef.close(true)" cdkFocusInitial
+            aria-label="Proceed">
+      {{'DIALOG.PROCEED' | translate}}
+    </button>
+  </div>
+</div>

@@ -17,6 +17,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {FormsModule} from '@angular/forms';
 import {DirectivesModule} from 'src/app/directives/directives.module';
 import {environment} from 'src/environments/environment';
+import {ComponentsModule} from 'src/app/main/components/components.module';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, environment.httpLoaderPrefix, environment.httpLoaderSuffix);
@@ -32,6 +33,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MapperModule,
     MatDialogModule,
     HttpClientModule,
+    ComponentsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

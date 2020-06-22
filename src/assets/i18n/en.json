@@ -34,5 +34,19 @@
     "SUBJECT": "+ Subject",
     "PREDICATE": "+ Predicate",
     "OBJECT": "+ Object"
+  },
+  "MESSAGES": {
+    "CONFIRM_MAPPING_DELETION": "Do You want to remove this mapping?",
+    "DISCARD_CHANGES": "Changes you made will not be saved.",
+    "CONFIRM_NEW_MAPPING": "All mappings will be lost. Do you wat to proceed?"
+  },
+  "DIALOG": {
+    "TITLE_CONFIRM": "Confirm",
+    "TITLE_INFORMATION": "Information",
+    "TITLE_ERROR": "Error",
+    "TITLE_WARNING": "Warning",
+    "CLOSE": "Close",
+    "CANCEL": "Cancel",
+    "PROCEED": "Proceed"
   }
 }
