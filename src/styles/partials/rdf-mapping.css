@@ -201,3 +201,7 @@
   right: auto;
   left: 16.66666666666%;
 }
+
+.mat-option-text {
+  font-size: 12px;
+}

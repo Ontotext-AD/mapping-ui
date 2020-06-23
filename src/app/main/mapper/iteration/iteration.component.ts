@@ -20,6 +20,7 @@ import {Observable, of} from 'rxjs';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
+import {RepositoryService} from '../../../services/rest/repository.service';
 
 
 @Component({
@@ -38,13 +39,15 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   triples: Triple[];
   mappingDetails: MappingDetails;
   isDirty: boolean = false;
+  repoNamespaces: { [key: string]: string };
 
   private boundCheckDirty: any;
 
   constructor(private modelManagementService: ModelManagementService,
               public dialog: MatDialog,
               private dialogService: DialogService,
-              private translateService: TranslateService) {
+              private translateService: TranslateService,
+              private repositoryService: RepositoryService) {
     super();
   }
 
@@ -75,6 +78,12 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     this.convertToTriples(this.mapping);
     this.triples.push(new Triple(undefined, undefined, undefined));
     this.initMappingDetails();
+    this.repositoryService.getNamespaces()
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(
+            (data) => {
+              this.repoNamespaces = data;
+            });
   }
 
   convertToTriples(mapping) {
@@ -155,6 +164,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         mappingDetails: this.mappingDetails,
         sources: this.sources,
         namespaces: this.mapping.namespaces,
+        repoNamespaces: this.repoNamespaces,
         dropped,
       },
     });

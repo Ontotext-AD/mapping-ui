@@ -20,6 +20,7 @@ import {IRIImpl} from 'src/app/models/iri-impl';
 import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
+import {RepositoryService} from '../../../services/rest/repository.service';
 
 export interface SubjectMapperData {
   mappingData: Triple,
@@ -27,6 +28,7 @@ export interface SubjectMapperData {
   mappingDetails: MappingDetails,
   sources: any[],
   namespaces: { [p: string]: string },
+  repoNamespaces: { [p: string]: string },
   dropped;
 }
 
@@ -62,16 +64,18 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   isTransformation: boolean;
   isPrefixTransformation: boolean;
   hasDatatype: boolean;
-  hasLanguage: boolean
+  hasLanguage: boolean;
   filteredColumnNames: Observable<string[]>;
   filteredNamespaces: Observable<any>;
+  filteredConstants: Observable<Observable<any>>;
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
               private formBuilder: FormBuilder,
               private modelManagementService: ModelManagementService,
               private dialogService: DialogService,
-              private translateService: TranslateService) {
+              private translateService: TranslateService,
+              private repositoryService: RepositoryService) {
     super();
   }
 
@@ -265,6 +269,19 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
           this.isLanguagePrefixTransformation = value === Language.Prefix;
         });
 
+    this.filteredConstants = merge(this.mapperForm.get('dataTypeConstant').valueChanges, this.mapperForm.get('constant').valueChanges)
+        .pipe(untilComponentDestroyed(this),
+            map((value) => {
+              let autoCompleteObservable = this.repositoryService.autocompleteIRIs(value);
+              if (this.isTypeProperty) {
+                autoCompleteObservable = this.repositoryService.autocompleteTypes(value);
+              }
+              if (this.isPredicate()) {
+                autoCompleteObservable = this.repositoryService.autocompletePredicates(value);
+              }
+              return autoCompleteObservable.pipe(map((types) => this.replaceIRIPrefixes(types)));
+            }));
+
     this.filteredColumnNames = merge(this.mapperForm.get('columnName').valueChanges, this.mapperForm.get('dataTypeColumnName').valueChanges)
         .pipe(untilComponentDestroyed(this),
             startWith(''),
@@ -276,8 +293,14 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
             map((value) => this.filterNamespace(value)));
   }
 
+  private replaceIRIPrefixes(types) {
+    return types.map((t) => {
+      return this.getPrefixTransformation(t);
+    });
+  }
+
   private filterNamespace(value: string): object[] {
-    return Object.entries(this.data.namespaces).map(([prefix, value]) => ({prefix, value}))
+    return Object.entries({...this.data.namespaces, ...this.data.repoNamespaces}).map(([prefix, value]) => ({prefix, value}))
         .filter((namespace) => namespace.prefix.toLowerCase().startsWith(value.toLowerCase()));
   }
 
@@ -320,7 +343,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   private setData(form: FormGroup) {
     this.setValueType(form);
     this.setTypeSource(form);
-    this.setTypeTransformation(form);
+    this.setTypeTransformation(form.value.expression, form.value.language, this.isTransformation);
   }
 
   private setValueType(form: FormGroup): void {
@@ -337,6 +360,11 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
       } else if (this.isDatatypeConstant && !Helper.isBlank(dataTypeConstant)) {
         this.modelManagementService.setValueTypeDatatypeValueColumnName(this.selected, undefined);
         this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, dataTypeConstant);
+        const transformed = this.getPrefixTransformation(dataTypeConstant);
+        if (transformed.prefix) {
+          this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, transformed.suffix);
+          this.setDataTypeTransformation(transformed.prefix, Language.Prefix.valueOf());
+        }
         this.modelManagementService.setValueTypeDatatypeValueSource(this.selected, form.value.dataTypeValueSource);
       } else if (!this.isDatatypeConstant && !this.isDatatypeColumn) {
         this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, undefined);
@@ -346,8 +374,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
       const datatypeTransformation = form.value.datatypeTransformation;
       if (!Helper.isBlank(datatypeTransformation)) {
-        this.modelManagementService.setValueTypeDatatypeTransformationExpression(this.selected, datatypeTransformation);
-        this.modelManagementService.setDatatypeTransformationLanguage(this.selected, form.value.datatypeLanguage);
+        this.setDataTypeTransformation(datatypeTransformation, form.value.datatypeLanguage);
       }
     }
 
@@ -377,12 +404,26 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     }
   }
 
+  private setDataTypeTransformation(datatypeTransformation: string, datatypeLanguage: string) {
+    this.modelManagementService.setValueTypeDatatypeTransformationExpression(this.selected, datatypeTransformation);
+    this.modelManagementService.setDatatypeTransformationLanguage(this.selected, datatypeLanguage);
+    if (datatypeLanguage === Language.Prefix.valueOf() && !this.data.namespaces[datatypeTransformation]) {
+      this.data.namespaces[datatypeTransformation] = this.data.repoNamespaces[datatypeTransformation];
+    }
+  }
+
   private setTypeSource(form: FormGroup): void {
     this.modelManagementService.setTypeSource(this.selected, form.value.source);
 
     const constant = form.value.constant;
     if (this.isConstant && !Helper.isBlank(constant)) {
-      this.modelManagementService.setConstant(this.selected, constant);
+      const transformed = this.getPrefixTransformation(constant);
+      if (transformed.prefix) {
+        this.setTypeTransformation(transformed.prefix, Language.Prefix.valueOf(), true);
+        this.modelManagementService.setConstant(this.selected, transformed.suffix);
+      } else {
+        this.modelManagementService.setConstant(this.selected, constant);
+      }
     }
 
     const columnName = form.value.columnName;
@@ -391,11 +432,26 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     }
   }
 
-  private setTypeTransformation(form: FormGroup): void {
-    const expression = form.value.expression;
-    if (this.isTransformation && !Helper.isBlank(expression)) {
+  private getPrefixTransformation(constantValue: string) {
+    const allNamespaces = {...this.data.namespaces, ...this.data.repoNamespaces};
+    let transformed = constantValue;
+    let foundPrefix;
+    Object.keys(allNamespaces).forEach((key) => {
+      if (constantValue.startsWith(allNamespaces[key])) {
+        transformed = constantValue.replace(allNamespaces[key], key + ':');
+        foundPrefix = key;
+      }
+    });
+    return {shortened: transformed, original: constantValue, prefix: foundPrefix, suffix: transformed.substr(transformed.lastIndexOf(':') + 1)};
+  }
+
+  private setTypeTransformation(expression: string, language: string, isTransformation: boolean): void {
+    if (isTransformation && !Helper.isBlank(expression)) {
       this.modelManagementService.setExpression(this.selected, expression);
-      this.modelManagementService.setTransformationLanguage(this.selected, form.value.language);
+      this.modelManagementService.setTransformationLanguage(this.selected, language);
+      if (language === Language.Prefix.valueOf() && !this.data.namespaces[expression]) {
+        this.data.namespaces[expression] = this.data.repoNamespaces[expression];
+      }
     }
   }
 
