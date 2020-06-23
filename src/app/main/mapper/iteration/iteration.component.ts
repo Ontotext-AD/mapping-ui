@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
 import {SimpleIRIValueMappingImpl} from 'src/app/models/simple-iri-value-mapping-impl';
@@ -16,8 +16,10 @@ import {Source} from 'src/app/models/source';
 import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 import {MappingDetails} from 'src/app/models/mapping-details';
 import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
-import {of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
+import {DialogService} from 'src/app/main/components/dialog/dialog.service';
+import {TranslateService} from '@ngx-translate/core';
 
 
 @Component({
@@ -25,18 +27,24 @@ import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestro
   templateUrl: './iteration.component.html',
   styleUrls: ['./iteration.component.scss'],
 })
-export class IterationComponent extends OnDestroyMixin implements OnInit {
+export class IterationComponent extends OnDestroyMixin implements OnInit, AfterViewInit, OnDestroy {
   @Input() mapping: MappingDefinitionImpl;
   @Input() sources: Array<Source>;
+  @Input() onSave: Observable<any>;
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
   OBJECT = OBJECT_SELECTOR;
   triples: Triple[];
   mappingDetails: MappingDetails;
+  isDirty: boolean = false;
+
+  private boundCheckDirty: any;
 
   constructor(private modelManagementService: ModelManagementService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private dialogService: DialogService,
+              private translateService: TranslateService) {
     super();
   }
 
@@ -46,9 +54,23 @@ export class IterationComponent extends OnDestroyMixin implements OnInit {
 
   ngOnInit(): void {
     this.init();
+    this.boundCheckDirty = this.checkDirty.bind(this);
+    this.onSave
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.isDirty = false;
+        });
   }
 
-  init() {
+  ngAfterViewInit() {
+    window.addEventListener('beforeunload', this.boundCheckDirty);
+  }
+
+  init(isDirty?: boolean) {
+    if (isDirty) {
+      this.isDirty = isDirty;
+    }
+
     this.triples = [];
     this.convertToTriples(this.mapping);
     this.triples.push(new Triple(undefined, undefined, undefined));
@@ -148,13 +170,13 @@ export class IterationComponent extends OnDestroyMixin implements OnInit {
         } else {
           subjectMappings.push(result.mappingData.getSubject());
         }
-        this.init();
+        this.init(true);
       } else if (result && result.mappingData.isRoot && result.selected === this.SUBJECT) {
         this.openMapperDialog(undefined, result.mappingData, this.PREDICATE);
       } else if (result && result.selected === this.PREDICATE && !result.mappingData.getObject()) {
         this.openMapperDialog(undefined, result.mappingData, this.OBJECT);
       } else {
-        this.init();
+        this.init(true);
       }
     });
   }
@@ -246,7 +268,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit {
       subject.setPropertyMappings([]);
       subject.setTypeMappings([]);
     }
-    this.init();
+    this.init(true);
   }
 
   private deleteObjectTypeMapping(mapping: Triple, hardDelete: boolean) {
@@ -277,25 +299,43 @@ export class IterationComponent extends OnDestroyMixin implements OnInit {
   }
 
   public deleteTripleMapping(mapping: Triple) {
-    if (mapping.isTypeProperty) {
-      this.deleteObjectTypeMapping(mapping, true);
-    } else {
-      this.deleteObjectPropertyMapping(mapping, true);
+    this.dialogService.confirm({
+      content: this.translateService.instant('MESSAGES.CONFIRM_MAPPING_DELETION'),
+    }).pipe(untilComponentDestroyed(this))
+        .subscribe((result) => {
+          if (result) {
+            if (mapping.isTypeProperty) {
+              this.deleteObjectTypeMapping(mapping, true);
+            } else {
+              this.deleteObjectPropertyMapping(mapping, true);
+            }
 
+            if (mapping.isRoot) {
+              let countMappings = mapping.getSubject().getTypeMappings().length;
+              mapping.getSubject().getPropertyMappings().forEach((propertyMapping) => {
+                countMappings += propertyMapping.getValues().length;
+              });
 
-      if (mapping.isRoot) {
-        let countMappings = mapping.getSubject().getTypeMappings().length;
-        mapping.getSubject().getPropertyMappings().forEach((propertyMapping) => {
-          countMappings += propertyMapping.getValues().length;
+              if (countMappings === 0) {
+                const subjectMappings = this.mapping.getSubjectMappings();
+                const index = subjectMappings.indexOf(mapping.getSubject() as SubjectMappingImpl);
+                subjectMappings.splice(index, 1);
+              }
+            }
+
+            this.init(true);
+          }
         });
+  }
 
-        if (countMappings === 0) {
-          const subjectMappings = this.mapping.getSubjectMappings();
-          const index = subjectMappings.indexOf(mapping.getSubject() as SubjectMappingImpl);
-          subjectMappings.splice(index, 1);
-        }
-      }
+  private checkDirty(event) {
+    if (this.isDirty) {
+      event.preventDefault();
+      event.returnValue = '';
     }
-    this.init();
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('beforeunload', this.boundCheckDirty);
   }
 }

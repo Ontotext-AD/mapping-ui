@@ -15,13 +15,15 @@ import {
 } from 'src/app/utils/constants';
 import {TranslateService} from '@ngx-translate/core';
 import {Type} from 'src/app/models/mapping-definition';
+import {DialogService} from 'src/app/main/components/dialog/dialog.service';
+import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 
 @Component({
   selector: 'app-mapper-cell',
   templateUrl: './cell.component.html',
   styleUrls: ['./cell.component.scss'],
 })
-export class CellComponent {
+export class CellComponent extends OnDestroyMixin {
   @Input() cellMapping: MappingBase;
   @Input() isFirstChild: boolean = true;
   @Input() isTypeProperty: boolean = false;
@@ -44,7 +46,9 @@ export class CellComponent {
   PREFIX = PREFIX_CONSTANT;
 
   constructor(private modelManagementService: ModelManagementService,
-              private translateService: TranslateService) {
+              private translateService: TranslateService,
+              private dialogService: DialogService) {
+    super();
   }
 
   ngOnInit(): void {
@@ -128,7 +132,14 @@ export class CellComponent {
 
   public deleteMapping($event) {
     $event.stopPropagation();
-    this.onDelete.emit();
+    this.dialogService.confirm({
+      content: this.translateService.instant('MESSAGES.CONFIRM_MAPPING_DELETION'),
+    }).pipe(untilComponentDestroyed(this))
+        .subscribe((result) => {
+          if (result) {
+            this.onDelete.emit();
+          }
+        });
   }
 
   isEmpty(): boolean {
