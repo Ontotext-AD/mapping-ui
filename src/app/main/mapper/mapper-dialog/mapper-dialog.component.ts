@@ -458,7 +458,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
   private isAllowedExpression(expression: string, language: string): boolean {
     // Allow the empty prefix
-    return !Helper.isBlank(expression) || (language === Language.Prefix.valueOf() && expression === "");
+    return !Helper.isBlank(expression) || (language === Language.Prefix.valueOf() && expression === '');
   }
 
   private createMappingObject(form: FormGroup): void {
