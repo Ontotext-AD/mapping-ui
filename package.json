@@ -52,6 +52,7 @@
     "@ngx-translate/http-loader": "^4.0.0",
     "@w11k/ngx-componentdestroyed": "^5.0.2",
     "class-transformer": "^0.2.3",
+    "ngx-cookie-service": "^3.0.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.4",
     "tslib": "^1.10.0",
