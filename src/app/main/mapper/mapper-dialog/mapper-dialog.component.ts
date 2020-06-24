@@ -20,7 +20,7 @@ import {IRIImpl} from 'src/app/models/iri-impl';
 import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
-import {RepositoryService} from '../../../services/rest/repository.service';
+import {RepositoryService} from 'src/app/services/rest/repository.service';
 
 export interface SubjectMapperData {
   mappingData: Triple,

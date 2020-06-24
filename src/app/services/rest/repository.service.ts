@@ -2,31 +2,38 @@ import {Injectable} from '@angular/core';
 import {EMPTY, Observable, of} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {map, switchMap} from 'rxjs/operators';
-import {ActivatedRoute, Params} from '@angular/router';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {CookieService} from 'ngx-cookie-service';
 import {SPARQL_AUTOCOMPLETE, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RepositoryService {
-  repository: Observable<string>;
   apiUrl = environment.repositoryApiUrl;
 
-  constructor(protected httpClient: HttpClient, protected route: ActivatedRoute) {
-    this.repository = this.route.queryParams.pipe(switchMap((params: Params) => {
-      return (params.repository) ? of(params.repository) : EMPTY;
-    }));
+  constructor(protected httpClient: HttpClient, protected cookies: CookieService) {
   }
 
   getAPIURL(apiName: string) : Observable<string> {
-    return this.repository.pipe(switchMap((repoParam) => {
-      if (repoParam) {
-        return of(`${this.apiUrl}/${repoParam}${apiName}`);
+    const repo = this.getCookie('com.ontotext.graphdb.repository');
+    return (repo)? of(`${this.apiUrl}/${repo}${apiName}`) : EMPTY;
+  }
+
+  private getCookie(cookieName) : string {
+    return this.cookies.get(cookieName + this.getPort());
+  }
+
+  private getPort() {
+    let port = window.location.port;
+    if (!port) {
+      if (window.location.protocol == 'https:') {
+        port = '443';
       } else {
-        return EMPTY;
+        port = '80';
       }
-    }));
+    }
+    return port;
   }
 
   getNamespaces() : Observable<{ [p: string]: string }> {
