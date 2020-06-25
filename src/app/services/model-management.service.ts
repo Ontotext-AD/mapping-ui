@@ -340,10 +340,6 @@ export class ModelManagementService {
     cellMapping.setValueTransformation(new ValueTransformationImpl(undefined, undefined));
   }
 
-  clearMapping(cellMapping: MappingBase): void {
-    cellMapping.clearMapping();
-  }
-
   getStoredModelMapping(): Observable<MappingDefinitionImpl> {
     return this.mappingDefinitionService.getMappingDefinition().pipe(map((md) => {
       return plainToClass(MappingDefinitionImpl, md, {excludeExtraneousValues: true});

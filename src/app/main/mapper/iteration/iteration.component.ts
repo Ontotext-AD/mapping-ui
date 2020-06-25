@@ -7,6 +7,7 @@ import {MapperDialogComponent} from 'src/app/main/mapper/mapper-dialog/mapper-di
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {Triple} from 'src/app/models/triple';
 import {
+  CONSTANT,
   OBJECT_SELECTOR,
   PREDICATE_SELECTOR,
   SUBJECT_SELECTOR,
@@ -20,6 +21,9 @@ import {Observable, of} from 'rxjs';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
+import {ModelConstructService} from 'src/app/services/model-construct.service';
+import {TypeMapping} from 'src/app/models/type-mapping';
+import {TabService} from 'src/app/services/tab.service';
 import {RepositoryService} from '../../../services/rest/repository.service';
 
 
@@ -47,7 +51,9 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
               public dialog: MatDialog,
               private dialogService: DialogService,
               private translateService: TranslateService,
-              private repositoryService: RepositoryService) {
+              private repositoryService: RepositoryService,
+              private modelConstructService: ModelConstructService,
+              private tabService: TabService) {
     super();
   }
 
@@ -115,14 +121,18 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   private setPropertyMappings(subject, isRoot) {
     this.getPropertyMappings(subject) && this.getPropertyMappings(subject).forEach((property) => {
-      property.getValues().forEach((object) => {
-        this.triples.push(new Triple(subject, property, object, false, isRoot));
-        isRoot = false;
-        if (object.getValueType() && object.getValueType().getType() === Type.IRI) {
-          this.setTypeMappings(object, false);
-          this.setPropertyMappings(object, false);
-        }
-      });
+      if (property.getValues()) {
+        property.getValues().forEach((object) => {
+          this.triples.push(new Triple(subject, property, object, false, isRoot));
+          isRoot = false;
+          if (object.getValueType() && object.getValueType().getType() === Type.IRI) {
+            this.setTypeMappings(object, false);
+            this.setPropertyMappings(object, false);
+          }
+        });
+      } else {
+        this.triples.push(new Triple(subject, property, undefined, false, isRoot));
+      }
     });
   }
 
@@ -172,14 +182,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     dialogRef.afterClosed().subscribe((result) => {
       this.initMappingDetails();
       if (result && result.mappingData.isRoot && result.mappingData.getObject()) {
-        const subjectMappings = this.mapping.getSubjectMappings();
-        const subject = result.mappingData.getSubject();
-        const index = subjectMappings.indexOf(subject);
-        if (index > -1) {
-          subjectMappings.splice(index, 1, subject);
-        } else {
-          subjectMappings.push(result.mappingData.getSubject());
-        }
+        this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
         this.init(true);
       } else if (result && result.mappingData.isRoot && result.selected === this.SUBJECT) {
         this.openMapperDialog(undefined, result.mappingData, this.PREDICATE);
@@ -188,6 +191,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       } else {
         this.init(true);
       }
+      this.tabService.selectCommand.emit(this.triples.length - 1);
     });
   }
 
@@ -332,7 +336,6 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
                 subjectMappings.splice(index, 1);
               }
             }
-
             this.init(true);
           }
         });
@@ -347,5 +350,69 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   ngOnDestroy(): void {
     window.removeEventListener('beforeunload', this.boundCheckDirty);
+  }
+
+  public onConstant(constant: string, triple: Triple, selected: string, index: number) {
+    const newTriple = new Triple(undefined, undefined, undefined, triple.isTypeProperty, triple.isRoot);
+    const previousTriple = this.triples[index - 1];
+    if (selected === this.SUBJECT && index === this.triples.length - 1) {
+      newTriple.setRoot(true);
+    } else if (selected === this.SUBJECT) {
+      newTriple.setSubject(triple.getSubject());
+    } else if (selected === this.PREDICATE && triple.getSubject()) {
+      newTriple.setSubject(triple.getSubject());
+      newTriple.setPredicate(triple.getPredicate());
+    } else if (selected === this.PREDICATE && !triple.getSubject()) {
+      newTriple.setSubject(previousTriple.getSubject());
+      newTriple.setPredicate(triple.getPredicate());
+      if (constant === TypeMapping.a) {
+        triple.setTypeProperty(true);
+      }
+    } else if (selected === this.OBJECT && triple.getSubject()) {
+      newTriple.setSubject(triple.getSubject());
+      newTriple.setPredicate(triple.getPredicate());
+      if (!newTriple.getPredicate()) {
+        newTriple.setTypeProperty(true);
+      }
+    } else if (selected === this.OBJECT && !triple.getSubject() && this.triples.length > 0) {
+      newTriple.setSubject(previousTriple.getSubject());
+      if (!newTriple.getPredicate() && !previousTriple.getPredicate()) {
+        newTriple.setTypeProperty(true);
+      } else if (!newTriple.getPredicate() && previousTriple.getPredicate() && !triple.isTypeProperty) {
+        newTriple.setPredicate(previousTriple.getPredicate());
+      } else {
+        newTriple.setPredicate(triple.getPredicate());
+      }
+    }
+
+    const settings = {
+      isConstant: true,
+      isRoot: selected === this.SUBJECT,
+      selected: selected,
+    };
+
+    const data = {
+      constant,
+      source: CONSTANT,
+      type: this.getType(selected, newTriple),
+      typeMapping: newTriple.isTypeProperty,
+    };
+
+    if (selected === this.PREDICATE && constant === TypeMapping.a) {
+      this.modelConstructService.setRootMappingInModel(newTriple, this.mapping);
+    } else {
+      const mapping = this.modelConstructService.createMappingObject(data, settings);
+      this.modelConstructService.setCellMapping(mapping, data, settings);
+      this.modelConstructService.setMappingObjectInTriple(mapping, data, settings, newTriple);
+      this.modelConstructService.setRootMappingInModel(newTriple, this.mapping);
+      this.init(true);
+    }
+  }
+
+  private getType(selected: string, newTriple: Triple) {
+    if (selected === this.OBJECT) {
+      return newTriple.getPredicate() ? Type.Literal : TypeMapping.a;
+    }
+    return undefined;
   }
 }

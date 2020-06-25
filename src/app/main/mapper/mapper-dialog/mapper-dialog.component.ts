@@ -12,15 +12,12 @@ import {MappingDetails} from 'src/app/models/mapping-details';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {Language} from 'src/app/models/language';
 import {MappingBase} from 'src/app/models/mapping-base';
-import {SimpleIRIValueMappingImpl} from 'src/app/models/simple-iri-value-mapping-impl';
-import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
 import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 import {TypeMapping} from 'src/app/models/type-mapping';
-import {IRIImpl} from 'src/app/models/iri-impl';
-import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
 import {RepositoryService} from 'src/app/services/rest/repository.service';
+import {ModelConstructService} from 'src/app/services/model-construct.service';
 
 export interface SubjectMapperData {
   mappingData: Triple,
@@ -45,7 +42,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   mapperForm: FormGroup;
   mapperForm$: Observable<FormGroup>;
   selected: MappingBase;
-  clone: MappingBase;
   isTypeProperty: boolean;
   typeKeys: string[];
   types: string[];
@@ -75,7 +71,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
               private modelManagementService: ModelManagementService,
               private dialogService: DialogService,
               private translateService: TranslateService,
-              private repositoryService: RepositoryService) {
+              private repositoryService: RepositoryService,
+              private modelConstructService: ModelConstructService) {
     super();
   }
 
@@ -295,7 +292,10 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
   private replaceIRIPrefixes(types) {
     return types.map((t) => {
-      return this.getPrefixTransformation(t);
+      return this.modelConstructService.getPrefixTransformation(t, {
+        namespaces: this.data.namespaces,
+        repoNamespaces: this.data.repoNamespaces,
+      });
     });
   }
 
@@ -329,184 +329,33 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.mapperForm$
         .pipe(takeUntil(componentDestroyed(this)))
         .subscribe((form) => {
+          const settings = {
+            hasDatatype: this.hasDatatype,
+            hasLanguage: this.hasLanguage,
+            isDatatypeColumn: this.isDatatypeColumn,
+            isDatatypeConstant: this.isDatatypeConstant,
+            isLanguageColumn: this.isLanguageColumn,
+            isLanguageConstant: this.isLanguageConstant,
+            isConstant: this.isConstant,
+            isColumn: this.isColumn,
+            isTransformation: this.isTransformation,
+            isRoot: this.data.mappingData.isRoot,
+            selected: this.data.selected,
+            namespaces: this.data.namespaces,
+            repoNamespaces: this.data.repoNamespaces,
+          };
+
+          const formValue = form.getRawValue();
+
           if (this.selected) {
-            this.modelManagementService.clearMapping(this.selected);
-            this.setData(form);
+            this.modelConstructService.clearMapping(this.selected);
+            this.modelConstructService.setCellMapping(this.selected, formValue, settings);
           } else {
-            this.createMappingObject(form);
-            this.setData(form);
-            this.setMappingObjectInModel(form);
+            this.selected = this.modelConstructService.createMappingObject(formValue, settings);
+            this.modelConstructService.setCellMapping(this.selected, formValue, settings);
+            this.modelConstructService.setMappingObjectInTriple(this.selected, formValue, settings, this.data.mappingData);
           }
         });
-  }
-
-  private setData(form: FormGroup) {
-    this.setValueType(form);
-    this.setTypeSource(form);
-    this.setTypeTransformation(form.value.expression, form.value.language, this.isTransformation);
-  }
-
-  private setValueType(form: FormGroup): void {
-    this.modelManagementService.setValueType(this.selected, form.value.type);
-
-    if (this.hasDatatype) {
-      const dataTypeColumnName = form.value.dataTypeColumnName;
-      const dataTypeConstant = form.value.dataTypeConstant;
-
-      if (this.isDatatypeColumn && !Helper.isBlank(dataTypeColumnName)) {
-        this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, undefined);
-        this.modelManagementService.setValueTypeDatatypeValueColumnName(this.selected, dataTypeColumnName);
-        this.modelManagementService.setValueTypeDatatypeValueSource(this.selected, form.value.dataTypeValueSource);
-      } else if (this.isDatatypeConstant && !Helper.isBlank(dataTypeConstant)) {
-        this.modelManagementService.setValueTypeDatatypeValueColumnName(this.selected, undefined);
-        this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, dataTypeConstant);
-        const transformed = this.getPrefixTransformation(dataTypeConstant);
-        if (transformed.prefix) {
-          this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, transformed.suffix);
-          this.setDataTypeTransformation(transformed.prefix, Language.Prefix.valueOf());
-        }
-        this.modelManagementService.setValueTypeDatatypeValueSource(this.selected, form.value.dataTypeValueSource);
-      } else if (!this.isDatatypeConstant && !this.isDatatypeColumn) {
-        this.modelManagementService.setValueTypeDatatypeValueConstant(this.selected, undefined);
-        this.modelManagementService.setValueTypeDatatypeValueColumnName(this.selected, undefined);
-        this.modelManagementService.setValueTypeDatatypeValueSource(this.selected, form.value.dataTypeValueSource);
-      }
-
-      const datatypeTransformation = form.value.datatypeTransformation;
-      if (!Helper.isBlank(datatypeTransformation)) {
-        this.setDataTypeTransformation(datatypeTransformation, form.value.datatypeLanguage);
-      }
-    }
-
-    if (this.hasLanguage) {
-      const languageColumnName = form.value.languageColumnName;
-      const languageConstant = form.value.languageConstant;
-
-      if (this.isLanguageColumn && !Helper.isBlank(languageColumnName)) {
-        this.modelManagementService.setValueTypeLanguageConstant(this.selected, undefined);
-        this.modelManagementService.setValueTypeLanguageColumnName(this.selected, languageColumnName);
-        this.modelManagementService.setValueTypeLanguageValueSource(this.selected, form.value.languageValueSource);
-      } else if (this.isLanguageConstant && !Helper.isBlank(languageConstant)) {
-        this.modelManagementService.setValueTypeLanguageColumnName(this.selected, undefined);
-        this.modelManagementService.setValueTypeLanguageConstant(this.selected, languageConstant);
-        this.modelManagementService.setValueTypeLanguageValueSource(this.selected, form.value.languageValueSource);
-      } else if (!this.isLanguageConstant && !this.isLanguageColumn) {
-        this.modelManagementService.setValueTypeLanguageConstant(this.selected, undefined);
-        this.modelManagementService.setValueTypeLanguageColumnName(this.selected, undefined);
-        this.modelManagementService.setValueTypeLanguageValueSource(this.selected, form.value.languageValueSource);
-      }
-
-      const languageTransformation = form.value.languageTransformation;
-      if (!Helper.isBlank(languageTransformation)) {
-        this.modelManagementService.setValueTypeLanguageTransformationExpression(this.selected, languageTransformation);
-        this.modelManagementService.setValueTypeLanguageTransformationLanguage(this.selected, form.value.languageTransformationLanguage);
-      }
-    }
-  }
-
-  private setDataTypeTransformation(datatypeTransformation: string, datatypeLanguage: string) {
-    this.modelManagementService.setValueTypeDatatypeTransformationExpression(this.selected, datatypeTransformation);
-    this.modelManagementService.setDatatypeTransformationLanguage(this.selected, datatypeLanguage);
-    if (datatypeLanguage === Language.Prefix.valueOf() && !this.data.namespaces[datatypeTransformation]) {
-      this.data.namespaces[datatypeTransformation] = this.data.repoNamespaces[datatypeTransformation];
-    }
-  }
-
-  private setTypeSource(form: FormGroup): void {
-    this.modelManagementService.setTypeSource(this.selected, form.value.source);
-
-    const constant = form.value.constant;
-    if (this.isConstant && !Helper.isBlank(constant)) {
-      const transformed = this.getPrefixTransformation(constant);
-      if (transformed.prefix) {
-        this.setTypeTransformation(transformed.prefix, Language.Prefix.valueOf(), true);
-        this.modelManagementService.setConstant(this.selected, transformed.suffix);
-      } else {
-        this.modelManagementService.setConstant(this.selected, constant);
-      }
-    }
-
-    const columnName = form.value.columnName;
-    if (this.isColumn && !Helper.isBlank(columnName)) {
-      this.modelManagementService.setColumnName(this.selected, columnName);
-    }
-  }
-
-  private getPrefixTransformation(constantValue: string) {
-    const allNamespaces = {...this.data.namespaces, ...this.data.repoNamespaces};
-    let transformed = constantValue;
-    let foundPrefix;
-    Object.keys(allNamespaces).forEach((key) => {
-      if (constantValue.startsWith(allNamespaces[key])) {
-        transformed = constantValue.replace(allNamespaces[key], key + ':');
-        foundPrefix = key;
-      }
-    });
-    return {shortened: transformed, original: constantValue, prefix: foundPrefix, suffix: transformed.substr(transformed.lastIndexOf(':') + 1)};
-  }
-
-  private setTypeTransformation(expression: string, language: string, isTransformation: boolean): void {
-    if (isTransformation && !Helper.isBlank(expression)) {
-      this.modelManagementService.setExpression(this.selected, expression);
-      this.modelManagementService.setTransformationLanguage(this.selected, language);
-      if (language === Language.Prefix.valueOf() && !this.data.namespaces[expression]) {
-        this.data.namespaces[expression] = this.data.repoNamespaces[expression];
-      }
-    }
-  }
-
-  private createMappingObject(form: FormGroup): void {
-    if (this.isSubject()) {
-      this.createSubject();
-    } else if (this.isPredicate() && form.value.type !== TypeMapping.a) {
-      this.createPredicate();
-    } else if (this.isObject()) {
-      this.createObject(form);
-    }
-  }
-
-  private createSubject() {
-    if (this.data.mappingData.isRoot) {
-      this.selected = new SubjectMappingImpl([], new SimpleIRIValueMappingImpl(undefined, undefined), []);
-    }
-  }
-
-  private createPredicate() {
-    this.selected = new PropertyMappingImpl(undefined, undefined);
-  }
-
-  private createObject(form) {
-    if (form.value.type !== TypeMapping.a && form.value.type !== Type.IRI) {
-      this.selected = new ValueMappingImpl(undefined, undefined, undefined);
-    } else if (form.value.type === Type.IRI) {
-      this.selected = new ValueMappingImpl(undefined, undefined, new IRIImpl([], undefined, [], undefined, undefined));
-    } else if (form.value.type === TypeMapping.a) {
-      this.selected = new SimpleIRIValueMappingImpl(undefined, undefined);
-    }
-  }
-
-  private setMappingObjectInModel(form: FormGroup): void {
-    if (this.isSubject()) {
-      this.data.mappingData.setSubject(this.selected);
-    } else if (this.isPredicate()) {
-      if (form.value.typeMapping) {
-        this.data.mappingData.setTypeProperty(true);
-        this.selected = undefined;
-      } else {
-        const subject = this.data.mappingData.getSubject();
-        this.modelManagementService.setPropertyMapping(subject, this.selected as PropertyMappingImpl);
-      }
-      this.data.mappingData.setPredicate(this.selected);
-    } else if (this.isObject()) {
-      const subject = this.data.mappingData.getSubject();
-      if (form.value.type === TypeMapping.a) {
-        this.modelManagementService.setTypeMapping(subject, this.selected as SimpleIRIValueMappingImpl);
-      } else {
-        const predicate = this.data.mappingData.getPredicate();
-        this.modelManagementService.setValueMapping(subject, predicate, this.selected as ValueMappingImpl);
-      }
-      this.data.mappingData.setObject(this.selected);
-    }
   }
 
   public isSubject(): boolean {
@@ -532,9 +381,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
   public isTypes() {
     return this.types.length > 0;
-  }
-
-  public ngOnDestroy(): void {
   }
 
   private checkDirty(event?) {

@@ -5,6 +5,7 @@ export const EMPTY_MAPPING = {'baseIRI': 'http://sample/base', 'namespaces': {'m
 export const DOWNLOAD_RDF_FILE = 'result-triples.ttl';
 export const GREL_CONSTANT = 'grel';
 export const PREFIX_CONSTANT = 'prefix';
+export const CONSTANT = 'constant';
 export const SPARQL_TYPES = `SELECT distinct ?iri ?g WHERE {
     {
         GRAPH ?g {

@@ -28,8 +28,11 @@ export class CellComponent extends OnDestroyMixin {
   @Input() isFirstChild: boolean = true;
   @Input() isTypeProperty: boolean = false;
   @Input() cellType: string;
+  @Input() tabIndex: number;
   @Output() onDrop = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<any>();
+  @Output() onConstant = new EventEmitter<string>();
+  @Output() onEditClick = new EventEmitter<any>();
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
@@ -49,9 +52,6 @@ export class CellComponent extends OnDestroyMixin {
               private translateService: TranslateService,
               private dialogService: DialogService) {
     super();
-  }
-
-  ngOnInit(): void {
   }
 
   /**
@@ -211,6 +211,21 @@ export class CellComponent extends OnDestroyMixin {
       return this.translateService.instant('LABELS.GREL');
     } else if (this.getSecondaryTransformationType().getLanguage() === this.PREFIX) {
       return this.getSecondaryTransformationType().getExpression();
+    }
+  }
+
+  public onPreventClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  public onEdit() {
+    this.onEditClick.emit();
+  }
+
+  public addConstant(event, value) {
+    if (value) {
+      this.onConstant.emit(value);
     }
   }
 }
