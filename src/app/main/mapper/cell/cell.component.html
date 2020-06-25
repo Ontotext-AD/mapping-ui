@@ -1,7 +1,25 @@
 <div cdkDrag class="mr-12" fxFill>
   <div class="triple-item" *ngIf="isEmpty(); else notEmptyBlock">
     <span class="ti-placeholder" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
-          (cdkDropListDropped)="drop($event)">{{getCellType()}}</span>
+          (cdkDropListDropped)="drop($event)" (click)="onPreventClick($event)">
+
+      <form>
+        <mat-form-field>
+        <mat-label>{{getCellType()}}</mat-label>
+          <input tabIndex="{{tabIndex}}" matInput #mapping (keydown.tab)="addConstant($event, mapping.value)">
+        </mat-form-field>
+      </form>
+
+    </span>
+    <div class="ti-footer">
+      <div class="ti-actions">
+          <span class="btn btn-link text-muted">
+            <span cdkDrag [cdkDragData]="cellMapping">
+						  <span class="icon-edit" (click)="onEdit()"></span>
+            </span>
+          </span>
+      </div>
+    </div>
   </div>
 
   <ng-template #notEmptyBlock>
@@ -123,7 +141,8 @@
                     {{getValueTypeLanguageSource().getConstant()}}
                   </span>
 
-                  <span *ngIf="getValueTypeLanguageSourceType() === 'row_index' || getValueTypeLanguageSourceType() === 'record_id'">
+                  <span
+                    *ngIf="getValueTypeLanguageSourceType() === 'row_index' || getValueTypeLanguageSourceType() === 'record_id'">
                     <span class="ti-source-type index" title="Const">
                       {{'CONSTANTS.INDEX' | translate}}
                     </span>
@@ -136,13 +155,19 @@
         </div>
       </div>
 
-      <div class="ti-footer" *ngIf="!!this.getSourceType() && isFirstChild">
+      <div class="ti-footer" *ngIf="isFirstChild">
         <div class="ti-preview">
           <div *ngFor="let previewItem of getPreview();">
             {{previewItem}}
           </div>
         </div>
         <div class="ti-actions">
+          <span class="btn btn-link text-muted">
+            <span cdkDrag [cdkDragData]="cellMapping">
+						  <span class="icon-edit" (click)="onEdit()"></span>
+            </span>
+          </span>
+
           <span class="btn btn-link text-muted">
             <span cdkDrag [cdkDragData]="cellMapping" cdkDragHandle>
 						  <span class="icon-copy"></span>
