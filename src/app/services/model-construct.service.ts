@@ -46,7 +46,7 @@ export class ModelConstructService {
         this.modelManagementService.setValueTypeDatatypeValueColumnName(cellMapping, undefined);
         this.modelManagementService.setValueTypeDatatypeValueConstant(cellMapping, dataTypeConstant);
         const transformed = this.getPrefixTransformation(dataTypeConstant, settings);
-        if (transformed.prefix) {
+        if (transformed.prefix != undefined) {
           this.modelManagementService.setValueTypeDatatypeValueConstant(cellMapping, transformed.suffix);
           this.setDataTypeTransformation(cellMapping, settings, transformed.prefix, Language.Prefix.valueOf());
         }
@@ -58,7 +58,7 @@ export class ModelConstructService {
       }
 
       const datatypeTransformation = form.datatypeTransformation;
-      if (!Helper.isBlank(datatypeTransformation)) {
+      if (this.isAllowedExpression(datatypeTransformation, form.datatypeLanguage)) {
         this.setDataTypeTransformation(cellMapping, settings, datatypeTransformation, form.datatypeLanguage);
       }
     }
@@ -82,7 +82,7 @@ export class ModelConstructService {
       }
 
       const languageTransformation = form.languageTransformation;
-      if (!Helper.isBlank(languageTransformation)) {
+      if (this.isAllowedExpression(languageTransformation, form.languageTransformationLanguage)) {
         this.modelManagementService.setValueTypeLanguageTransformationExpression(cellMapping, languageTransformation);
         this.modelManagementService.setValueTypeLanguageTransformationLanguage(cellMapping, form.languageTransformationLanguage);
       }
@@ -103,7 +103,7 @@ export class ModelConstructService {
     const constant = form.constant;
     if (settings.isConstant && !Helper.isBlank(constant)) {
       const transformed = this.getPrefixTransformation(constant, settings);
-      if (transformed.prefix) {
+      if (transformed.prefix != undefined) {
         this.setTypeTransformation(transformed.prefix, Language.Prefix.valueOf(), true);
         this.modelManagementService.setConstant(cellMapping, transformed.suffix);
       } else {
@@ -118,7 +118,7 @@ export class ModelConstructService {
   }
 
   private setTypeTransformation(cellMapping: MappingBase, form, settings): void {
-    if (settings.isTransformation && !Helper.isBlank(form.expression)) {
+    if (settings.isTransformation && this.isAllowedExpression(form.expression, form.language)) {
       this.modelManagementService.setExpression(cellMapping, form.expression);
       this.modelManagementService.setTransformationLanguage(cellMapping, form.language);
       if (form.language === Language.Prefix.valueOf() && !settings.namespaces[form.expression]) {
@@ -138,6 +138,11 @@ export class ModelConstructService {
       }
     });
     return {shortened: transformed, original: constantValue, prefix: foundPrefix, suffix: transformed.substr(transformed.lastIndexOf(':') + 1)};
+  }
+
+  private isAllowedExpression(expression: string, language: string): boolean {
+    // Allow the empty prefix
+    return !Helper.isBlank(expression) || (language === Language.Prefix.valueOf() && expression === '');
   }
 
   createMappingObject(form, settings): MappingBase {
