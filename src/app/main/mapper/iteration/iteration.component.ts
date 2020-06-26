@@ -191,7 +191,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       } else {
         this.init(true);
       }
-      this.tabService.selectCommand.emit(this.triples.length - 1);
+      const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
+      this.tabService.selectCommand.emit({index: this.triples.length - 1, position});
     });
   }
 

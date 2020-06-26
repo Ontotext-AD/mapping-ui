@@ -6,7 +6,7 @@
       <form>
         <mat-form-field>
         <mat-label>{{getCellType()}}</mat-label>
-          <input tabIndex="{{tabIndex}}" matInput #mapping (keydown.tab)="addConstant($event, mapping.value)">
+          <input tabIndex="{{tabIndex}}" tabPosition="{{tabPosition}}" matInput #mapping (keydown.tab)="addConstant($event, mapping.value)" (blur)="select($event, mapping.value)">
         </mat-form-field>
       </form>
 

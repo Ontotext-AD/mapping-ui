@@ -6,6 +6,6 @@ import {BehaviorSubject} from 'rxjs';
   providedIn: 'root',
 })
 export class TabService {
-  selectedInput: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  selectedInput: BehaviorSubject<any> = new BehaviorSubject<any>({index: 0, position: 1});
   selectCommand: EventEmitter<any> = new EventEmitter<any>();
 }

@@ -21,6 +21,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from "@angular/material/icon";
 import {MatChipsModule} from "@angular/material/chips";
 import {FlexLayoutModule} from "@angular/flex-layout";
+import {DirectivesModule} from "src/app/directives/directives.module";
 
 
 describe('MapperComponent', () => {
@@ -49,7 +50,8 @@ describe('MapperComponent', () => {
         MatInputModule,
         MatIconModule,
         MatChipsModule,
-        FlexLayoutModule
+        FlexLayoutModule,
+        DirectivesModule
       ]
     })
     .compileComponents();
