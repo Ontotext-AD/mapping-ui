@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
@@ -17,8 +17,9 @@ import {TranslateService} from '@ngx-translate/core';
 import {Type} from 'src/app/models/mapping-definition';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
+import {TabService} from 'src/app/services/tab.service';
 import {RepositoryService} from "../../../services/rest/repository.service";
-import {merge, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {ModelConstructService} from "../../../services/model-construct.service";
 import {FormControl} from "@angular/forms";
@@ -35,6 +36,7 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   @Input() cellType: string;
   @Input() tabIndex: number;
   @Input() namespaces: { [key: string]: string };
+  @Input() tabPosition: number;
   @Output() onDrop = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<any>();
   @Output() onConstant = new EventEmitter<string>();
@@ -61,6 +63,7 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
 
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,
+              private tabService: TabService,
               private dialogService: DialogService,
               private repositoryService: RepositoryService,
               private modelConstructService: ModelConstructService) {
@@ -242,6 +245,13 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   public addConstant(event, value) {
     if (value) {
       this.onConstant.emit(value);
+    }
+  }
+
+  public select($event, value) {
+    if (value) {
+      this.tabService.selectCommand.emit({index: this.tabIndex, position: this.tabPosition});
+      this.addConstant(undefined, value);
     }
   }
 
