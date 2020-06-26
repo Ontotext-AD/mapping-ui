@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
@@ -17,22 +17,33 @@ import {TranslateService} from '@ngx-translate/core';
 import {Type} from 'src/app/models/mapping-definition';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
+import {RepositoryService} from "../../../services/rest/repository.service";
+import {merge, Observable} from "rxjs";
+import {map} from "rxjs/operators";
+import {ModelConstructService} from "../../../services/model-construct.service";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-mapper-cell',
   templateUrl: './cell.component.html',
   styleUrls: ['./cell.component.scss'],
 })
-export class CellComponent extends OnDestroyMixin {
+export class CellComponent extends OnDestroyMixin implements OnInit {
   @Input() cellMapping: MappingBase;
   @Input() isFirstChild: boolean = true;
   @Input() isTypeProperty: boolean = false;
   @Input() cellType: string;
   @Input() tabIndex: number;
+  @Input() namespaces: { [key: string]: string };
   @Output() onDrop = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<any>();
   @Output() onConstant = new EventEmitter<string>();
   @Output() onEditClick = new EventEmitter<any>();
+  autoInput = new FormControl();
+
+
+  suggestions: Observable<Observable<any>>;
+
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
@@ -50,10 +61,15 @@ export class CellComponent extends OnDestroyMixin {
 
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private repositoryService: RepositoryService,
+              private modelConstructService: ModelConstructService) {
     super();
   }
 
+  ngOnInit() {
+    this.subscribeToValueChanges();
+  }
   /**
    * Get the value source for the cell depending on the cellMapping type
    *
@@ -228,4 +244,15 @@ export class CellComponent extends OnDestroyMixin {
       this.onConstant.emit(value);
     }
   }
+
+  private subscribeToValueChanges() {
+    this.suggestions = this.autoInput.valueChanges
+      .pipe(untilComponentDestroyed(this),
+        map((value) => {
+          let autoCompleteObservable = this.repositoryService.autocompleteIRIs(value as string);
+          return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, this.namespaces)));
+        }));
+  }
+
+
 }

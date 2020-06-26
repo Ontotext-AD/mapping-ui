@@ -5,6 +5,7 @@
                      [isFirstChild]="isFirstSubject(mapping, index)"
                      [tabIndex]="index"
                      [cellType]="SUBJECT"
+                     [namespaces]="getAllNamespaces()"
                      (onDrop)="onDrop($event, mapping, SUBJECT, index)"
                      (onDelete)="onDelete($event, mapping, SUBJECT)"
                      (onConstant)="onConstant($event, mapping, SUBJECT, index)"
@@ -14,6 +15,7 @@
                      [isTypeProperty]="mapping.isTypeProperty"
                      [isFirstChild]="isFirstPredicate(mapping, index)"
                      [cellType]="PREDICATE"
+                     [namespaces]="getAllNamespaces()"
                      (onDrop)="onDrop($event, mapping, PREDICATE, index)"
                      (onDelete)="onDelete($event, mapping, PREDICATE)"
                      (onConstant)="onConstant($event, mapping, PREDICATE, index)"
@@ -21,6 +23,7 @@
                      appCypressData="predicate" [fxFlex]="33"></app-mapper-cell>
     <app-mapper-cell [cellMapping]="mapping.getObject()"
                      [cellType]="OBJECT"
+                     [namespaces]="getAllNamespaces()"
                      (onDrop)="onDrop($event, mapping, OBJECT, index)"
                      (onDelete)="onDelete($event, mapping, OBJECT)"
                      (onConstant)="onConstant($event, mapping, OBJECT, index)"

@@ -92,6 +92,11 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
             });
   }
 
+  getAllNamespaces() {
+    return {...this.repoNamespaces, ...this.mapping.namespaces};
+  }
+
+
   convertToTriples(mapping) {
     mapping.getSubjectMappings().forEach((subject) => {
       const isRoot = true;

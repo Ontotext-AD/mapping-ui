@@ -3,10 +3,15 @@
     <span class="ti-placeholder" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
           (cdkDropListDropped)="drop($event)" (click)="onPreventClick($event)">
 
-      <form>
+      <form #myForm>
         <mat-form-field>
         <mat-label>{{getCellType()}}</mat-label>
-          <input tabIndex="{{tabIndex}}" matInput #mapping (keydown.tab)="addConstant($event, mapping.value)">
+          <input tabIndex="{{tabIndex}}" matInput #mapping (keydown.tab)="addConstant($event, mapping.value)" [formControl]="autoInput" [matAutocomplete]="autocInline">
+          <mat-autocomplete #autocInline="matAutocomplete">
+            <mat-option *ngFor="let option of suggestions | async" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
       </form>
 

@@ -102,7 +102,7 @@ export class ModelConstructService {
 
     const constant = form.constant;
     if (settings.isConstant && !Helper.isBlank(constant)) {
-      const transformed = this.getPrefixTransformation(constant, settings);
+      const transformed = this.getPrefixTransformation(constant, {...settings.namespaces, ...settings.repoNamespaces});
       if (transformed.prefix != undefined) {
         this.setTypeTransformation(transformed.prefix, Language.Prefix.valueOf(), true);
         this.modelManagementService.setConstant(cellMapping, transformed.suffix);
@@ -127,8 +127,7 @@ export class ModelConstructService {
     }
   }
 
-  public getPrefixTransformation(constantValue: string, settings) {
-    const allNamespaces = {...settings.namespaces, ...settings.repoNamespaces};
+  public getPrefixTransformation(constantValue: string, allNamespaces) {
     let transformed = constantValue;
     let foundPrefix;
     Object.keys(allNamespaces).forEach((key) => {
@@ -138,6 +137,12 @@ export class ModelConstructService {
       }
     });
     return {shortened: transformed, original: constantValue, prefix: foundPrefix, suffix: transformed.substr(transformed.lastIndexOf(':') + 1)};
+  }
+
+  public replaceIRIPrefixes(types, namespaces: { [p: string]: string }) {
+    return types.map((t) => {
+      return this.getPrefixTransformation(t, namespaces);
+      });
   }
 
   private isAllowedExpression(expression: string, language: string): boolean {
