@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
@@ -14,27 +14,42 @@ import {
   SUBJECT_SELECTOR,
 } from 'src/app/utils/constants';
 import {TranslateService} from '@ngx-translate/core';
-import {Type} from 'src/app/models/mapping-definition';
+import {Source as SourceEnum, SourceSign, Type} from 'src/app/models/mapping-definition';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {TabService} from 'src/app/services/tab.service';
+import {RepositoryService} from '../../../services/rest/repository.service';
+import {merge, Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {ModelConstructService} from '../../../services/model-construct.service';
+import {FormControl} from '@angular/forms';
+import {TypeMapping} from '../../../models/type-mapping';
 
 @Component({
   selector: 'app-mapper-cell',
   templateUrl: './cell.component.html',
   styleUrls: ['./cell.component.scss'],
 })
-export class CellComponent extends OnDestroyMixin {
+export class CellComponent extends OnDestroyMixin implements AfterViewInit {
+  autoInput = new FormControl();
+
   @Input() cellMapping: MappingBase;
   @Input() isFirstChild: boolean = true;
   @Input() isTypeProperty: boolean = false;
+  @Input() isTypeObject: boolean = false;
   @Input() cellType: string;
   @Input() tabIndex: number;
+  @Input() namespaces: { [key: string]: string };
+  @Input() sources: Array<Source>;
   @Input() tabPosition: number;
   @Output() onDrop = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<any>();
-  @Output() onConstant = new EventEmitter<string>();
+  @Output() onValueSet = new EventEmitter<any>();
   @Output() onEditClick = new EventEmitter<any>();
+
+
+  suggestions: Observable<Observable<any>>;
+
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
@@ -49,13 +64,22 @@ export class CellComponent extends OnDestroyMixin {
 
   GREL = GREL_CONSTANT;
   PREFIX = PREFIX_CONSTANT;
+  selected: boolean = undefined;
 
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,
+              private tabService: TabService,
               private dialogService: DialogService,
-              private tabService: TabService) {
+              private repositoryService: RepositoryService,
+              private modelConstructService: ModelConstructService) {
     super();
   }
+
+
+  ngAfterViewInit(): void {
+    this.subscribeToValueChanges();
+  }
+
 
   /**
    * Get the value source for the cell depending on the cellMapping type
@@ -226,16 +250,61 @@ export class CellComponent extends OnDestroyMixin {
     this.onEditClick.emit();
   }
 
-  public addConstant(event, value) {
-    if (value) {
-      this.onConstant.emit(value);
+  private getSource(value) {
+    if (value.startsWith(SourceSign.Column)) {
+      return SourceEnum.Column;
+    }
+    if (value.startsWith(SourceSign.RecordRowID) && value.substr(1) === SourceEnum.RowIndex || value.substr(1) === SourceEnum.RecordID) {
+      return value.substr(1);
+    }
+    return SourceEnum.Constant;
+  }
+
+  public selectOption($event, value) {
+    // selects the current value and saves it on the model only it is not a constant
+    const source = this.getSource(value);
+    if (source != SourceEnum.Constant || value === TypeMapping.a) {
+      this.saveValue(value === TypeMapping.a ? value: value.substr(1), true);
     }
   }
 
-  public select($event, value) {
+  public saveInputValue(emitTab: boolean) {
+    this.saveValue(this.autoInput.value, emitTab);
+  }
+
+  private saveValue(value, emitTab: boolean) {
     if (value) {
-      this.tabService.selectCommand.emit({index: this.tabIndex, position: this.tabPosition});
-      this.addConstant(undefined, value);
+      if (value) {
+        if (emitTab) {
+          this.tabService.selectCommand.emit({index: this.tabIndex, position: this.tabPosition});
+        }
+        this.onValueSet.emit({value: value, source: this.getSource(this.autoInput.value)});
+      }
     }
+  }
+
+  private subscribeToValueChanges() {
+    this.suggestions = merge(this.autoInput.valueChanges)
+        .pipe(untilComponentDestroyed(this),
+            map((value) => {
+              const valueStr = value as String;
+              if (valueStr.startsWith(SourceSign.Column)) {
+                return of(this.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase().substr(1)))
+                    .map((source) => {
+                      return {label: source.title, value: SourceSign.Column + source.title, source: SourceEnum.Column};
+                    }));
+              }
+              if (valueStr.startsWith(SourceSign.RecordRowID)) {
+                return of([{label: SourceEnum.RowIndex, value: SourceSign.RecordRowID + SourceEnum.RowIndex, source: SourceEnum.RowIndex}, {label: SourceEnum.RecordID, value: SourceSign.RecordRowID + SourceEnum.RecordID, source: SourceEnum.RecordID}]);
+              }
+              let autoCompleteObservable = this.repositoryService.autocompleteIRIs(value as string);
+              if (this.cellType === this.PREDICATE) {
+                autoCompleteObservable = this.repositoryService.autocompletePredicates(value as string);
+              }
+              if (this.cellType === this.OBJECT && this.isTypeObject) {
+                autoCompleteObservable = this.repositoryService.autocompleteTypes(value as string);
+              }
+              return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, this.namespaces)));
+            }));
   }
 }

@@ -1,10 +1,10 @@
-import {Directive, ElementRef, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, Input} from '@angular/core';
 import {TabService} from 'src/app/services/tab.service';
 
 @Directive({
   selector: '[tabIndex], [tabPosition]',
 })
-export class TabDirective implements OnInit {
+export class TabDirective implements AfterViewInit {
   private _index: number;
   private _position: number;
   get index(): any {
@@ -26,8 +26,11 @@ export class TabDirective implements OnInit {
   constructor(private el: ElementRef, private tabService: TabService) {
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.tabService.selectedInput.subscribe((command) => {
+      if (command.index === 0 && command.position === 1) {
+        return;
+      }
       if (command.index === this.index && command.position === this.position) {
         this.el.nativeElement.focus();
       }
