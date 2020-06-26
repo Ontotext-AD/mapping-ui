@@ -17,6 +17,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Type} from 'src/app/models/mapping-definition';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
+import {TabService} from 'src/app/services/tab.service';
 
 @Component({
   selector: 'app-mapper-cell',
@@ -29,6 +30,7 @@ export class CellComponent extends OnDestroyMixin {
   @Input() isTypeProperty: boolean = false;
   @Input() cellType: string;
   @Input() tabIndex: number;
+  @Input() tabPosition: number;
   @Output() onDrop = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<any>();
   @Output() onConstant = new EventEmitter<string>();
@@ -50,7 +52,8 @@ export class CellComponent extends OnDestroyMixin {
 
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private tabService: TabService) {
     super();
   }
 
@@ -226,6 +229,13 @@ export class CellComponent extends OnDestroyMixin {
   public addConstant(event, value) {
     if (value) {
       this.onConstant.emit(value);
+    }
+  }
+
+  public select($event, value) {
+    if (value) {
+      this.tabService.selectCommand.emit({index: this.tabIndex, position: this.tabPosition});
+      this.addConstant(undefined, value);
     }
   }
 }

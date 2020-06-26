@@ -3,7 +3,7 @@
     <div  class="triples-block" [fxFlex]="97">
     <app-mapper-cell [cellMapping]="mapping.getSubject()"
                      [isFirstChild]="isFirstSubject(mapping, index)"
-                     [tabIndex]="index"
+                     [tabIndex]="index" [tabPosition]="1"
                      [cellType]="SUBJECT"
                      (onDrop)="onDrop($event, mapping, SUBJECT, index)"
                      (onDelete)="onDelete($event, mapping, SUBJECT)"
@@ -14,6 +14,7 @@
                      [isTypeProperty]="mapping.isTypeProperty"
                      [isFirstChild]="isFirstPredicate(mapping, index)"
                      [cellType]="PREDICATE"
+                     [tabIndex]="index" [tabPosition]="2"
                      (onDrop)="onDrop($event, mapping, PREDICATE, index)"
                      (onDelete)="onDelete($event, mapping, PREDICATE)"
                      (onConstant)="onConstant($event, mapping, PREDICATE, index)"
@@ -21,6 +22,7 @@
                      appCypressData="predicate" [fxFlex]="33"></app-mapper-cell>
     <app-mapper-cell [cellMapping]="mapping.getObject()"
                      [cellType]="OBJECT"
+                     [tabIndex]="index" [tabPosition]="3"
                      (onDrop)="onDrop($event, mapping, OBJECT, index)"
                      (onDelete)="onDelete($event, mapping, OBJECT)"
                      (onConstant)="onConstant($event, mapping, OBJECT, index)"

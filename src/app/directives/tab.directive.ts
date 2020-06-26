@@ -6,6 +6,7 @@ import {TabService} from 'src/app/services/tab.service';
 })
 export class TabDirective implements OnInit {
   private _index: number;
+  private _position: number;
   get index(): any {
     return this._index;
   }
@@ -14,18 +15,30 @@ export class TabDirective implements OnInit {
     this._index = parseInt(i);
   }
 
+  get position(): any {
+    return this._position;
+  }
+  @Input('tabPosition')
+  set position(i: any) {
+    this._position = parseInt(i);
+  }
+
   constructor(private el: ElementRef, private tabService: TabService) {
   }
 
   ngOnInit() {
-    this.tabService.selectedInput.subscribe((i) => {
-      if (i === this.index) {
+    this.tabService.selectedInput.subscribe((command) => {
+      if (command.index === this.index && command.position === this.position) {
         this.el.nativeElement.focus();
       }
     });
 
-    this.tabService.selectCommand.subscribe((index) => {
-      this.tabService.selectedInput.next(index);
+    this.tabService.selectCommand.subscribe((command) => {
+      if (command.position === 3) {
+        this.tabService.selectedInput.next({index: command.index + 1, position: 1});
+      } else {
+        this.tabService.selectedInput.next({index: command.index, position: command.position + 1});
+      }
     });
   }
 }
