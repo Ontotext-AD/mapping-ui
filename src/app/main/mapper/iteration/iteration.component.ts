@@ -181,18 +181,15 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
     dialogRef.afterClosed().subscribe((result) => {
       this.initMappingDetails();
-      if (result && result.mappingData.isRoot && result.mappingData.getObject()) {
+      if (result.selected === this.PREDICATE && result.mappingData.isTypeProperty) {
+        this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
+      } else {
         this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
         this.init(true);
-      } else if (result && result.mappingData.isRoot && result.selected === this.SUBJECT) {
-        this.openMapperDialog(undefined, result.mappingData, this.PREDICATE);
-      } else if (result && result.selected === this.PREDICATE && !result.mappingData.getObject()) {
-        this.openMapperDialog(undefined, result.mappingData, this.OBJECT);
-      } else {
-        this.init(true);
       }
+
       const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
-      this.tabService.selectCommand.emit({index: this.triples.length - 1, position});
+      this.tabService.selectCommand.emit({index: this.triples.length - 2, position});
     });
   }
 
@@ -354,35 +351,29 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   public onConstant(constant: string, triple: Triple, selected: string, index: number) {
-    const newTriple = new Triple(undefined, undefined, undefined, triple.isTypeProperty, triple.isRoot);
     const previousTriple = this.triples[index - 1];
     if (selected === this.SUBJECT && index === this.triples.length - 1) {
-      newTriple.setRoot(true);
-    } else if (selected === this.SUBJECT) {
-      newTriple.setSubject(triple.getSubject());
+      triple.setRoot(true);
     } else if (selected === this.PREDICATE && triple.getSubject()) {
-      newTriple.setSubject(triple.getSubject());
-      newTriple.setPredicate(triple.getPredicate());
+      if (constant === TypeMapping.a) {
+        triple.setTypeProperty(true);
+      }
     } else if (selected === this.PREDICATE && !triple.getSubject()) {
-      newTriple.setSubject(previousTriple.getSubject());
-      newTriple.setPredicate(triple.getPredicate());
+      triple.setSubject(previousTriple.getSubject());
+      triple.setPredicate(triple.getPredicate());
       if (constant === TypeMapping.a) {
         triple.setTypeProperty(true);
       }
     } else if (selected === this.OBJECT && triple.getSubject()) {
-      newTriple.setSubject(triple.getSubject());
-      newTriple.setPredicate(triple.getPredicate());
-      if (!newTriple.getPredicate()) {
-        newTriple.setTypeProperty(true);
+      if (!triple.getPredicate()) {
+        triple.setTypeProperty(true);
       }
     } else if (selected === this.OBJECT && !triple.getSubject() && this.triples.length > 0) {
-      newTriple.setSubject(previousTriple.getSubject());
-      if (!newTriple.getPredicate() && !previousTriple.getPredicate()) {
-        newTriple.setTypeProperty(true);
-      } else if (!newTriple.getPredicate() && previousTriple.getPredicate() && !triple.isTypeProperty) {
-        newTriple.setPredicate(previousTriple.getPredicate());
-      } else {
-        newTriple.setPredicate(triple.getPredicate());
+      triple.setSubject(previousTriple.getSubject());
+      if (!triple.getPredicate() && !previousTriple.getPredicate()) {
+        triple.setTypeProperty(true);
+      } else if (!triple.getPredicate() && previousTriple.getPredicate() && !triple.isTypeProperty) {
+        triple.setPredicate(previousTriple.getPredicate());
       }
     }
 
@@ -395,24 +386,24 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     const data = {
       constant,
       source: CONSTANT,
-      type: this.getType(selected, newTriple),
-      typeMapping: newTriple.isTypeProperty,
+      type: this.getType(selected, triple),
+      typeMapping: triple.isTypeProperty,
     };
 
     if (selected === this.PREDICATE && constant === TypeMapping.a) {
-      this.modelConstructService.setRootMappingInModel(newTriple, this.mapping);
+      this.modelConstructService.setRootMappingInModel(triple, this.mapping);
     } else {
       const mapping = this.modelConstructService.createMappingObject(data, settings);
       this.modelConstructService.setCellMapping(mapping, data, settings);
-      this.modelConstructService.setMappingObjectInTriple(mapping, data, settings, newTriple);
-      this.modelConstructService.setRootMappingInModel(newTriple, this.mapping);
+      this.modelConstructService.setMappingObjectInTriple(mapping, data, settings, triple);
+      this.modelConstructService.setRootMappingInModel(triple, this.mapping);
       this.init(true);
     }
   }
 
-  private getType(selected: string, newTriple: Triple) {
+  private getType(selected: string, triple: Triple) {
     if (selected === this.OBJECT) {
-      return newTriple.getPredicate() ? Type.Literal : TypeMapping.a;
+      return triple.getPredicate() ? Type.Literal : TypeMapping.a;
     }
     return undefined;
   }
