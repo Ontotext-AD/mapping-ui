@@ -276,7 +276,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
               if (this.isPredicate()) {
                 autoCompleteObservable = this.repositoryService.autocompletePredicates(value);
               }
-
               return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, {...this.data.namespaces, ...this.data.repoNamespaces})));
             }));
 

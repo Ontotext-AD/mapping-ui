@@ -6,8 +6,7 @@
       <form>
         <mat-form-field>
         <mat-label>{{getCellType()}}</mat-label>
-          <input tabIndex="{{tabIndex}}" tabPosition="{{tabPosition}}" matInput #mapping (keydown.tab)="addConstant($event, mapping.value)" (blur)="select($event, mapping.value)">
-          <input tabIndex="{{tabIndex}}" matInput #mapping (keydown.tab)="addConstant($event, mapping.value)" [formControl]="autoInput" [matAutocomplete]="autocInline">
+          <input tabIndex="{{tabIndex}}" tabPosition="{{tabPosition}}" matInput #mapping (keydown.tab)="addConstant($event, mapping.value)" (blur)="select($event, mapping.value)" [formControl]="autoInput" [matAutocomplete]="autocInline">
           <mat-autocomplete #autocInline="matAutocomplete">
             <mat-option *ngFor="let option of suggestions | async" [value]="option">
               {{option}}
