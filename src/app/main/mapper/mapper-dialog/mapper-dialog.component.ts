@@ -18,6 +18,7 @@ import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
 import {RepositoryService} from 'src/app/services/rest/repository.service';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
+import {MapperService} from '../../../services/rest/mapper.service';
 
 export interface SubjectMapperData {
   mappingData: Triple,
@@ -64,6 +65,10 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   filteredColumnNames: Observable<string[]>;
   filteredNamespaces: Observable<any>;
   filteredConstants: Observable<Observable<any>>;
+  grelPreviewExpression: Observable<Array<any>>;
+  grelPreviewLanguageTransformation: Observable<Array<any>>;
+  grelPreviewDataTypeTransformation: Observable<Array<any>>;
+
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
@@ -72,7 +77,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
               private dialogService: DialogService,
               private translateService: TranslateService,
               private repositoryService: RepositoryService,
-              private modelConstructService: ModelConstructService) {
+              private modelConstructService: ModelConstructService,
+              private mapperService: MapperService) {
     super();
   }
 
@@ -252,18 +258,21 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           this.isTransformation = value === Language.GREL || value === Language.Prefix;
           this.isPrefixTransformation = this.isTransformation && value === Language.Prefix;
+          this.mapperForm.patchValue({'expression': ''});
         });
 
     this.mapperForm.get('datatypeLanguage').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
           this.isDataTypePrefixTransformation = value === Language.Prefix;
+          this.mapperForm.patchValue({'datatypeTransformation': ''});
         });
 
     this.mapperForm.get('languageTransformationLanguage').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
           this.isLanguagePrefixTransformation = value === Language.Prefix;
+          this.mapperForm.patchValue({'languageTransformation': ''});
         });
 
     this.filteredConstants = merge(this.mapperForm.get('dataTypeConstant').valueChanges, this.mapperForm.get('constant').valueChanges)
@@ -284,10 +293,47 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
             startWith(''),
             map((value) => this.filterColumn(value)));
 
+    this.mapperForm.get('expression').valueChanges
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((value) => {
+          if (value && !this.isPrefixTransformation) {
+            this.grelPreviewExpression = this.previewGREL(value);
+          }
+        });
+
+    this.mapperForm.get('languageTransformation').valueChanges
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((value) => {
+          if (value && !this.isLanguagePrefixTransformation) {
+            this.grelPreviewLanguageTransformation = this.previewGREL(value);
+          }
+        });
+
+    this.mapperForm.get('datatypeTransformation').valueChanges
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((value) => {
+          if (value && !this.isDataTypePrefixTransformation) {
+            this.grelPreviewDataTypeTransformation = this.previewGREL(value);
+          }
+        });
+
     this.filteredNamespaces = merge(this.mapperForm.get('expression').valueChanges, this.mapperForm.get('datatypeTransformation').valueChanges, this.mapperForm.get('languageTransformation').valueChanges)
         .pipe(untilComponentDestroyed(this),
             startWith(''),
             map((value) => this.filterNamespace(value)));
+  }
+
+  private previewGREL(value) {
+    return this.mapperService.previewGREL(this.modelManagementService.getValueSource(this.selected), value)
+        .pipe(untilComponentDestroyed(this), map((value) => {
+          const errors = value.map((e) => (e && e.error) ? e.error : e)
+              .filter((val, index, self) => self.indexOf(val) === index);
+          // Do not show the same error multiple times if it is the same for all results
+          if (errors.length === 1) {
+            return errors;
+          }
+          return value;
+        }));
   }
 
   private filterNamespace(value: string): object[] {

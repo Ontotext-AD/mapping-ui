@@ -72,7 +72,8 @@
                   <mat-form-field class="ml-16" style="width: 100%;">
                     <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
                     <textarea matInput formControlName="datatypeTransformation" name="datatypeTransformation"
-                              cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="datatypePrefixAuto"></textarea>
+                              cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="datatypePrefixAuto"
+                              [placeholder]="!isDataTypePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"></textarea>
                     <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
                       <div *ngIf="isDataTypePrefixTransformation">
                         <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
@@ -80,6 +81,12 @@
                         </mat-option>
                       </div>
                     </mat-autocomplete>
+                    <div *ngIf="!isDataTypePrefixTransformation">
+                      <div *ngFor="let preview of grelPreviewDataTypeTransformation | async">
+                        <div class="mb-2 mt-2" *ngIf="preview">{{preview.error || preview}}</div>
+                      </div>
+                    </div>
+                    <mat-icon matSuffix><a *ngIf="!isDataTypePrefixTransformation" class="icon-help" href="https://github.com/OpenRefine/OpenRefine/wiki/Variables" target="_blank"></a></mat-icon>
                   </mat-form-field>
                 </div>
               </div>
@@ -129,7 +136,8 @@
                   <mat-form-field class="ml-16" style="width: 300px;">
                     <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
                     <textarea matInput formControlName="languageTransformation" name="languageTransformation"
-                      cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="languagePrefixAuto"></textarea>
+                      cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="languagePrefixAuto"
+                      [placeholder]="!isLanguagePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"></textarea>
                     <mat-autocomplete #languagePrefixAuto="matAutocomplete">
                       <div *ngIf="isLanguagePrefixTransformation">
                         <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
@@ -137,6 +145,12 @@
                         </mat-option>
                       </div>
                     </mat-autocomplete>
+                    <div *ngIf="!isLanguagePrefixTransformation">
+                      <div *ngFor="let preview of grelPreviewLanguageTransformation | async">
+                        <div class="mb-2 mt-2" *ngIf="preview">{{preview.error || preview}}</div>
+                      </div>
+                    </div>
+                    <mat-icon matSuffix><a *ngIf="!isLanguagePrefixTransformation" class="icon-help" href="https://github.com/OpenRefine/OpenRefine/wiki/Variables" target="_blank"></a></mat-icon>
                   </mat-form-field>
                 </div>
               </div>
@@ -192,14 +206,22 @@
               <mat-form-field class="ml-16" style="width: 300px;" *ngIf="isTransformation">
                 <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
                 <textarea matInput formControlName="expression" name="expression"
-                          cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10" [matAutocomplete]="prefixAuto"></textarea>
-                <mat-autocomplete #prefixAuto="matAutocomplete" >
-                  <div *ngIf="isPrefixTransformation">
-                    <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
-                      {{namespace.prefix}}={{namespace.value}}
-                    </mat-option>
-                  </div>
+                          cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="10"
+                          [matAutocomplete]="prefixAuto"
+                          [placeholder]="!isPrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"></textarea>
+                <mat-autocomplete #prefixAuto="matAutocomplete">
+                <div *ngIf="isPrefixTransformation">
+                  <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
+                    {{namespace.prefix}}={{namespace.value}}
+                  </mat-option>
+                </div>
                 </mat-autocomplete>
+                <div *ngIf="!isPrefixTransformation">
+                  <div *ngFor="let preview of grelPreviewExpression | async">
+                    <div class="mb-2 mt-2" *ngIf="preview">{{preview.error || preview}}</div>
+                  </div>
+                </div>
+                <mat-icon matSuffix><a *ngIf="!isPrefixTransformation" class="icon-help" href="https://github.com/OpenRefine/OpenRefine/wiki/Variables" target="_blank"></a></mat-icon>
               </mat-form-field>
             </div>
           </div>
