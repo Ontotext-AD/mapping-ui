@@ -1,6 +1,6 @@
-import {AfterViewInit, Directive, ElementRef, Input, OnInit} from '@angular/core';
+import {Directive, ElementRef, Input, OnInit} from '@angular/core';
 import {TabService} from 'src/app/services/tab.service';
-import {Observable} from "rxjs";
+import {Observable} from 'rxjs';
 
 @Directive({
   selector: '[tabIndex], [tabPosition]',
@@ -26,7 +26,7 @@ export class TabDirective implements OnInit {
   }
 
   @Input('autocomplete')
-  set autocomplete(auto: any){
+  set autocomplete(auto: any) {
     this._autocomplete = auto;
   }
 
@@ -41,8 +41,7 @@ export class TabDirective implements OnInit {
       if (command.index === this.index && command.position === this.position) {
         this.autocomplete && this.autocomplete.subscribe(() => {
           this.el.nativeElement.focus();
-        })
-
+        });
       }
     });
 
