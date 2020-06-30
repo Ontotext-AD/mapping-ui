@@ -39,8 +39,8 @@
                     <textarea matInput formControlName="dataTypeConstant" name="dataTypeConstant" cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="autoDataTypeC"></textarea>
                     <mat-autocomplete #autoDataTypeC="matAutocomplete">
-                      <mat-option *ngFor="let const of filteredConstants | async | async" [value]="const.original">
-                        {{const.shortened}}
+                      <mat-option *ngFor="let const of filteredConstants | async | async" [value]="const.value">
+                        {{const.label}}
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
@@ -160,8 +160,8 @@
                 <textarea matInput formControlName="constant" name="constant" cdkTextareaAutosize
                           cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="autoType"></textarea>
                 <mat-autocomplete #autoType="matAutocomplete">
-                    <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.original">
-                      {{constant.shortened}}
+                    <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.value">
+                      {{constant.label}}
                     </mat-option>
                 </mat-autocomplete>
               </mat-form-field>

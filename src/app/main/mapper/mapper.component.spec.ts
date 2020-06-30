@@ -7,7 +7,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {TranslateModule} from "@ngx-translate/core";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatInputModule} from "@angular/material/input";
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {IterationComponent} from "src/app/main/mapper/iteration/iteration.component";
 import {CellComponent} from "src/app/main/mapper/cell/cell.component";
 import {HttpClientTestingModule} from '@angular/common/http/testing';
@@ -22,6 +22,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatChipsModule} from "@angular/material/chips";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {DirectivesModule} from "src/app/directives/directives.module";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+
 
 
 describe('MapperComponent', () => {
@@ -51,7 +53,9 @@ describe('MapperComponent', () => {
         MatIconModule,
         MatChipsModule,
         FlexLayoutModule,
-        DirectivesModule
+        DirectivesModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule
       ]
     })
     .compileComponents();

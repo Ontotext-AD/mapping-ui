@@ -276,7 +276,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
               if (this.isPredicate()) {
                 autoCompleteObservable = this.repositoryService.autocompletePredicates(value);
               }
-              return autoCompleteObservable.pipe(map((types) => this.replaceIRIPrefixes(types)));
+              return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, {...this.data.namespaces, ...this.data.repoNamespaces})));
             }));
 
     this.filteredColumnNames = merge(this.mapperForm.get('columnName').valueChanges, this.mapperForm.get('dataTypeColumnName').valueChanges)
@@ -288,15 +288,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this),
             startWith(''),
             map((value) => this.filterNamespace(value)));
-  }
-
-  private replaceIRIPrefixes(types) {
-    return types.map((t) => {
-      return this.modelConstructService.getPrefixTransformation(t, {
-        namespaces: this.data.namespaces,
-        repoNamespaces: this.data.repoNamespaces,
-      });
-    });
   }
 
   private filterNamespace(value: string): object[] {

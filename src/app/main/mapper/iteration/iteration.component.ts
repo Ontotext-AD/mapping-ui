@@ -7,7 +7,6 @@ import {MapperDialogComponent} from 'src/app/main/mapper/mapper-dialog/mapper-di
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {Triple} from 'src/app/models/triple';
 import {
-  CONSTANT,
   OBJECT_SELECTOR,
   PREDICATE_SELECTOR,
   SUBJECT_SELECTOR,
@@ -25,6 +24,7 @@ import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {TypeMapping} from 'src/app/models/type-mapping';
 import {TabService} from 'src/app/services/tab.service';
 import {RepositoryService} from '../../../services/rest/repository.service';
+import {Language} from '../../../models/language';
 
 
 @Component({
@@ -91,6 +91,11 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
               this.repoNamespaces = data;
             });
   }
+
+  getAllNamespaces() {
+    return {...this.repoNamespaces, ...this.mapping.namespaces};
+  }
+
 
   convertToTriples(mapping) {
     mapping.getSubjectMappings().forEach((subject) => {
@@ -350,18 +355,20 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     window.removeEventListener('beforeunload', this.boundCheckDirty);
   }
 
-  public onConstant(constant: string, triple: Triple, selected: string, index: number) {
+  public onValueSet(valueSet, triple: Triple, selected: string, index: number) {
+    const value = valueSet.value;
+    const source = valueSet.source;
     const previousTriple = this.triples[index - 1];
     if (selected === this.SUBJECT && index === this.triples.length - 1) {
       triple.setRoot(true);
     } else if (selected === this.PREDICATE && triple.getSubject()) {
-      if (constant === TypeMapping.a) {
+      if (value === TypeMapping.a) {
         triple.setTypeProperty(true);
       }
     } else if (selected === this.PREDICATE && !triple.getSubject()) {
       triple.setSubject(previousTriple.getSubject());
       triple.setPredicate(triple.getPredicate());
-      if (constant === TypeMapping.a) {
+      if (value === TypeMapping.a) {
         triple.setTypeProperty(true);
       }
     } else if (selected === this.OBJECT && triple.getSubject()) {
@@ -376,21 +383,32 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         triple.setPredicate(previousTriple.getPredicate());
       }
     }
-
-    const settings = {
-      isConstant: true,
-      isRoot: selected === this.SUBJECT,
-      selected: selected,
-    };
+    let prefixTransformation;
+    if (source === SourceEnum.Constant) {
+      prefixTransformation = this.modelConstructService.getPrefixTransformation(value, this.getAllNamespaces());
+    }
+    const prefix = prefixTransformation && prefixTransformation.prefix;
 
     const data = {
-      constant,
-      source: CONSTANT,
+      constant: source === SourceEnum.Constant ? value : undefined,
+      columnName: source === SourceEnum.Column ? value : undefined,
+      source: source,
       type: this.getType(selected, triple),
       typeMapping: triple.isTypeProperty,
+      expression: prefix ? prefixTransformation.prefix : undefined,
+      language: prefix ? Language.Prefix.valueOf() : undefined,
     };
 
-    if (selected === this.PREDICATE && constant === TypeMapping.a) {
+    const settings = {
+      isConstant: source === SourceEnum.Constant,
+      isColumn: source === SourceEnum.Column,
+      isTransformation: !!prefix,
+      isRoot: selected === this.SUBJECT,
+      selected: selected,
+      namespaces: this.getAllNamespaces(),
+    };
+
+    if (selected === this.PREDICATE && value === TypeMapping.a) {
       this.modelConstructService.setRootMappingInModel(triple, this.mapping);
     } else {
       const mapping = this.modelConstructService.createMappingObject(data, settings);

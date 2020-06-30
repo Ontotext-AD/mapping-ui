@@ -46,3 +46,7 @@ export const SPARQL_AUTOCOMPLETE=`SELECT distinct ?iri ?g WHERE {
             ?iri <http://www.ontotext.com/plugins/autocomplete#query> "KEY_WORD"}.
     }
 }`;
+export const SOURCE_SIGN = {
+  Column: '@',
+  RecordRowID: '#',
+};
