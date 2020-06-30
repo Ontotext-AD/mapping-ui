@@ -2,9 +2,14 @@
   <div class="m-12 card-block">
     <div cdkDropList cdkDropListOrientation="horizontal" class="rdfm-columns-container"
          [cdkDropListData]="sources" cdkDropListSortingDisabled appCypressData="source-box">
-      <div class="rdfm-column-item m-8 p-8 cursor-move" *ngFor="let source of sources;let i = index" cdkDrag
-           [attr.appCypressData]="'source-' + i" [cdkDragData]="source">
-        {{source.title}}
+      <div cdkDrag class="rdfm-column-item m-8 p-8 cursor-move" *ngFor="let source of sources;let i = index"
+           [attr.appCypressData]="'source-' + i"
+           [cdkDragData]="source"
+           [ngClass]="{
+              'used': source.isUsed()
+              }"
+           matTooltip="{{source.getTitle()}}">
+        {{source.getReasonableLongTitle()}}
       </div>
     </div>
   </div>

@@ -6,11 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MapperDialogComponent} from 'src/app/main/mapper/mapper-dialog/mapper-dialog.component';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {Triple} from 'src/app/models/triple';
-import {
-  OBJECT_SELECTOR,
-  PREDICATE_SELECTOR,
-  SUBJECT_SELECTOR,
-} from 'src/app/utils/constants';
+import {OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
 import {Source as SourceEnum, Type} from 'src/app/models/mapping-definition';
 import {Source} from 'src/app/models/source';
 import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
@@ -23,8 +19,10 @@ import {TranslateService} from '@ngx-translate/core';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {TypeMapping} from 'src/app/models/type-mapping';
 import {TabService} from 'src/app/services/tab.service';
-import {RepositoryService} from '../../../services/rest/repository.service';
-import {Language} from '../../../models/language';
+import {RepositoryService} from 'src/app/services/rest/repository.service';
+import {Language} from 'src/app/models/language';
+import {MappingBase} from 'src/app/models/mapping-base';
+import {SourceService} from 'src/app/services/source.service';
 
 
 @Component({
@@ -44,6 +42,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   mappingDetails: MappingDetails;
   isDirty: boolean = false;
   repoNamespaces: { [key: string]: string };
+  usedSources: Set<string>;
 
   private boundCheckDirty: any;
 
@@ -53,7 +52,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
               private translateService: TranslateService,
               private repositoryService: RepositoryService,
               private modelConstructService: ModelConstructService,
-              private tabService: TabService) {
+              private tabService: TabService,
+              private sourceService: SourceService) {
     super();
   }
 
@@ -80,6 +80,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       this.isDirty = isDirty;
     }
 
+    this.usedSources = new Set();
     this.triples = [];
     this.convertToTriples(this.mapping);
     this.triples.push(new Triple(undefined, undefined, undefined));
@@ -90,6 +91,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
             (data) => {
               this.repoNamespaces = data;
             });
+
+    this.sourceService.usedSources.next(this.usedSources);
   }
 
   getAllNamespaces() {
@@ -99,6 +102,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   convertToTriples(mapping) {
     mapping.getSubjectMappings().forEach((subject) => {
+      this.setUsedSources(subject);
       const isRoot = true;
       if (subject.getTypeMappings().length > 0 || subject.getPropertyMappings().length > 0) {
         this.setTypeMappings(subject, isRoot)
@@ -118,6 +122,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   private setTypeMappings(subject, isRoot) {
     this.getTypeMappings(subject) && this.getTypeMappings(subject).forEach((mapping) => {
+      this.setUsedSources(mapping);
       this.triples.push(new Triple(subject, undefined, mapping, true, isRoot));
       isRoot = false;
     });
@@ -126,8 +131,10 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   private setPropertyMappings(subject, isRoot) {
     this.getPropertyMappings(subject) && this.getPropertyMappings(subject).forEach((property) => {
+      this.setUsedSources(property);
       if (property.getValues()) {
         property.getValues().forEach((object) => {
+          this.setUsedSources(object);
           this.triples.push(new Triple(subject, property, object, false, isRoot));
           isRoot = false;
           if (object.getValueType() && object.getValueType().getType() === Type.IRI) {
@@ -424,5 +431,12 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       return triple.getPredicate() ? Type.Literal : TypeMapping.a;
     }
     return undefined;
+  }
+
+  private setUsedSources(mapping: MappingBase) {
+    const valueSource = mapping.getValueSource();
+    if (valueSource && valueSource.getSource() === SourceEnum.Column) {
+      this.usedSources.add(valueSource.getColumnName());
+    }
   }
 }

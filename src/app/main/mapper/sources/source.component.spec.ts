@@ -6,6 +6,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {HttpLoaderFactory} from "src/app/app.module";
 import * as Http from "http";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 describe('SourceComponent', () => {
   let component: SourceComponent;
@@ -16,7 +17,8 @@ describe('SourceComponent', () => {
       declarations: [ SourceComponent ],
       imports: [
         TranslateModule.forRoot(),
-        DragDropModule
+        DragDropModule,
+        MatTooltipModule,
       ],
       providers: [TranslateService]
 

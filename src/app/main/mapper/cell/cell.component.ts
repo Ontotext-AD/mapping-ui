@@ -18,12 +18,12 @@ import {Source as SourceEnum, Type} from 'src/app/models/mapping-definition';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {TabService} from 'src/app/services/tab.service';
-import {RepositoryService} from '../../../services/rest/repository.service';
+import {RepositoryService} from 'src/app/services/rest/repository.service';
 import {merge, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {ModelConstructService} from '../../../services/model-construct.service';
+import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {FormControl} from '@angular/forms';
-import {TypeMapping} from '../../../models/type-mapping';
+import {TypeMapping} from 'src/app/models/type-mapping';
 
 @Component({
   selector: 'app-mapper-cell',
