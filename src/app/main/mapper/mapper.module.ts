@@ -19,6 +19,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatRadioModule,
     MatAutocompleteModule,
     MatIconModule,
+    MatTooltipModule,
   ],
 })
 export class MapperModule { }

@@ -40,3 +40,7 @@
 .example-list.cdk-drop-list-dragging .definition-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+.used {
+  background: #E1E1E1;
+}

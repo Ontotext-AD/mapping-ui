@@ -23,7 +23,7 @@ import {MatChipsModule} from "@angular/material/chips";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {DirectivesModule} from "src/app/directives/directives.module";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 describe('MapperComponent', () => {
@@ -55,7 +55,8 @@ describe('MapperComponent', () => {
         FlexLayoutModule,
         DirectivesModule,
         ReactiveFormsModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatTooltipModule,
       ]
     })
     .compileComponents();
