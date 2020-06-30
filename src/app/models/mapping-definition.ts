@@ -64,11 +64,6 @@ export enum Source {
   RowIndex = "row_index",
 }
 
-export enum SourceSign {
-  Column = "@",
-  RecordRowID = "#",
-}
-
 export interface SimpleLiteralValueMapping {
   transformation?: ValueTransformation;
   valueSource:     Column;

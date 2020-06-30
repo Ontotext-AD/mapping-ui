@@ -10,11 +10,11 @@ import {
   GREL_CONSTANT,
   OBJECT_SELECTOR,
   PREDICATE_SELECTOR,
-  PREFIX_CONSTANT,
+  PREFIX_CONSTANT, SOURCE_SIGN,
   SUBJECT_SELECTOR,
 } from 'src/app/utils/constants';
 import {TranslateService} from '@ngx-translate/core';
-import {Source as SourceEnum, SourceSign, Type} from 'src/app/models/mapping-definition';
+import {Source as SourceEnum, Type} from 'src/app/models/mapping-definition';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {TabService} from 'src/app/services/tab.service';
@@ -251,10 +251,10 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   private getSource(value) {
-    if (value.startsWith(SourceSign.Column)) {
+    if (value.startsWith(SOURCE_SIGN.Column)) {
       return SourceEnum.Column;
     }
-    if (value.startsWith(SourceSign.RecordRowID) && value.substr(1) === SourceEnum.RowIndex || value.substr(1) === SourceEnum.RecordID) {
+    if (value.startsWith(SOURCE_SIGN.RecordRowID) && value.substr(1) === SourceEnum.RowIndex || value.substr(1) === SourceEnum.RecordID) {
       return value.substr(1);
     }
     return SourceEnum.Constant;
@@ -286,20 +286,20 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this),
             map((value) => {
               const valueStr = value as String;
-              if (valueStr.startsWith(SourceSign.Column)) {
+              if (valueStr.startsWith(SOURCE_SIGN.Column)) {
                 return of(this.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase().substr(1)))
                     .map((source) => {
-                      return {label: source.title, value: SourceSign.Column + source.title, source: SourceEnum.Column};
+                      return {label: source.title, value: SOURCE_SIGN.Column + source.title, source: SourceEnum.Column};
                     }));
               }
-              if (valueStr.startsWith(SourceSign.RecordRowID)) {
+              if (valueStr.startsWith(SOURCE_SIGN.RecordRowID)) {
                 return of([{
                   label: SourceEnum.RowIndex,
-                  value: SourceSign.RecordRowID + SourceEnum.RowIndex,
+                  value: SOURCE_SIGN.RecordRowID + SourceEnum.RowIndex,
                   source: SourceEnum.RowIndex,
                 }, {
                   label: SourceEnum.RecordID,
-                  value: SourceSign.RecordRowID + SourceEnum.RecordID,
+                  value: SOURCE_SIGN.RecordRowID + SourceEnum.RecordID,
                   source: SourceEnum.RecordID,
                 }]);
               }
