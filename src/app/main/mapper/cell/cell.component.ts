@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
@@ -30,7 +30,7 @@ import {TypeMapping} from '../../../models/type-mapping';
   templateUrl: './cell.component.html',
   styleUrls: ['./cell.component.scss'],
 })
-export class CellComponent extends OnDestroyMixin implements AfterViewInit {
+export class CellComponent extends OnDestroyMixin implements OnInit {
   autoInput = new FormControl();
 
   @Input() cellMapping: MappingBase;
@@ -76,7 +76,7 @@ export class CellComponent extends OnDestroyMixin implements AfterViewInit {
   }
 
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.subscribeToValueChanges();
   }
 
@@ -147,12 +147,12 @@ export class CellComponent extends OnDestroyMixin implements AfterViewInit {
 
   public canDrop() {
     if (!!this.getSourceType() || this.isFirstChild && this.isTypeProperty) {
-      return function(drag: CdkDrag, drop: CdkDropList) { // eslint-disable-line @typescript-eslint/no-unused-vars
+      return function (drag: CdkDrag, drop: CdkDropList) { // eslint-disable-line @typescript-eslint/no-unused-vars
         return false;
       };
     }
 
-    return function(drag: CdkDrag, drop: CdkDropList) { // eslint-disable-line @typescript-eslint/no-unused-vars
+    return function (drag: CdkDrag, drop: CdkDropList) { // eslint-disable-line @typescript-eslint/no-unused-vars
       return true;
     };
   }
@@ -162,11 +162,11 @@ export class CellComponent extends OnDestroyMixin implements AfterViewInit {
     this.dialogService.confirm({
       content: this.translateService.instant('MESSAGES.CONFIRM_MAPPING_DELETION'),
     }).pipe(untilComponentDestroyed(this))
-        .subscribe((result) => {
-          if (result) {
-            this.onDelete.emit();
-          }
-        });
+      .subscribe((result) => {
+        if (result) {
+          this.onDelete.emit();
+        }
+      });
   }
 
   isEmpty(): boolean {
@@ -264,7 +264,7 @@ export class CellComponent extends OnDestroyMixin implements AfterViewInit {
     // selects the current value and saves it on the model only it is not a constant
     const source = this.getSource(value);
     if (source != SourceEnum.Constant || value === TypeMapping.a) {
-      this.saveValue(value === TypeMapping.a ? value: value.substr(1), true);
+      this.saveValue(value === TypeMapping.a ? value : value.substr(1), true);
     }
   }
 
@@ -274,37 +274,43 @@ export class CellComponent extends OnDestroyMixin implements AfterViewInit {
 
   private saveValue(value, emitTab: boolean) {
     if (value) {
-      if (value) {
-        if (emitTab) {
-          this.tabService.selectCommand.emit({index: this.tabIndex, position: this.tabPosition});
-        }
-        this.onValueSet.emit({value: value, source: this.getSource(this.autoInput.value)});
+      if (emitTab) {
+        this.tabService.selectCommand.emit({index: this.tabIndex, position: this.tabPosition});
       }
+      this.onValueSet.emit({value: value, source: this.getSource(this.autoInput.value)});
     }
   }
 
   private subscribeToValueChanges() {
     this.suggestions = merge(this.autoInput.valueChanges)
-        .pipe(untilComponentDestroyed(this),
-            map((value) => {
-              const valueStr = value as String;
-              if (valueStr.startsWith(SourceSign.Column)) {
-                return of(this.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase().substr(1)))
-                    .map((source) => {
-                      return {label: source.title, value: SourceSign.Column + source.title, source: SourceEnum.Column};
-                    }));
-              }
-              if (valueStr.startsWith(SourceSign.RecordRowID)) {
-                return of([{label: SourceEnum.RowIndex, value: SourceSign.RecordRowID + SourceEnum.RowIndex, source: SourceEnum.RowIndex}, {label: SourceEnum.RecordID, value: SourceSign.RecordRowID + SourceEnum.RecordID, source: SourceEnum.RecordID}]);
-              }
-              let autoCompleteObservable = this.repositoryService.autocompleteIRIs(value as string);
-              if (this.cellType === this.PREDICATE) {
-                autoCompleteObservable = this.repositoryService.autocompletePredicates(value as string);
-              }
-              if (this.cellType === this.OBJECT && this.isTypeObject) {
-                autoCompleteObservable = this.repositoryService.autocompleteTypes(value as string);
-              }
-              return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, this.namespaces)));
-            }));
+      .pipe(untilComponentDestroyed(this),
+        map((value) => {
+          const valueStr = value as String;
+          if (valueStr.startsWith(SourceSign.Column)) {
+            return of(this.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase().substr(1)))
+              .map((source) => {
+                return {label: source.title, value: SourceSign.Column + source.title, source: SourceEnum.Column};
+              }));
+          }
+          if (valueStr.startsWith(SourceSign.RecordRowID)) {
+            return of([{
+              label: SourceEnum.RowIndex,
+              value: SourceSign.RecordRowID + SourceEnum.RowIndex,
+              source: SourceEnum.RowIndex
+            }, {
+              label: SourceEnum.RecordID,
+              value: SourceSign.RecordRowID + SourceEnum.RecordID,
+              source: SourceEnum.RecordID
+            }]);
+          }
+          let autoCompleteObservable = this.repositoryService.autocompleteIRIs(value as string);
+          if (this.cellType === this.PREDICATE) {
+            autoCompleteObservable = this.repositoryService.autocompletePredicates(value as string);
+          }
+          if (this.cellType === this.OBJECT && this.isTypeObject) {
+            autoCompleteObservable = this.repositoryService.autocompleteTypes(value as string);
+          }
+          return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, this.namespaces)));
+        }));
   }
 }

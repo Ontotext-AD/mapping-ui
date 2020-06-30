@@ -1,12 +1,14 @@
-import {AfterViewInit, Directive, ElementRef, Input} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, Input, OnInit} from '@angular/core';
 import {TabService} from 'src/app/services/tab.service';
+import {Observable} from "rxjs";
 
 @Directive({
   selector: '[tabIndex], [tabPosition]',
 })
-export class TabDirective implements AfterViewInit {
+export class TabDirective implements OnInit {
   private _index: number;
   private _position: number;
+  private _autocomplete: Observable<any>;
   get index(): any {
     return this._index;
   }
@@ -23,16 +25,24 @@ export class TabDirective implements AfterViewInit {
     this._position = parseInt(i);
   }
 
+  @Input('autocomplete')
+  set autocomplete(auto: any){
+    this._autocomplete = auto;
+  }
+
   constructor(private el: ElementRef, private tabService: TabService) {
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.tabService.selectedInput.subscribe((command) => {
       if (command.index === 0 && command.position === 1) {
         return;
       }
       if (command.index === this.index && command.position === this.position) {
-        this.el.nativeElement.focus();
+        this.autocomplete && this.autocomplete.subscribe(() => {
+          this.el.nativeElement.focus();
+        })
+
       }
     });
 

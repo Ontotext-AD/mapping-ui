@@ -5,14 +5,14 @@
 
       <form>
         <mat-form-field>
-        <mat-label>{{getCellType()}}</mat-label>
+          <mat-label>{{getCellType()}}</mat-label>
           <input matInput #mapping  tabIndex="{{tabIndex}}"
                  tabPosition="{{tabPosition}}"
+                 autocomplete="{{suggestions}}"
                  [formControl]="autoInput"
                  [matAutocomplete]="autocInline"
                  (keydown.tab)="saveInputValue(false)"
-                 (keydown.enter)="saveInputValue(true)"
-                 >
+                 (keydown.enter)="saveInputValue(true)">
           <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="selectOption($event, $event.option.value)">
             <mat-option *ngFor="let option of suggestions | async | async" [value]="option.value">
               {{option.label}}
