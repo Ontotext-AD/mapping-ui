@@ -9,6 +9,7 @@ import {environment} from 'src/environments/environment';
 
 import {ActivatedRoute} from '@angular/router';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
+import {Column} from '../../models/mapping-definition';
 
 @Injectable({
   providedIn: 'root',
@@ -50,6 +51,13 @@ export class MapperService extends RestService {
   preview(mappingDefinition: MappingDefinitionImpl): Observable<any> {
     return this.getAPIURL('/preview/').pipe(switchMap((fullUrl) => {
       return this.httpClient.post(fullUrl, mappingDefinition);
+    }));
+  }
+
+  previewGREL(valueSource: Column, grelExpression: string, limit?: number): Observable<Array<any>> {
+    const payload = {valueSource: valueSource, grel: grelExpression};
+    return this.getAPIURL('/grel/').pipe(switchMap((fullUrl) => {
+      return this.httpClient.post<Array<any>>(fullUrl + '?limit=' + (limit || 10), payload);
     }));
   }
 

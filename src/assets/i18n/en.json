@@ -25,7 +25,8 @@
     "UNIQUE_BNODE": "Unique BNode",
     "VALUE_BNODE": "BNode",
     "IRI": "IRI",
-    "GREL": "GREL"
+    "GREL": "GREL",
+    "GREL_PLACEHOLDER": "Use value, row, cell(s), recon, record"
   },
   "CONSTANTS": {
     "COLUMN": "@",
