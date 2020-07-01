@@ -120,26 +120,26 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     this.mappingDetails = {} as MappingDetails;
   }
 
-  private setTypeMappings(subject, isRoot) {
+  private setTypeMappings(subject, isRoot, isIRI?) {
     this.getTypeMappings(subject) && this.getTypeMappings(subject).forEach((mapping) => {
       this.setUsedSources(mapping);
-      this.triples.push(new Triple(subject, undefined, mapping, true, isRoot));
+      this.triples.push(new Triple(subject, undefined, mapping, true, isRoot, isIRI));
       isRoot = false;
     });
     return of(isRoot);
   }
 
-  private setPropertyMappings(subject, isRoot) {
+  private setPropertyMappings(subject, isRoot, isIRI?) {
     this.getPropertyMappings(subject) && this.getPropertyMappings(subject).forEach((property) => {
       this.setUsedSources(property);
       if (property.getValues()) {
         property.getValues().forEach((object) => {
           this.setUsedSources(object);
-          this.triples.push(new Triple(subject, property, object, false, isRoot));
+          this.triples.push(new Triple(subject, property, object, false, isRoot, isIRI));
           isRoot = false;
           if (object.getValueType() && object.getValueType().getType() === Type.IRI) {
-            this.setTypeMappings(object, false);
-            this.setPropertyMappings(object, false);
+            this.setTypeMappings(object, false, true);
+            this.setPropertyMappings(object, false, true);
           }
         });
       } else {
