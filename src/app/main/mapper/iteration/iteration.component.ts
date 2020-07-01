@@ -288,8 +288,14 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       }
     } else if (selected === this.SUBJECT) {
       const subject = mapping.getSubject();
-      subject.setPropertyMappings([]);
-      subject.setTypeMappings([]);
+      if (subject instanceof SubjectMappingImpl) {
+        const mappings = this.mapping.getSubjectMappings();
+        const index = mappings.indexOf(subject);
+        mappings.splice(index, 1);
+      } else {
+        subject.setPropertyMappings([]);
+        subject.setTypeMappings([]);
+      }
     }
     this.init(true);
   }
