@@ -6,7 +6,7 @@
       <form>
         <mat-form-field>
           <mat-label>{{getCellType()}}</mat-label>
-          <input matInput #mapping  tabIndex="{{tabIndex}}"
+          <input matInput #mapping tabIndex="{{tabIndex}}"
                  tabPosition="{{tabPosition}}"
                  autocomplete="{{suggestions}}"
                  [formControl]="autoInput"
@@ -48,16 +48,8 @@
         </div>
 
         <div *ngIf="isFirstChild && !isTypeProperty; else emptyBlock" fxFill>
-          <div>
-            <div class="ti-type" [fxFlex]="25" [ngClass]="{
-              'type-iri': getType() === IRI,
-              'type-literal': getType() === LITERAL,
-              'type-node': getType() === UNIQUE_BNODE || getType() === VALUE_BNODE
-              }">
-              <span *ngIf="getType()">{{getValueTypeLabel()}}</span>
-            </div>
-
-            <div [fxFlex]="25">
+          <div fxLayout="row" fxLayoutAlign="space-between end">
+            <div fxFlex="auto">
               <div *ngIf="getTransformationType()">
                 <span class="ti-transform" [ngClass]="{
                   'type-grel': getTransformationType() === GREL,
@@ -68,44 +60,20 @@
               </div>
             </div>
 
-            <div [fxFlex]="25">
-              <div class="ti-type" [fxFlex]="25" [ngClass]="{
-                'type-datatype': getType() === DATATYPE_LITERAL,
-                'type-language-literal': getType() === LANGUAGE_LITERAL
-                }">
-                <span *ngIf="isSecondaryType()">
-                  {{getSecondaryTypeLabel()}}
-                </span>
-              </div>
-            </div>
-
-            <div [fxFlex]="25">
-              <div *ngIf="getSecondaryTransformationType()">
-                <span class="ti-transform" [ngClass]="{
-                  'type-grel': getSecondaryTransformationType().getLanguage() === GREL,
-                  'type-prefix': getSecondaryTransformationType().getLanguage() === PREFIX
-                  }">
-                  {{getSecondaryTransformationLabel()}}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div fxFill>
-            <div [fxFlex]="50">
-              <span class="ti-source">
-                <span *ngIf="getSourceType() === 'column'">
+            <div class="ml-8" fxFlex="grow">
+             <span class="ti-source">
+                <span *ngIf="getSourceType() === 'column'" matTooltip="{{getValueSource().getColumnName()}}">
                   <span class="ti-source-type type-col" title="column">
                     {{'CONSTANTS.COLUMN' | translate}}
                   </span>
-                  {{getValueSource().getColumnName()}}
+                  {{getReasonableLongWord(getValueSource().getColumnName())}}
                 </span>
 
-                <span *ngIf="getSourceType() === 'constant'">
+                <span *ngIf="getSourceType() === 'constant'" matTooltip="{{getValueSource().getConstant()}}}">
                   <span class="ti-source-type type-const" title="Const">
                     {{'CONSTANTS.CONSTANT' | translate}}
                   </span>
-                  {{getValueSource().getConstant()}}
+                  {{getReasonableLongWord(getValueSource().getConstant())}}
                 </span>
 
                 <span *ngIf="getSourceType() === 'row_index' || getSourceType() === 'record_id'">
@@ -117,21 +85,43 @@
               </span>
             </div>
 
-            <div [fxFlex]="50">
+            <div class="ti-type" [fxFlex]="20" fxLayout="column" fxLayoutAlign="space-between end" [ngClass]="{
+              'type-iri': getType() === IRI,
+              'type-literal': getType() === LITERAL,
+              'type-node': getType() === UNIQUE_BNODE || getType() === VALUE_BNODE
+              }">
+              <span *ngIf="getType()">{{getValueTypeLabel()}}</span>
+
+            </div>
+          </div>
+
+          <div class="mt-12" >
+            <div fxFlex="auto">
+              <div *ngIf="getSecondaryTransformationType()">
+                <span class="ti-transform" [ngClass]="{
+                  'type-grel': getSecondaryTransformationType().getLanguage() === GREL,
+                  'type-prefix': getSecondaryTransformationType().getLanguage() === PREFIX
+                  }">
+                  {{getSecondaryTransformationLabel()}}
+                </span>
+              </div>
+            </div>
+
+            <div class="ml-8" fxFlex="grow">
               <span class="ti-source">
                 <div *ngIf="getDatatypeSource()">
-                  <span *ngIf="getDatatypeSourceType() === 'column'">
+                  <span *ngIf="getDatatypeSourceType() === 'column'" matTooltip="{{getDatatypeSource().getColumnName()}}">
                     <span class="ti-source-type type-col" title="column">
                       {{'CONSTANTS.COLUMN' | translate}}
                     </span>
-                    {{getDatatypeSource().getColumnName()}}
+                    {{getReasonableLongWord(getDatatypeSource().getColumnName())}}
                   </span>
 
-                  <span *ngIf="getDatatypeSourceType() === 'constant'">
+                  <span *ngIf="getDatatypeSourceType() === 'constant'" matTooltip=" {{getDatatypeSource().getConstant()}}">
                     <span class="ti-source-type type-const" title="Const">
                       {{'CONSTANTS.CONSTANT' | translate}}
                     </span>
-                    {{getDatatypeSource().getConstant()}}
+                    {{getReasonableLongWord(getDatatypeSource().getConstant())}}
                   </span>
 
                   <span *ngIf="getDatatypeSourceType() === 'row_index' || getDatatypeSourceType() === 'record_id'">
@@ -143,18 +133,20 @@
                 </div>
 
                 <div *ngIf="getValueTypeLanguageSource()">
-                  <span *ngIf="getValueTypeLanguageSourceType() === 'column'">
+                  <span *ngIf="getValueTypeLanguageSourceType() === 'column'"
+                        matTooltip="{{getValueTypeLanguageSource().getColumnName()}}">
                     <span class="ti-source-type type-col" title="column">
                       {{'CONSTANTS.COLUMN' | translate}}
                     </span>
-                    {{getValueTypeLanguageSource().getColumnName()}}
+                    {{getReasonableLongWord(getValueTypeLanguageSource().getColumnName())}}
                   </span>
 
-                  <span *ngIf="getValueTypeLanguageSourceType() === 'constant'">
+                  <span *ngIf="getValueTypeLanguageSourceType() === 'constant'"
+                        matTooltip="{{getValueTypeLanguageSource().getConstant()}}}">
                     <span class="ti-source-type type-const" title="Const">
                       {{'CONSTANTS.CONSTANT' | translate}}
                     </span>
-                    {{getValueTypeLanguageSource().getConstant()}}
+                    {{getReasonableLongWord(getValueTypeLanguageSource().getConstant())}}
                   </span>
 
                   <span
@@ -167,36 +159,51 @@
                 </div>
               </span>
             </div>
+
+            <div dir="rtl">
+              <div [fxFlex]="20">
+                <div *ngIf="getSecondaryTransformationType()">
+                  <span class="ti-transform" [ngClass]="{
+                  'type-datatype': getType() === DATATYPE_LITERAL,
+                  'type-language-literal': getType() === LANGUAGE_LITERAL
+                  }">
+                    <span *ngIf="isSecondaryType()">
+                    {{getSecondaryTypeLabel()}}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
+      </div>
+    </div>
+
+    <div class="ti-footer" *ngIf="isFirstChild">
+      <div class="ti-preview">
+        <div *ngFor="let previewItem of getPreview();">
+          {{previewItem}}
         </div>
       </div>
-
-      <div class="ti-footer" *ngIf="isFirstChild">
-        <div class="ti-preview">
-          <div *ngFor="let previewItem of getPreview();">
-            {{previewItem}}
-          </div>
-        </div>
-        <div class="ti-actions">
+      <div class="ti-actions">
           <span class="btn btn-link text-muted">
             <span cdkDrag [cdkDragData]="cellMapping">
 						  <span class="icon-edit" (click)="onEdit()"></span>
             </span>
           </span>
 
-          <span class="btn btn-link text-muted">
+        <span class="btn btn-link text-muted">
             <span cdkDrag [cdkDragData]="cellMapping" cdkDragHandle>
 						  <span class="icon-copy"></span>
             </span>
           </span>
 
-          <span class="btn btn-link text-muted">
+        <span class="btn btn-link text-muted">
 					  <span class="icon-trash" (click)="deleteMapping($event)"></span>
           </span>
-        </div>
       </div>
     </div>
-  </ng-template>
+</div>
+</ng-template>
 </div>
 
 <ng-template #emptyBlock>
