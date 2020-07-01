@@ -9,14 +9,16 @@ export class Triple {
   object: ValueMappingImpl | SimpleIRIValueMappingImpl;
   isTypeProperty: boolean;
   isRoot: boolean;
+  isIRI: boolean;
 
   constructor(subject?: SubjectMappingImpl | ValueMappingImpl, predicate?: PropertyMappingImpl,
-      object?: ValueMappingImpl | SimpleIRIValueMappingImpl, isTypeProperty?: boolean, isRoot?: boolean) {
+      object?: ValueMappingImpl | SimpleIRIValueMappingImpl, isTypeProperty?: boolean, isRoot?: boolean, isIRI?: boolean) {
     this.subject = subject;
     this.predicate = predicate;
     this.object = object;
     this.isTypeProperty = isTypeProperty || false;
     this.isRoot = isRoot;
+    this.isIRI = isIRI;
   }
 
   getSubject() {
@@ -57,6 +59,11 @@ export class Triple {
 
   setTypeProperty(isTypeProperty: boolean) {
     this.isTypeProperty = isTypeProperty;
+    return this;
+  }
+
+  setIRI(isIRI: boolean) {
+    this.isIRI = isIRI;
     return this;
   }
 }
