@@ -12,6 +12,7 @@ import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
 import {Triple} from 'src/app/models/triple';
 import {Language} from 'src/app/models/language';
+import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 
 @Injectable({
   providedIn: 'root',
@@ -204,14 +205,16 @@ export class ModelConstructService {
     }
   }
 
-  setRootMappingInModel(mappingData: Triple, mapping) {
-    const subjectMappings = mapping.getSubjectMappings();
+  setRootMappingInModel(mappingData: Triple, mapping: MappingDefinitionImpl) {
     const subject = mappingData.getSubject();
-    const index = subjectMappings.indexOf(subject);
-    if (index > -1) {
-      subjectMappings.splice(index, 1, subject);
-    } else {
-      subjectMappings.push(mappingData.getSubject());
+    if (subject instanceof SubjectMappingImpl) {
+      const subjectMappings = mapping.getSubjectMappings();
+      const index = subjectMappings.indexOf(subject);
+      if (index > -1) {
+        subjectMappings.splice(index, 1, subject);
+      } else if (subject instanceof SubjectMappingImpl) {
+        subjectMappings.push(subject);
+      }
     }
   }
 }

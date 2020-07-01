@@ -235,7 +235,6 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     const object = this.getTripleByIndex(index) && this.getTripleByIndex(index).getObject();
     const triple = new Triple(object as ValueMappingImpl, undefined, undefined);
     this.triples.splice(index + 1, 0, triple);
-    this.openMapperDialog(undefined, triple, this.PREDICATE);
   }
 
   public isPlusApplicable(index) {
