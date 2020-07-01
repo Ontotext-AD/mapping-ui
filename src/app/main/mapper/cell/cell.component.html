@@ -1,4 +1,4 @@
-<div cdkDrag class="mr-12" fxFill>
+<div class="mr-12" fxFill>
   <div class="triple-item" *ngIf="isEmpty(); else notEmptyBlock">
     <span class="ti-placeholder" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
           (cdkDropListDropped)="drop($event)" (click)="onPreventClick($event)">
