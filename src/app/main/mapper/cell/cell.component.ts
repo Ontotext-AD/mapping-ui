@@ -24,6 +24,7 @@ import {map} from 'rxjs/operators';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {FormControl} from '@angular/forms';
 import {TypeMapping} from 'src/app/models/type-mapping';
+import {Helper} from 'src/app/utils/helper';
 
 @Component({
   selector: 'app-mapper-cell',
@@ -47,9 +48,7 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   @Output() onValueSet = new EventEmitter<any>();
   @Output() onEditClick = new EventEmitter<any>();
 
-
   suggestions: Observable<Observable<any>>;
-
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
@@ -312,5 +311,9 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
               }
               return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, this.namespaces)));
             }));
+  }
+
+  getReasonableLongWord(word: string) {
+    return Helper.getReasonableLongWord(word, 7, 7);
   }
 }

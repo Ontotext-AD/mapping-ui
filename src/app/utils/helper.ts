@@ -16,4 +16,11 @@ export class Helper {
   public static isBlank(string: string): boolean {
     return !string || string.match(/^\s*$/) !== null;
   }
+
+  public static getReasonableLongWord(word: string, fromStart= 5, fromEnd = 5) {
+    if (word.length > 15) {
+      return word.substr(0, fromStart) + ' ... ' + word.substr(word.length -fromEnd, fromEnd);
+    }
+    return word;
+  }
 }
