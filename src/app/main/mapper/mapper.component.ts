@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {Source} from 'src/app/models/source';
@@ -8,6 +8,8 @@ import {EMPTY_MAPPING, DOWNLOAD_RDF_FILE} from 'src/app/utils/constants';
 import {plainToClass} from 'class-transformer';
 import {MatChipInputEvent} from '@angular/material/chips/chip-input';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {ChannelName} from 'src/app/services/channel-name.enum';
+import {MessageService} from 'src/app/services/message.service';
 
 
 @Component({
@@ -19,10 +21,10 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   sources: Array<Source>;
   mapping: MappingDefinitionImpl = plainToClass(MappingDefinitionImpl, EMPTY_MAPPING);
   rdf: string;
-  onSave = new EventEmitter<any>();
 
   constructor(private modelManagementService: ModelManagementService,
-              private mapperService: MapperService) {
+              private mapperService: MapperService,
+              private messageService: MessageService) {
     super();
   }
 
@@ -41,12 +43,30 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .subscribe((data) => {
           this.mapping = data;
         });
-  }
 
-  onSavedMapping() {
-    this.modelManagementService.storeModelMapping(this.mapping)
+    this.messageService.read(ChannelName.NewMapping)
         .pipe(untilComponentDestroyed(this))
-        .subscribe( () => this.onSave.emit());
+        .subscribe(() => {
+          this.mapping = new MappingDefinitionImpl(undefined, undefined, []);
+        });
+
+    this.messageService.read(ChannelName.PreviewMapping)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.onPreview();
+        });
+
+    this.messageService.read(ChannelName.GetRDF)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.onGetRDF();
+        });
+
+    this.messageService.read(ChannelName.GetSPARQL)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.onSPARQL();
+        });
   }
 
   onGetRDF() {
@@ -75,10 +95,6 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .subscribe((data) => {
           this.mapping = plainToClass(MappingDefinitionImpl, data);
         });
-  }
-
-  public onNewMapping() {
-    this.mapping = new MappingDefinitionImpl(undefined, undefined, []);
   }
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
