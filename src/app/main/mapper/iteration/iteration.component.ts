@@ -25,6 +25,7 @@ import {MappingBase} from 'src/app/models/mapping-base';
 import {SourceService} from 'src/app/services/source.service';
 import {MessageService} from 'src/app/services/message.service';
 import {ChannelName} from 'src/app/services/channel-name.enum';
+import {Helper} from '../../../utils/helper';
 
 
 @Component({
@@ -410,7 +411,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       constant: source === SourceEnum.Constant ? value : undefined,
       columnName: source === SourceEnum.Column ? value : undefined,
       source: source,
-      type: this.getType(selected, triple),
+      type: this.getType(selected, triple, value),
       typeMapping: triple.isTypeProperty,
       expression: prefix ? prefixTransformation.prefix : undefined,
       language: prefix ? Language.Prefix.valueOf() : undefined,
@@ -436,9 +437,9 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     }
   }
 
-  private getType(selected: string, triple: Triple) {
+  private getType(selected: string, triple: Triple, value: string) {
     if (selected === this.OBJECT) {
-      return triple.getPredicate() ? Type.Literal : TypeMapping.a;
+      return triple.getPredicate() ? (Helper.isIRI(value) ? Type.IRI : (Type.Literal)) : TypeMapping.a;
     }
     return undefined;
   }
