@@ -1,7 +1,6 @@
 <div class="row mb-3">
   <div class="col-lg-12" cdkDropListGroup appCypressData="mapper">
-    <app-header [mapping]="mapping" (onNewMapping)="onNewMapping()" (savedMapping)="onSavedMapping()"
-                (onGetRDF)="onGetRDF()" (onSPARQL)="onSPARQL()" (onPreview)="onPreview()"></app-header>
+    <app-header [mapping]="mapping"></app-header>
     <app-sources [sources]="sources"></app-sources>
 
     <div class="mr-12 ml-12 mb-12">
@@ -29,6 +28,6 @@
 
     <div class="mr-12 ml-12 mb-12">Namespaces: {{mapping.getNamespaces() | json}}</div>
 
-    <app-iteration [mapping]="mapping" [sources]="sources" [onSave]="onSave"></app-iteration>
+    <app-iteration [mapping]="mapping" [sources]="sources"></app-iteration>
   </div>
 </div>

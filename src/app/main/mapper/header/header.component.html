@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="end end" appCypressData="header">
-  <button (click)="saveMapping()" class="mr-12 btn-primary cursor-pointer">{{"BUTTONS.SAVE" | translate}}</button>
+  <button (click)="saveMapping()" [disabled]="!isMappingDirty" class="mr-12 btn-primary cursor-pointer">{{"BUTTONS.SAVE" | translate}}</button>
   <button class="mr-12 btn-primary cursor-pointer" (click)="openDialog()">{{"BUTTONS.VIEW_JSON" | translate}}</button>
   <button class="mr-12 btn-primary cursor-pointer" (click)="getRDF()">{{"BUTTONS.RDF" | translate}}</button>
   <button class="mr-12 btn-primary cursor-pointer" (click)="getSPARQL()">{{"BUTTONS.SPARQL" | translate}}</button>

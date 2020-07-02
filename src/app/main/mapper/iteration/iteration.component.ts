@@ -12,7 +12,7 @@ import {Source} from 'src/app/models/source';
 import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 import {MappingDetails} from 'src/app/models/mapping-details';
 import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, of} from 'rxjs';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -23,6 +23,8 @@ import {RepositoryService} from 'src/app/services/rest/repository.service';
 import {Language} from 'src/app/models/language';
 import {MappingBase} from 'src/app/models/mapping-base';
 import {SourceService} from 'src/app/services/source.service';
+import {MessageService} from 'src/app/services/message.service';
+import {ChannelName} from 'src/app/services/channel-name.enum';
 
 
 @Component({
@@ -33,14 +35,13 @@ import {SourceService} from 'src/app/services/source.service';
 export class IterationComponent extends OnDestroyMixin implements OnInit, AfterViewInit, OnDestroy {
   @Input() mapping: MappingDefinitionImpl;
   @Input() sources: Array<Source>;
-  @Input() onSave: Observable<any>;
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
   OBJECT = OBJECT_SELECTOR;
   triples: Triple[];
   mappingDetails: MappingDetails;
-  isDirty: boolean = false;
+  isDirty: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   repoNamespaces: { [key: string]: string };
   usedSources: Set<string>;
 
@@ -53,7 +54,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
               private repositoryService: RepositoryService,
               private modelConstructService: ModelConstructService,
               private tabService: TabService,
-              private sourceService: SourceService) {
+              private sourceService: SourceService,
+              private messageService: MessageService) {
     super();
   }
 
@@ -64,11 +66,14 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   ngOnInit(): void {
     this.init();
     this.boundCheckDirty = this.checkDirty.bind(this);
-    this.onSave
+
+    this.messageService.read(ChannelName.SaveMapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
-          this.isDirty = false;
+          this.isDirty.next(false);
         });
+
+    this.isDirty.subscribe((isDirty) => this.messageService.publish(ChannelName.DirtyMapping, isDirty));
   }
 
   ngAfterViewInit() {
@@ -77,7 +82,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   init(isDirty?: boolean) {
     if (isDirty) {
-      this.isDirty = isDirty;
+      this.isDirty.next(isDirty);
     }
 
     this.usedSources = new Set();

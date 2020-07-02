@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
@@ -7,6 +7,8 @@ import {Convert} from 'src/app/models/mapping-definition';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
+import {MessageService} from 'src/app/services/message.service';
+import {ChannelName} from 'src/app/services/channel-name.enum';
 
 export interface JSONDialogData {
   mapping
@@ -18,26 +20,27 @@ export interface JSONDialogData {
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent extends OnDestroyMixin implements OnInit {
-  @Output() savedMapping = new EventEmitter<void>();
-  @Output() onNewMapping = new EventEmitter<void>();
-  @Output() onGetRDF = new EventEmitter<void>();
-  @Output() onSPARQL = new EventEmitter<void>();
-  @Output() onPreview = new EventEmitter<void>();
   @Input() mapping: MappingDefinitionImpl;
-
+  isMappingDirty: boolean;
 
   constructor(public dialog: MatDialog,
               private modelManagementService: ModelManagementService,
               private dialogService: DialogService,
-              private translateService: TranslateService) {
+              private translateService: TranslateService,
+              private messageService: MessageService) {
     super();
   }
 
   ngOnInit(): void {
+    this.messageService.read(ChannelName.DirtyMapping)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((event) => {
+          this.isMappingDirty = event.getMessage();
+        });
   }
 
   saveMapping(): void {
-    this.savedMapping.emit();
+    this.messageService.publish(ChannelName.SaveMapping);
   }
 
   openDialog(): void {
@@ -51,15 +54,15 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
   }
 
   getRDF(): void {
-    this.onGetRDF.emit();
+    this.messageService.publish(ChannelName.GetRDF);
   }
 
   getSPARQL(): void {
-    this.onSPARQL.emit();
+    this.messageService.publish(ChannelName.GetSPARQL);
   }
 
   preview(): void {
-    this.onPreview.emit();
+    this.messageService.publish(ChannelName.PreviewMapping);
   }
 
   public isDevEnv() {
@@ -72,7 +75,7 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
     }).pipe(untilComponentDestroyed(this))
         .subscribe((result) => {
           if (result) {
-            this.onNewMapping.emit();
+            this.messageService.publish(ChannelName.NewMapping);
           }
         });
   }
