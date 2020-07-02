@@ -4,7 +4,7 @@
     <form *ngIf="mapperForm$ | async as mapperForm" [formGroup]="mapperForm" fxLayout="column" fxLayoutAlign="start"
           fxFlex="200">
       <div class="typeProperty-section">
-        <div *ngIf="isPredicate()">
+        <div *ngIf="isPredicate() && !this.selected">
           <mat-label></mat-label>
           <mat-checkbox formControlName="typeMapping" name="typeMapping"
                         labelPosition="after"> {{"LABELS.TYPE_PROPERTY" | translate}} </mat-checkbox>
