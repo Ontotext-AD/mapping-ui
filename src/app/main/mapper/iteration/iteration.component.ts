@@ -68,7 +68,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     this.init();
     this.boundCheckDirty = this.checkDirty.bind(this);
 
-    this.messageService.read(ChannelName.SaveMapping)
+    this.messageService.read(ChannelName.MappingSaved)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
           this.isDirty.next(false);

@@ -4,7 +4,7 @@ import {ModelManagementService} from 'src/app/services/model-management.service'
 import {Source} from 'src/app/models/source';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
-import {EMPTY_MAPPING, DOWNLOAD_RDF_FILE} from 'src/app/utils/constants';
+import {DOWNLOAD_RDF_FILE, EMPTY_MAPPING} from 'src/app/utils/constants';
 import {plainToClass} from 'class-transformer';
 import {MatChipInputEvent} from '@angular/material/chips/chip-input';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -48,6 +48,16 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
           this.mapping = new MappingDefinitionImpl(undefined, undefined, []);
+        });
+
+    this.messageService.read(ChannelName.SaveMapping)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.modelManagementService.storeModelMapping(this.mapping)
+              .pipe(untilComponentDestroyed(this))
+              .subscribe(() => {
+                this.messageService.publish(ChannelName.MappingSaved);
+              });
         });
 
     this.messageService.read(ChannelName.PreviewMapping)
