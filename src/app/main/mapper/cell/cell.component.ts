@@ -12,6 +12,7 @@ import {
   PREDICATE_SELECTOR,
   PREFIX_CONSTANT, SOURCE_SIGN,
   SUBJECT_SELECTOR,
+  MAT_OPTION,
 } from 'src/app/utils/constants';
 import {TranslateService} from '@ngx-translate/core';
 import {Source as SourceEnum, Type} from 'src/app/models/mapping-definition';
@@ -315,5 +316,15 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
 
   getReasonableLongWord(word: string) {
     return Helper.getReasonableLongWord(word, 7, 7);
+  }
+
+  public saveInputValueOnBlur($event: FocusEvent) {
+    // @ts-ignore
+    if ($event.relatedTarget && $event.relatedTarget.tagName === MAT_OPTION) {
+      $event.preventDefault();
+      $event.stopPropagation();
+    } else {
+      this.saveInputValue(true);
+    }
   }
 }
