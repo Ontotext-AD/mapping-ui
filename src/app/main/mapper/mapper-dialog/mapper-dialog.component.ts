@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {merge, Observable, of} from 'rxjs';
 import {Triple} from 'src/app/models/triple';
 import {OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
@@ -18,7 +18,8 @@ import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
 import {RepositoryService} from 'src/app/services/rest/repository.service';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
-import {MapperService} from '../../../services/rest/mapper.service';
+import {MapperService} from 'src/app/services/rest/mapper.service';
+import {conditionalValidator} from 'src/app/validators/conditional.validator';
 
 export interface SubjectMapperData {
   mappingData: Triple,
@@ -68,6 +69,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   grelPreviewExpression: Observable<Array<any>>;
   grelPreviewLanguageTransformation: Observable<Array<any>>;
   grelPreviewDataTypeTransformation: Observable<Array<any>>;
+  title: string;
 
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
@@ -106,10 +108,13 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   private setSelected() {
     if (this.isSubject()) {
       this.selected = this.data.mappingData.getSubject();
+      this.title = this.translateService.instant('LABELS.SUBJECT');
     } else if (this.isPredicate()) {
       this.selected = this.data.mappingData.getPredicate();
+      this.title = this.translateService.instant('LABELS.PREDICATE');
     } else if (this.isObject()) {
       this.selected = this.data.mappingData.getObject();
+      this.title = this.translateService.instant('LABELS.OBJECT');
     }
   }
 
@@ -168,25 +173,25 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
       typeMapping: [mappingDetails.typeMapping],
 
       // Value type
-      type: [mappingDetails.type],
-      dataTypeValueSource: [mappingDetails.dataTypeValueSource],
-      dataTypeColumnName: [mappingDetails.dataTypeColumnName],
-      dataTypeConstant: [mappingDetails.dataTypeConstant],
+      type: [mappingDetails.type, conditionalValidator(() => this.types.length > 0, Validators.required)],
+      dataTypeValueSource: [mappingDetails.dataTypeValueSource, conditionalValidator(() => this.hasDatatype, Validators.required)],
+      dataTypeColumnName: [mappingDetails.dataTypeColumnName, conditionalValidator(() => this.isDatatypeColumn, Validators.required)],
+      dataTypeConstant: [mappingDetails.dataTypeConstant, conditionalValidator(() => this.isDatatypeConstant, Validators.required)],
 
       datatypeTransformation: [mappingDetails.datatypeTransformation],
       datatypeLanguage: [mappingDetails.datatypeLanguage],
 
-      languageValueSource: [mappingDetails.languageValueSource],
-      languageColumnName: [mappingDetails.languageColumnName],
-      languageConstant: [mappingDetails.languageConstant],
+      languageValueSource: [mappingDetails.languageValueSource, conditionalValidator(() => this.hasLanguage, Validators.required)],
+      languageColumnName: [mappingDetails.languageColumnName, conditionalValidator(() => this.isLanguageColumn, Validators.required)],
+      languageConstant: [mappingDetails.languageConstant, conditionalValidator(() => this.isLanguageConstant, Validators.required)],
 
       languageTransformation: [mappingDetails.languageTransformation],
       languageTransformationLanguage: [mappingDetails.languageTransformationLanguage],
 
       // Value source
-      columnName: [mappingDetails.columnName],
-      source: [mappingDetails.source],
-      constant: [mappingDetails.constant],
+      columnName: [mappingDetails.columnName, conditionalValidator(() => this.isColumn, Validators.required)],
+      source: [mappingDetails.source, Validators.required],
+      constant: [mappingDetails.constant, conditionalValidator(() => this.isConstant, Validators.required)],
 
       // Value transformation
       expression: [mappingDetails.expression],
@@ -194,6 +199,10 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     });
 
     return this.mapperForm;
+  }
+
+  isDatatype() {
+    return this.mapperForm.get('dataTypeValueSource').value;
   }
 
   private showAppropriateFields() {
@@ -230,6 +239,14 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           this.isColumn = value === Source.Column;
           this.isConstant = value === Source.Constant;
+
+          if (this.isColumn) {
+            this.mapperForm.get('columnName').markAsTouched();
+          } else if (this.isConstant) {
+            this.mapperForm.get('constant').markAsTouched();
+          }
+          this.mapperForm.get('columnName').updateValueAndValidity();
+          this.mapperForm.get('constant').updateValueAndValidity();
         });
 
     this.mapperForm.get('type').valueChanges
@@ -237,6 +254,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           this.hasDatatype = value === Type.DatatypeLiteral;
           this.hasLanguage = value === Type.LanguageLiteral;
+          this.mapperForm.get('dataTypeValueSource').updateValueAndValidity();
+          this.mapperForm.get('languageValueSource').updateValueAndValidity();
         });
 
     this.mapperForm.get('dataTypeValueSource').valueChanges
@@ -244,6 +263,14 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           this.isDatatypeColumn = value === Source.Column;
           this.isDatatypeConstant = value === Source.Constant;
+
+          if (this.isDatatypeColumn) {
+            this.mapperForm.get('dataTypeColumnName').markAsTouched();
+          } else if (this.isDatatypeConstant) {
+            this.mapperForm.get('dataTypeConstant').markAsTouched();
+          }
+          this.mapperForm.get('dataTypeColumnName').updateValueAndValidity();
+          this.mapperForm.get('dataTypeConstant').updateValueAndValidity();
         });
 
     this.mapperForm.get('languageValueSource').valueChanges
@@ -251,6 +278,14 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           this.isLanguageColumn = value === Source.Column;
           this.isLanguageConstant = value === Source.Constant;
+
+          if (this.isLanguageColumn) {
+            this.mapperForm.get('languageColumnName').markAsTouched();
+          } else if (this.isLanguageConstant) {
+            this.mapperForm.get('languageConstant').markAsTouched();
+          }
+          this.mapperForm.get('languageColumnName').updateValueAndValidity();
+          this.mapperForm.get('languageConstant').updateValueAndValidity();
         });
 
     this.mapperForm.get('language').valueChanges
@@ -342,7 +377,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   private filterColumn(value: string): string[] {
-    return this.data.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase()));
+    return this.data.sources.filter((source) => source.title.toLowerCase().includes(value && value.toLowerCase()));
   }
 
   private subscribeToCheckDirty() {
@@ -437,5 +472,9 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     } else {
       this.dialogRef.close();
     }
+  }
+
+  public isMappingInvalid() {
+    return !this.mapperForm.valid && !this.mapperForm.get('typeMapping').value;
   }
 }

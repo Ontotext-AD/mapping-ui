@@ -1,5 +1,5 @@
 <div class="subject-dialog" appCypressData="subject-dialog">
-  <h1 mat-dialog-title>{{"LABELS.RDF_VALUE" | translate}}</h1>
+  <h1 mat-dialog-title cdkFocusInitial>{{title}}</h1>
   <div mat-dialog-content>
     <form *ngIf="mapperForm$ | async as mapperForm" [formGroup]="mapperForm" fxLayout="column" fxLayoutAlign="start"
           fxFlex="200">
@@ -21,7 +21,11 @@
               <mat-radio-button class="type-radio-button" *ngFor="let type of types" [value]="type">
                 {{getType(type)}}
               </mat-radio-button>
+              <mat-error *ngIf="mapperForm.get('type').hasError('required')">
+                {{ 'ERROR.REQUIRED' | translate }}
+              </mat-error>
             </mat-radio-group>
+
             <div class="ml-16" fxLayout="row" fxLayoutAlign="space-between start">
               <div *ngIf="hasDatatype">
                 <strong>{{'LABELS.TYPE_SOURCE' | translate}}</strong>
@@ -32,15 +36,22 @@
                     <mat-radio-button class="type-radio-button" *ngFor="let source of sources" [value]="source">
                       {{getType(source)}}
                     </mat-radio-button>
+                    <mat-error *ngIf="mapperForm.get('dataTypeValueSource').hasError('required')">
+                      {{ 'ERROR.REQUIRED' | translate }}
+                    </mat-error>
                   </mat-radio-group>
+
 
                   <mat-form-field class="ml-16" *ngIf="isDatatypeConstant">
                     <mat-label>{{'LABELS.CONSTANT' | translate}}</mat-label>
                     <textarea matInput formControlName="dataTypeConstant" name="dataTypeConstant" cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="autoDataTypeC"></textarea>
+                    <mat-error *ngIf="mapperForm.get('dataTypeConstant').hasError('required')">
+                      {{ 'ERROR.REQUIRED' | translate }}
+                    </mat-error>
                     <mat-autocomplete #autoDataTypeC="matAutocomplete">
-                      <mat-option *ngFor="let const of filteredConstants | async | async" [value]="const.value">
-                        {{const.label}}
+                      <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.value">
+                        {{constant.label}}
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
@@ -50,6 +61,9 @@
                     <textarea matInput formControlName="dataTypeColumnName" name="dataTypeColumnName"
                               cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="autoc"></textarea>
+                    <mat-error *ngIf="mapperForm.get('dataTypeColumnName').hasError('required')">
+                      {{ 'ERROR.REQUIRED' | translate }}
+                    </mat-error>
                     <mat-autocomplete #autoc="matAutocomplete">
                       <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title">
                         {{option.title}}
@@ -100,12 +114,18 @@
                     <mat-radio-button class="type-radio-button" *ngFor="let source of sources" [value]="source">
                       {{getType(source)}}
                     </mat-radio-button>
+                    <mat-error *ngIf="mapperForm.get('languageValueSource').hasError('required')">
+                      {{ 'ERROR.REQUIRED' | translate }}
+                    </mat-error>
                   </mat-radio-group>
 
                   <mat-form-field class="ml-16" style="width: 300px;" *ngIf="isLanguageConstant">
                     <mat-label>{{'LABELS.CONSTANT' | translate}}</mat-label>
                     <textarea matInput formControlName="languageConstant" name="languageConstant" cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                    <mat-error *ngIf="mapperForm.get('languageConstant').hasError('required')">
+                      {{ 'ERROR.REQUIRED' | translate }}
+                    </mat-error>
                   </mat-form-field>
 
                   <mat-form-field class="ml-16" style="width: 300px;" *ngIf="isLanguageColumn">
@@ -113,6 +133,9 @@
                     <textarea matInput formControlName="languageColumnName" name="languageColumnName"
                               cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="autoc"></textarea>
+                    <mat-error *ngIf="mapperForm.get('languageColumnName').hasError('required')">
+                      {{ 'ERROR.REQUIRED' | translate }}
+                    </mat-error>
                     <mat-autocomplete #autoc="matAutocomplete">
                     <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title">
                       {{option.title}}
@@ -167,12 +190,19 @@
                 <mat-radio-button class="type-radio-button" *ngFor="let source of sources" [value]="source">
                   {{getType(source)}}
                 </mat-radio-button>
+                <mat-error *ngIf="mapperForm.get('source').hasError('required')">
+                  {{ 'ERROR.REQUIRED' | translate }}
+                </mat-error>
               </mat-radio-group>
 
-              <mat-form-field class="ml-16" style="width: 400px;" *ngIf="isConstant">
+
+              <mat-form-field class="ml-16 w-400" *ngIf="isConstant">
                 <mat-label>{{'LABELS.CONSTANT' | translate}}</mat-label>
                 <textarea matInput formControlName="constant" name="constant" cdkTextareaAutosize
                           cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="autoType"></textarea>
+                <mat-error *ngIf="mapperForm.get('constant').hasError('required')">
+                  {{ 'ERROR.REQUIRED' | translate }}
+                </mat-error>
                 <mat-autocomplete #autoType="matAutocomplete">
                     <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.value">
                       {{constant.label}}
@@ -180,10 +210,13 @@
                 </mat-autocomplete>
               </mat-form-field>
 
-              <mat-form-field class="ml-16" style="width: 300px;" *ngIf="isColumn">
+              <mat-form-field class="ml-16 w-400" *ngIf="isColumn">
                 <mat-label>{{'LABELS.COLUMN_NAME' | translate}}</mat-label>
                 <textarea matInput formControlName="columnName" name="columnName" cdkTextareaAutosize
                           cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" [matAutocomplete]="auto"></textarea>
+                <mat-error *ngIf="mapperForm.get('columnName').hasError('required')">
+                  {{ 'ERROR.REQUIRED' | translate }}
+                </mat-error>
                 <mat-autocomplete #auto="matAutocomplete">
                   <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title">
                     {{option.title}}
@@ -230,7 +263,9 @@
     </form>
   </div>
   <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center end">
-    <button class="btn-primary" [mat-dialog-close]="data" (click)="save()" cdkFocusInitial>Ok</button>
+    <button class="btn-primary" [mat-dialog-close]="data" (click)="save()" [disabled]="isMappingInvalid()">
+      {{'BUTTONS.OK' | translate}}
+    </button>
   </div>
 
 </div>
