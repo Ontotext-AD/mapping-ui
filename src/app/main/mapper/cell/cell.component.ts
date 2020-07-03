@@ -24,7 +24,6 @@ import {merge, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {FormControl} from '@angular/forms';
-import {TypeMapping} from 'src/app/models/type-mapping';
 import {Helper} from 'src/app/utils/helper';
 
 @Component({
@@ -258,14 +257,6 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
       return value.substr(1);
     }
     return SourceEnum.Constant;
-  }
-
-  public selectOption($event, value) {
-    // selects the current value and saves it on the model only it is not a constant
-    const source = this.getSource(value);
-    if (source != SourceEnum.Constant || value === TypeMapping.a) {
-      this.saveValue(value === TypeMapping.a ? value : value.substr(1), true);
-    }
   }
 
   public saveInputValue(emitTab: boolean) {
