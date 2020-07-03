@@ -185,7 +185,7 @@
         </div>
       </div>
       <div class="ti-actions">
-          <span class="btn btn-link text-muted">
+          <span *ngIf="!isTypeProperty" class="btn btn-link text-muted">
             <span cdkDrag [cdkDragData]="cellMapping">
 						  <span class="icon-edit" (click)="onEdit()"></span>
             </span>
