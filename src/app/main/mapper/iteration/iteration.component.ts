@@ -423,7 +423,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       isTransformation: !!prefix,
       isRoot: selected === this.SUBJECT,
       selected: selected,
-      namespaces: this.getAllNamespaces(),
+      namespaces: this.mapping.namespaces,
+      repoNamespaces: this.repoNamespaces,
     };
 
     if (selected === this.PREDICATE && value === TypeMapping.a) {
