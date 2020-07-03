@@ -12,8 +12,9 @@
                  [formControl]="autoInput"
                  [matAutocomplete]="autocInline"
                  (keydown.tab)="saveInputValue(false)"
-                 (keydown.enter)="saveInputValue(true)">
-          <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="selectOption($event, $event.option.value)">
+                 (keydown.enter)="saveInputValue(true)"
+                 (blur)="saveInputValueOnBlur($event)">
+          <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="saveInputValue(true)">
             <mat-option *ngFor="let option of suggestions | async | async" [value]="option.value">
               {{option.label}}
             </mat-option>
