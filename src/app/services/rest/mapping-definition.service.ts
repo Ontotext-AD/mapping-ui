@@ -41,7 +41,7 @@ export class MappingDefinitionService extends RestService {
   saveMappingDefinition(mappingDefinition: JSON): Observable<void> {
     return this.getAPIURL('/mapping-editor/save-rdf-mapping/').pipe(switchMap((fullUrl) => {
       const payload = new HttpParams()
-          .set('mapping', JSON.stringify(mappingDefinition));
+          .set('mapping', encodeURIComponent(JSON.stringify(mappingDefinition)));
       return this.httpClient.post<any>(fullUrl, payload);
     }));
   }
