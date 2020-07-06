@@ -6,6 +6,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {RouterModule} from "@angular/router";
 import {APP_BASE_HREF} from "@angular/common";
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -18,7 +19,8 @@ describe('HeaderComponent', () => {
         TranslateModule.forRoot(),
         RouterModule.forRoot([]),
         MatDialogModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        MatSnackBarModule,
       ],
       providers: [{provide: APP_BASE_HREF, useValue : '/' }]
 

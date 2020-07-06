@@ -3,6 +3,7 @@ import {TestBed} from '@angular/core/testing';
 import {ModelConstructService} from './model-construct.service';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {RouterTestingModule} from "@angular/router/testing";
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 describe('ModelConstructService', () => {
   let service: ModelConstructService;
@@ -11,7 +12,8 @@ describe('ModelConstructService', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule
+        RouterTestingModule,
+        MatSnackBarModule,
       ]
     });
     service = TestBed.inject(ModelConstructService);

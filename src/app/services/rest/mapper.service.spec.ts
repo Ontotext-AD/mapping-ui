@@ -1,17 +1,20 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { MapperService } from './mapper.service';
+import {MapperService} from './mapper.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
+import {ErrorReporterService} from '../error-reporter.service';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
-describe('ColumnsService', () => {
+describe('MapperService', () => {
   let service: MapperService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule
+        RouterTestingModule,
+        MatSnackBarModule,
       ]
     });
     service = TestBed.inject(MapperService);

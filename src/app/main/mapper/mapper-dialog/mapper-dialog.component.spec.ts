@@ -13,6 +13,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {Observable} from "rxjs";
 import {MatIconModule} from "@angular/material/icon";
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 
@@ -40,6 +41,7 @@ describe('MapperDialogComponent', () => {
         RouterTestingModule,
         MatAutocompleteModule,
         MatIconModule,
+        MatSnackBarModule,
       ],
       providers: [
         TranslateService,

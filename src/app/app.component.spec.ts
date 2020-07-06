@@ -6,6 +6,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MapperModule} from "src/app/main/mapper/mapper.module";
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 describe('AppComponent', () => {
@@ -17,7 +18,8 @@ describe('AppComponent', () => {
         DragDropModule,
         TranslateModule.forRoot(),
         MatDialogModule,
-        MapperModule
+        MapperModule,
+        MatSnackBarModule
       ],
       declarations: [
         AppComponent,
