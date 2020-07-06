@@ -60,12 +60,6 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
               });
         });
 
-    this.messageService.read(ChannelName.PreviewMapping)
-        .pipe(untilComponentDestroyed(this))
-        .subscribe(() => {
-          this.onPreview();
-        });
-
     this.messageService.read(ChannelName.GetRDF)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
@@ -95,15 +89,6 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe((data) => {
           window.parent.open(window.parent.location.origin + '/sparql?query=' + encodeURIComponent(data));
-        });
-  }
-
-  onPreview() {
-    this.modelManagementService.removePreview(this.mapping);
-    this.mapperService.preview(this.mapping)
-        .pipe(untilComponentDestroyed(this))
-        .subscribe((data) => {
-          this.mapping = plainToClass(MappingDefinitionImpl, data);
         });
   }
 

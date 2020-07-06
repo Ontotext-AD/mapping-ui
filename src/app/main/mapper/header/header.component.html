@@ -17,10 +17,14 @@
   <button class="mr-12 btn-primary cursor-pointer" (click)="getSPARQL()"
           matTooltip="{{'TOOLTIPS.CONVERT_TO_SPARQL' | translate}}">{{"BUTTONS.SPARQL" | translate}}
   </button>
-  <button class="mr-12 btn-primary cursor-pointer" (click)="preview()"
-          matTooltip="{{'TOOLTIPS.OPEN_PREVIEW' | translate}}">{{"BUTTONS.PREVIEW" | translate}}
-  </button>
   <button *ngIf="isDevEnv()" class="mr-12 btn-primary cursor-pointer" (click)="newMapping()"
           matTooltip="{{'TOOLTIPS.NEW_MAPPING' | translate}}">{{"BUTTONS.NEW" | translate}}
   </button>
 </div>
+<form>
+    <mat-slide-toggle
+      color="primary"
+      (change)="togglePreview($event)">
+      {{"BUTTONS.PREVIEW" | translate}}
+    </mat-slide-toggle>
+</form>

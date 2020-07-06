@@ -394,13 +394,15 @@ export class ModelManagementService {
   }
 
   private removeFromTypesAndProperties(mappingBase: MappingBase) {
-    if (mappingBase.getPropertyMappings()) {
+    if (mappingBase && mappingBase.getPropertyMappings()) {
       mappingBase.getPropertyMappings().forEach((pm) => {
         pm.clearPreview();
-        pm.getValues().forEach((vm) => {
-          vm.clearPreview();
-          this.removeFromTypesAndProperties(vm);
-        });
+        if (pm.getValues()) {
+          pm.getValues().forEach((vm) => {
+            vm.clearPreview();
+            this.removeFromTypesAndProperties(vm);
+          });
+        }
       });
     }
 
