@@ -232,6 +232,16 @@ $altTheme: mat-dark-theme($theme-primary, $theme-accent, $theme-warn);
 
 // Specific component overrides, pieces that are not in line with the general theming
 
+.mat-snack-bar-container .mat-simple-snackbar-action {
+  display: none;
+}
+.mat-snack-bar-container.error-notification {
+  background-color: #ed4f2f;
+}
+.mat-snack-bar-container.success-notification {
+  background-color: #5cb85c;
+}
+
 // Handle buttons appropriately, with respect to line-height
 .mat-raised-button, .mat-stroked-button, .mat-flat-button {
   padding: 0 1.15em;
