@@ -36,11 +36,10 @@ export class ErrorReporterService {
         errorMessage = error.message;
       }
     }
-    console.error(errorMessage);
     if (notify) {
       this.notificationService.error(message);
     }
     // return an observable with a user-facing error message
-    return throwError('Something bad happened; please try again later.');
+    return throwError(errorMessage);
   }
 }
