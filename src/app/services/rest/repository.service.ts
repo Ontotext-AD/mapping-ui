@@ -40,20 +40,15 @@ export class RepositoryService {
   }
 
   getNamespaces(): Observable<{ [p: string]: string }> {
-    return this.getAPIURL('/namespaces').pipe(
-      switchMap((fullUrl) => {
-        return this.httpClient.get<any>(fullUrl, {}).pipe(
-          map((res) => {
-            const obj = {};
-            res.results.bindings.forEach((e) => {
-              obj[e.prefix.value] = e.namespace.value;
-            });
-            return obj;
-          }),
-          catchError((error) => this.errorReporterService.handleError('Loading namespaces failed.', error))
-        );
-      })
-    );
+    return this.getAPIURL('/namespaces').pipe(switchMap((fullUrl) => {
+      return this.httpClient.get<any>(fullUrl, {}).pipe(map((res) => {
+        const obj = {};
+        res.results.bindings.forEach((e) => {
+          obj[e.prefix.value] = e.namespace.value;
+        });
+        return obj;
+      }), catchError((error) => this.errorReporterService.handleError('Loading namespaces failed.', error)));
+    }));
   }
 
   autocompleteTypes(searchKey: string): Observable<string[]> {
@@ -70,17 +65,12 @@ export class RepositoryService {
 
   autocomplete(searchKey: string, query: string): Observable<string[]> {
     const payload = new HttpParams().set('query', query.replace('KEY_WORD', searchKey));
-    return this.getAPIURL('').pipe(
-      switchMap((fullUrl) => {
-        return this.httpClient.post<any>(fullUrl, payload).pipe(
-          map((res) => {
-            return res.results.bindings.map((binding) => {
-              return binding.iri.value;
-            });
-          }),
-          catchError((error) => this.errorReporterService.handleError('Loading columns failed.', error, false))
-        );
-      })
-    );
+    return this.getAPIURL('').pipe(switchMap((fullUrl) => {
+      return this.httpClient.post<any>(fullUrl, payload).pipe(map((res) => {
+        return res.results.bindings.map((binding) => {
+          return binding.iri.value;
+        });
+      }), catchError((error) => this.errorReporterService.handleError('Loading columns failed.', error, false)));
+    }));
   }
 }

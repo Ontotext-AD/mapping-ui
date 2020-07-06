@@ -24,6 +24,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {DirectivesModule} from "src/app/directives/directives.module";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 describe('MapperComponent', () => {
@@ -57,6 +58,7 @@ describe('MapperComponent', () => {
         ReactiveFormsModule,
         MatAutocompleteModule,
         MatTooltipModule,
+        MatSnackBarModule,
       ]
     })
     .compileComponents();

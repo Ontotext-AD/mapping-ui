@@ -8,10 +8,9 @@ import {NotificationService} from './notification.service';
  * Also rises notification by default if not configured otherwise.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ErrorReporterService {
-
   constructor(private notificationService: NotificationService) {
   }
 

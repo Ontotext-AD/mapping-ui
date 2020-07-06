@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {RestService} from './rest.service';
 import {ErrorReporterService} from '../error-reporter.service';
-import {NotificationService} from '../notification.service';
 import {environment} from 'src/environments/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ActivatedRoute} from '@angular/router';
@@ -31,27 +30,20 @@ export class MappingDefinitionService extends RestService {
   }
 
   getMappingDefinition(): Observable<JSON> {
-    return this.getAPIURL('/core/get-models/').pipe(
-      switchMap((fullUrl) => {
-        return this.httpClient.get<JSON>(fullUrl, this.httpOptions).pipe(
-          map((json) => {
-            if (!json['overlayModels']['mappingDefinition']) {
-              return EMPTY_MAPPING;
-            }
-            return json['overlayModels']['mappingDefinition']['mappingDefinition'];
-          }),
-          catchError((error) => this.errorReporterService.handleError('Loading model failed.', error))
-        );
-      })
-    );
+    return this.getAPIURL('/core/get-models/').pipe(switchMap((fullUrl) => {
+      return this.httpClient.get<JSON>(fullUrl, this.httpOptions).pipe(map((json) => {
+        if (!json['overlayModels']['mappingDefinition']) {
+          return EMPTY_MAPPING;
+        }
+        return json['overlayModels']['mappingDefinition']['mappingDefinition'];
+      }), catchError((error) => this.errorReporterService.handleError('Loading model failed.', error)));
+    }));
   }
 
   saveMappingDefinition(mappingDefinition: JSON) {
     return this.getAPIURL('/mapping-editor/save-rdf-mapping/').pipe(switchMap((fullUrl) => {
       const payload = new HttpParams().set('mapping', encodeURIComponent(JSON.stringify(mappingDefinition)));
-      return this.httpClient.post<any>(fullUrl, payload).pipe(
-        catchError((error) => this.errorReporterService.handleError('Mapping save failed.', error))
-      );
+      return this.httpClient.post<any>(fullUrl, payload).pipe(catchError((error) => this.errorReporterService.handleError('Mapping save failed.', error)));
     }));
   }
 }

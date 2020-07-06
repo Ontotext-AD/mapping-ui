@@ -9,10 +9,9 @@ import {
  * allows notifications to be displayed.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotificationService {
-
   private horizontalPosition: MatSnackBarHorizontalPosition = 'right';
   private verticalPosition: MatSnackBarVerticalPosition = 'bottom';
   private duration = 5000;
@@ -28,7 +27,7 @@ export class NotificationService {
     this.config = {
       duration: this.duration,
       horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition
+      verticalPosition: this.verticalPosition,
     };
   }
 
@@ -45,16 +44,12 @@ export class NotificationService {
   }
 
   private getErrorSnackConfig() {
-    const errorConfig = {
-      panelClass: 'error-notification'
-    };
+    const errorConfig = {panelClass: 'error-notification'};
     return {...this.config, ...errorConfig};
   }
 
   private getSuccessSnackConfig() {
-    const successConfig = {
-      panelClass: 'success-notification'
-    };
+    const successConfig = {panelClass: 'success-notification'};
     return {...this.config, ...successConfig};
   }
 }
