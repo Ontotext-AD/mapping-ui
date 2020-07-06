@@ -27,12 +27,12 @@
       <div class="ti-actions">
         <span class="btn btn-link text-muted">
             <span>
-						  <span class="icon-save" (click)="saveInputValue(true)"></span>
+						  <span class="icon-save" (click)="saveInputValue(true)" matTooltip="{{'TOOLTIPS.SAVE_VALUE' | translate}}"></span>
             </span>
           </span>
         <span class="btn btn-link text-muted">
             <span cdkDrag [cdkDragData]="cellMapping">
-						  <span class="icon-edit" (click)="onEdit()"></span>
+						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}"></span>
             </span>
           </span>
       </div>
@@ -70,7 +70,7 @@
                   {{getReasonableLongWord(getValueSource().getColumnName())}}
                 </span>
 
-                <span *ngIf="getSourceType() === 'constant'" matTooltip="{{getValueSource().getConstant()}}}">
+                <span *ngIf="getSourceType() === 'constant'" matTooltip="{{getValueSource().getConstant()}}">
                   <span class="ti-source-type type-const" title="Const">
                     {{'CONSTANTS.CONSTANT' | translate}}
                   </span>
@@ -188,18 +188,18 @@
       <div class="ti-actions">
           <span *ngIf="!isTypeProperty" class="btn btn-link text-muted">
             <span cdkDrag [cdkDragData]="cellMapping">
-						  <span class="icon-edit" (click)="onEdit()"></span>
+						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}"></span>
             </span>
           </span>
 
         <span class="btn btn-link text-muted">
             <span cdkDrag [cdkDragData]="cellMapping" cdkDragHandle>
-						  <span class="icon-copy"></span>
+						  <span class="icon-copy" matTooltip="{{'TOOLTIPS.COPY_VALUE' | translate}}"></span>
             </span>
           </span>
 
         <span class="btn btn-link text-muted">
-					  <span class="icon-trash" (click)="deleteMapping($event)"></span>
+					  <span class="icon-trash" (click)="deleteMapping($event)" matTooltip="{{'TOOLTIPS.DELETE_VALUE' | translate}}"></span>
           </span>
       </div>
     </div>

@@ -22,6 +22,7 @@ export interface JSONDialogData {
 export class HeaderComponent extends OnDestroyMixin implements OnInit {
   @Input() mapping: MappingDefinitionImpl;
   isMappingDirty: boolean;
+  isSavingInProgress: boolean;
 
   constructor(public dialog: MatDialog,
               private modelManagementService: ModelManagementService,
@@ -37,9 +38,16 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
         .subscribe((event) => {
           this.isMappingDirty = event.getMessage();
         });
+
+    this.messageService.read(ChannelName.MappingSaved)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.isSavingInProgress = false;
+        });
   }
 
   saveMapping(): void {
+    this.isSavingInProgress = true;
     this.messageService.publish(ChannelName.SaveMapping);
   }
 

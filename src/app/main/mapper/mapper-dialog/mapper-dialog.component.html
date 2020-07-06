@@ -100,7 +100,11 @@
                         <div class="mb-2 mt-2" *ngIf="preview">{{preview.error || preview}}</div>
                       </div>
                     </div>
-                    <mat-icon matSuffix><a *ngIf="!isDataTypePrefixTransformation" class="icon-help" href="https://github.com/OpenRefine/OpenRefine/wiki/Variables" target="_blank"></a></mat-icon>
+                    <mat-icon matSuffix>
+                      <a *ngIf="!isDataTypePrefixTransformation" class="icon-help" target="_blank"
+                         href="https://github.com/OpenRefine/OpenRefine/wiki/Variables"
+                         matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
+                    </mat-icon>
                   </mat-form-field>
                 </div>
               </div>
@@ -173,7 +177,11 @@
                         <div class="mb-2 mt-2" *ngIf="preview">{{preview.error || preview}}</div>
                       </div>
                     </div>
-                    <mat-icon matSuffix><a *ngIf="!isLanguagePrefixTransformation" class="icon-help" href="https://github.com/OpenRefine/OpenRefine/wiki/Variables" target="_blank"></a></mat-icon>
+                    <mat-icon matSuffix>
+                      <a *ngIf="!isLanguagePrefixTransformation" class="icon-help" target="_blank"
+                         href="https://github.com/OpenRefine/OpenRefine/wiki/Variables"
+                         matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
+                    </mat-icon>
                   </mat-form-field>
                 </div>
               </div>
@@ -254,7 +262,11 @@
                     <div class="mb-2 mt-2" *ngIf="preview">{{preview.error || preview}}</div>
                   </div>
                 </div>
-                <mat-icon matSuffix><a *ngIf="!isPrefixTransformation" class="icon-help" href="https://github.com/OpenRefine/OpenRefine/wiki/Variables" target="_blank"></a></mat-icon>
+                <mat-icon matSuffix>
+                  <a *ngIf="!isPrefixTransformation" class="icon-help" target="_blank"
+                     href="https://github.com/OpenRefine/OpenRefine/wiki/Variables"
+                     matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
+                </mat-icon>
               </mat-form-field>
             </div>
           </div>
@@ -263,7 +275,7 @@
     </form>
   </div>
   <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center end">
-    <button class="btn-primary" [mat-dialog-close]="data" (click)="save()" [disabled]="isMappingInvalid()">
+    <button class="btn-primary" [mat-dialog-close]="data" (click)="save()" [disabled]="isMappingInvalid()" matTooltip="{{'TOOLTIPS.SAVE_AND_CLOSE' | translate}}">
       {{'BUTTONS.OK' | translate}}
     </button>
   </div>

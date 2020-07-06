@@ -14,6 +14,8 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {Observable} from "rxjs";
 import {MatIconModule} from "@angular/material/icon";
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -42,6 +44,7 @@ describe('MapperDialogComponent', () => {
         MatAutocompleteModule,
         MatIconModule,
         MatSnackBarModule,
+        MatTooltipModule,
       ],
       providers: [
         TranslateService,

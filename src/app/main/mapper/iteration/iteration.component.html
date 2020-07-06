@@ -42,19 +42,19 @@
     <div [fxFlex]="3">
       <div>
         <span class="btn btn-link text-muted" *ngIf="isDeleteApplicable(index)">
-			    <span class="icon-trash" (click)="deleteTripleMapping(mapping)"></span>
+			    <span class="icon-trash" (click)="deleteTripleMapping(mapping)" matTooltip="{{'TOOLTIPS.DELETE_TRIPLE' | translate}}"></span>
 			  </span>
       </div>
 
       <div>
         <span class="btn btn-link text-muted" *ngIf="isInsertApplicable(index)">
-			    <span class="icon-plus" (click)="insertMapping($event, mapping, index)"></span>
+			    <span class="icon-plus" (click)="insertMapping($event, mapping, index)" matTooltip="{{'TOOLTIPS.ADD_TRIPLE' | translate}}"></span>
 			  </span>
       </div>
 
       <div>
         <span class="btn btn-link text-muted" *ngIf="isPlusApplicable(index)">
-			    <span class="icon-arrow-right" (click)="continueMapping($event, mapping, index)"></span>
+			    <span class="icon-arrow-right" (click)="continueMapping($event, mapping, index)" matTooltip="{{'TOOLTIPS.ADD_NESTED_TRIPLE' | translate}}"></span>
 			  </span>
       </div>
       &nbsp;

@@ -20,6 +20,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -58,6 +59,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatAutocompleteModule,
     MatIconModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class MapperModule { }

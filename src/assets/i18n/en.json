@@ -9,6 +9,23 @@
     "PREVIEW": "Preview",
     "OK": "Ok"
   },
+  "TOOLTIPS": {
+    "SAVE_VALUE": "Save value",
+    "EDIT_VALUE": "Edit value",
+    "COPY_VALUE": "Copy value",
+    "DELETE_VALUE": "Delete value",
+    "ADD_TRIPLE": "Add triple",
+    "ADD_NESTED_TRIPLE": "Add nested triple",
+    "DELETE_TRIPLE": "Delete triple",
+    "SAVE_MAPPING": "Save mapping",
+    "OPEN_JSON": "View JSON model",
+    "CONVERT_TO_RDF": "Convert to RDF",
+    "CONVERT_TO_SPARQL": "Convert to SPARQL",
+    "OPEN_PREVIEW": "Open mapping preview",
+    "NEW_MAPPING": "Create new mapping",
+    "SAVE_AND_CLOSE": "Save and close configuration",
+    "GREL_VALUE_HELP": "Open value type documentation in separate window"
+  },
   "LABELS": {
     "RDF_VALUE": "RDF value",
     "CONSTANT": "Constant",
@@ -43,7 +60,9 @@
   "MESSAGES": {
     "CONFIRM_MAPPING_DELETION": "Do You want to remove this mapping?",
     "DISCARD_CHANGES": "Changes you made will not be saved.",
-    "CONFIRM_NEW_MAPPING": "All mappings will be lost. Do you wat to proceed?"
+    "CONFIRM_NEW_MAPPING": "All mappings will be lost. Do you wat to proceed?",
+    "MAPPING_IS_DIRTY": "Mapping has unsaved changes",
+    "MAPPING_IS_SAVED": "All mapping changes saved"
   },
   "DIALOG": {
     "TITLE_CONFIRM": "Confirm",
