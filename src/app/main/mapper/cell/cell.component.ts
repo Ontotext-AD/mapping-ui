@@ -25,6 +25,7 @@ import {map} from 'rxjs/operators';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {FormControl} from '@angular/forms';
 import {Helper} from 'src/app/utils/helper';
+import {TypeMapping} from '../../../models/type-mapping';
 
 @Component({
   selector: 'app-mapper-cell',
@@ -260,7 +261,13 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   public saveInputValue(emitTab: boolean) {
-    this.saveValue(this.autoInput.value, emitTab);
+    let value = this.autoInput.value;
+    const source = this.getSource(value);
+    // Remove special chars from columns and indexes
+    if (source !== SourceEnum.Constant && value !== TypeMapping.a) {
+      value = value.substr(1);
+    }
+    this.saveValue(value, emitTab);
   }
 
   private saveValue(value, emitTab: boolean) {
