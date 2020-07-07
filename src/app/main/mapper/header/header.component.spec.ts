@@ -7,6 +7,7 @@ import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {RouterModule} from "@angular/router";
 import {APP_BASE_HREF} from "@angular/common";
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
@@ -25,6 +26,7 @@ describe('HeaderComponent', () => {
         MatSnackBarModule,
         MatProgressSpinnerModule,
         MatTooltipModule,
+        MatSlideToggleModule
       ],
       providers: [{provide: APP_BASE_HREF, useValue : '/' }]
 

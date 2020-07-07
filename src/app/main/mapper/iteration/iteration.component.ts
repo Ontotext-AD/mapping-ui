@@ -26,6 +26,8 @@ import {SourceService} from 'src/app/services/source.service';
 import {MessageService} from 'src/app/services/message.service';
 import {ChannelName} from 'src/app/services/channel-name.enum';
 import {Helper} from '../../../utils/helper';
+import {plainToClass} from 'class-transformer';
+import {MapperService} from '../../../services/rest/mapper.service';
 
 
 @Component({
@@ -47,6 +49,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   usedSources: Set<string>;
 
   private boundCheckDirty: any;
+  private isPreviewOn: boolean;
 
   constructor(private modelManagementService: ModelManagementService,
               public dialog: MatDialog,
@@ -56,16 +59,23 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
               private modelConstructService: ModelConstructService,
               private tabService: TabService,
               private sourceService: SourceService,
-              private messageService: MessageService) {
+              private messageService: MessageService,
+              private mapperService: MapperService) {
     super();
   }
 
   ngOnChanges() {
-    this.init();
+    this.initWithPreview();
   }
 
   ngOnInit(): void {
-    this.init();
+    this.messageService.read(ChannelName.PreviewToggle)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((event) => {
+          this.isPreviewOn = event.getMessage();
+          this.initWithPreview();
+        });
+
     this.boundCheckDirty = this.checkDirty.bind(this);
 
     this.messageService.read(ChannelName.MappingSaved)
@@ -79,6 +89,20 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   ngAfterViewInit() {
     window.addEventListener('beforeunload', this.boundCheckDirty);
+  }
+
+  initWithPreview(isDirty?: boolean) {
+    this.modelManagementService.removePreview(this.mapping);
+    if (this.isPreviewOn && this.isComplete(this.mapping)) {
+      this.mapperService.preview(this.mapping)
+          .pipe(untilComponentDestroyed(this))
+          .subscribe((data) => {
+            this.mapping = plainToClass(MappingDefinitionImpl, data);
+            this.init(isDirty);
+          });
+    } else {
+      this.init(isDirty);
+    }
   }
 
   init(isDirty?: boolean) {
@@ -103,6 +127,36 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   getAllNamespaces() {
     return {...this.repoNamespaces, ...this.mapping.namespaces};
+  }
+
+
+  isCompleteCell(subject, isRoot) {
+    let isCompleteMapping = true;
+    if (isRoot && subject.getPropertyMappings().length === 0 && subject.getTypeMappings().length === 0) {
+      isCompleteMapping = false;
+    }
+    if (subject.getPropertyMappings()) {
+      subject.getPropertyMappings().forEach((propertyMapping) => {
+        if (!propertyMapping.getValues() || propertyMapping.getValues().length === 0) {
+          isCompleteMapping = false;
+        } else {
+          let valid = true;
+          propertyMapping.getValues().forEach((valueMapping) => {
+            valid = valid && this.isCompleteCell(valueMapping, false);
+          });
+          isCompleteMapping = isCompleteMapping && valid;
+        }
+      });
+    }
+    return isCompleteMapping;
+  }
+
+  isComplete(mapping) {
+    let isCompleteMapping = true;
+    mapping.getSubjectMappings().forEach((subject) => {
+      isCompleteMapping = isCompleteMapping && this.isCompleteCell(subject, true);
+    });
+    return isCompleteMapping;
   }
 
 
@@ -203,7 +257,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
       } else {
         this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
-        this.init(true);
+        this.initWithPreview(true);
       }
 
       const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
@@ -303,7 +357,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         subject.setTypeMappings([]);
       }
     }
-    this.init(true);
+    this.initWithPreview(true);
   }
 
   private deleteObjectTypeMapping(mapping: Triple, hardDelete: boolean) {
@@ -357,7 +411,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
                 subjectMappings.splice(index, 1);
               }
             }
-            this.init(true);
+            this.initWithPreview(true);
           }
         });
   }
@@ -434,7 +488,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       this.modelConstructService.setCellMapping(mapping, data, settings);
       this.modelConstructService.setMappingObjectInTriple(mapping, data, settings, triple);
       this.modelConstructService.setRootMappingInModel(triple, this.mapping);
-      this.init(true);
+      this.initWithPreview(true);
     }
   }
 

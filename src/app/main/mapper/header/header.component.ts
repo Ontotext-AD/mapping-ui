@@ -69,8 +69,8 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
     this.messageService.publish(ChannelName.GetSPARQL);
   }
 
-  preview(): void {
-    this.messageService.publish(ChannelName.PreviewMapping);
+  togglePreview($event): void {
+    this.messageService.publish(ChannelName.PreviewToggle, $event.checked);
   }
 
   public isDevEnv() {
