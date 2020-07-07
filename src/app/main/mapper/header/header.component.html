@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutAlign="end end" appCypressData="header">
+<div fxLayout="row" fxLayoutAlign="end end" appCypressData="header" class="header-component">
   <span class="mr-12">{{isMappingDirty ? 'Mapping has unsaved changes' : 'All mapping changes saved'}}</span>
   <button (click)="saveMapping()" [disabled]="!isMappingDirty" class="mr-12 btn-primary cursor-pointer">{{"BUTTONS.SAVE" | translate}}</button>
   <button class="mr-12 btn-primary cursor-pointer" (click)="openDialog()">{{"BUTTONS.VIEW_JSON" | translate}}</button>

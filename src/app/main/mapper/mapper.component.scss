@@ -1,3 +1,14 @@
 mat-form-field {
     width: 100%;
 }
+
+.top-header {
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  width: 96%;
+}
+
+.top-header + .content {
+  padding-top: 262px;
+}
