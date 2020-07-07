@@ -1,7 +1,7 @@
 export const SUBJECT_SELECTOR = 'subject';
 export const PREDICATE_SELECTOR = 'predicate';
 export const OBJECT_SELECTOR = 'object';
-export const EMPTY_MAPPING = {'baseIRI': 'http://sample/base', 'namespaces': {'my': 'http://my/', 'example': 'http://example/'}, 'subjectMappings': []};
+export const EMPTY_MAPPING = {'baseIRI': 'http://example/base/', 'namespaces': {'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'}, 'subjectMappings': []};
 export const DOWNLOAD_RDF_FILE = 'result-triples.ttl';
 export const GREL_CONSTANT = 'grel';
 export const PREFIX_CONSTANT = 'prefix';

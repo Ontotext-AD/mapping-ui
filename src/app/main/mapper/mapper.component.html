@@ -16,7 +16,8 @@
       <div class="mr-12 ml-12 mb-12">
         <mat-form-field>
           <mat-chip-list #namespaces area-label="Namespaces management">
-            <mat-chip *ngFor="let namespace of mapping.namespaces | keyvalue" (removed)="removeNamespace(namespace.key)">
+            <mat-chip *ngFor="let namespace of mapping.namespaces | keyvalue" (removed)="removeNamespace(namespace.key)"
+                      matTooltip="{{namespace.value}}" matTooltipClass="long-tooltip">
               {{namespace.key}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
@@ -28,8 +29,6 @@
           </mat-chip-list>
         </mat-form-field>
       </div>
-
-      <div class="mr-12 ml-12 mb-12">Namespaces: {{mapping.getNamespaces() | json}}</div>
 
       <app-iteration [mapping]="mapping" [sources]="sources"></app-iteration>
     </div>
