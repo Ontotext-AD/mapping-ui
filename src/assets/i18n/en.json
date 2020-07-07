@@ -60,7 +60,7 @@
   "MESSAGES": {
     "CONFIRM_MAPPING_DELETION": "Do You want to remove this mapping?",
     "DISCARD_CHANGES": "Changes you made will not be saved.",
-    "CONFIRM_NEW_MAPPING": "All mappings will be lost. Do you wat to proceed?",
+    "CONFIRM_NEW_MAPPING": "All mappings will be lost. Do you want to proceed?",
     "MAPPING_IS_DIRTY": "Mapping has unsaved changes",
     "MAPPING_IS_SAVED": "All mapping changes saved"
   },
