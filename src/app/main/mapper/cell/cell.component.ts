@@ -251,11 +251,13 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   private getSource(value) {
-    if (value.startsWith(SOURCE_SIGN.Column)) {
-      return SourceEnum.Column;
-    }
-    if (value.startsWith(SOURCE_SIGN.RecordRowID) && value.substr(1) === SourceEnum.RowIndex || value.substr(1) === SourceEnum.RecordID) {
-      return value.substr(1);
+    if (value) {
+      if (value.startsWith(SOURCE_SIGN.Column)) {
+        return SourceEnum.Column;
+      }
+      if (value.startsWith(SOURCE_SIGN.RecordRowID) && value.substr(1) === SourceEnum.RowIndex || value.substr(1) === SourceEnum.RecordID) {
+        return value.substr(1);
+      }
     }
     return SourceEnum.Constant;
   }
