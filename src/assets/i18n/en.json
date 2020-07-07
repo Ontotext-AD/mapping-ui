@@ -62,7 +62,8 @@
     "DISCARD_CHANGES": "Changes you made will not be saved.",
     "CONFIRM_NEW_MAPPING": "All mappings will be lost. Do you want to proceed?",
     "MAPPING_IS_DIRTY": "Mapping has unsaved changes",
-    "MAPPING_IS_SAVED": "All mapping changes saved"
+    "MAPPING_IS_SAVED": "All mapping changes saved",
+    "EDIT_SAVED_TRIPLE_REF": "Editing this cell will reflect all the triples it appears in"
   },
   "DIALOG": {
     "TITLE_CONFIRM": "Confirm",

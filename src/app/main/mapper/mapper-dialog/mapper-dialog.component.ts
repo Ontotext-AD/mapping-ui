@@ -70,6 +70,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   grelPreviewLanguageTransformation: Observable<Array<any>>;
   grelPreviewDataTypeTransformation: Observable<Array<any>>;
   title: string;
+  hasChildren: boolean;
 
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
@@ -103,6 +104,20 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     } else {
       this.setMappingData(this.selected, this.mappingDetails);
     }
+    this.setHasChildren();
+  }
+
+  private setHasChildren() {
+    let hasChildren = false;
+    if (this.selected) {
+      const valueType = this.selected.getValueType();
+      const isIRI = valueType && valueType.getType() === Type.IRI;
+      const propMapping = this.selected.getPropertyMappings();
+      if (isIRI && propMapping && propMapping.length) {
+        hasChildren = true;
+      }
+    }
+    this.hasChildren = hasChildren;
   }
 
   private setSelected() {

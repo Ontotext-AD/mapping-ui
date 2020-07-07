@@ -1,5 +1,8 @@
 <div class="subject-dialog" appCypressData="subject-dialog">
   <h1 mat-dialog-title cdkFocusInitial>{{title}}</h1>
+  <div *ngIf="hasChildren" class="alert alert-warning small" role="alert">
+    {{'MESSAGES.EDIT_SAVED_TRIPLE_REF' | translate}}
+  </div>
   <div mat-dialog-content>
     <form *ngIf="mapperForm$ | async as mapperForm" [formGroup]="mapperForm" fxLayout="column" fxLayoutAlign="start"
           fxFlex="200">
