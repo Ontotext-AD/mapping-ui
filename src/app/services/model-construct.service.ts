@@ -62,6 +62,8 @@ export class ModelConstructService {
       if (this.isAllowedExpression(datatypeTransformation, form.datatypeLanguage)) {
         this.setDataTypeTransformation(cellMapping, settings, datatypeTransformation, form.datatypeLanguage);
       }
+    } else if (this.modelManagementService.getValueType(cellMapping)) {
+      this.modelManagementService.getValueType(cellMapping).setDatatype(undefined);
     }
 
     if (settings.hasLanguage) {
@@ -87,6 +89,8 @@ export class ModelConstructService {
         this.modelManagementService.setValueTypeLanguageTransformationExpression(cellMapping, languageTransformation);
         this.modelManagementService.setValueTypeLanguageTransformationLanguage(cellMapping, form.languageTransformationLanguage);
       }
+    } else if (this.modelManagementService.getValueType(cellMapping)) {
+      this.modelManagementService.getValueType(cellMapping).setLanguage(undefined);
     }
   }
 
