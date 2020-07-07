@@ -1,9 +1,26 @@
 <div fxLayout="row" fxLayoutAlign="end end" appCypressData="header" class="header-component">
-  <span class="mr-12">{{isMappingDirty ? 'Mapping has unsaved changes' : 'All mapping changes saved'}}</span>
-  <button (click)="saveMapping()" [disabled]="!isMappingDirty" class="mr-12 btn-primary cursor-pointer">{{"BUTTONS.SAVE" | translate}}</button>
-  <button class="mr-12 btn-primary cursor-pointer" (click)="openDialog()">{{"BUTTONS.VIEW_JSON" | translate}}</button>
-  <button class="mr-12 btn-primary cursor-pointer" (click)="getRDF()">{{"BUTTONS.RDF" | translate}}</button>
-  <button class="mr-12 btn-primary cursor-pointer" (click)="getSPARQL()">{{"BUTTONS.SPARQL" | translate}}</button>
-  <button class="mr-12 btn-primary cursor-pointer" (click)="preview()">{{"BUTTONS.PREVIEW" | translate}}</button>
-  <button *ngIf="isDevEnv()" class="mr-12 btn-primary cursor-pointer" (click)="newMapping()">{{"BUTTONS.NEW" | translate}}</button>
+  <span class="mr-12">
+    {{isMappingDirty ? ('MESSAGES.MAPPING_IS_DIRTY' | translate) : ('MESSAGES.MAPPING_IS_SAVED' | translate)}}
+  </span>
+  <span matTooltip="{{'TOOLTIPS.SAVE_MAPPING' | translate}}">
+    <button (click)="saveMapping()" [disabled]="!isMappingDirty" class="mr-12 btn-primary cursor-pointer">
+      {{"BUTTONS.SAVE" | translate}}
+      <mat-spinner *ngIf="isSavingInProgress" [diameter]="20"></mat-spinner>
+    </button>
+  </span>
+  <button class="mr-12 btn-primary cursor-pointer" (click)="openDialog()"
+          matTooltip="{{'TOOLTIPS.OPEN_JSON' | translate}}">{{"BUTTONS.VIEW_JSON" | translate}}
+  </button>
+  <button class="mr-12 btn-primary cursor-pointer" (click)="getRDF()"
+          matTooltip="{{'TOOLTIPS.CONVERT_TO_RDF' | translate}}">{{"BUTTONS.RDF" | translate}}
+  </button>
+  <button class="mr-12 btn-primary cursor-pointer" (click)="getSPARQL()"
+          matTooltip="{{'TOOLTIPS.CONVERT_TO_SPARQL' | translate}}">{{"BUTTONS.SPARQL" | translate}}
+  </button>
+  <button class="mr-12 btn-primary cursor-pointer" (click)="preview()"
+          matTooltip="{{'TOOLTIPS.OPEN_PREVIEW' | translate}}">{{"BUTTONS.PREVIEW" | translate}}
+  </button>
+  <button *ngIf="isDevEnv()" class="mr-12 btn-primary cursor-pointer" (click)="newMapping()"
+          matTooltip="{{'TOOLTIPS.NEW_MAPPING' | translate}}">{{"BUTTONS.NEW" | translate}}
+  </button>
 </div>

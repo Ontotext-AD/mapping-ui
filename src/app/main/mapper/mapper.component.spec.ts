@@ -25,6 +25,7 @@ import {DirectivesModule} from "src/app/directives/directives.module";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 describe('MapperComponent', () => {
@@ -59,6 +60,7 @@ describe('MapperComponent', () => {
         MatAutocompleteModule,
         MatTooltipModule,
         MatSnackBarModule,
+        MatProgressSpinnerModule,
       ]
     })
     .compileComponents();
