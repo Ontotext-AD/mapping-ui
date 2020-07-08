@@ -66,4 +66,8 @@ export class Triple {
     this.isIRI = isIRI;
     return this;
   }
+
+  getIRI() {
+    return this.isIRI;
+  }
 }
