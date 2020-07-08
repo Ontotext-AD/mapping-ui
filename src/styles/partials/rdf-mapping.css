@@ -205,3 +205,7 @@
 .mat-option-text {
   font-size: 12px;
 }
+
+.long-tooltip {
+  max-width: unset !important;
+}
