@@ -1,4 +1,11 @@
-<div fxLayout="row" fxLayoutAlign="end end" appCypressData="header" class="header-component">
+<div fxLayout="row" fxLayoutAlign="end end" appCypressData="header" class="header-component py-1">
+  <form class="preview-toggle mr-auto">
+    <mat-slide-toggle
+      color="primary"
+      (change)="togglePreview($event)">
+      {{"BUTTONS.PREVIEW" | translate}}
+    </mat-slide-toggle>
+  </form>
   <span class="mr-12">
     {{isMappingDirty ? ('MESSAGES.MAPPING_IS_DIRTY' | translate) : ('MESSAGES.MAPPING_IS_SAVED' | translate)}}
   </span>
@@ -21,10 +28,3 @@
           matTooltip="{{'TOOLTIPS.NEW_MAPPING' | translate}}">{{"BUTTONS.NEW" | translate}}
   </button>
 </div>
-<form>
-    <mat-slide-toggle
-      color="primary"
-      (change)="togglePreview($event)">
-      {{"BUTTONS.PREVIEW" | translate}}
-    </mat-slide-toggle>
-</form>
