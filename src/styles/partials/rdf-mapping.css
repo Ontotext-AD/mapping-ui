@@ -16,6 +16,36 @@
   overflow-y: scroll;
 }
 
+@media (max-width: 575px) {
+  .rdfm-columns-container {
+    height: 144px;
+  }
+}
+
+@media (min-width: 576px) {
+  .rdfm-columns-container {
+    height: 144px;
+  }
+}
+
+@media (min-width: 768px) {
+  .rdfm-columns-container {
+    height: 144px;
+  }
+}
+
+@media (min-width: 992px) {
+  .rdfm-columns-container {
+    height: 114px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .rdfm-columns-container {
+    height: 76px;
+  }
+}
+
 .rdfm-column-item {
   font-size: 1rem;
   display: inline-block;
@@ -45,7 +75,7 @@
 .triple-item {
   flex-grow: 1;
   flex-basis: 0;
-  padding: 1.25rem 1.5rem;
+  padding: 0.5rem 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

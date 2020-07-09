@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutAlign="end end" appCypressData="header" class="header-component py-1">
+<div fxLayout="row" fxLayoutAlign="end end" appCypressData="header" class="header-component py-2">
   <form class="preview-toggle mr-auto">
     <mat-slide-toggle
       color="primary"
@@ -6,25 +6,25 @@
       {{"BUTTONS.PREVIEW" | translate}}
     </mat-slide-toggle>
   </form>
-  <span class="mr-12">
+  <span class="mr-12 unsaved-changes-msg">
     {{isMappingDirty ? ('MESSAGES.MAPPING_IS_DIRTY' | translate) : ('MESSAGES.MAPPING_IS_SAVED' | translate)}}
   </span>
   <span matTooltip="{{'TOOLTIPS.SAVE_MAPPING' | translate}}">
-    <button (click)="saveMapping()" [disabled]="!isMappingDirty" class="mr-12 btn-primary cursor-pointer">
+    <button (click)="saveMapping()" [disabled]="!isMappingDirty" class="mr-12 btn btn-sm btn-primary cursor-pointer">
       {{"BUTTONS.SAVE" | translate}}
       <mat-spinner *ngIf="isSavingInProgress" [diameter]="20"></mat-spinner>
     </button>
   </span>
-  <button class="mr-12 btn-primary cursor-pointer" (click)="openDialog()"
+  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="openDialog()"
           matTooltip="{{'TOOLTIPS.OPEN_JSON' | translate}}">{{"BUTTONS.VIEW_JSON" | translate}}
   </button>
-  <button class="mr-12 btn-primary cursor-pointer" (click)="getRDF()"
+  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getRDF()"
           matTooltip="{{'TOOLTIPS.CONVERT_TO_RDF' | translate}}">{{"BUTTONS.RDF" | translate}}
   </button>
-  <button class="mr-12 btn-primary cursor-pointer" (click)="getSPARQL()"
+  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getSPARQL()"
           matTooltip="{{'TOOLTIPS.CONVERT_TO_SPARQL' | translate}}">{{"BUTTONS.SPARQL" | translate}}
   </button>
-  <button *ngIf="isDevEnv()" class="mr-12 btn-primary cursor-pointer" (click)="newMapping()"
+  <button *ngIf="isDevEnv()" class="btn btn-sm btn-primary cursor-pointer" (click)="newMapping()"
           matTooltip="{{'TOOLTIPS.NEW_MAPPING' | translate}}">{{"BUTTONS.NEW" | translate}}
   </button>
 </div>
