@@ -208,18 +208,19 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     });
   }
 
-  isFirstSubject(mapping, index) {
+  isFirstSubject(triple, index) {
     if (index === 0) {
       return true;
     }
-    return mapping.getSubject() !== this.triples[index - 1].getSubject();
+    return triple.getSubject() !== this.triples[index - 1].getSubject();
   }
 
-  isFirstPredicate(mapping, index) {
+  isFirstPredicate(triple, index) {
     if (index === 0) {
       return true;
     }
-    return mapping.getPredicate() !== this.triples[index - 1].getPredicate();
+    const previousTriple = this.triples[index - 1];
+    return triple.getPredicate() !== previousTriple.getPredicate() || triple.isTypeProperty;
   }
 
   getPropertyMappings(subject): PropertyMappingImpl[] {
