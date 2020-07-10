@@ -298,10 +298,15 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     this.triples.splice(index + 1, 0, triple);
   }
 
-  public isPlusApplicable(index) {
+  /**
+   * Nesting under current triple is applicable when current object is of type IRI.
+   *
+   * @param index Current row index in the mapping.
+   * @return boolean if the nesting is applicable.
+   */
+  public isNestApplicable(index) {
     const object = this.getTripleByIndex(index) && this.getTripleByIndex(index).getObject();
-    const subject = this.getTripleByIndex(index + 1) && this.getTripleByIndex(index + 1).getSubject();
-    return object && subject !== object && object.getValueType() && object.getValueType().getType() === Type.IRI;
+    return !!(object && object.getValueType() && object.getValueType().getType() === Type.IRI);
   }
 
   public isDeleteApplicable(index) {
