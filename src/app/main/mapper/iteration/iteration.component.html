@@ -53,7 +53,7 @@
       </div>
 
       <div>
-        <span class="btn btn-link text-muted" *ngIf="isPlusApplicable(index)">
+        <span class="btn btn-link text-muted" *ngIf="isNestApplicable(index)">
 			    <span class="icon-arrow-right" (click)="continueMapping($event, mapping, index)" matTooltip="{{'TOOLTIPS.ADD_NESTED_TRIPLE' | translate}}"></span>
 			  </span>
       </div>
