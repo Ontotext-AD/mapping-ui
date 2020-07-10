@@ -315,7 +315,9 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   getReasonableLongWord(word: string) {
-    return Helper.getReasonableLongWord(word, 7, 7);
+    if (word) {
+      return Helper.getReasonableLongWord(word, 7, 7);
+    }
   }
 
   public saveInputValueOnBlur($event: FocusEvent) {
