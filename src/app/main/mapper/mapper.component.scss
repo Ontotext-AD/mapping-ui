@@ -10,6 +10,36 @@ mat-form-field {
   background-color: #fff;
 }
 
-.top-header + .content {
-  padding-top: 200px;
+@media (max-width: 575px) {
+  .top-header + .content {
+    padding-top: 220px;
+  }
+}
+
+@media (min-width: 576px) {
+  .top-header + .content {
+    padding-top: 220px;
+  }
+}
+
+@media (min-width: 768px) {
+  .top-header + .content {
+    padding-top: 220px;
+  }
+}
+
+@media (min-width: 992px) {
+  .top-header + .content {
+    padding-top: 190px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .top-header + .content {
+    padding-top: 150px;
+  }
+}
+
+.mat-standard-chip {
+  min-height: 22px;
 }

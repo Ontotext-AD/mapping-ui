@@ -2,3 +2,11 @@
   display: inline-block;
   vertical-align: middle;
 }
+
+.header-component {
+  align-items: center !important;
+}
+
+.unsaved-changes-msg {
+  white-space: nowrap;
+}
