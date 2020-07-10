@@ -1,5 +1,5 @@
-<div>
-  <div *ngFor="let mapping of triples; let index = index" fxLayout="row" fxLayoutAlign="start stretch">
+<div class="mapping-wrapper">
+  <div *ngFor="let mapping of triples; let index = index" fxLayout="row" fxLayoutAlign="start stretch" class="tripple-wraper">
     <div [fxFlex]="97" [ngClass]="{'triples-blocks-subrow': mapping.isIRI}">
       <div class="triples-block">
         <app-mapper-cell [cellMapping]="mapping.getSubject()"
@@ -41,19 +41,19 @@
 
     <div [fxFlex]="3">
       <div>
-        <span class="btn btn-link text-muted" *ngIf="isDeleteApplicable(index)">
+        <span class="btn btn-link text-muted delete-triple" *ngIf="isDeleteApplicable(index)">
 			    <span class="icon-trash" (click)="deleteTripleMapping(mapping)" matTooltip="{{'TOOLTIPS.DELETE_TRIPLE' | translate}}"></span>
 			  </span>
       </div>
 
       <div>
-        <span class="btn btn-link text-muted" *ngIf="isInsertApplicable(index)">
+        <span class="btn btn-link text-muted add-sibling" *ngIf="isInsertApplicable(index)">
 			    <span class="icon-plus" (click)="insertMapping($event, mapping, index)" matTooltip="{{'TOOLTIPS.ADD_TRIPLE' | translate}}"></span>
 			  </span>
       </div>
 
       <div>
-        <span class="btn btn-link text-muted" *ngIf="isNestApplicable(index)">
+        <span class="btn btn-link text-muted add-nested" *ngIf="isNestApplicable(index)">
 			    <span class="icon-arrow-right" (click)="continueMapping($event, mapping, index)" matTooltip="{{'TOOLTIPS.ADD_NESTED_TRIPLE' | translate}}"></span>
 			  </span>
       </div>
