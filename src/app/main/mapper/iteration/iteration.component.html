@@ -12,7 +12,8 @@
                          (onDelete)="onDelete($event, mapping, SUBJECT)"
                          (onValueSet)="onValueSet($event, mapping, SUBJECT, index)"
                          (onEditClick)="openMapperDialog($event, mapping, SUBJECT, index)"
-                         appCypressData="subject" [fxFlex]="33"></app-mapper-cell>
+                         [attr.appCypressData]="'subject-' + index"
+                         [fxFlex]="33"></app-mapper-cell>
         <app-mapper-cell [cellMapping]="mapping.getPredicate()"
                          [isTypeProperty]="mapping.isTypeProperty"
                          [isFirstChild]="isFirstPredicate(mapping, index)"
@@ -24,7 +25,8 @@
                          (onDelete)="onDelete($event, mapping, PREDICATE)"
                          (onValueSet)="onValueSet($event, mapping, PREDICATE, index)"
                          (onEditClick)="openMapperDialog($event, mapping, PREDICATE, index)"
-                         appCypressData="predicate" [fxFlex]="33"></app-mapper-cell>
+                         [attr.appCypressData]="'predicate-' + index"
+                         [fxFlex]="33"></app-mapper-cell>
         <app-mapper-cell [cellMapping]="mapping.getObject()"
                          [isTypeObject]="mapping.isTypeProperty"
                          [cellType]="OBJECT"
@@ -35,7 +37,8 @@
                          (onDelete)="onDelete($event, mapping, OBJECT)"
                          (onValueSet)="onValueSet($event, mapping, OBJECT, index)"
                          (onEditClick)="openMapperDialog($event, mapping, OBJECT, index)"
-                         appCypressData="object" [fxFlex]="33"></app-mapper-cell>
+                         [attr.appCypressData]="'object-' + index"
+                         [fxFlex]="33"></app-mapper-cell>
       </div>
     </div>
 

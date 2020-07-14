@@ -20,6 +20,7 @@ import {RepositoryService} from 'src/app/services/rest/repository.service';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {conditionalValidator} from 'src/app/validators/conditional.validator';
+import {environment} from 'src/environments/environment';
 
 export interface SubjectMapperData {
   mappingData: Triple,
@@ -40,6 +41,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
   OBJECT = OBJECT_SELECTOR;
+  environment = environment;
 
   mapperForm: FormGroup;
   mapperForm$: Observable<FormGroup>;
@@ -69,9 +71,12 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   grelPreviewExpression: Observable<Array<any>>;
   grelPreviewLanguageTransformation: Observable<Array<any>>;
   grelPreviewDataTypeTransformation: Observable<Array<any>>;
+  firstGrelPreviewDataTypeTransformation: any;
   title: string;
   hasChildren: boolean;
-
+  showDataTypeTransformation: boolean = false;
+  showLanguageTransformation: boolean = false;
+  showTransformation: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
@@ -124,6 +129,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     if (this.isSubject()) {
       this.selected = this.data.mappingData.getSubject();
       this.title = this.translateService.instant('LABELS.SUBJECT');
+      console.log(this.selected);
     } else if (this.isPredicate()) {
       this.selected = this.data.mappingData.getPredicate();
       this.title = this.translateService.instant('LABELS.PREDICATE');
@@ -131,6 +137,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
       this.selected = this.data.mappingData.getObject();
       this.title = this.translateService.instant('LABELS.OBJECT');
     }
+    console.log(this.selected);
   }
 
   private setTypes() {
@@ -364,6 +371,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           if (value && !this.isDataTypePrefixTransformation) {
             this.grelPreviewDataTypeTransformation = this.previewGREL(value);
+            this.firstGrelPreviewDataTypeTransformation = this.grelPreviewDataTypeTransformation[0];
           }
         });
 

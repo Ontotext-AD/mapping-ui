@@ -24,7 +24,9 @@
     "OPEN_PREVIEW": "Open mapping preview",
     "NEW_MAPPING": "Create new mapping",
     "SAVE_AND_CLOSE": "Save and close configuration",
-    "GREL_VALUE_HELP": "Open value type documentation in separate window"
+    "GREL_VALUE_HELP": "Open value type documentation in separate window",
+    "CLICK_FOR_MOORE": "Click for moore examples",
+    "CLICK_TO_HIDE": "Click to hide examples"
   },
   "LABELS": {
     "RDF_VALUE": "RDF value",

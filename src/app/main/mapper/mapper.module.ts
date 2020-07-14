@@ -22,6 +22,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 
 @NgModule({
@@ -62,6 +63,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
+    MatButtonToggleModule,
   ],
 })
 export class MapperModule { }

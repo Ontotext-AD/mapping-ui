@@ -9,12 +9,20 @@ declare global {
        * @param cypressData - value of attribute appCypressData.
        */
       cypressData(cypressData: string): Chainable<Element>;
+      cypressFind(cypressData: string): Chainable<Element>;
+
     }
   }
 }
 
 Cypress.Commands.add('cypressData', (dataTestValue: string) => {
   return cy.get('[appCypressData=' + dataTestValue + ']');
+});
+
+Cypress.Commands.add('cypressFind',  {
+  prevSubject: true
+}, (subject: any, dataTestValue: string) => {
+  return subject.find('[appCypressData=' + dataTestValue + ']');
 });
 
 // Convert this to a module instead of script (allows import/export)
