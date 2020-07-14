@@ -16,5 +16,12 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+// Configures retry count for failed tests
+// import 'cypress-plugin-retries';
+// Cypress.env('RETRIES', 0);
+
+// Imports viewport configuration
+import './viewport';
+
+// Import server and stubs
+import './server';

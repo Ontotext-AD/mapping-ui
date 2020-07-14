@@ -1,0 +1,8 @@
+{
+  "websocket": true,
+  "origins": [
+    "*:*"
+  ],
+  "cookie_needed": false,
+  "entropy": 3047599733
+}

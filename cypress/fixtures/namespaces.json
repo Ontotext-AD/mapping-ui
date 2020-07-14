@@ -1,0 +1,172 @@
+{
+  "head" : {
+    "vars" : [
+      "prefix",
+      "namespace"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "pq"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.wikidata.org/prop/qualifier/"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "wgs"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.w3.org/2003/01/geo/wgs84_pos#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "ps"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.wikidata.org/prop/statement/"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "owl"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.w3.org/2002/07/owl#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "wdt"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.wikidata.org/prop/direct/"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "gn"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.geonames.org/ontology#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "wds"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.wikidata.org/entity/statement/"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "wikibase"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://wikiba.se/ontology#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "xsd"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.w3.org/2001/XMLSchema#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "rdfs"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "voc"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "https://swapi.co/vocabulary/"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "wd"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.wikidata.org/entity/"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "commons"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://commons.wikimedia.org/wiki/Special:FilePath/"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "p"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.wikidata.org/prop/"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "puml"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://plantuml.com/ontology#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "rdf"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        }
+      }
+    ]
+  }
+}
