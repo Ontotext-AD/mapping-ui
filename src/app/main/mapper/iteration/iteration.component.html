@@ -1,5 +1,5 @@
-<div class="mapping-wrapper">
-  <div *ngFor="let mapping of triples; let index = index" fxLayout="row" fxLayoutAlign="start stretch" class="tripple-wraper">
+<div appCypressData="mapping-wrapper">
+  <div *ngFor="let mapping of triples; let index = index" fxLayout="row" fxLayoutAlign="start stretch" appCypressData="triple-wrapper">
     <div [fxFlex]="97" [ngClass]="{'triples-blocks-subrow': mapping.isIRI}">
       <div class="triples-block">
         <app-mapper-cell [cellMapping]="mapping.getSubject()"

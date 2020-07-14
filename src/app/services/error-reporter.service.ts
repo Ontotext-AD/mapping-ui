@@ -22,23 +22,56 @@ export class ErrorReporterService {
    * @return Observable<never>
    */
   handleError(message: string, error: HttpErrorResponse, notify: boolean = true) {
-    let errorMessage;
+    let errorMessage = message;
     if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      errorMessage = `An error occurred: ${error.error.message}`;
+      errorMessage = this.clientError(error, notify);
+      throwError(errorMessage);
     } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      if (error.status !== 0) {
-        errorMessage = `Server error: status ${error.status}, error: ${error.error}`;
+      const errMessage = this.backendError(error, message, notify);
+      if (errMessage instanceof Promise) {
+        errMessage.then((err) => {
+          throwError(err);
+        });
+      } else {
+        return throwError(errorMessage);
+      }
+    }
+    return throwError(errorMessage);
+  }
+
+  clientError(error: any, notify: boolean) {
+    // A client-side or network error occurred. Handle it accordingly.
+    const errorMessage = `An error occurred: ${error.error.message}`;
+    this.notify(notify, errorMessage);
+    // return an observable with a user-facing error message
+    return errorMessage;
+  }
+
+  backendError(error: any, message: string, notify: boolean) {
+    // The backend returned an unsuccessful response code.
+    // The response body may contain clues as to what went wrong
+    let errorMessage = message;
+    if (error.status !== 0) {
+      // There is a case when response is returned as a Blob and the error should
+      // be resolved by reading the Blob which is async operation
+      if (error.error instanceof Blob) {
+        return (new Response(error.error)).text().then((errorText) => {
+          this.notify(notify, errorText);
+          return errorText;
+        });
+      } else if (typeof error.error === 'string') {
+        errorMessage = error.error;
       } else {
         errorMessage = error.message;
       }
+      this.notify(notify, errorMessage);
+      return errorMessage;
     }
-    if (notify) {
+  }
+
+  notify(shouldNotify: boolean, message: string) {
+    if (shouldNotify) {
       this.notificationService.error(message);
     }
-    // return an observable with a user-facing error message
-    return throwError(errorMessage);
   }
 }

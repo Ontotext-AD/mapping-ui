@@ -7,6 +7,7 @@
         <mat-form-field>
           <mat-label>{{getCellType()}}</mat-label>
           <input matInput #mapping tabIndex="{{tabIndex}}"
+                 appCypressData="cell-value"
                  tabPosition="{{tabPosition}}"
                  autocomplete="{{suggestions}}"
                  [formControl]="autoInput"
