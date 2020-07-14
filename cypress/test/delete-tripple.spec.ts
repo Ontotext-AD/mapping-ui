@@ -43,7 +43,7 @@ describe('Delete triple', () => {
     MappingSteps.getTriples().should('have.length', 1);
   });
 
-  it.only('Should be able to delete nested triple', () => {
+  it('Should be able to delete nested triple', () => {
     // Given I have opened the mapping UI
     cy.visit('?dataProviderID=ontorefine:123');
     // And I see two triples + one empty template

@@ -5,11 +5,11 @@ class MappingSteps {
 
   // mapping
   static getMapping() {
-    return cy.get('.mapping-wrapper');
+    return cy.cypressData('mapping-wrapper');
   }
 
   static getTriples() {
-    return MappingSteps.getMapping().find('.tripple-wraper');
+    return MappingSteps.getMapping().find('[appCypressData=triple-wrapper]');
   }
 
   // triple
@@ -30,6 +30,10 @@ class MappingSteps {
     return MappingSteps.getTriple(index).find('.triple-item').eq(0);
   }
 
+  static getTripleSubjectValue(index: any) {
+    return MappingSteps.getTripleSubject(index).find('[appCypressData="cell-value"]');
+  }
+
   static getTripleSubjectType(index: any) {
     return MappingSteps.getTripleSubject(index).find('.ti-type');
   }
@@ -43,9 +47,17 @@ class MappingSteps {
     return MappingSteps.getTriple(index).find('.triple-item').eq(1);
   }
 
+  static getTriplePredicateValue(index: any) {
+    return MappingSteps.getTriplePredicate(index).find('[appCypressData="cell-value"]');
+  }
+
   // triple object
   static getTripleObject(index: any) {
     return MappingSteps.getTriple(index).find('.triple-item').eq(2);
+  }
+
+  static getTripleObjectValue(index: any) {
+    return MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]');
   }
 
   static getTripleObjectType(index: any) {
@@ -75,6 +87,11 @@ class MappingSteps {
 
   static reject() {
     return MappingSteps.getConfirmation().find('.cancel-btn').should('be.visible').click();
+  }
+
+  // Notifications
+  static getNotification() {
+    return cy.get('.mat-simple-snackbar');
   }
 }
 

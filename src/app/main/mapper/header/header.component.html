@@ -10,7 +10,7 @@
     {{isMappingDirty ? ('MESSAGES.MAPPING_IS_DIRTY' | translate) : ('MESSAGES.MAPPING_IS_SAVED' | translate)}}
   </span>
   <span matTooltip="{{'TOOLTIPS.SAVE_MAPPING' | translate}}">
-    <button (click)="saveMapping()" [disabled]="!isMappingDirty" class="mr-12 btn btn-sm btn-primary cursor-pointer">
+    <button (click)="saveMapping()" [disabled]="!isMappingDirty" appCypressData="save-action" class="mr-12 btn btn-sm btn-primary cursor-pointer">
       {{"BUTTONS.SAVE" | translate}}
       <mat-spinner *ngIf="isSavingInProgress" [diameter]="20"></mat-spinner>
     </button>
@@ -18,10 +18,10 @@
   <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="openDialog()"
           matTooltip="{{'TOOLTIPS.OPEN_JSON' | translate}}">{{"BUTTONS.VIEW_JSON" | translate}}
   </button>
-  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getRDF()"
+  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getRDF()" appCypressData="generate-rdf-action"
           matTooltip="{{'TOOLTIPS.CONVERT_TO_RDF' | translate}}">{{"BUTTONS.RDF" | translate}}
   </button>
-  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getSPARQL()"
+  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getSPARQL()" appCypressData="generate-sparql-action"
           matTooltip="{{'TOOLTIPS.CONVERT_TO_SPARQL' | translate}}">{{"BUTTONS.SPARQL" | translate}}
   </button>
   <button *ngIf="isDevEnv()" class="btn btn-sm btn-primary cursor-pointer" (click)="newMapping()"
