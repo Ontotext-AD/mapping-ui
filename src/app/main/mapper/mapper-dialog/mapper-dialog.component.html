@@ -1,4 +1,4 @@
-<div class="{{data.selected}}-dialog">
+<div class="mapping-dialog">
   <h1 mat-dialog-title cdkFocusInitial appCypressData="dialog-title">{{title}}</h1>
   <div *ngIf="hasChildren" class="alert alert-warning small" role="alert">
     {{'MESSAGES.EDIT_SAVED_TRIPLE_REF' | translate}}
@@ -8,23 +8,28 @@
           fxFlex="200">
       <div class="typeProperty-section">
         <div *ngIf="isPredicate() && !this.selected">
-          <mat-label></mat-label>
-          <mat-checkbox formControlName="typeMapping" name="typeMapping"
-                        labelPosition="after"> {{"LABELS.TYPE_PROPERTY" | translate}} </mat-checkbox>
+          <div fxLayout="row" fxLayoutAlign="start start">
+            <div fxFlex="20"><h4>{{'LABELS.TYPE_MAPPING' | translate}}</h4></div>
+            <div fxFlex="80">
+              <mat-slide-toggle formControlName="typeMapping" color="primary" appCypressData="type-mapping-button">
+                {{'LABELS.TYPE_PROPERTY' | translate}}
+              </mat-slide-toggle>
+            </div>
+          </div>
         </div>
       </div>
 
       <div *ngIf="showOptions">
         <div class="type-section">
-          <div *ngIf="isTypes()" fxLayout="row" fxLayoutAlign="start start">
+          <div class="form-field-md" *ngIf="isTypes()" fxLayout="row" fxLayoutAlign="start start">
             <div fxFlex="20"><h4>{{'LABELS.TYPE' | translate}}</h4></div>
             <div fxFlex="80">
               <mat-button-toggle-group formControlName="type">
-                <mat-button-toggle *ngFor="let type of types" [value]="type">
+                <mat-button-toggle *ngFor="let type of types" [value]="type" [attr.appCypressData]="'type-'+ type">
                   {{getType(type)}}
                 </mat-button-toggle>
               </mat-button-toggle-group>
-              <mat-error *ngIf="mapperForm.get('type').hasError('required')">
+              <mat-error *ngIf="mapperForm.get('type').hasError('required')" appCypressData="type-error">
                 {{ 'ERROR.REQUIRED' | translate }}
               </mat-error>
             </div>
@@ -36,11 +41,12 @@
                 <div fxFlex="20"><span>{{'LABELS.TYPE_SOURCE' | translate}}</span></div>
                 <div fxFlex="80">
                   <mat-button-toggle-group formControlName="dataTypeValueSource">
-                    <mat-button-toggle *ngFor="let source of sources" [value]="source">
+                    <mat-button-toggle *ngFor="let source of sources" [value]="source" [attr.appCypressData]="'datatype-'+ source">
                       {{getType(source)}}
                     </mat-button-toggle>
                   </mat-button-toggle-group>
-                  <mat-error *ngIf="mapperForm.get('dataTypeValueSource').hasError('required')">
+                  <mat-error *ngIf="mapperForm.get('dataTypeValueSource').hasError('required')"
+                             appCypressData="datatype-source-error">
                     {{ 'ERROR.REQUIRED' | translate }}
                   </mat-error>
                 </div>
@@ -54,8 +60,10 @@
                     <textarea matInput formControlName="dataTypeConstant" name="dataTypeConstant" cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                               [placeholder]="('LABELS.CONSTANT' | translate)"
-                              [matAutocomplete]="autoDataTypeC"></textarea>
-                  <mat-error *ngIf="mapperForm.get('dataTypeConstant').hasError('required')">
+                              [matAutocomplete]="autoDataTypeC"
+                              appCypressData="datatype-constant-input"></textarea>
+                  <mat-error *ngIf="mapperForm.get('dataTypeConstant').hasError('required')"
+                             appCypressData="datatype-constant-error">
                     {{ 'ERROR.REQUIRED' | translate }}
                   </mat-error>
                   <mat-autocomplete #autoDataTypeC="matAutocomplete">
@@ -75,8 +83,10 @@
                               cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                               [placeholder]="('LABELS.COLUMN_NAME' | translate)"
-                              [matAutocomplete]="autoc"></textarea>
-                  <mat-error *ngIf="mapperForm.get('dataTypeColumnName').hasError('required')">
+                              [matAutocomplete]="autoc"
+                              appCypressData="datatype-column-input"></textarea>
+                  <mat-error *ngIf="mapperForm.get('dataTypeColumnName').hasError('required')"
+                             appCypressData="datatype-column-error">
                     {{ 'ERROR.REQUIRED' | translate }}
                   </mat-error>
                   <mat-autocomplete #autoc="matAutocomplete">
@@ -91,7 +101,7 @@
                 <div fxFlex="20"><span>{{'LABELS.TYPE_TRANSFORMATION' | translate}}</span></div>
                 <div fxFlex="15">
                   <mat-button-toggle-group formControlName="datatypeLanguage">
-                    <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang">
+                    <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang" [attr.appCypressData]="'datatype-transformation-'+ lang">
                       {{getType(lang)}}
                     </mat-button-toggle>
                   </mat-button-toggle-group>
@@ -103,7 +113,8 @@
                       <textarea matInput formControlName="datatypeTransformation" name="datatypeTransformation"
                                 cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                                 [matAutocomplete]="datatypePrefixAuto"
-                                [placeholder]="!isDataTypePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"></textarea>
+                                [placeholder]="!isDataTypePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
+                                appCypressData="datatype-transformation-expression"></textarea>
                       <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
                         <div *ngIf="isDataTypePrefixTransformation">
                           <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
@@ -139,11 +150,12 @@
                 <div fxFlex="20"><span>{{'LABELS.SOURCE' | translate}}</span></div>
                 <div fxFlex="80">
                   <mat-button-toggle-group formControlName="languageValueSource">
-                    <mat-button-toggle *ngFor="let source of sources" [value]="source">
+                    <mat-button-toggle *ngFor="let source of sources" [value]="source" [attr.appCypressData]="'language-'+ source">
                       {{getType(source)}}
                     </mat-button-toggle>
                   </mat-button-toggle-group>
-                  <mat-error *ngIf="mapperForm.get('languageValueSource').hasError('required')">
+                  <mat-error *ngIf="mapperForm.get('languageValueSource').hasError('required')"
+                             appCypressData="language-source-error">
                     {{ 'ERROR.REQUIRED' | translate }}
                   </mat-error>
                 </div>
@@ -156,8 +168,10 @@
                 <mat-form-field fxFlex="80">
                     <textarea matInput formControlName="languageConstant" name="languageConstant" cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                              [placeholder]="('LABELS.CONSTANT' | translate)"></textarea>
-                  <mat-error *ngIf="mapperForm.get('languageConstant').hasError('required')">
+                              [placeholder]="('LABELS.CONSTANT' | translate)"
+                              appCypressData="language-constant-input"></textarea>
+                  <mat-error *ngIf="mapperForm.get('languageConstant').hasError('required')"
+                             appCypressData="language-constant-error">
                     {{ 'ERROR.REQUIRED' | translate }}
                   </mat-error>
                 </mat-form-field>
@@ -172,8 +186,10 @@
                               cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                               [placeholder]="('LABELS.COLUMN_NAME' | translate)"
-                              [matAutocomplete]="autoc"></textarea>
-                  <mat-error *ngIf="mapperForm.get('languageColumnName').hasError('required')">
+                              [matAutocomplete]="autoc"
+                              appCypressData="language-column-input"></textarea>
+                  <mat-error *ngIf="mapperForm.get('languageColumnName').hasError('required')"
+                             appCypressData="language-column-error">
                     {{ 'ERROR.REQUIRED' | translate }}
                   </mat-error>
                   <mat-autocomplete #autoc="matAutocomplete">
@@ -189,7 +205,7 @@
                 <div fxFlex="20"><span>{{'LABELS.TRANSFORMATION' | translate}}</span></div>
                 <div fxFlex="15">
                   <mat-button-toggle-group formControlName="languageTransformationLanguage">
-                    <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang">
+                    <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang" [attr.appCypressData]="'language-transformation-'+ lang">
                       {{getType(lang)}}
                     </mat-button-toggle>
                   </mat-button-toggle-group>
@@ -201,7 +217,8 @@
                       <textarea matInput formControlName="languageTransformation" name="languageTransformation"
                                 cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                                 [matAutocomplete]="languagePrefixAuto"
-                                [placeholder]="!isLanguagePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"></textarea>
+                                [placeholder]="!isLanguagePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
+                                appCypressData="language-transformation-expression"></textarea>
                       <mat-autocomplete #languagePrefixAuto="matAutocomplete">
                         <div *ngIf="isLanguagePrefixTransformation">
                           <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
@@ -233,105 +250,108 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="source-section">
-        <div fxLayout="row" fxLayoutAlign="start start">
-          <div fxFlex="20"><h4>{{'LABELS.SOURCE' | translate}}</h4></div>
-          <div fxFlex="80">
-            <mat-button-toggle-group formControlName="source">
-              <mat-button-toggle *ngFor="let source of sources" [value]="source">
-                {{getType(source)}}
-              </mat-button-toggle>
-            </mat-button-toggle-group>
-            <mat-error *ngIf="mapperForm.get('source').hasError('required')">
-              {{ 'ERROR.REQUIRED' | translate }}
-            </mat-error>
+        <div class="source-section">
+          <div fxLayout="row" fxLayoutAlign="start start">
+            <div fxFlex="20"><h4>{{'LABELS.SOURCE' | translate}}</h4></div>
+            <div fxFlex="80">
+              <mat-button-toggle-group formControlName="source">
+                <mat-button-toggle *ngFor="let source of sources" [value]="source" [attr.appCypressData]="source">
+                  {{getType(source)}}
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+              <mat-error *ngIf="mapperForm.get('source').hasError('required')" appCypressData="source-error">
+                {{ 'ERROR.REQUIRED' | translate }}
+              </mat-error>
+            </div>
           </div>
-        </div>
 
-        <div *ngIf="isConstant" class="mt-12" fxLayout="row" fxLayoutAlign="start start">
-          <div fxFlex="20">
-            <span>{{'LABELS.CONSTANT' | translate}}</span>
-          </div>
-          <mat-form-field fxFlex="80">
+          <div *ngIf="isConstant" class="mt-12" fxLayout="row" fxLayoutAlign="start start">
+            <div fxFlex="20">
+              <span>{{'LABELS.CONSTANT' | translate}}</span>
+            </div>
+            <mat-form-field fxFlex="80">
                     <textarea matInput formControlName="constant" name="constant" cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                               [placeholder]="('LABELS.CONSTANT' | translate)"
-                              [matAutocomplete]="autoType"></textarea>
-            <mat-error *ngIf="mapperForm.get('constant').hasError('required')">
-              {{ 'ERROR.REQUIRED' | translate }}
-            </mat-error>
-            <mat-autocomplete #autoType="matAutocomplete">
-              <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.value">
-                {{constant.label}}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-        </div>
-
-        <div *ngIf="isColumn" class="mt-12" fxLayout="row" fxLayoutAlign="start start">
-          <div fxFlex="20">
-            <span>{{'LABELS.COLUMN_NAME' | translate}}</span>
+                              [matAutocomplete]="autoType"
+                              appCypressData="constant-input"></textarea>
+              <mat-error *ngIf="mapperForm.get('constant').hasError('required')" appCypressData="constant-error">
+                {{ 'ERROR.REQUIRED' | translate }}
+              </mat-error>
+              <mat-autocomplete #autoType="matAutocomplete">
+                <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.value">
+                  {{constant.label}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
           </div>
-          <mat-form-field fxFlex="80">
+
+          <div *ngIf="isColumn" class="mt-12" fxLayout="row" fxLayoutAlign="start start">
+            <div fxFlex="20">
+              <span>{{'LABELS.COLUMN_NAME' | translate}}</span>
+            </div>
+            <mat-form-field fxFlex="80">
                     <textarea matInput formControlName="columnName" name="columnName"
                               cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                               [placeholder]="('LABELS.COLUMN_NAME' | translate)"
-                              [matAutocomplete]="autoc"></textarea>
-            <mat-error *ngIf="mapperForm.get('columnName').hasError('required')">
-              {{ 'ERROR.REQUIRED' | translate }}
-            </mat-error>
-            <mat-autocomplete #autoc="matAutocomplete">
-              <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title">
-                {{option.title}}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="transformation-section">
-        <div class="mt-12" fxLayout="row" fxLayoutAlign="start start">
-          <div fxFlex="20"><h4>{{'LABELS.TRANSFORMATION' | translate}}</h4></div>
-          <div fxFlex="15">
-            <mat-button-toggle-group formControlName="language">
-              <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang">
-                {{getType(lang)}}
-              </mat-button-toggle>
-            </mat-button-toggle-group>
+                              [matAutocomplete]="autoc"
+                              appCypressData="column-input"></textarea>
+              <mat-error *ngIf="mapperForm.get('columnName').hasError('required')" appCypressData="column-error">
+                {{ 'ERROR.REQUIRED' | translate }}
+              </mat-error>
+              <mat-autocomplete #autoc="matAutocomplete">
+                <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title">
+                  {{option.title}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
           </div>
-          <div fxFlex="65">
-            <div fxLayout="column" fxLayoutAlign="space-around stretch">
-              <mat-form-field class="ml-16" fxFlex>
-                <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
-                <textarea matInput formControlName="expression" name="expression"
-                          cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                          [matAutocomplete]="prefixAuto"
-                          [placeholder]="!isPrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"></textarea>
-                <mat-autocomplete #prefixAuto="matAutocomplete">
-                  <div *ngIf="isPrefixTransformation">
-                    <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
-                      {{namespace.prefix}}={{namespace.value}}
-                    </mat-option>
-                  </div>
-                </mat-autocomplete>
-                <mat-icon matSuffix>
-                  <a *ngIf="!isPrefixTransformation" class="icon-help" target="_blank"
-                     href={{environment.openRefineVariables}}
-                     matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
-                </mat-icon>
-              </mat-form-field>
+        </div>
 
-              <div class="ml-16" *ngIf="!isPrefixTransformation">
-                <div
-                  *ngFor="let preview of grelPreviewExpression | async; let index = index;">
-                  <div class="mb-2" *ngIf="preview"
-                       [ngClass]="{hide: index !== 0 && !showTransformation}"
-                       (click)="showTransformation = !showTransformation"
-                       matTooltip="{{showTransformation ? ('TOOLTIPS.CLICK_TO_HIDE' | translate) : ('TOOLTIPS.CLICK_FOR_MOORE' | translate)}}">
-                    {{preview.error || preview}}
+        <div class="transformation-section">
+          <div class="mt-12" fxLayout="row" fxLayoutAlign="start start">
+            <div fxFlex="20"><h4>{{'LABELS.TRANSFORMATION' | translate}}</h4></div>
+            <div fxFlex="15">
+              <mat-button-toggle-group formControlName="language">
+                <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang" [attr.appCypressData]="'transformation-'+ lang">
+                  {{getType(lang)}}
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <div fxFlex="65">
+              <div fxLayout="column" fxLayoutAlign="space-around stretch">
+                <mat-form-field class="ml-16" fxFlex>
+                  <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
+                  <textarea matInput formControlName="expression" name="expression"
+                            cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+                            [matAutocomplete]="prefixAuto"
+                            [placeholder]="!isPrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
+                            appCypressData="transformation-expression"></textarea>
+                  <mat-autocomplete #prefixAuto="matAutocomplete">
+                    <div *ngIf="isPrefixTransformation">
+                      <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
+                        {{namespace.prefix}}={{namespace.value}}
+                      </mat-option>
+                    </div>
+                  </mat-autocomplete>
+                  <mat-icon matSuffix>
+                    <a *ngIf="!isPrefixTransformation" class="icon-help" target="_blank"
+                       href={{environment.openRefineVariables}}
+                       matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
+                  </mat-icon>
+                </mat-form-field>
+
+                <div class="ml-16" *ngIf="!isPrefixTransformation">
+                  <div
+                    *ngFor="let preview of grelPreviewExpression | async; let index = index;">
+                    <div class="mb-2" *ngIf="preview"
+                         [ngClass]="{hide: index !== 0 && !showTransformation}"
+                         (click)="showTransformation = !showTransformation"
+                         matTooltip="{{showTransformation ? ('TOOLTIPS.CLICK_TO_HIDE' | translate) : ('TOOLTIPS.CLICK_FOR_MOORE' | translate)}}">
+                      {{preview.error || preview}}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -343,7 +363,7 @@
   </div>
   <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center end">
     <button class="btn-primary" [mat-dialog-close]="data" (click)="save()" [disabled]="isMappingInvalid()"
-            matTooltip="{{'TOOLTIPS.SAVE_AND_CLOSE' | translate}}">
+            matTooltip="{{'TOOLTIPS.SAVE_AND_CLOSE' | translate}}" appCypressData="ok-mapping-button">
       {{'BUTTONS.OK' | translate}}
     </button>
   </div>

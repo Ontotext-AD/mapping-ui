@@ -129,7 +129,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     if (this.isSubject()) {
       this.selected = this.data.mappingData.getSubject();
       this.title = this.translateService.instant('LABELS.SUBJECT');
-      console.log(this.selected);
     } else if (this.isPredicate()) {
       this.selected = this.data.mappingData.getPredicate();
       this.title = this.translateService.instant('LABELS.PREDICATE');
@@ -137,7 +136,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
       this.selected = this.data.mappingData.getObject();
       this.title = this.translateService.instant('LABELS.OBJECT');
     }
-    console.log(this.selected);
   }
 
   private setTypes() {
@@ -469,9 +467,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     return this.isTypeProperty && this.isObject();
   }
 
-  public getType(typ: string) {
-    return Helper.getEnumKeyByEnumValue(Type, typ) || Helper.getEnumKeyByEnumValue(Source, typ) ||
-      Helper.getEnumKeyByEnumValue(Language, typ) || Helper.getEnumKeyByEnumValue(TypeMapping, typ);
+  public getType(type: string) {
+    return this.translateService.instant('TYPE.' + type.toUpperCase());
   }
 
   public isTypes() {

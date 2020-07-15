@@ -5,4 +5,5 @@ export const environment = {
   repositoryApiUrl: '/repositories',
   httpLoaderPrefix: './assets/i18n/',
   httpLoaderSuffix: '.js',
+  openRefineVariables: 'https://github.com/OpenRefine/OpenRefine/wiki/Variables',
 };

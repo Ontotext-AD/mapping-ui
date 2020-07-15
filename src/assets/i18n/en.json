@@ -25,7 +25,7 @@
     "NEW_MAPPING": "Create new mapping",
     "SAVE_AND_CLOSE": "Save and close configuration",
     "GREL_VALUE_HELP": "Open value type documentation in separate window",
-    "CLICK_FOR_MOORE": "Click for moore examples",
+    "CLICK_FOR_MORE": "Click for more examples",
     "CLICK_TO_HIDE": "Click to hide examples"
   },
   "LABELS": {
@@ -39,6 +39,7 @@
     "TYPE": "Type",
     "TYPE_TRANSFORMATION": "Type transformation",
     "TYPE_SOURCE": "Type source",
+    "TYPE_MAPPING": "Type mapping",
     "DATATYPE_LITERAL": "Datatype",
     "LANGUAGE_LITERAL": "Language",
     "LITERAL": "Literal",
@@ -78,5 +79,20 @@
   },
   "ERROR": {
     "REQUIRED": "* Required"
+  },
+  "TYPE": {
+    "DATATYPE_LITERAL": "Datatype Literal",
+    "IRI": "IRI",
+    "LANGUAGE_LITERAL": "Language Literal",
+    "LITERAL": "Literal",
+    "UNIQUE_BNODE": "Unique Bnode",
+    "VALUE_BNODE": "Value Bnode",
+    "COLUMN": "Column",
+    "CONSTANT": "Constant",
+    "RECORD_ID": "Record ID",
+    "ROW_INDEX": "Row Index",
+    "PREFIX": "Prefix",
+    "GREL": "GREL",
+    "A": "a"
   }
 }

@@ -1,9 +1,9 @@
-.subject-dialog {
-  min-width: 900px;
-  min-height: 480px;
+.mapping-dialog {
+  min-width: 960px;
+  min-height: 250px;
 
   form {
-    height: 450px;
+    min-height: 250px;
   }
 }
 
@@ -32,4 +32,11 @@
 
 div.hide{
   display: none;
+}
+
+mat-button-toggle {
+  height: 36px;
+  align-items: center;
+  flex-direction: row;
+  display: flex;
 }
