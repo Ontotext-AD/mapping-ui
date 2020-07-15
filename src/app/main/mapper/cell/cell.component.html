@@ -14,7 +14,7 @@
                  [matAutocomplete]="autocInline"
                  (keydown.tab)="saveInputValue(false)"
                  (keydown.enter)="saveInputValue(true)"
-                 (blur)="saveInputValueOnBlur($event)" appCypressData="cell-input">
+                 (blur)="saveInputValueOnBlur($event)">
           <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="saveInputValue(true)">
             <mat-option *ngFor="let option of suggestions | async | async" [value]="option.value">
               {{option.label}}

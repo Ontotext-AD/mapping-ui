@@ -7,7 +7,7 @@ export class MapperComponentSelectors {
   static readonly FIRST_SOURCE_SELECTOR = 'source-0';
   static readonly BUTTON_EDIT_EMPTY_CELL = 'button-edit-empty-cell';
   static readonly BUTTON_EDIT_CELL = 'button-edit-cell';
-  static readonly CELL_INPUT = 'cell-input';
+  static readonly CELL_INPUT = 'cell-value';
   static readonly DATATYPE_SOURCE_ERROR = 'datatype-source-error';
   static readonly DATATYPE_CONSTANT_ERROR = 'datatype-constant-error';
   static readonly DATATYPE_COLUMN_ERROR = 'datatype-column-error';
