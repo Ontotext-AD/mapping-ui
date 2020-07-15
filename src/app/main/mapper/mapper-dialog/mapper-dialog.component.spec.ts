@@ -18,6 +18,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatInputModule} from "@angular/material/input";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 
 
@@ -50,6 +51,7 @@ describe('MapperDialogComponent', () => {
         MatButtonToggleModule,
         MatInputModule,
         BrowserAnimationsModule,
+        MatSlideToggleModule,
       ],
       providers: [
         TranslateService,
