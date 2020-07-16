@@ -93,7 +93,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   initWithPreview(isDirty?: boolean) {
     this.modelManagementService.removePreview(this.mapping);
-    if (this.isPreviewOn && this.isComplete(this.mapping)) {
+    if (this.mapping.getSubjectMappings().length && this.isPreviewOn && this.isComplete(this.mapping)) {
       this.mapperService.preview(this.mapping)
           .pipe(untilComponentDestroyed(this))
           .subscribe((data) => {

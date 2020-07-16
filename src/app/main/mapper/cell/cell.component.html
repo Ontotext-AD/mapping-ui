@@ -200,7 +200,8 @@
           </span>
 
         <span class="btn btn-link text-muted">
-					  <span class="icon-trash" (click)="deleteMapping($event)" matTooltip="{{'TOOLTIPS.DELETE_VALUE' | translate}}"></span>
+					  <span class="icon-trash" (click)="deleteMapping($event)" appCypressData="delete-node"
+                  matTooltip="{{'TOOLTIPS.DELETE_VALUE' | translate}}"></span>
           </span>
       </div>
     </div>

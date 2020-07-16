@@ -3,6 +3,12 @@
  */
 class MappingSteps {
 
+  static completeTriple(index: number, subject: string, predicate: string, object: string) {
+    MappingSteps.getTripleSubjectValue(index).type(subject).blur();
+    MappingSteps.getTriplePredicateValue(index).type(predicate).blur();
+    MappingSteps.getTripleObjectValue(index).type(object).blur();
+  }
+
   // mapping
   static getMapping() {
     return cy.cypressData('mapping-wrapper');
@@ -34,12 +40,24 @@ class MappingSteps {
     return MappingSteps.getTripleSubject(index).find('[appCypressData="cell-value"]');
   }
 
+  static getTripleSubjectValuePreview(index: any) {
+    return MappingSteps.getTripleSubject(index).find('.ti-source');
+  }
+
   static getTripleSubjectType(index: any) {
     return MappingSteps.getTripleSubject(index).find('.ti-type');
   }
 
   static getTripleSubjectSource(index: any) {
     return MappingSteps.getTripleSubject(index).find('.ti-source');
+  }
+
+  static getTripleSubjectPreview(index: number) {
+    return MappingSteps.getTripleSubject(index).find('.ti-preview');
+  }
+
+  static deleteTripleSubject(index: number) {
+    return MappingSteps.getTripleSubject(index).find('[appCypressData="delete-node"]').click();
   }
 
   // triple predicate
@@ -49,6 +67,10 @@ class MappingSteps {
 
   static getTriplePredicateValue(index: any) {
     return MappingSteps.getTriplePredicate(index).find('[appCypressData="cell-value"]');
+  }
+
+  static getTriplePredicatePreview(index: number) {
+    return MappingSteps.getTriplePredicate(index).find('.ti-preview');
   }
 
   // triple object
@@ -66,6 +88,10 @@ class MappingSteps {
 
   static getTripleObjectSource(index: any) {
     return MappingSteps.getTripleObject(index).find('.ti-source');
+  }
+
+  static getTripleObjectPreview(index: number) {
+    return MappingSteps.getTripleObject(index).find('.ti-preview');
   }
 
   // dialog and confirmation

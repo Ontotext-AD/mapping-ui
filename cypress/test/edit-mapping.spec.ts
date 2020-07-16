@@ -77,7 +77,7 @@ describe('Edit mapping', () => {
       // And I expect the save button to be disabled
       HeaderSteps.getSaveMappingButton().should('be.visible').and('be.disabled');
       // When I complete a triple
-      completeTriple();
+      MappingSteps.completeTriple(0, '@duration', 'as', '123');
       // And Click the save button
       HeaderSteps.saveMapping();
       // Then I expect an error notification
@@ -136,10 +136,4 @@ describe('Edit mapping', () => {
     });
 
   });
-
-  function completeTriple() {
-    MappingSteps.getTripleSubjectValue(0).type('@duration').blur();
-    MappingSteps.getTriplePredicateValue(0).type('as').blur();
-    MappingSteps.getTripleObjectValue(0).type('123').blur();
-  }
 });
