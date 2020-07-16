@@ -10,6 +10,7 @@ export class Triple {
   isTypeProperty: boolean;
   isRoot: boolean;
   isIRI: boolean;
+  level?: number;
 
   constructor(subject?: SubjectMappingImpl | ValueMappingImpl, predicate?: PropertyMappingImpl,
       object?: ValueMappingImpl | SimpleIRIValueMappingImpl, isTypeProperty?: boolean, isRoot?: boolean, isIRI?: boolean) {
@@ -19,6 +20,7 @@ export class Triple {
     this.isTypeProperty = isTypeProperty || false;
     this.isRoot = isRoot;
     this.isIRI = isIRI;
+    this.level = 0;
   }
 
   getSubject() {
@@ -69,5 +71,13 @@ export class Triple {
 
   getIRI() {
     return this.isIRI;
+  }
+
+  getLevel() {
+    return this.level;
+  }
+
+  setLevel(level: number) {
+    this.level = level;
   }
 }

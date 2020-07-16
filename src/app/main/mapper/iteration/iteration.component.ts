@@ -91,6 +91,15 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     window.addEventListener('beforeunload', this.boundCheckDirty);
   }
 
+  isFirstInGroup(triple: Triple, index: number) {
+    const level = triple.getLevel();
+    let isFirst = false;
+    if (index > 0) {
+      isFirst = this.triples[index - 1].getLevel() < level;
+    }
+    return isFirst;
+  }
+
   initWithPreview(isDirty?: boolean) {
     this.modelManagementService.removePreview(this.mapping);
     if (this.mapping.getSubjectMappings().length && this.isPreviewOn && this.isComplete(this.mapping)) {
@@ -113,7 +122,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     this.usedSources = new Set();
     this.triples = [];
     this.convertToTriples(this.mapping);
-    this.triples.push(new Triple(undefined, undefined, undefined));
+    this.addTriple(new Triple(undefined, undefined, undefined), 0);
     this.initMappingDetails();
     this.repositoryService.getNamespaces()
         .pipe(untilComponentDestroyed(this))
@@ -128,7 +137,6 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   getAllNamespaces() {
     return {...this.repoNamespaces, ...this.mapping.namespaces};
   }
-
 
   isCompleteCell(subject, isRoot) {
     let isCompleteMapping = true;
@@ -159,7 +167,6 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     return isCompleteMapping;
   }
 
-
   convertToTriples(mapping) {
     mapping.getSubjectMappings().forEach((subject) => {
       this.setUsedSources(subject);
@@ -167,11 +174,11 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       if (subject.getTypeMappings().length > 0 || subject.getPropertyMappings().length > 0) {
         this.setTypeMappings(subject, isRoot)
             .pipe(untilComponentDestroyed(this))
-            .subscribe((isRoot) => {
-              this.setPropertyMappings(subject, isRoot);
+            .subscribe((root) => {
+              this.setPropertyMappings(subject, root, 0);
             });
       } else {
-        this.triples.push(new Triple(subject, undefined, undefined, false, isRoot));
+        this.addTriple(new Triple(subject, undefined, undefined, false, isRoot), 0);
       }
     });
   }
@@ -181,31 +188,44 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   private setTypeMappings(subject, isRoot, isIRI?) {
-    this.getTypeMappings(subject) && this.getTypeMappings(subject).forEach((mapping) => {
-      this.setUsedSources(mapping);
-      this.triples.push(new Triple(subject, undefined, mapping, true, isRoot, isIRI));
-      isRoot = false;
-    });
+    const typeMappings = this.getTypeMappings(subject);
+    if (typeMappings) {
+      typeMappings.forEach((mapping) => {
+        this.setUsedSources(mapping);
+        this.addTriple(new Triple(subject, undefined, mapping, true, isRoot, isIRI), 0);
+        isRoot = false;
+      });
+    }
     return of(isRoot);
   }
 
-  private setPropertyMappings(subject, isRoot, isIRI?) {
-    this.getPropertyMappings(subject) && this.getPropertyMappings(subject).forEach((property) => {
-      this.setUsedSources(property);
-      if (property.getValues()) {
-        property.getValues().forEach((object) => {
-          this.setUsedSources(object);
-          this.triples.push(new Triple(subject, property, object, false, isRoot, isIRI));
-          isRoot = false;
-          if (object.getValueType() && object.getValueType().getType() === Type.IRI) {
-            this.setTypeMappings(object, false, true);
-            this.setPropertyMappings(object, false, true);
-          }
-        });
-      } else {
-        this.triples.push(new Triple(subject, property, undefined, false, isRoot));
-      }
-    });
+  private setPropertyMappings(subject, isRoot, level, isIRI?) {
+    let nestingLevel = level;
+    const propertyMappings = this.getPropertyMappings(subject);
+    if (propertyMappings) {
+      propertyMappings.forEach((property) => {
+        this.setUsedSources(property);
+        if (property.getValues()) {
+          property.getValues().forEach((object) => {
+            this.setUsedSources(object);
+            this.addTriple(new Triple(subject, property, object, false, isRoot, isIRI), nestingLevel);
+            isRoot = false;
+            if (object.getValueType() && object.getValueType().getType() === Type.IRI) {
+              this.setTypeMappings(object, false, true);
+              nestingLevel++;
+              this.setPropertyMappings(object, false, nestingLevel, true);
+            }
+          });
+        } else {
+          this.addTriple(new Triple(subject, property, undefined, false, isRoot), nestingLevel);
+        }
+      });
+    }
+  }
+
+  private addTriple(triple: Triple, level: number) {
+    triple.setLevel(level);
+    this.triples.push(triple);
   }
 
   isFirstSubject(triple, index) {
@@ -470,7 +490,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     const data = {
       constant: source === SourceEnum.Constant ? value : undefined,
       columnName: source === SourceEnum.Column ? value : undefined,
-      source: source,
+      source,
       type: this.getType(selected, triple, value),
       typeMapping: triple.isTypeProperty,
       expression: prefix ? prefixTransformation.prefix : undefined,
@@ -482,7 +502,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       isColumn: source === SourceEnum.Column,
       isTransformation: !!prefix,
       isRoot: selected === this.SUBJECT,
-      selected: selected,
+      selected,
       namespaces: this.mapping.namespaces,
       repoNamespaces: this.repoNamespaces,
     };
