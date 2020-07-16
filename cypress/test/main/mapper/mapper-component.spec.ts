@@ -63,7 +63,7 @@ describe('MapperComponent', () => {
     cy.cypressData(MapperComponentSelectors.RECORD_ID).should('be.visible');
     cy.cypressData(MapperComponentSelectors.ROW_INDEX).should('be.visible');
     cy.cypressData(MapperComponentSelectors.TRANSFORMATION_PREFIX).should('be.visible');
-    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_GREL).should('be.visible');
+    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_GREL).should('be.visible').click();
     cy.cypressData(MapperComponentSelectors.TRANSFORMATION_EXPRESSION).should('be.visible');
 
     // I see required fields
@@ -114,7 +114,7 @@ describe('MapperComponent', () => {
     cy.cypressData(MapperComponentSelectors.RECORD_ID).should('be.visible');
     cy.cypressData(MapperComponentSelectors.ROW_INDEX).should('be.visible');
     cy.cypressData(MapperComponentSelectors.TRANSFORMATION_PREFIX).should('be.visible');
-    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_GREL).should('be.visible');
+    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_GREL).should('be.visible').click();
     cy.cypressData(MapperComponentSelectors.TRANSFORMATION_EXPRESSION).should('be.visible');
 
     // WHEN:
@@ -146,7 +146,7 @@ describe('MapperComponent', () => {
     cy.cypressData(MapperComponentSelectors.RECORD_ID).should('be.visible');
     cy.cypressData(MapperComponentSelectors.ROW_INDEX).should('be.visible');
     cy.cypressData(MapperComponentSelectors.TRANSFORMATION_PREFIX).should('be.visible');
-    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_GREL).should('be.visible');
+    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_GREL).should('be.visible').click();
     cy.cypressData(MapperComponentSelectors.TRANSFORMATION_EXPRESSION).should('be.visible');
 
     // I see required fields
@@ -164,7 +164,7 @@ describe('MapperComponent', () => {
     cy.cypressData(MapperComponentSelectors.DATATYPE_RECORD_ID).should('be.visible');
     cy.cypressData(MapperComponentSelectors.DATATYPE_ROW_INDEX).should('be.visible');
     cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_PREFIX).should('be.visible');
-    cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_GREL).should('be.visible');
+    cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_GREL).should('be.visible').click();
     cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_EXPRESSION).should('be.visible');
 
     // I see required fields
@@ -181,7 +181,7 @@ describe('MapperComponent', () => {
     cy.cypressData(MapperComponentSelectors.LANGUAGE_RECORD_ID).should('be.visible');
     cy.cypressData(MapperComponentSelectors.LANGUAGE_ROW_INDEX).should('be.visible');
     cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_PREFIX).should('be.visible');
-    cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_GREL).should('be.visible');
+    cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_GREL).should('be.visible').click();
     cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_EXPRESSION).should('be.visible');
 
     // I see required fields

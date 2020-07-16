@@ -19,6 +19,7 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatInputModule} from "@angular/material/input";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatDividerModule} from "@angular/material/divider";
 
 
 
@@ -29,6 +30,10 @@ describe('MapperDialogComponent', () => {
     backdropClick: () => {
       return new Observable<any>()},
     keydownEvents: () => {
+      return new Observable<any>()},
+    updatePosition:  () => {
+      return new Observable<any>()},
+    updateSize:  () => {
       return new Observable<any>()}
   };
 
@@ -52,6 +57,7 @@ describe('MapperDialogComponent', () => {
         MatInputModule,
         BrowserAnimationsModule,
         MatSlideToggleModule,
+        MatDividerModule,
       ],
       providers: [
         TranslateService,

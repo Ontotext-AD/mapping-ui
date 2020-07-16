@@ -91,6 +91,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setDialogStyle();
     this.mappingDetails = {...this.data.mappingDetails, ...{} as MappingDetails};
     this.init();
     this.mapperForm$ = of(this.createMapperForm(this.mappingDetails));
@@ -99,6 +100,11 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.subscribeToValueChanges();
 
     this.subscribeToCheckDirty();
+  }
+
+  private setDialogStyle() {
+    this.dialogRef.updatePosition({top: '100px'});
+    this.dialogRef.updateSize('60%');
   }
 
   private init(): void {

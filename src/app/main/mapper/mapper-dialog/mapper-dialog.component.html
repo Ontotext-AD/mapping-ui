@@ -20,8 +20,9 @@
       </div>
 
       <div *ngIf="showOptions">
-        <div class="type-section">
-          <div class="form-field-md" *ngIf="isTypes()" fxLayout="row" fxLayoutAlign="start start">
+        <div class="type-section" *ngIf="isTypes()" >
+          <mat-divider></mat-divider>
+          <div class="form-field-md mt-24" fxLayout="row" fxLayoutAlign="start start">
             <div fxFlex="20"><h4>{{'LABELS.TYPE' | translate}}</h4></div>
             <div fxFlex="80">
               <mat-button-toggle-group formControlName="type">
@@ -35,7 +36,7 @@
             </div>
           </div>
 
-          <div class="mt-12">
+          <div class="mt-24">
             <div *ngIf="hasDatatype">
               <div fxLayout="row" fxLayoutAlign="start start">
                 <div fxFlex="20"><span>{{'LABELS.TYPE_SOURCE' | translate}}</span></div>
@@ -52,7 +53,7 @@
                 </div>
               </div>
 
-              <div *ngIf="isDatatypeConstant" class="mt-12" fxLayout="row" fxLayoutAlign="start start">
+              <div *ngIf="isDatatypeConstant" class="mt-24" fxLayout="row" fxLayoutAlign="start start">
                 <div fxFlex="20">
                   <span>{{'LABELS.CONSTANT' | translate}}</span>
                 </div>
@@ -74,7 +75,7 @@
                 </mat-form-field>
               </div>
 
-              <div *ngIf="isDatatypeColumn" class="mt-12" fxLayout="row" fxLayoutAlign="start start">
+              <div *ngIf="isDatatypeColumn" class="mt-24" fxLayout="row" fxLayoutAlign="start start">
                 <div fxFlex="20">
                   <span>{{'LABELS.COLUMN_NAME' | translate}}</span>
                 </div>
@@ -97,18 +98,18 @@
                 </mat-form-field>
               </div>
 
-              <div class="mt-12" fxLayout="row" fxLayoutAlign="start start">
+              <div class="mt-24" fxLayout="row" fxLayoutAlign="start none">
                 <div fxFlex="20"><span>{{'LABELS.TYPE_TRANSFORMATION' | translate}}</span></div>
-                <div fxFlex="15">
+                <div fxFlex="none">
                   <mat-button-toggle-group formControlName="datatypeLanguage">
                     <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang" [attr.appCypressData]="'datatype-transformation-'+ lang">
                       {{getType(lang)}}
                     </mat-button-toggle>
                   </mat-button-toggle-group>
                 </div>
-                <div fxFlex="65">
+                <div fxFlex="65" *ngIf="!!mapperForm.get('datatypeLanguage').value">
                   <div fxLayout="column" fxLayoutAlign="space-around stretch">
-                    <mat-form-field class="ml-16" fxFlex>
+                    <mat-form-field class="ml-16">
                       <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
                       <textarea matInput formControlName="datatypeTransformation" name="datatypeTransformation"
                                 cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
@@ -123,7 +124,7 @@
                         </div>
                       </mat-autocomplete>
                       <mat-icon matSuffix>
-                        <a *ngIf="!isDataTypePrefixTransformation" class="icon-help" target="_blank"
+                        <a *ngIf="!isDataTypePrefixTransformation" class="icon-info" target="_blank"
                            href={{environment.openRefineVariables}}
                            matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
                       </mat-icon>
@@ -132,10 +133,10 @@
                     <div class="ml-16" *ngIf="!isDataTypePrefixTransformation">
                       <div
                         *ngFor="let preview of grelPreviewDataTypeTransformation | async; let index = index;">
-                        <div class="mb-2" *ngIf="preview"
+                        <div class="mb-2 cursor-pointer" *ngIf="preview"
                              [ngClass]="{hide: index !== 0 && !showDataTypeTransformation}"
                              (click)="showDataTypeTransformation = !showDataTypeTransformation"
-                             matTooltip="{{showDataTypeTransformation ? ('TOOLTIPS.CLICK_TO_HIDE' | translate) : ('TOOLTIPS.CLICK_FOR_MOORE' | translate)}}">
+                             matTooltip="{{showDataTypeTransformation ? ('TOOLTIPS.CLICK_TO_HIDE' | translate) : ('TOOLTIPS.CLICK_FOR_MORE' | translate)}}">
                           {{preview.error || preview}}
                         </div>
                       </div>
@@ -147,7 +148,7 @@
 
             <div *ngIf="hasLanguage">
               <div fxLayout="row" fxLayoutAlign="start start">
-                <div fxFlex="20"><span>{{'LABELS.SOURCE' | translate}}</span></div>
+                <div fxFlex="20"><span>{{'LABELS.TYPE_SOURCE' | translate}}</span></div>
                 <div fxFlex="80">
                   <mat-button-toggle-group formControlName="languageValueSource">
                     <mat-button-toggle *ngFor="let source of sources" [value]="source" [attr.appCypressData]="'language-'+ source">
@@ -161,7 +162,7 @@
                 </div>
               </div>
 
-              <div *ngIf="isLanguageConstant" class="mt-12" fxLayout="row" fxLayoutAlign="start start">
+              <div *ngIf="isLanguageConstant" class="mt-24" fxLayout="row" fxLayoutAlign="start start">
                 <div fxFlex="20">
                   <span>{{'LABELS.CONSTANT' | translate}}</span>
                 </div>
@@ -177,7 +178,7 @@
                 </mat-form-field>
               </div>
 
-              <div *ngIf="isLanguageColumn" class="mt-12" fxLayout="row" fxLayoutAlign="start start">
+              <div *ngIf="isLanguageColumn" class="mt-24" fxLayout="row" fxLayoutAlign="start start">
                 <div fxFlex="20">
                   <span>{{'LABELS.COLUMN_NAME' | translate}}</span>
                 </div>
@@ -201,18 +202,18 @@
               </div>
 
 
-              <div class="mt-12" fxLayout="row" fxLayoutAlign="start start">
-                <div fxFlex="20"><span>{{'LABELS.TRANSFORMATION' | translate}}</span></div>
-                <div fxFlex="15">
+              <div class="mt-24" fxLayout="row" fxLayoutAlign="start none">
+                <div fxFlex="20"><span>{{'LABELS.TYPE_TRANSFORMATION' | translate}}</span></div>
+                <div fxFlex="none">
                   <mat-button-toggle-group formControlName="languageTransformationLanguage">
                     <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang" [attr.appCypressData]="'language-transformation-'+ lang">
                       {{getType(lang)}}
                     </mat-button-toggle>
                   </mat-button-toggle-group>
                 </div>
-                <div fxFlex="65">
+                <div fxFlex="65" *ngIf="!!mapperForm.get('languageTransformationLanguage').value">
                   <div fxLayout="column" fxLayoutAlign="space-around stretch">
-                    <mat-form-field class="ml-16" fxFlex>
+                    <mat-form-field class="ml-16">
                       <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
                       <textarea matInput formControlName="languageTransformation" name="languageTransformation"
                                 cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
@@ -236,10 +237,10 @@
                     <div class="ml-16" *ngIf="!isLanguagePrefixTransformation">
                       <div
                         *ngFor="let preview of grelPreviewLanguageTransformation | async; let index = index;">
-                        <div class="mb-2" *ngIf="preview"
+                        <div class="mb-2 cursor-pointer" *ngIf="preview"
                              [ngClass]="{hide: index !== 0 && !showLanguageTransformation}"
                              (click)="showLanguageTransformation = !showLanguageTransformation"
-                             matTooltip="{{showLanguageTransformation ? ('TOOLTIPS.CLICK_TO_HIDE' | translate) : ('TOOLTIPS.CLICK_FOR_MOORE' | translate)}}">
+                             matTooltip="{{showLanguageTransformation ? ('TOOLTIPS.CLICK_TO_HIDE' | translate) : ('TOOLTIPS.CLICK_FOR_MORE' | translate)}}">
                           {{preview.error || preview}}
                         </div>
                       </div>
@@ -251,8 +252,9 @@
           </div>
         </div>
 
-        <div class="source-section">
-          <div fxLayout="row" fxLayoutAlign="start start">
+        <mat-divider class="mt-24"></mat-divider>
+        <div class="source-section mt-24">
+          <div fxLayout="row" fxLayoutAlign="start none">
             <div fxFlex="20"><h4>{{'LABELS.SOURCE' | translate}}</h4></div>
             <div fxFlex="80">
               <mat-button-toggle-group formControlName="source">
@@ -266,7 +268,7 @@
             </div>
           </div>
 
-          <div *ngIf="isConstant" class="mt-12" fxLayout="row" fxLayoutAlign="start start">
+          <div *ngIf="isConstant" class="mt-24" fxLayout="row" fxLayoutAlign="start start">
             <div fxFlex="20">
               <span>{{'LABELS.CONSTANT' | translate}}</span>
             </div>
@@ -287,7 +289,7 @@
             </mat-form-field>
           </div>
 
-          <div *ngIf="isColumn" class="mt-12" fxLayout="row" fxLayoutAlign="start start">
+          <div *ngIf="isColumn" class="mt-24" fxLayout="row" fxLayoutAlign="start start">
             <div fxFlex="20">
               <span>{{'LABELS.COLUMN_NAME' | translate}}</span>
             </div>
@@ -310,19 +312,20 @@
           </div>
         </div>
 
+        <mat-divider class="mt-24"></mat-divider>
         <div class="transformation-section">
-          <div class="mt-12" fxLayout="row" fxLayoutAlign="start start">
+          <div class="mt-24" fxLayout="row" fxLayoutAlign="start none">
             <div fxFlex="20"><h4>{{'LABELS.TRANSFORMATION' | translate}}</h4></div>
-            <div fxFlex="15">
+            <div fxFlex="none">
               <mat-button-toggle-group formControlName="language">
                 <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang" [attr.appCypressData]="'transformation-'+ lang">
                   {{getType(lang)}}
                 </mat-button-toggle>
               </mat-button-toggle-group>
             </div>
-            <div fxFlex="65">
+            <div fxFlex="65" *ngIf="isTransformation">
               <div fxLayout="column" fxLayoutAlign="space-around stretch">
-                <mat-form-field class="ml-16" fxFlex>
+                <mat-form-field class="ml-16">
                   <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
                   <textarea matInput formControlName="expression" name="expression"
                             cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
@@ -337,7 +340,7 @@
                     </div>
                   </mat-autocomplete>
                   <mat-icon matSuffix>
-                    <a *ngIf="!isPrefixTransformation" class="icon-help" target="_blank"
+                    <a *ngIf="!isPrefixTransformation" class="icon-info"  target="_blank"
                        href={{environment.openRefineVariables}}
                        matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
                   </mat-icon>
@@ -346,10 +349,10 @@
                 <div class="ml-16" *ngIf="!isPrefixTransformation">
                   <div
                     *ngFor="let preview of grelPreviewExpression | async; let index = index;">
-                    <div class="mb-2" *ngIf="preview"
+                    <div class="mb-2 cursor-pointer" *ngIf="preview"
                          [ngClass]="{hide: index !== 0 && !showTransformation}"
                          (click)="showTransformation = !showTransformation"
-                         matTooltip="{{showTransformation ? ('TOOLTIPS.CLICK_TO_HIDE' | translate) : ('TOOLTIPS.CLICK_FOR_MOORE' | translate)}}">
+                         matTooltip="{{showTransformation ? ('TOOLTIPS.CLICK_TO_HIDE' | translate) : ('TOOLTIPS.CLICK_FOR_MORE' | translate)}}">
                       {{preview.error || preview}}
                     </div>
                   </div>

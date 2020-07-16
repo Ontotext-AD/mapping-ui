@@ -1,15 +1,9 @@
 .mapping-dialog {
-  min-width: 960px;
-  min-height: 250px;
-
   form {
     min-height: 250px;
   }
 }
 
-.w-400 {
-  width: 400px !important;
-}
 
 .mat-button-toggle-group {
   border-radius: 0;
@@ -35,8 +29,12 @@ div.hide{
 }
 
 mat-button-toggle {
-  height: 36px;
+  height: 33px;
   align-items: center;
   flex-direction: row;
   display: flex;
+}
+
+.icon-info {
+  color: #ED4F2F;
 }
