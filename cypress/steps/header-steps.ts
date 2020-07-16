@@ -32,6 +32,14 @@ class HeaderSteps {
   static generateSparql() {
     return HeaderSteps.getGenerateSparqlButton().click();
   }
+
+  static getPreviewToggle() {
+    return this.getHeader().find('[appCypressData="toggle-preview"]');
+  }
+
+  static enablePreview() {
+    return HeaderSteps.getPreviewToggle().click();
+  }
 }
 
 export default HeaderSteps;
