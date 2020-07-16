@@ -59,7 +59,6 @@
 
 .triples-block {
   display: flex;
-  margin-bottom: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.125);
   background-color: #fff;
 }
@@ -193,41 +192,44 @@
   white-space: nowrap;
 }
 
+.triple-wrapper {
+  justify-content: flex-end !important;
+}
+
+.triple-actions .btn-link {
+  padding: 0.3em;
+}
 
 /* inline drilldown / triples subrow */
 .triples-blocks-subrow {
-  background-color: rgba(45, 186, 171, 0.3);
-  padding: 1.5rem;
-  margin-bottom: 1rem;
   position: relative;
 }
 .triples-blocks-subrow .triples-block:last-of-type {
- margin-bottom: 0;
+  margin-bottom: 0;
 }
 
-.triples-blocks-subrow::before {
+.first-in-group .triples-blocks-subrow::before {
   content: "";
-  border-width: 1rem;
+  border-width: 1em;
+  border-top-width: 0;
+  border-style: solid;
   border-left-color: transparent;
   border-right-color: transparent;
-  border-bottom-color: #CFE9E6;
+  border-bottom-color: rgba(45, 186, 171, 0.3);
   position: absolute;
-  top: -0.75rem;
-  right: 16.66666666666%;
+  top: -28px;
+  right: 98%;
   margin-right: -0.5rem;
   display: block;
-  content: "";
-  border-style: solid;
-  border-top-width: 0;
 }
 
-.triples-blocks-subrow.right-arrow::before {
+.first-in-group.triples-blocks-subrow.right-arrow::before {
   right: 16.66666666666%;
 }
-.triples-blocks-subrow.center-arrow::before {
+.first-in-group.triples-blocks-subrow.center-arrow::before {
   right: 50%;
 }
-.triples-blocks-subrow.center-arrow::before {
+.first-in-group.triples-blocks-subrow.center-arrow::before {
   right: auto;
   left: 16.66666666666%;
 }

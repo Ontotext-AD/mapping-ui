@@ -40,6 +40,7 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   @Input() isTypeProperty: boolean = false;
   @Input() isTypeObject: boolean = false;
   @Input() cellType: string;
+  @Input() nestLevel = 0;
   @Input() tabIndex: number;
   @Input() namespaces: { [key: string]: string };
   @Input() sources: Array<Source>;
@@ -96,7 +97,7 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
    *
    * @return source type
    */
-  getSourceType(): String {
+  getSourceType(): string {
     return this.getValueSource() && this.getValueSource().getSource();
   }
 

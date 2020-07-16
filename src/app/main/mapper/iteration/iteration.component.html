@@ -1,11 +1,12 @@
 <div appCypressData="mapping-wrapper">
-  <div *ngFor="let mapping of triples; let index = index" fxLayout="row" fxLayoutAlign="start stretch" appCypressData="triple-wrapper">
-    <div [fxFlex]="97" [ngClass]="{'triples-blocks-subrow': mapping.isIRI}">
-      <div class="triples-block">
+  <div *ngFor="let mapping of triples; let index = index" fxLayout="row" fxLayoutAlign="start stretch"
+       [ngClass]="['level-' + mapping.getLevel(), isFirstInGroup(mapping, index) ? 'first-in-group' : '', 'triple-wrapper']" appCypressData="triple-wrapper">
+    <div [fxFlex]="97" [ngClass]="['triples-block', (mapping.isIRI ? 'triples-blocks-subrow' : '')]">
         <app-mapper-cell [cellMapping]="mapping.getSubject()"
                          [isFirstChild]="isFirstSubject(mapping, index)"
                          [tabIndex]="index" [tabPosition]="1"
                          [cellType]="SUBJECT"
+                         [nestLevel]="mapping.getLevel()"
                          [namespaces]="getAllNamespaces()"
                          [sources]="sources"
                          (onDrop)="onDrop($event, mapping, SUBJECT, index)"
@@ -39,10 +40,9 @@
                          (onEditClick)="openMapperDialog($event, mapping, OBJECT, index)"
                          [attr.appCypressData]="'object-' + index"
                          [fxFlex]="33"></app-mapper-cell>
-      </div>
     </div>
 
-    <div [fxFlex]="3">
+    <div [fxFlex]="3" class="triple-actions">
       <div>
         <span class="btn btn-link text-muted delete-triple" *ngIf="isDeleteApplicable(index)">
 			    <span class="icon-trash" (click)="deleteTripleMapping(mapping)" matTooltip="{{'TOOLTIPS.DELETE_TRIPLE' | translate}}"></span>
@@ -60,7 +60,6 @@
 			    <span class="icon-arrow-right" (click)="continueMapping($event, mapping, index)" matTooltip="{{'TOOLTIPS.ADD_NESTED_TRIPLE' | translate}}"></span>
 			  </span>
       </div>
-      &nbsp;
     </div>
   </div>
 </div>
