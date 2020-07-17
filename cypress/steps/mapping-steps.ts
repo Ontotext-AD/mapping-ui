@@ -102,6 +102,10 @@ class MappingSteps {
     return MappingSteps.getTripleObject(index).find('.ti-preview');
   }
 
+  static deleteTripleObject(index: number) {
+    return MappingSteps.getTripleObject(index).find('[appCypressData="delete-node"]').click();
+  }
+
   // dialog and confirmation
   static getModalDialog() {
     return cy.get('.modal-dialog');
@@ -116,7 +120,8 @@ class MappingSteps {
   }
 
   static confirm() {
-    return MappingSteps.getConfirmation().find('.confirm-btn').should('be.visible').click();
+    MappingSteps.getConfirmation().find('.confirm-btn').should('be.visible').click();
+    MappingSteps.getConfirmation().should('not.be.visible');
   }
 
   static reject() {
