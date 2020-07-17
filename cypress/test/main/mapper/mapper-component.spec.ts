@@ -7,7 +7,7 @@ describe('MapperComponent', () => {
     // stub namespaces
     cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
     // stub model
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete-triple-with-iri-object/mapping-model.json');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
     // stub columns
     cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
     // stub socksjs
