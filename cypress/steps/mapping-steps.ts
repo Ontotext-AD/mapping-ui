@@ -31,6 +31,10 @@ class MappingSteps {
     return MappingSteps.getTriple(index).find('.delete-triple').click();
   }
 
+  static addNestedTriple(index: any) {
+    return MappingSteps.getTriple(index).find('[appCypressData=add-nested]').click();
+  }
+
   // triple subject
   static getTripleSubject(index: any) {
     return MappingSteps.getTriple(index).find('.triple-item').eq(0);
