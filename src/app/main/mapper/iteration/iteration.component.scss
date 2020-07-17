@@ -37,7 +37,6 @@ $nested-border-color: rgba(45, 186, 171, 0.3);
 // Put the borders around each triples-block
 @for $i from 1 through $nesting-levels {
   .level-#{$i} .triples-block {
-    border-bottom: 1em solid $nested-border-color;
     border-left: 1em solid $nested-border-color;
     border-right: 1em solid $nested-border-color;
   }
@@ -49,6 +48,10 @@ $nested-border-color: rgba(45, 186, 171, 0.3);
 
 .first-in-group .triples-block {
   border-top: 1em solid $nested-border-color !important;
+}
+
+.last-in-group .triples-block {
+  border-bottom: 1em solid $nested-border-color !important;
 }
 
 .level-0 {
