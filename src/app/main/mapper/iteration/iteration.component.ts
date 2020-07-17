@@ -172,7 +172,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       this.setUsedSources(subject);
       const isRoot = true;
       if (subject.getTypeMappings().length > 0 || subject.getPropertyMappings().length > 0) {
-        this.setTypeMappings(subject, isRoot)
+        this.setTypeMappings(subject, isRoot, 0)
             .pipe(untilComponentDestroyed(this))
             .subscribe((root) => {
               this.setPropertyMappings(subject, root, 0);
@@ -187,12 +187,12 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     this.mappingDetails = {} as MappingDetails;
   }
 
-  private setTypeMappings(subject, isRoot, isIRI?) {
+  private setTypeMappings(subject, isRoot, nestingLevel, isIRI?) {
     const typeMappings = this.getTypeMappings(subject);
     if (typeMappings) {
       typeMappings.forEach((mapping) => {
         this.setUsedSources(mapping);
-        this.addTriple(new Triple(subject, undefined, mapping, true, isRoot, isIRI), 0);
+        this.addTriple(new Triple(subject, undefined, mapping, true, isRoot, isIRI), nestingLevel);
         isRoot = false;
       });
     }
@@ -200,7 +200,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   private setPropertyMappings(subject, isRoot, level, isIRI?) {
-    let nestingLevel = level;
+    const nestingLevel = level;
     const propertyMappings = this.getPropertyMappings(subject);
     if (propertyMappings) {
       propertyMappings.forEach((property) => {
@@ -211,9 +211,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
             this.addTriple(new Triple(subject, property, object, false, isRoot, isIRI), nestingLevel);
             isRoot = false;
             if (object.getValueType() && object.getValueType().getType() === Type.IRI) {
-              this.setTypeMappings(object, false, true);
-              nestingLevel++;
-              this.setPropertyMappings(object, false, nestingLevel, true);
+              this.setTypeMappings(object, false, nestingLevel + 1, true);
+              this.setPropertyMappings(object, false, nestingLevel + 1, true);
             }
           });
         } else {
