@@ -33,7 +33,7 @@
           </span>
         <span class="btn btn-link text-muted">
             <span cdkDrag [cdkDragData]="cellMapping">
-						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}"></span>
+						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}" appCypressData="button-edit-empty-cell"></span>
             </span>
           </span>
       </div>
@@ -189,7 +189,7 @@
       <div class="ti-actions">
           <span *ngIf="!isTypeProperty" class="btn btn-link text-muted">
             <span cdkDrag [cdkDragData]="cellMapping">
-						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}"></span>
+						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}" appCypressData="button-edit-cell"></span>
             </span>
           </span>
 

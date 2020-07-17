@@ -20,6 +20,7 @@ import {RepositoryService} from 'src/app/services/rest/repository.service';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {conditionalValidator} from 'src/app/validators/conditional.validator';
+import {environment} from 'src/environments/environment';
 
 export interface SubjectMapperData {
   mappingData: Triple,
@@ -40,6 +41,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
   OBJECT = OBJECT_SELECTOR;
+  environment = environment;
 
   mapperForm: FormGroup;
   mapperForm$: Observable<FormGroup>;
@@ -69,9 +71,12 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   grelPreviewExpression: Observable<Array<any>>;
   grelPreviewLanguageTransformation: Observable<Array<any>>;
   grelPreviewDataTypeTransformation: Observable<Array<any>>;
+  firstGrelPreviewDataTypeTransformation: any;
   title: string;
   hasChildren: boolean;
-
+  showDataTypeTransformation: boolean = false;
+  showLanguageTransformation: boolean = false;
+  showTransformation: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
@@ -86,6 +91,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setDialogStyle();
     this.mappingDetails = {...this.data.mappingDetails, ...{} as MappingDetails};
     this.init();
     this.mapperForm$ = of(this.createMapperForm(this.mappingDetails));
@@ -94,6 +100,11 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.subscribeToValueChanges();
 
     this.subscribeToCheckDirty();
+  }
+
+  private setDialogStyle() {
+    this.dialogRef.updatePosition({top: '50px'});
+    this.dialogRef.updateSize('60%');
   }
 
   private init(): void {
@@ -364,6 +375,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           if (value && !this.isDataTypePrefixTransformation) {
             this.grelPreviewDataTypeTransformation = this.previewGREL(value);
+            this.firstGrelPreviewDataTypeTransformation = this.grelPreviewDataTypeTransformation[0];
           }
         });
 
@@ -461,9 +473,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     return this.isTypeProperty && this.isObject();
   }
 
-  public getType(typ: string) {
-    return Helper.getEnumKeyByEnumValue(Type, typ) || Helper.getEnumKeyByEnumValue(Source, typ) ||
-      Helper.getEnumKeyByEnumValue(Language, typ) || Helper.getEnumKeyByEnumValue(TypeMapping, typ);
+  public getType(type: string) {
+    return this.translateService.instant('TYPE.' + type.toUpperCase());
   }
 
   public isTypes() {

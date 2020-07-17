@@ -9,6 +9,7 @@ export const environment = {
   repositoryApiUrl: 'http://localhost:7200/repositories',
   httpLoaderPrefix: './assets/i18n/',
   httpLoaderSuffix: '.json',
+  openRefineVariables: 'https://github.com/OpenRefine/OpenRefine/wiki/Variables',
 };
 
 /*

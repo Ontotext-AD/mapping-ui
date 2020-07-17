@@ -1,12 +1,40 @@
-.subject-dialog {
-  min-width: 640px;
-  min-height: 480px;
-
+.mapping-dialog {
   form {
-    height: 450px;
+    min-height: 250px;
   }
 }
 
-.w-400 {
-  width: 400px !important;
+
+.mat-button-toggle-group {
+  border-radius: 0;
+  border-color:#EBEBEB;
+
+}
+
+.mat-button-toggle {
+  background-color: #EBEBEB;
+  color: #04355E;
+  border-color:#EBEBEB;
+
+}
+
+.mat-button-toggle-checked {
+  background-color: #ED4F2F;
+  color: #fff;
+  border-color: #ED4F2F;
+}
+
+div.hide{
+  display: none;
+}
+
+mat-button-toggle {
+  height: 33px;
+  align-items: center;
+  flex-direction: row;
+  display: flex;
+}
+
+.icon-info {
+  color: #ED4F2F;
 }

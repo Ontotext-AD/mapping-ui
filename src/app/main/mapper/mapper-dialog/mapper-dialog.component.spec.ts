@@ -14,8 +14,12 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {Observable} from "rxjs";
 import {MatIconModule} from "@angular/material/icon";
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatInputModule} from "@angular/material/input";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatDividerModule} from "@angular/material/divider";
 
 
 
@@ -26,6 +30,10 @@ describe('MapperDialogComponent', () => {
     backdropClick: () => {
       return new Observable<any>()},
     keydownEvents: () => {
+      return new Observable<any>()},
+    updatePosition:  () => {
+      return new Observable<any>()},
+    updateSize:  () => {
       return new Observable<any>()}
   };
 
@@ -45,6 +53,11 @@ describe('MapperDialogComponent', () => {
         MatIconModule,
         MatSnackBarModule,
         MatTooltipModule,
+        MatButtonToggleModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        MatSlideToggleModule,
+        MatDividerModule,
       ],
       providers: [
         TranslateService,
