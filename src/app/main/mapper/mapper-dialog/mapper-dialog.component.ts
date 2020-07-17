@@ -103,7 +103,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   private setDialogStyle() {
-    this.dialogRef.updatePosition({top: '100px'});
+    this.dialogRef.updatePosition({top: '50px'});
     this.dialogRef.updateSize('60%');
   }
 

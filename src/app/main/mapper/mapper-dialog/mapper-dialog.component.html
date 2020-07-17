@@ -362,13 +362,15 @@
           </div>
         </div>
       </div>
+      <mat-divider class="mt-24"></mat-divider>
+      <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end none" class="mb-24">
+        <button class="btn-primary" [mat-dialog-close]="data" (click)="save()" [disabled]="isMappingInvalid()"
+                matTooltip="{{'TOOLTIPS.SAVE_AND_CLOSE' | translate}}" appCypressData="ok-mapping-button">
+          {{'BUTTONS.OK' | translate}}
+        </button>
+      </div>
     </form>
   </div>
-  <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center end">
-    <button class="btn-primary" [mat-dialog-close]="data" (click)="save()" [disabled]="isMappingInvalid()"
-            matTooltip="{{'TOOLTIPS.SAVE_AND_CLOSE' | translate}}" appCypressData="ok-mapping-button">
-      {{'BUTTONS.OK' | translate}}
-    </button>
-  </div>
+
 
 </div>
