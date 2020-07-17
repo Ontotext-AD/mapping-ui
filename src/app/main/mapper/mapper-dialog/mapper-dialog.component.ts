@@ -507,9 +507,9 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     // When configuring a predicate the type and source could be changed simultaneously.
     // In which case we consider the configuration as invalid if the form is invalid and
     // the type is not "a".
-    // When configuring the object the type is set and can't be changed. So we consider
-    // configuration as invalid only when the form is invalid.
-    if (this.isObject()) {
+    // When configuring an object or subject the type is set and can't be changed. So we
+    // consider configuration as invalid only when the form is invalid.
+    if (this.isObject() || this.isSubject()) {
       invalid = !isFormValid;
     } else {
       invalid = !isFormValid && !isTypeMapping;
