@@ -50,7 +50,7 @@
           a
         </div>
 
-        <div *ngIf="isFirstChild && !isTypeProperty; else emptyBlock" fxFill>
+        <div *ngIf="isFirstChild && !isTypeProperty && nestLevel === 0; else emptyBlock" fxFill>
           <div fxLayout="row" fxLayoutAlign="space-between end">
             <div fxFlex="auto">
               <div *ngIf="getTransformationType()">

@@ -91,6 +91,22 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     window.addEventListener('beforeunload', this.boundCheckDirty);
   }
 
+  getRowSize(triple: Triple) {
+    const level = triple.getLevel();
+    if (level === 0) {
+      return '97';
+    }
+    return '66';
+  }
+
+  getCellSize(triple: Triple) {
+    const level = triple.getLevel();
+    if (level === 0) {
+      return '33';
+    }
+    return '50';
+  }
+
   isFirstInGroup(triple: Triple, index: number) {
     const level = triple.getLevel();
     let isFirst = false;
@@ -98,6 +114,24 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       isFirst = this.triples[index - 1].getLevel() < level;
     }
     return isFirst;
+  }
+
+  isLastInGroup(triple: Triple, index: number) {
+    const level = triple.getLevel();
+    let isLast = false;
+    if (level === 0) {
+      isLast = false;
+    } else {
+      const rowsCount = this.triples.length;
+      if (index < rowsCount - 1) {
+        const nextTripleLevel = this.triples[index + 1].getLevel();
+        // if next triple is nested or is root level we consider current as last in the group
+        if (nextTripleLevel > level || nextTripleLevel === 0) {
+          isLast = true;
+        }
+      }
+    }
+    return isLast;
   }
 
   initWithPreview(isDirty?: boolean) {

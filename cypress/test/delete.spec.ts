@@ -15,7 +15,9 @@ describe('Delete', () => {
   });
 
   context('triple', () => {
-    it('Should be able to delete root level triple with IRI object and all its children', () => {
+    // TODO: Skipped because in a view where the nested triple's subject is not redered we can't perform a delete
+    // If the layout stays this way, we should delete the test. Otherwise enable it.
+    it.skip('Should be able to delete root level triple with IRI object and all its children', () => {
       // stub model
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
 
