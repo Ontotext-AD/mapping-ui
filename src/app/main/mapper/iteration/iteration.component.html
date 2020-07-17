@@ -63,7 +63,7 @@
       </div>
 
       <div>
-        <span class="btn btn-link text-muted add-nested" *ngIf="isNestApplicable(index)">
+        <span class="btn btn-link text-muted add-nested" *ngIf="isNestApplicable(index)" appCypressData="add-nested">
 			    <span class="icon-arrow-right" (click)="continueMapping($event, mapping, index)" matTooltip="{{'TOOLTIPS.ADD_NESTED_TRIPLE' | translate}}"></span>
 			  </span>
       </div>

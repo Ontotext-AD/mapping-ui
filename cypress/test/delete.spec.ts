@@ -72,6 +72,14 @@ describe('Delete', () => {
       MappingSteps.getTripleSubjectSource(0).should('contain', 'director_name');
       MappingSteps.getTripleObjectType(0).should('contain', 'IRI');
       MappingSteps.getTripleObjectSource(0).should('contain', 'movie_imdb_link');
+      // When I add new nested triple
+      MappingSteps.addNestedTriple(0);
+      MappingSteps.getTriples().should('have.length', 3);
+      // And I delete the new nested triple
+      MappingSteps.deleteTriple(1);
+      MappingSteps.confirm();
+      // Then I expect the triple to be deleted
+      MappingSteps.getTriples().should('have.length', 2);
     });
   });
 
