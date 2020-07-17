@@ -9,7 +9,7 @@ describe('Delete', () => {
     // stub namespaces
     cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
     // stub columns
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
     // stub socksjs
     cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
   });
@@ -109,6 +109,27 @@ describe('Delete', () => {
       MappingSteps.confirm();
       // Then I expect the whole triple to be deleted
       MappingSteps.getTriples().should('have.length', 1);
+    });
+  });
+
+  context('object', () => {
+    it('Should be able to delete object', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
+
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      // Given I have created a mapping column-constant-column
+      MappingSteps.getTriples().should('have.length', 1);
+      MappingSteps.completeTriple(0, '@duration', 'as', '@color');
+      MappingSteps.getTriples().should('have.length', 2);
+      // When I delete the object
+      MappingSteps.deleteTripleObject(0);
+      MappingSteps.confirm();
+      // Then I expect the object to be deleted
+      MappingSteps.getTriples().should('have.length', 2);
+      MappingSteps.getTripleObjectValue(0).should('be.empty');
+      MappingSteps.getTripleObjectType(0).should('have.length', 0);
     });
   });
 });
