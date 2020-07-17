@@ -64,6 +64,10 @@ class MappingSteps {
     return MappingSteps.getTripleSubject(index).find('[appCypressData="delete-node"]').click();
   }
 
+  static editTripleSubject(index: number) {
+    return MappingSteps.getTripleSubject(index).find('[appCypressData="button-edit-cell"]').click();
+  }
+
   // triple predicate
   static getTriplePredicate(index: any) {
     return MappingSteps.getTriple(index).find('.triple-item').eq(1);

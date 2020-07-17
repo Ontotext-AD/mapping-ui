@@ -1,6 +1,6 @@
 import MappingSteps from '../steps/mapping-steps';
-import {HeaderComponentSelectors} from '../utils/selectors/header-component.selectors';
 import HeaderSteps from '../steps/header-steps';
+import EditDialogSteps from '../steps/edit-dialog-steps';
 
 describe('Edit mapping', () => {
 
@@ -8,6 +8,30 @@ describe('Edit mapping', () => {
     cy.setCookie('com.ontotext.graphdb.repository4200', 'Movies');
     cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
     cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
+  });
+
+  it('Should validate subject edit form', () => {
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+    cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
+    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+    cy.visit('?dataProviderID=ontorefine:123');
+    cy.wait('@loadColumns');
+    // Given I have created a mapping column-type-constant
+    MappingSteps.getTriples().should('have.length', 1);
+    MappingSteps.completeTriple(0, '@duration', 'a', '123');
+    MappingSteps.getTriples().should('have.length', 2);
+    // When I edit the subject
+    MappingSteps.editTripleSubject(0);
+    // Then I expect the dialog to be opened
+    EditDialogSteps.getDialog().should('be.visible');
+    // And the OK button to be enabled
+    EditDialogSteps.getOkButton().should('be.visible').and('be.enabled');
+    // When I remove the column value
+    EditDialogSteps.getColumnField().should('have.value', 'duration');
+    EditDialogSteps.clearColumnValue();
+    // Then I expect the OK button to become disabled because the column value is a mandatory field
+    EditDialogSteps.getOkButton().should('be.visible').and('be.disabled');
   });
 
   // TODO: I add these tests here for now, but later we should distribute them in respective specs with the related operations
@@ -67,11 +91,11 @@ describe('Edit mapping', () => {
     it('Should show error notification when mapping save operation fails', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
       // cy.route('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', 'fixture:edit-mapping/save-mapping-success.json');
-
       // When I load application
       cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
       // Then I expect to see empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I expect the save button to be disabled
