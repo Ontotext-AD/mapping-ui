@@ -3,10 +3,34 @@
  */
 class MappingSteps {
 
-  static completeTriple(index: number, subject: string, predicate: string, object: string) {
-    MappingSteps.getTripleSubjectValue(index).type(subject).blur();
-    MappingSteps.getTriplePredicateValue(index).type(predicate).blur();
-    MappingSteps.getTripleObjectValue(index).type(object).blur();
+  static completeTriple(index: number, subject?: string, predicate?: string, object?: string) {
+    if (subject) {
+      MappingSteps.getTripleSubjectValue(index).type(subject).blur();
+    }
+    if (predicate) {
+      MappingSteps.getTriplePredicateValue(index).type(predicate).blur();
+    }
+    if (object) {
+      MappingSteps.getTripleObjectValue(index).type(object).blur();
+    }
+  }
+
+  static verifyTriple(index: number, subject: string, predicate: string, object: string) {
+    if (subject.length) {
+      MappingSteps.getTripleSubjectValuePreview(index).should('contain', subject);
+    } else {
+      MappingSteps.getTripleSubjectValuePreview(index).should('have.length', 0);
+    }
+    if (predicate.length) {
+      MappingSteps.getTriplePredicateValuePreview(index).should('contain', predicate);
+    } else {
+      MappingSteps.getTriplePredicateValuePreview(index).should('have.length', 0);
+    }
+    if (object.length) {
+      MappingSteps.getTripleObjectValuePreview(index).should('contain', object);
+    } else {
+      MappingSteps.getTripleObjectValuePreview(index).should('have.length', 0);
+    }
   }
 
   // mapping
@@ -37,7 +61,7 @@ class MappingSteps {
 
   // triple subject
   static getTripleSubject(index: any) {
-    return MappingSteps.getTriple(index).find('[appCypressData=triple-item]').eq(0);
+    return MappingSteps.getTriple(index).find(`[appCypressData=subject-${index}] .triple-item`);
   }
 
   static getTripleSubjectValue(index: any) {
@@ -70,24 +94,36 @@ class MappingSteps {
 
   // triple predicate
   static getTriplePredicate(index: any) {
-    return MappingSteps.getTriple(index).find('[appCypressData=triple-item]').eq(1);
+    return MappingSteps.getTriple(index).find(`[appCypressData=predicate-${index}] .triple-item`);
   }
 
   static getTriplePredicateValue(index: any) {
     return MappingSteps.getTriplePredicate(index).find('[appCypressData="cell-value"]');
   }
 
+  static getTriplePredicateValuePreview(index: any) {
+    return MappingSteps.getTriplePredicate(index).find('.ti-source');
+  }
+
   static getTriplePredicatePreview(index: number) {
     return MappingSteps.getTriplePredicate(index).find('.ti-preview');
   }
 
+  static deleteTriplePredicate(index: number) {
+    return MappingSteps.getTriplePredicate(index).find('[appCypressData="delete-node"]').click();
+  }
+
   // triple object
   static getTripleObject(index: any) {
-    return MappingSteps.getTriple(index).find('[appCypressData=triple-item]').eq(2);
+    return MappingSteps.getTriple(index).find(`[appCypressData=object-${index}] .triple-item`);
   }
 
   static getTripleObjectValue(index: any) {
     return MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]');
+  }
+
+  static getTripleObjectValuePreview(index: any) {
+    return MappingSteps.getTripleObject(index).find('.ti-source');
   }
 
   static getTripleObjectType(index: any) {
@@ -104,6 +140,11 @@ class MappingSteps {
 
   static deleteTripleObject(index: number) {
     return MappingSteps.getTripleObject(index).find('[appCypressData="delete-node"]').click();
+  }
+
+  // This is for the empty cell edit!!!
+  static editTripleObject(index: number) {
+    return MappingSteps.getTripleObject(index).find('[appCypressData="button-edit-empty-cell"]').click();
   }
 
   // dialog and confirmation

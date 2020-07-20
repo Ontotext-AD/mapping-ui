@@ -20,7 +20,7 @@
       </div>
 
       <div *ngIf="showOptions">
-        <div class="type-section" *ngIf="isTypes()" >
+        <div class="type-section" appCypressData="type-section" *ngIf="isTypes()" >
           <mat-divider></mat-divider>
           <div class="form-field-md mt-24" fxLayout="row" fxLayoutAlign="start start">
             <div fxFlex="20"><h4>{{'LABELS.TYPE' | translate}}</h4></div>
@@ -253,7 +253,7 @@
         </div>
 
         <mat-divider class="mt-24"></mat-divider>
-        <div class="source-section mt-24">
+        <div class="source-section mt-24" appCypressData="source-section">
           <div fxLayout="row" fxLayoutAlign="start none">
             <div fxFlex="20"><h4>{{'LABELS.SOURCE' | translate}}</h4></div>
             <div fxFlex="80">
