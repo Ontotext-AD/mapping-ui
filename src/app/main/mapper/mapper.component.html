@@ -1,7 +1,7 @@
 <div class="row mb-3">
   <div class="col-lg-12" cdkDropListGroup appCypressData="mapper">
     <div class="top-header">
-      <app-header [mapping]="mapping"></app-header>
+      <app-header></app-header>
       <app-sources [sources]="sources"></app-sources>
     </div>
 
@@ -30,7 +30,7 @@
         </mat-form-field>
       </div>
 
-      <app-iteration [mapping]="mapping" [sources]="sources"></app-iteration>
+      <app-iteration [rdfMapping]="mapping" [sources]="sources" (updateMapping)="updateMapping($event)"></app-iteration>
     </div>
   </div>
 </div>

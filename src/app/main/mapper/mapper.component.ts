@@ -5,11 +5,13 @@ import {Source} from 'src/app/models/source';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {DOWNLOAD_RDF_FILE, EMPTY_MAPPING} from 'src/app/utils/constants';
-import {plainToClass} from 'class-transformer';
+import {classToClass, plainToClass} from 'class-transformer';
 import {MatChipInputEvent} from '@angular/material/chips/chip-input';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {ChannelName} from 'src/app/services/channel-name.enum';
 import {MessageService} from 'src/app/services/message.service';
+import {JSONValueDialog} from 'src/app/main/mapper/json-value-dialog';
+import {MatDialog} from '@angular/material/dialog';
 
 
 @Component({
@@ -21,14 +23,14 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   sources: Array<Source>;
   mapping: MappingDefinitionImpl = plainToClass(MappingDefinitionImpl, EMPTY_MAPPING);
   rdf: string;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  addOnBlur = true;
 
   constructor(private modelManagementService: ModelManagementService,
               private mapperService: MapperService,
-              private messageService: MessageService) {
+              private messageService: MessageService,
+              private dialog: MatDialog) {
     super();
-  }
-
-  drop() {
   }
 
   ngOnInit(): void {
@@ -38,6 +40,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
             (data) => {
               this.sources = data;
             });
+
     this.modelManagementService.getStoredModelMapping()
         .pipe(untilComponentDestroyed(this))
         .subscribe((data) => {
@@ -71,6 +74,12 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .subscribe(() => {
           this.onSPARQL();
         });
+
+    this.messageService.read(ChannelName.ViewJSONMapping)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.openJSONDialog();
+        });
   }
 
   onGetRDF() {
@@ -92,9 +101,6 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         });
   }
 
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  addOnBlur = true;
-
   addNamespace(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
@@ -113,5 +119,19 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
 
   removeNamespace(key: string): void {
     delete this.mapping.namespaces[key];
+  }
+
+  public updateMapping(event: any) {
+    this.mapping = event;
+  }
+
+  openJSONDialog(): void {
+    this.dialog.open(JSONValueDialog, {
+      width: '900px',
+      height: '600px',
+      data: {
+        mapping: classToClass(this.mapping),
+      },
+    });
   }
 }

@@ -1,4 +1,11 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {
+  AfterViewInit,
+  Component, EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
 import {SimpleIRIValueMappingImpl} from 'src/app/models/simple-iri-value-mapping-impl';
@@ -25,10 +32,14 @@ import {MappingBase} from 'src/app/models/mapping-base';
 import {SourceService} from 'src/app/services/source.service';
 import {MessageService} from 'src/app/services/message.service';
 import {ChannelName} from 'src/app/services/channel-name.enum';
-import {Helper} from '../../../utils/helper';
-import {plainToClass} from 'class-transformer';
-import {MapperService} from '../../../services/rest/mapper.service';
+import {Helper} from 'src/app/utils/helper';
+import {classToClass, plainToClass} from 'class-transformer';
+import {MapperService} from 'src/app/services/rest/mapper.service';
+import {ViewMode} from 'src/app/services/view-mode.enum';
 
+export interface JSONDialogData {
+  mapping
+}
 
 @Component({
   selector: 'app-iteration',
@@ -36,9 +47,11 @@ import {MapperService} from '../../../services/rest/mapper.service';
   styleUrls: ['./iteration.component.scss'],
 })
 export class IterationComponent extends OnDestroyMixin implements OnInit, AfterViewInit, OnDestroy {
-  @Input() mapping: MappingDefinitionImpl;
+  @Input() rdfMapping: MappingDefinitionImpl;
   @Input() sources: Array<Source>;
+  @Output() updateMapping: EventEmitter<MappingDefinitionImpl> = new EventEmitter<MappingDefinitionImpl>();
 
+  mapping: MappingDefinitionImpl;
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
   OBJECT = OBJECT_SELECTOR;
@@ -49,7 +62,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   usedSources: Set<string>;
 
   private boundCheckDirty: any;
-  private isPreviewOn: boolean;
+  private isPreviewOn: boolean = true;
+  private viewMode: ViewMode = ViewMode.Preview;
 
   constructor(private modelManagementService: ModelManagementService,
               public dialog: MatDialog,
@@ -64,15 +78,14 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     super();
   }
 
-  ngOnChanges() {
-    this.initWithPreview();
-  }
-
   ngOnInit(): void {
-    this.messageService.read(ChannelName.PreviewToggle)
+    this.mapping = this.rdfMapping;
+
+    this.messageService.read(ChannelName.ViewMode)
         .pipe(untilComponentDestroyed(this))
         .subscribe((event) => {
-          this.isPreviewOn = event.getMessage();
+          this.viewMode = event.getMessage();
+          this.isPreviewOn = this.viewMode === ViewMode.Preview || this.viewMode === ViewMode.PreviewAndConfiguration;
           this.initWithPreview();
         });
 
@@ -85,6 +98,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         });
 
     this.isDirty.subscribe((isDirty) => this.messageService.publish(ChannelName.DirtyMapping, isDirty));
+    this.initWithPreview();
   }
 
   ngAfterViewInit() {
@@ -135,20 +149,21 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   initWithPreview(isDirty?: boolean) {
-    this.modelManagementService.removePreview(this.mapping);
     if (this.mapping.getSubjectMappings().length && this.isPreviewOn && this.isComplete(this.mapping)) {
-      this.mapperService.preview(this.mapping)
+      this.mapperService.preview(classToClass(this.mapping))
           .pipe(untilComponentDestroyed(this))
           .subscribe((data) => {
             this.mapping = plainToClass(MappingDefinitionImpl, data);
             this.init(isDirty);
           });
     } else {
+      this.modelManagementService.removePreview(this.mapping);
       this.init(isDirty);
     }
   }
 
   init(isDirty?: boolean) {
+    this.updateMapping.emit(this.mapping);
     if (isDirty) {
       this.isDirty.next(isDirty);
     }
@@ -307,12 +322,17 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
     dialogRef.afterClosed().subscribe((result) => {
       this.initMappingDetails();
-      if (result.selected === this.PREDICATE && result.mappingData.isTypeProperty) {
-        this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
-      } else {
-        this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
+      // if (result.selected === this.PREDICATE && result.mappingData.isTypeProperty) {
+      //   this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
+      // } else {
+      //   this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
+      //   this.initWithPreview(true);
+      // }
+      this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
+      if (result.selected === this.OBJECT) {
         this.initWithPreview(true);
       }
+
 
       const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
       this.tabService.selectCommand.emit({index: this.triples.length - 2, position});
@@ -486,7 +506,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     window.removeEventListener('beforeunload', this.boundCheckDirty);
   }
 
-  public onValueSet(valueSet, triple: Triple, selected: string, index: number) {
+  public onValueSet(valueSet, triple: any, selected: string, index: number) {
     const value = valueSet.value;
     const source = valueSet.source;
     const previousTriple = this.triples[index - 1];
@@ -514,6 +534,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         triple.setPredicate(previousTriple.getPredicate());
       }
     }
+
     let prefixTransformation;
     if (source === SourceEnum.Constant) {
       prefixTransformation = this.modelConstructService.getPrefixTransformation(value, this.getAllNamespaces());
@@ -547,7 +568,9 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       this.modelConstructService.setCellMapping(mapping, data, settings);
       this.modelConstructService.setMappingObjectInTriple(mapping, data, settings, triple);
       this.modelConstructService.setRootMappingInModel(triple, this.mapping);
-      this.initWithPreview(true);
+      if (!!triple.getSubject() && (!!triple.getPredicate() || triple.isTypeProperty) && !!triple.getObject()) {
+        this.initWithPreview(true);
+      }
     }
   }
 
@@ -563,5 +586,9 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     if (valueSource && valueSource.getSource() === SourceEnum.Column) {
       this.usedSources.add(valueSource.getColumnName());
     }
+  }
+
+  public getViewMode() {
+    return this.viewMode;
   }
 }

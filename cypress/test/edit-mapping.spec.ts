@@ -160,4 +160,26 @@ describe('Edit mapping', () => {
     });
 
   });
+
+  context('Update JSON mapping', () => {
+    it.only('Should update JSON mapping when manipulating the mapping', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+
+      // When I load application
+      cy.visit('?dataProviderID=ontorefine:123');
+      // Then I expect to see a mapping with 2 triples (+1 empty row)
+      MappingSteps.getTriples().should('have.length', 3);
+      // When I click View JSON button
+      HeaderSteps.viewJSON();
+      // Then I expect to view JSON popup window
+      MappingSteps.getViewJSONDialog().should('be.visible')
+
+    })
+
+
+  });
+
+
 });

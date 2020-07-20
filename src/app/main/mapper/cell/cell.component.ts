@@ -25,7 +25,8 @@ import {map} from 'rxjs/operators';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {FormControl} from '@angular/forms';
 import {Helper} from 'src/app/utils/helper';
-import {TypeMapping} from '../../../models/type-mapping';
+import {TypeMapping} from 'src/app/models/type-mapping';
+import {ViewMode} from 'src/app/services/view-mode.enum';
 
 @Component({
   selector: 'app-mapper-cell',
@@ -33,8 +34,6 @@ import {TypeMapping} from '../../../models/type-mapping';
   styleUrls: ['./cell.component.scss'],
 })
 export class CellComponent extends OnDestroyMixin implements OnInit {
-  autoInput = new FormControl();
-
   @Input() cellMapping: MappingBase;
   @Input() isFirstChild: boolean = true;
   @Input() isTypeProperty: boolean = false;
@@ -45,12 +44,15 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   @Input() namespaces: { [key: string]: string };
   @Input() sources: Array<Source>;
   @Input() tabPosition: number;
+  @Input() viewMode: ViewMode;
   @Output() onDrop = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<any>();
   @Output() onValueSet = new EventEmitter<any>();
   @Output() onEditClick = new EventEmitter<any>();
 
+  autoInput = new FormControl();
   suggestions: Observable<Observable<any>>;
+  selected: boolean = undefined;
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
@@ -65,7 +67,8 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
 
   GREL = GREL_CONSTANT;
   PREFIX = PREFIX_CONSTANT;
-  selected: boolean = undefined;
+
+  ViewMode = ViewMode;
 
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,

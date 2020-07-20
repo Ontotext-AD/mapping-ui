@@ -84,6 +84,19 @@
   background-color: rgba(237, 79, 47, 0.05);
 }
 
+.triple-item-preview {
+  flex-grow: 1;
+  flex-basis: 0;
+  padding: 0.5rem 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-right: 1px solid #eee;
+}
+.triple-item-preview:hover {
+  background-color: rgba(237, 79, 47, 0.05);
+}
+
 .ti-row {
   display: flex;
   align-items: center;
@@ -117,7 +130,7 @@
   border-top:1px solid #eee
 }
 .ti-preview {
-  font-size: 0.85em;
+  font-size: 1.5em;
   word-break: break-all;
   margin-right: 0.5rem;
 }

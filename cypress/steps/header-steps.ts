@@ -40,6 +40,15 @@ class HeaderSteps {
   static enablePreview() {
     return HeaderSteps.getPreviewToggle().click();
   }
+
+  static getViewJSONlButton() {
+    return this.getHeader().find('[appCypressData="view-json-action"]');
+  }
+
+  static viewJSON() {
+    return HeaderSteps.getViewJSONlButton().click();
+  }
+
 }
 
 export default HeaderSteps;

@@ -132,6 +132,10 @@ class MappingSteps {
   static getNotification() {
     return cy.get('.mat-simple-snackbar');
   }
+
+  static getViewJSONDialog() {
+    return cy.get('[appCypressData="view-json-modal"]')
+  }
 }
 
 export default MappingSteps;

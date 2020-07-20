@@ -1,5 +1,5 @@
 import {Column, SimpleIRIValueMapping, ValueTransformation} from 'src/app/models/mapping-definition';
-import {Expose, Type} from 'class-transformer';
+import {Expose, Transform, Type} from 'class-transformer';
 import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {MappingBase} from 'src/app/models/mapping-base';
@@ -9,7 +9,18 @@ import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
 export class SimpleIRIValueMappingImpl implements SimpleIRIValueMapping, MappingBase {
   @Expose() @Type(() => ValueTransformationImpl) transformation?: ValueTransformation;
   @Expose() @Type(() => ColumnImpl) valueSource: Column;
-  preview: string[];
+
+  // type transformations
+  // 0 - plainToClass - form JSON to classes
+  // 1 - classToPlain - from classes to JSON
+  // 2 - classToClass - deep copy of the classes
+  // Used to sanitize the preview array when requesting new one
+  @Transform((value, obj, type) => {
+    if (type === 2) {
+      return value = [];
+    }
+    return value;
+  }) preview: string[];
 
   constructor(transformation: ValueTransformation, valueSource: Column) {
     this.transformation = transformation;

@@ -1,11 +1,10 @@
 <div fxLayout="row" fxLayoutAlign="end end" appCypressData="header" class="header-component py-2">
-  <form class="preview-toggle mr-auto">
-    <mat-slide-toggle appCypressData="toggle-preview"
-      color="primary"
-      (change)="togglePreview($event)">
-      {{"BUTTONS.PREVIEW" | translate}}
-    </mat-slide-toggle>
-  </form>
+  <mat-button-toggle-group class="mr-auto" value="{{ViewMode.Preview}}" (change)="togglePreview($event)">
+    <mat-button-toggle value="{{ViewMode.Preview}}">{{"BUTTONS.PREVIEW" | translate}}</mat-button-toggle>
+    <mat-button-toggle value="{{ViewMode.Configuration}}">{{"BUTTONS.CONFIGURATION" | translate}}</mat-button-toggle>
+    <mat-button-toggle value="{{ViewMode.PreviewAndConfiguration}}">{{"BUTTONS.PREVIEW_AND_CONFIGURATION" | translate}}</mat-button-toggle>
+  </mat-button-toggle-group>
+
   <span class="mr-12 unsaved-changes-msg">
     {{isMappingDirty ? ('MESSAGES.MAPPING_IS_DIRTY' | translate) : ('MESSAGES.MAPPING_IS_SAVED' | translate)}}
   </span>
@@ -15,7 +14,7 @@
       <mat-spinner *ngIf="isSavingInProgress" [diameter]="20"></mat-spinner>
     </button>
   </span>
-  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="openDialog()"
+  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="openDialog()" appCypressData="view-json-action"
           matTooltip="{{'TOOLTIPS.OPEN_JSON' | translate}}">{{"BUTTONS.VIEW_JSON" | translate}}
   </button>
   <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getRDF()" appCypressData="generate-rdf-action"
