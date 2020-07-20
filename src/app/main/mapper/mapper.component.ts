@@ -12,6 +12,7 @@ import {ChannelName} from 'src/app/services/channel-name.enum';
 import {MessageService} from 'src/app/services/message.service';
 import {JSONValueDialog} from 'src/app/main/mapper/json-value-dialog';
 import {MatDialog} from '@angular/material/dialog';
+import {BehaviorSubject} from 'rxjs';
 
 
 @Component({
@@ -22,6 +23,7 @@ import {MatDialog} from '@angular/material/dialog';
 export class MapperComponent extends OnDestroyMixin implements OnInit {
   sources: Array<Source>;
   mapping: MappingDefinitionImpl = plainToClass(MappingDefinitionImpl, EMPTY_MAPPING);
+  rdfMapping: BehaviorSubject<MappingDefinitionImpl>;
   rdf: string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   addOnBlur = true;
@@ -34,6 +36,8 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   }
 
   ngOnInit(): void {
+    this.rdfMapping = new BehaviorSubject<MappingDefinitionImpl>(this.mapping);
+
     this.mapperService.getColumns()
         .pipe(untilComponentDestroyed(this))
         .subscribe(
@@ -44,7 +48,10 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     this.modelManagementService.getStoredModelMapping()
         .pipe(untilComponentDestroyed(this))
         .subscribe((data) => {
-          this.mapping = data;
+          if (data) {
+            this.mapping = data;
+            this.rdfMapping.next(this.mapping);
+          }
         });
 
     this.messageService.read(ChannelName.NewMapping)
@@ -133,5 +140,17 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         mapping: classToClass(this.mapping),
       },
     });
+  }
+
+  public getMapping() {
+    return this.rdfMapping;
+  }
+
+  public getBaseIRI(): string {
+    return this.mapping && this.mapping.getBaseIRI();
+  }
+
+  public getNamespaces(): { [p: string]: string } {
+    return this.mapping && this.mapping.getNamespaces();
   }
 }

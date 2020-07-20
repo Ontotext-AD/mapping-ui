@@ -6,5 +6,5 @@ export enum ChannelName {
   GetRDF = 'get_RDF',
   GetSPARQL = 'sparql',
   DirtyMapping = 'dirty_mapping',
-  ViewJSONMapping = 'viev_json_mapping'
+  ViewJSONMapping = 'view_json_mapping'
 }

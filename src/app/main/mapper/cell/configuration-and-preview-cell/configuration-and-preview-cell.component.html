@@ -1,46 +1,21 @@
 <div class="mr-12" fxFill>
-  <div fxLayout="row" fxLayoutAlign="space-between end" class="triple-item-empty" *ngIf="isEmpty(); else notEmptyBlock">
-    <span fxFlex="grow" class="ti-placeholder" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
-          (cdkDropListDropped)="drop($event)" (click)="onPreventClick($event)">
-
-      <form>
-        <mat-form-field fxFill>
-          <mat-label>{{getCellType()}}</mat-label>
-          <input matInput #mapping tabIndex="{{tabIndex}}"
-                 appCypressData="cell-value"
-                 tabPosition="{{tabPosition}}"
-                 autocomplete="{{suggestions}}"
-                 [formControl]="autoInput"
-                 [matAutocomplete]="autocInline"
-                 (keydown.tab)="saveInputValue(false)"
-                 (keydown.enter)="saveInputValue(true)"
-                 (blur)="saveInputValueOnBlur($event)">
-          <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="saveInputValue(true)">
-            <mat-option *ngFor="let option of suggestions | async | async" [value]="option.value">
-              {{option.label}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-      </form>
-
-    </span>
-    <div >
-      <div class="ti-actions">
-        <span class="btn btn-link text-muted">
-            <span cdkDrag [cdkDragData]="cellMapping">
-						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}"
-                    appCypressData="button-edit-empty-cell"></span>
-            </span>
-          </span>
-      </div>
-    </div>
-
-  </div>
+  <app-empty-block *ngIf="isEmpty(); else notEmptyBlock"
+                   [cellMapping]="cellMapping"
+                   [autocomplete]="suggestions"
+                   [tabIndex]="tabIndex"
+                   [tabPosition]="tabPosition"
+                   [cellType]="cellType"
+                   [isTypeObject]="isTypeObject"
+                   [namespaces]="namespaces"
+                   [sources]="sources"
+                   (onValueSet)="setValue($event)"
+                   (onEditClick)="onEdit()"
+                   (onDrop)="onDropEvent($event)"></app-empty-block>
 
 
   <ng-template #notEmptyBlock>
     <div [ngClass]="['triple-item', (nestLevel > 0 ? 'empty-cell' : '')]" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
-         (cdkDropListDropped)="drop($event)" fxFill>
+         (cdkDropListDropped)="drop($event)" fxFill appCypressData=triple-item>
       <div class="ti-row">
 
         <div class="type-property" *ngIf="isFirstChild && isTypeProperty">

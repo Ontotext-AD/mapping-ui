@@ -49,6 +49,14 @@ class HeaderSteps {
     return HeaderSteps.getViewJSONlButton().click();
   }
 
+  static getConfigurationButton() {
+    return cy.cypressData(HeaderComponentSelectors.BUTTON_CONFIGURATION);
+  }
+
+  static getBothViewButton() {
+    return cy.cypressData(HeaderComponentSelectors.BUTTON_BOTH);
+  }
+
 }
 
 export default HeaderSteps;

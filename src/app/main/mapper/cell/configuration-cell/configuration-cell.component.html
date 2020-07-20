@@ -1,46 +1,21 @@
 <div class="mr-12" fxFill>
-  <div fxLayout="row" fxLayoutAlign="space-between end" class="triple-item-empty" *ngIf="isEmpty(); else notEmptyBlock">
-    <span fxFlex="grow" class="ti-placeholder" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
-          (cdkDropListDropped)="drop($event)" (click)="onPreventClick($event)">
-
-      <form>
-        <mat-form-field fxFill>
-          <mat-label>{{getCellType()}}</mat-label>
-          <input matInput #mapping tabIndex="{{tabIndex}}"
-                 appCypressData="cell-value"
-                 tabPosition="{{tabPosition}}"
-                 autocomplete="{{suggestions}}"
-                 [formControl]="autoInput"
-                 [matAutocomplete]="autocInline"
-                 (keydown.tab)="saveInputValue(false)"
-                 (keydown.enter)="saveInputValue(true)"
-                 (blur)="saveInputValueOnBlur($event)">
-          <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="saveInputValue(true)">
-            <mat-option *ngFor="let option of suggestions | async | async" [value]="option.value">
-              {{option.label}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-      </form>
-
-    </span>
-    <div>
-      <div class="ti-actions">
-        <span class="btn btn-link text-muted">
-            <span cdkDrag [cdkDragData]="cellMapping">
-						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}"
-                    appCypressData="button-edit-empty-cell"></span>
-            </span>
-          </span>
-      </div>
-    </div>
-
-  </div>
+  <app-empty-block *ngIf="isEmpty(); else notEmptyBlock"
+                   [cellMapping]="cellMapping"
+                   [autocomplete]="suggestions"
+                   [tabIndex]="tabIndex"
+                   [tabPosition]="tabPosition"
+                   [cellType]="cellType"
+                   [isTypeObject]="isTypeObject"
+                   [namespaces]="namespaces"
+                   [sources]="sources"
+                   (onValueSet)="setValue($event)"
+                   (onEditClick)="onEdit()"
+                   (onDrop)="onDropEvent($event)"></app-empty-block>
 
 
   <ng-template #notEmptyBlock>
-    <div class="triple-item-preview">
-      <div fxFlex="grow" *ngIf="isFirstChild && !isTypeProperty; else emptyBlock">
+    <div class="triple-item-preview" appCypressData=triple-item>
+      <div fxFlex="grow" *ngIf="isFirstChild; else emptyBlock">
 
         <div class="type-property" *ngIf="isFirstChild && isTypeProperty">
           a
@@ -84,7 +59,7 @@
               </span>
             </div>
 
-            <div class="ti-type" [fxFlex]="20" fxLayout="column" fxLayoutAlign="space-between end" [ngClass]="{
+            <div class="ti-type" fxFlex="20" fxLayout="column" fxLayoutAlign="space-between end" [ngClass]="{
               'type-iri': getType() === IRI,
               'type-literal': getType() === LITERAL,
               'type-node': getType() === UNIQUE_BNODE || getType() === VALUE_BNODE
@@ -179,7 +154,7 @@
         </div>
       </div>
 
-      <div class="actions ml-12" fxFlex="10" *ngIf="isFirstChild">
+      <div class="actions ml-12" fxFlex="noshrink" *ngIf="isFirstChild">
         <div fxLayout="row" fxLayoutAlign="end stretch">
           <mat-divider [vertical]="true"></mat-divider>
           <span fxFlex *ngIf="!isTypeProperty" class="btn btn-link text-muted">

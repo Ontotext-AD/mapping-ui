@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
-  Component, EventEmitter,
+  Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
@@ -19,7 +20,7 @@ import {Source} from 'src/app/models/source';
 import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
 import {MappingDetails} from 'src/app/models/mapping-details';
 import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
-import {BehaviorSubject, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -47,7 +48,7 @@ export interface JSONDialogData {
   styleUrls: ['./iteration.component.scss'],
 })
 export class IterationComponent extends OnDestroyMixin implements OnInit, AfterViewInit, OnDestroy {
-  @Input() rdfMapping: MappingDefinitionImpl;
+  @Input() rdfMapping: Observable<MappingDefinitionImpl>;
   @Input() sources: Array<Source>;
   @Output() updateMapping: EventEmitter<MappingDefinitionImpl> = new EventEmitter<MappingDefinitionImpl>();
 
@@ -79,8 +80,6 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   ngOnInit(): void {
-    this.mapping = this.rdfMapping;
-
     this.messageService.read(ChannelName.ViewMode)
         .pipe(untilComponentDestroyed(this))
         .subscribe((event) => {
@@ -98,7 +97,11 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         });
 
     this.isDirty.subscribe((isDirty) => this.messageService.publish(ChannelName.DirtyMapping, isDirty));
-    this.initWithPreview();
+
+    this.rdfMapping.subscribe((mapping) => {
+      this.mapping = mapping;
+      this.init(false);
+    });
   }
 
   ngAfterViewInit() {
@@ -149,7 +152,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   initWithPreview(isDirty?: boolean) {
-    if (this.mapping.getSubjectMappings().length && this.isPreviewOn && this.isComplete(this.mapping)) {
+    if (this.mapping.getSubjectMappings() && this.mapping.getSubjectMappings().length && this.isPreviewOn && this.isComplete(this.mapping)) {
       this.mapperService.preview(classToClass(this.mapping))
           .pipe(untilComponentDestroyed(this))
           .subscribe((data) => {
@@ -157,7 +160,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
             this.init(isDirty);
           });
     } else {
-      this.modelManagementService.removePreview(this.mapping);
+      this.mapping.getSubjectMappings() && this.modelManagementService.removePreview(this.mapping);
       this.init(isDirty);
     }
   }
@@ -322,17 +325,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
     dialogRef.afterClosed().subscribe((result) => {
       this.initMappingDetails();
-      // if (result.selected === this.PREDICATE && result.mappingData.isTypeProperty) {
-      //   this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
-      // } else {
-      //   this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
-      //   this.initWithPreview(true);
-      // }
       this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
-      if (result.selected === this.OBJECT) {
-        this.initWithPreview(true);
-      }
-
+      this.initWithPreview(true);
 
       const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
       this.tabService.selectCommand.emit({index: this.triples.length - 2, position});
@@ -420,10 +414,14 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     } else if (selected === this.OBJECT) {
       this.deleteObjectPropertyMapping(mapping, false);
     } else if (selected === this.PREDICATE) {
-      const propertyMappings = mapping.getSubject().getPropertyMappings();
-      const index = propertyMappings.indexOf(mapping.getPredicate());
-      if (index > -1) {
-        propertyMappings.splice(index, 1);
+      if (mapping.isTypeProperty) {
+        mapping.getSubject().setTypeMappings([]);
+      } else {
+        const propertyMappings = mapping.getSubject().getPropertyMappings();
+        const index = propertyMappings.indexOf(mapping.getPredicate());
+        if (index > -1) {
+          propertyMappings.splice(index, 1);
+        }
       }
     } else if (selected === this.SUBJECT) {
       const subject = mapping.getSubject();

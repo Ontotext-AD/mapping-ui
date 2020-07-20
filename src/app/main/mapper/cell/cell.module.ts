@@ -16,6 +16,7 @@ import {ConfigurationCellComponent} from './configuration-cell/configuration-cel
 import {ConfigurationAndPreviewCellComponent} from './configuration-and-preview-cell/configuration-and-preview-cell.component';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {MatDividerModule} from '@angular/material/divider';
+import {EmptyBlockComponent} from './empty-block/empty-block.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import {MatDividerModule} from '@angular/material/divider';
     PreviewCellComponent,
     ConfigurationCellComponent,
     ConfigurationAndPreviewCellComponent,
+    EmptyBlockComponent,
   ],
   exports: [
     CellComponent,

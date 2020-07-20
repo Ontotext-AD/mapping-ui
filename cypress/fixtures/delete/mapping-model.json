@@ -311,7 +311,10 @@
                   "valueSource": {
                     "source": "constant",
                     "constant": "test"
-                  }
+                  },
+                  "preview": [
+                    "<test>"
+                  ]
                 },
                 "values": [
                   {
@@ -326,11 +329,17 @@
                           "valueSource": {
                             "source": "constant",
                             "constant": "movie"
-                          }
+                          },
+                          "preview": [
+                            "<movie>"
+                          ]
                         }
                       ],
                       "propertyMappings": []
-                    }
+                    },
+                    "preview": [
+                      "<http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0499549%2F%3Fref_%3Dfn_tt_tt_1>"
+                    ]
                   }
                 ]
               }
