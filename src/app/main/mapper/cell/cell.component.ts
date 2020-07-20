@@ -23,6 +23,7 @@ import {Observable} from 'rxjs';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {Helper} from 'src/app/utils/helper';
 import {ViewMode} from 'src/app/services/view-mode.enum';
+import {Triple} from '../../../models/triple';
 
 @Component({
   selector: 'app-mapper-cell',
@@ -30,6 +31,7 @@ import {ViewMode} from 'src/app/services/view-mode.enum';
   styleUrls: ['./cell.component.scss'],
 })
 export class CellComponent extends OnDestroyMixin implements OnInit {
+  @Input() triple: Triple;
   @Input() cellMapping: MappingBase;
   @Input() isFirstChild: boolean = true;
   @Input() isTypeProperty: boolean = false;
@@ -155,10 +157,33 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
     };
   }
 
+  private getOnDeleteWarningMessage(): string {
+    let hasChildren = false;
+    let messageKey = 'MESSAGES.CONFIRM_MAPPING_DELETION';
+    if (this.cellType === this.SUBJECT) {
+      const hasPredicate = this.cellMapping.getPropertyMappings() && this.cellMapping.getPropertyMappings().length;
+      const hasObject = this.cellMapping.getTypeMappings() && this.cellMapping.getTypeMappings().length;
+      hasChildren = !!(hasPredicate || hasObject || this.triple.isTypeProperty);
+    } else if (this.cellType === this.PREDICATE) {
+      const object = this.triple.getObject();
+      hasChildren = !!(object && (object.getValueSource() || object.getValueType()));
+    } else if (this.cellType === this.OBJECT) {
+      const object = this.triple.getObject();
+      hasChildren = !!(object && (object.getTypeMappings().length || object.getPropertyMappings().length));
+    } else {
+      throw Error('No such type!');
+    }
+    if (hasChildren) {
+      messageKey = 'MESSAGES.CONFIRM_MAPPING_WITH_CHILDREN_DELETION';
+    }
+    return messageKey;
+  }
+
   public deleteMapping($event) {
     $event.stopPropagation();
+    const messageKey = this.getOnDeleteWarningMessage();
     this.dialogService.confirm({
-      content: this.translateService.instant('MESSAGES.CONFIRM_MAPPING_DELETION'),
+      content: this.translateService.instant(messageKey),
     }).pipe(untilComponentDestroyed(this))
         .subscribe((result) => {
           if (result) {

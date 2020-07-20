@@ -14,7 +14,8 @@ class EditDialogSteps {
   }
 
   static saveConfiguration() {
-    return this.getOkButton().click();
+    this.getOkButton().click();
+    this.getDialog().should('not.be.visible');
   }
 
   // fields
@@ -28,6 +29,30 @@ class EditDialogSteps {
       parseSpecialCharSequences: true
     });
   }
+
+  // type section
+  static getTypeSection() {
+    return EditDialogSteps.getDialog().find('[appCypressData=type-section]');
+  }
+
+  static selectIri() {
+    return this.getTypeSection().find('[appCypressData=type-iri]').should('be.visible').click();
+  }
+
+  // source section
+  static getSourceSection() {
+    return EditDialogSteps.getDialog().find('[appCypressData=source-section]');
+  }
+
+  static selectConstant() {
+    return this.getSourceSection().find('[appCypressData=constant]').click();
+  }
+
+  static completeConstant(value: string) {
+    return this.getSourceSection().find('[appCypressData=constant-input]').should('be.visible').type(value).blur();
+  }
+
+  // transformation section
 }
 
 export default EditDialogSteps;

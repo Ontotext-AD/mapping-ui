@@ -1,5 +1,6 @@
 import MappingSteps from '../steps/mapping-steps';
 import HeaderSteps from '../steps/header-steps';
+import EditDialogSteps from '../steps/edit-dialog-steps';
 
 describe('Delete', () => {
 
@@ -14,8 +15,76 @@ describe('Delete', () => {
     cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
   });
 
+  context('parent', () => {
+    beforeEach(() => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+    });
+
+    it('Should be able to delete a subject with a predicate and have a warning', () => {
+      // Given I have opened an empty mapping
+      MappingSteps.getTriples().should('have.length', 1);
+      // And I have created a subject and a predicate
+      MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
+      MappingSteps.verifyTriple(0, 'subject', 'predicate', '');
+      // When I try to delete the subject
+      MappingSteps.deleteTripleSubject(0);
+      // Then I expect a warning
+      MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do You want to remove this mapping?');
+      MappingSteps.confirm();
+      MappingSteps.getTriples().should('have.length', 1);
+      MappingSteps.verifyTriple(0, '', '', '');
+    });
+
+    it('Should be able to delete a predicate with an object and have a warning', () => {
+      // Given I have opened an empty mapping
+      MappingSteps.getTriples().should('have.length', 1);
+      // And I have created a subject, predicate and an object
+      MappingSteps.completeTriple(0, 'subject', 'predicate', 'object');
+      MappingSteps.verifyTriple(0, 'subject', 'predicate', 'object');
+      // When I try to delete the predicate
+      MappingSteps.deleteTriplePredicate(0);
+      // Then I expect a warning
+      MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do You want to remove this mapping?');
+      MappingSteps.confirm();
+      MappingSteps.getTriples().should('have.length', 2);
+      MappingSteps.verifyTriple(0, 'subject', '', '');
+    });
+
+    it('Should be able to delete an object with nested triples and have a warning', () => {
+      // Given I have opened an empty mapping
+      MappingSteps.getTriples().should('have.length', 1);
+      // And I have created a triple
+      MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
+      MappingSteps.editTripleObject(0);
+      EditDialogSteps.getDialog().should('be.visible');
+      EditDialogSteps.selectIri();
+      EditDialogSteps.selectConstant();
+      EditDialogSteps.completeConstant('iri value');
+      EditDialogSteps.saveConfiguration();
+      MappingSteps.verifyTriple(0, 'subject', 'predicate', 'iri value');
+      // And a nested triple
+      MappingSteps.addNestedTriple(0);
+      MappingSteps.getTriplePredicateValue(1).type('nestedPredicate').blur();
+      MappingSteps.getTriples().should('have.length', 3);
+      MappingSteps.getTripleObjectValue(1).type('nestedObject').blur();
+      MappingSteps.getTriplePredicateValuePreview(1).should('contain', 'nestedPredicate');
+      MappingSteps.getTripleObjectValuePreview(1).should('contain', 'nestedObject');
+      // When I delete the object for the parent triple
+      MappingSteps.deleteTripleObject(0);
+      // Then I expect warning
+      MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do You want to remove this mapping?');
+      MappingSteps.confirm();
+      MappingSteps.getTriples().should('have.length', 2);
+      MappingSteps.verifyTriple(0, 'subject', 'predicate', '');
+    });
+  });
+
   context('triple', () => {
-    // TODO: Skipped because in a view where the nested triple's subject is not redered we can't perform a delete
+    // TODO: Skipped because in a view where the nested triple's subject is not rendered we can't perform a delete
     // If the layout stays this way, we should delete the test. Otherwise enable it.
     it.skip('Should be able to delete root level triple with IRI object and all its children', () => {
       // stub model
@@ -139,3 +208,4 @@ describe('Delete', () => {
     });
   });
 });
+
