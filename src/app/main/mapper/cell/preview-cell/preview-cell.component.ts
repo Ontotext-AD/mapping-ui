@@ -11,4 +11,5 @@ export class PreviewCellComponent extends CellComponent {
   @Input() onDelete = new EventEmitter<any>();
   @Input() onValueSet = new EventEmitter<any>();
   @Input() onEditClick = new EventEmitter<any>();
+  @Input() onAddNewSibling = new EventEmitter<any>();
 }

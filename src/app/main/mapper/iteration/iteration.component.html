@@ -7,7 +7,7 @@
         isLastInGroup(mapping, index) ? 'last-in-group' : ''
        ]"
        appCypressData="triple-wrapper">
-    <div [fxFlex]="getRowSize(mapping)" [ngClass]="['triples-block', (mapping.isIRI ? 'triples-blocks-subrow' : '')]">
+    <div [fxFlex]="getRowSize(mapping)" [ngClass]="['triples-block', (mapping.isIRI ? 'triples-blocks-subrow' : ''), getBlockEnd(mapping)]">
         <app-mapper-cell *ngIf="mapping.getLevel() === 0"
                          [triple]="mapping"
                          [cellMapping]="mapping.getSubject()"
@@ -18,16 +18,19 @@
                          [namespaces]="getAllNamespaces()"
                          [sources]="sources"
                          [viewMode]="getViewMode()"
+                         [shouldFocus]="mapping.newMappingRole === SUBJECT"
                          (onDrop)="onDrop($event, mapping, SUBJECT, index)"
                          (onDelete)="onDelete($event, mapping, SUBJECT)"
                          (onValueSet)="onValueSet($event, mapping, SUBJECT, index)"
                          (onEditClick)="openMapperDialog($event, mapping, SUBJECT, index)"
+                         (onAddNewSibling)="addNewSibling($event, mapping, SUBJECT, index)"
                          [attr.appCypressData]="'subject-' + index"
                          [fxFlex]="33"></app-mapper-cell>
         <app-mapper-cell [triple]="mapping"
                          [cellMapping]="mapping.getPredicate()"
                          [isTypeProperty]="mapping.isTypeProperty"
                          [isFirstChild]="isFirstPredicate(mapping, index)"
+                         [shouldFocus]="mapping.newMappingRole === PREDICATE"
                          [cellType]="PREDICATE"
                          [namespaces]="getAllNamespaces()"
                          [sources]="sources"
@@ -37,6 +40,7 @@
                          (onDelete)="onDelete($event, mapping, PREDICATE)"
                          (onValueSet)="onValueSet($event, mapping, PREDICATE, index)"
                          (onEditClick)="openMapperDialog($event, mapping, PREDICATE, index)"
+                         (onAddNewSibling)="addNewSibling($event, mapping, PREDICATE, index)"
                          [attr.appCypressData]="'predicate-' + index"
                          [fxFlex]="getCellSize(mapping)"></app-mapper-cell>
         <app-mapper-cell [triple]="mapping"
@@ -47,10 +51,12 @@
                          [namespaces]="getAllNamespaces()"
                          [sources]="sources"
                          [viewMode]="getViewMode()"
+                         [shouldFocus]="mapping.newMappingRole === OBJECT"
                          (onDrop)="onDrop($event, mapping, OBJECT, index)"
                          (onDelete)="onDelete($event, mapping, OBJECT)"
                          (onValueSet)="onValueSet($event, mapping, OBJECT, index)"
                          (onEditClick)="openMapperDialog($event, mapping, OBJECT, index)"
+                         (onAddNewSibling)="addNewSibling($event, mapping, OBJECT, index)"
                          [attr.appCypressData]="'object-' + index"
                          [fxFlex]="getCellSize(mapping)"></app-mapper-cell>
     </div>
@@ -59,12 +65,6 @@
       <div>
         <span class="btn btn-link text-muted delete-triple" *ngIf="isDeleteApplicable(index)">
 			    <span class="icon-trash" (click)="deleteTripleMapping(mapping)" matTooltip="{{'TOOLTIPS.DELETE_TRIPLE' | translate}}"></span>
-			  </span>
-      </div>
-
-      <div>
-        <span class="btn btn-link text-muted add-sibling" *ngIf="isInsertApplicable(index)">
-			    <span class="icon-plus" (click)="insertMapping($event, mapping, index)" matTooltip="{{'TOOLTIPS.ADD_TRIPLE' | translate}}"></span>
 			  </span>
       </div>
 

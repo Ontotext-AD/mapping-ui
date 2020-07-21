@@ -4,6 +4,7 @@
                    [autocomplete]="suggestions"
                    [tabIndex]="tabIndex"
                    [tabPosition]="tabPosition"
+                   [shouldFocus]="shouldFocus"
                    [cellType]="cellType"
                    [isTypeObject]="isTypeObject"
                    [namespaces]="namespaces"
@@ -165,6 +166,11 @@
           <span *ngIf="!isTypeProperty" class="btn btn-link text-muted">
 						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}" appCypressData="button-edit-cell"></span>
           </span>
+
+          <span class="btn btn-link text-muted add-sibling">
+			      <span class="icon-plus"  (click)="addSibling()" appcypressdata="add-sibling"
+                  matTooltip="{{'TOOLTIPS.ADD' | translate}} {{cellType}}"></span>
+			    </span>
 
           <span class="btn btn-link text-muted">
 					  <span class="icon-trash" (click)="deleteMapping($event)" appCypressData="delete-node"

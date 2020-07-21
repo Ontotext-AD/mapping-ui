@@ -1,4 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
@@ -18,9 +24,7 @@ import {Type} from 'src/app/models/mapping-definition';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {TabService} from 'src/app/services/tab.service';
-import {RepositoryService} from 'src/app/services/rest/repository.service';
 import {Observable} from 'rxjs';
-import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {Helper} from 'src/app/utils/helper';
 import {ViewMode} from 'src/app/services/view-mode.enum';
 import {Triple} from '../../../models/triple';
@@ -34,6 +38,7 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   @Input() triple: Triple;
   @Input() cellMapping: MappingBase;
   @Input() isFirstChild: boolean = true;
+  @Input() shouldFocus: boolean = false;
   @Input() isTypeProperty: boolean = false;
   @Input() isTypeObject: boolean = false;
   @Input() cellType: string;
@@ -47,6 +52,7 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   @Output() onDelete = new EventEmitter<any>();
   @Output() onValueSet = new EventEmitter<any>();
   @Output() onEditClick = new EventEmitter<any>();
+  @Output() onAddNewSibling = new EventEmitter<any>();
 
   suggestions: Observable<Observable<any>>;
   selected: boolean = undefined;
@@ -70,16 +76,13 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,
               private tabService: TabService,
-              private dialogService: DialogService,
-              private repositoryService: RepositoryService,
-              private modelConstructService: ModelConstructService) {
+              private dialogService: DialogService) {
     super();
   }
 
 
   ngOnInit(): void {
   }
-
 
   /**
    * Get the value source for the cell depending on the cellMapping type
@@ -263,6 +266,11 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
       return Helper.getReasonableLongWord(word, 7, 7);
     }
   }
+
+  addSibling() {
+    this.onAddNewSibling.emit();
+  }
+
 
   public setValue(event: any) {
     this.onValueSet.emit(event);

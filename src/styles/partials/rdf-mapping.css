@@ -64,13 +64,26 @@
 }
 
 .triples-block::after {
-  content: ";";
   font-size: 2.5rem;
   padding: 0 0.3rem;
   color: #ccc;
   align-self: center;
   margin-top: -0.4rem;
 }
+
+.triples-block-end-dot::after {
+  content: ".";
+}
+
+.triples-block-end-column::after {
+  content: ";";
+}
+
+.triples-block-end-comma::after {
+  content: ",";
+}
+
+
 .triple-item {
   flex-grow: 1;
   flex-basis: 0;

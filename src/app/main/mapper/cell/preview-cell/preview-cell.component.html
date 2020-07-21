@@ -4,6 +4,7 @@
                    [autocomplete]="suggestions"
                    [tabIndex]="tabIndex"
                    [tabPosition]="tabPosition"
+                   [shouldFocus]="shouldFocus"
                    [cellType]="cellType"
                    [isTypeObject]="isTypeObject"
                    [namespaces]="namespaces"
@@ -38,6 +39,11 @@
                       appCypressData="button-edit-cell"></span>
               </span>
           </div>
+
+          <span class="btn btn-link text-muted add-sibling">
+			      <span class="icon-plus"  (click)="addSibling()" appcypressdata="add-sibling"
+                  matTooltip="{{'TOOLTIPS.ADD' | translate}} {{cellType}}"></span>
+			    </span>
 
           <span fxFlex class="btn btn-link text-muted">
             <span class="icon-trash" (click)="deleteMapping($event)" appCypressData="delete-node"

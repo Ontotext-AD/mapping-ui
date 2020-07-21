@@ -9,10 +9,12 @@
   [namespaces]="namespaces"
   [sources]="sources"
   [tabPosition]="tabPosition"
+  [shouldFocus]="shouldFocus"
   [onDrop]="onDrop"
   [onDelete]="onDelete"
   [onValueSet]="onValueSet"
-  [onEditClick]="onEditClick">
+  [onEditClick]="onEditClick"
+  [onAddNewSibling]="onAddNewSibling">
 </app-configuration-and-preview-cell>
 
 <app-configuration-cell *ngIf="viewMode === ViewMode.Configuration"
@@ -26,10 +28,12 @@
   [namespaces]="namespaces"
   [sources]="sources"
   [tabPosition]="tabPosition"
+  [shouldFocus]="shouldFocus"
   [onDrop]="onDrop"
   [onDelete]="onDelete"
   [onValueSet]="onValueSet"
-  [onEditClick]="onEditClick">
+  [onEditClick]="onEditClick"
+  [onAddNewSibling]="onAddNewSibling">
 </app-configuration-cell>
 
 <app-preview-cell *ngIf="viewMode === ViewMode.Preview"
@@ -43,8 +47,10 @@
   [namespaces]="namespaces"
   [sources]="sources"
   [tabPosition]="tabPosition"
+  [shouldFocus]="shouldFocus"
   [onDrop]="onDrop"
   [onDelete]="onDelete"
   [onValueSet]="onValueSet"
-  [onEditClick]="onEditClick">
+  [onEditClick]="onEditClick"
+  [onAddNewSibling]="onAddNewSibling">
 </app-preview-cell>
