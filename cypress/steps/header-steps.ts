@@ -41,12 +41,20 @@ class HeaderSteps {
     return HeaderSteps.getPreviewToggle().click();
   }
 
-  static getViewJSONlButton() {
+  static getNewMappingButton() {
+    return this.getHeader().find('[appCypressData="new-mapping-action"]');
+  }
+
+  static newMapping() {
+    return HeaderSteps.getNewMappingButton().click();
+  }
+
+  static getViewJSONButton() {
     return this.getHeader().find('[appCypressData="view-json-action"]');
   }
 
   static viewJSON() {
-    return HeaderSteps.getViewJSONlButton().click();
+    return HeaderSteps.getViewJSONButton().click();
   }
 
   static getConfigurationButton() {
