@@ -23,7 +23,7 @@
   <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getSPARQL()" appCypressData="generate-sparql-action"
           matTooltip="{{'TOOLTIPS.CONVERT_TO_SPARQL' | translate}}">{{"BUTTONS.SPARQL" | translate}}
   </button>
-  <button *ngIf="isDevEnv()" class="btn btn-sm btn-primary cursor-pointer" (click)="newMapping()" appCypressData="new-mapping-action"
+  <button class="btn btn-sm btn-primary cursor-pointer" (click)="newMapping()" appCypressData="new-mapping-action"
           matTooltip="{{'TOOLTIPS.NEW_MAPPING' | translate}}">{{"BUTTONS.NEW" | translate}}
   </button>
 </div>
