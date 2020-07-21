@@ -1,0 +1,183 @@
+<div class="mr-12" fxFill>
+  <app-empty-block *ngIf="isEmpty(); else notEmptyBlock"
+                   [cellMapping]="cellMapping"
+                   [autocomplete]="suggestions"
+                   [tabIndex]="tabIndex"
+                   [tabPosition]="tabPosition"
+                   [cellType]="cellType"
+                   [isTypeObject]="isTypeObject"
+                   [namespaces]="namespaces"
+                   [sources]="sources"
+                   (onValueSet)="setValue($event)"
+                   (onEditClick)="onEdit()"
+                   (onDrop)="onDropEvent($event)"></app-empty-block>
+
+
+  <ng-template #notEmptyBlock>
+    <div [ngClass]="['triple-item', (nestLevel > 0 ? 'empty-cell' : '')]" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
+         (cdkDropListDropped)="drop($event)" fxFill appCypressData=triple-item>
+      <div class="ti-row">
+
+        <div class="type-property" *ngIf="isFirstChild && isTypeProperty">
+          a
+        </div>
+
+        <div *ngIf="isFirstChild && !isTypeProperty && nestLevel === 0; else emptyBlock" fxFill>
+          <div fxLayout="row" fxLayoutAlign="space-between end">
+            <div fxFlex="auto">
+              <div *ngIf="getTransformationType()">
+                <span class="ti-transform" [ngClass]="{
+                  'type-grel': getTransformationType() === GREL,
+                  'type-prefix': getTransformationType() === PREFIX
+                  }">
+                  {{getTransformationLabel()}}
+                </span>
+              </div>
+            </div>
+
+            <div class="ml-8" fxFlex="grow">
+             <span class="ti-source">
+                <span *ngIf="getSourceType() === 'column'" matTooltip="{{getValueSource().getColumnName()}}">
+                  <span class="ti-source-type type-col" title="column">
+                    {{'CONSTANTS.COLUMN' | translate}}
+                  </span>
+                  {{getReasonableLongWord(getValueSource().getColumnName())}}
+                </span>
+
+                <span *ngIf="getSourceType() === 'constant'" matTooltip="{{getValueSource().getConstant()}}">
+                  <span class="ti-source-type type-const" title="Const">
+                    {{'CONSTANTS.CONSTANT' | translate}}
+                  </span>
+                  {{getReasonableLongWord(getValueSource().getConstant())}}
+                </span>
+
+                <span *ngIf="getSourceType() === 'row_index' || getSourceType() === 'record_id'">
+                  <span class="ti-source-type index" title="Const">
+                   {{'CONSTANTS.INDEX' | translate}}
+                  </span>
+                  {{getValueSource().source}}
+                </span>
+              </span>
+            </div>
+
+            <div class="ti-type" [fxFlex]="20" fxLayout="column" fxLayoutAlign="space-between end" [ngClass]="{
+              'type-iri': getType() === IRI,
+              'type-literal': getType() === LITERAL,
+              'type-node': getType() === UNIQUE_BNODE || getType() === VALUE_BNODE
+              }">
+              <span *ngIf="getType()">{{getValueTypeLabel()}}</span>
+
+            </div>
+          </div>
+
+          <div class="mt-12">
+            <div fxFlex="auto">
+              <div *ngIf="getSecondaryTransformationType()">
+                <span class="ti-transform" [ngClass]="{
+                  'type-grel': getSecondaryTransformationType().getLanguage() === GREL,
+                  'type-prefix': getSecondaryTransformationType().getLanguage() === PREFIX
+                  }">
+                  {{getSecondaryTransformationLabel()}}
+                </span>
+              </div>
+            </div>
+
+            <div class="ml-8" fxFlex="grow">
+              <span class="ti-source">
+                <div *ngIf="getDatatypeSource()">
+                  <span *ngIf="getDatatypeSourceType() === 'column'"
+                        matTooltip="{{getDatatypeSource().getColumnName()}}">
+                    <span class="ti-source-type type-col" title="column">
+                      {{'CONSTANTS.COLUMN' | translate}}
+                    </span>
+                    {{getReasonableLongWord(getDatatypeSource().getColumnName())}}
+                  </span>
+
+                  <span *ngIf="getDatatypeSourceType() === 'constant'"
+                        matTooltip=" {{getDatatypeSource().getConstant()}}">
+                    <span class="ti-source-type type-const" title="Const">
+                      {{'CONSTANTS.CONSTANT' | translate}}
+                    </span>
+                    {{getReasonableLongWord(getDatatypeSource().getConstant())}}
+                  </span>
+
+                  <span *ngIf="getDatatypeSourceType() === 'row_index' || getDatatypeSourceType() === 'record_id'">
+                    <span class="ti-source-type index" title="Const">
+                      {{'CONSTANTS.INDEX' | translate}}
+                    </span>
+                    {{getDatatypeSource().source}}
+                  </span>
+                </div>
+
+                <div *ngIf="getValueTypeLanguageSource()">
+                  <span *ngIf="getValueTypeLanguageSourceType() === 'column'"
+                        matTooltip="{{getValueTypeLanguageSource().getColumnName()}}">
+                    <span class="ti-source-type type-col" title="column">
+                      {{'CONSTANTS.COLUMN' | translate}}
+                    </span>
+                    {{getReasonableLongWord(getValueTypeLanguageSource().getColumnName())}}
+                  </span>
+
+                  <span *ngIf="getValueTypeLanguageSourceType() === 'constant'"
+                        matTooltip="{{getValueTypeLanguageSource().getConstant()}}}">
+                    <span class="ti-source-type type-const" title="Const">
+                      {{'CONSTANTS.CONSTANT' | translate}}
+                    </span>
+                    {{getReasonableLongWord(getValueTypeLanguageSource().getConstant())}}
+                  </span>
+
+                  <span
+                    *ngIf="getValueTypeLanguageSourceType() === 'row_index' || getValueTypeLanguageSourceType() === 'record_id'">
+                    <span class="ti-source-type index" title="Const">
+                      {{'CONSTANTS.INDEX' | translate}}
+                    </span>
+                    {{getValueTypeLanguageSource().source}}
+                  </span>
+                </div>
+              </span>
+            </div>
+
+            <div dir="rtl">
+              <div [fxFlex]="20">
+                <div *ngIf="getSecondaryTransformationType()">
+                  <span class="ti-transform" [ngClass]="{
+                  'type-datatype': getType() === DATATYPE_LITERAL,
+                  'type-language-literal': getType() === LANGUAGE_LITERAL
+                  }">
+                    <span *ngIf="isSecondaryType()">
+                    {{getSecondaryTypeLabel()}}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ti-footer" *ngIf="isFirstChild && nestLevel === 0">
+        <div class="ti-preview">
+          <div *ngFor="let previewItem of getPreview();">
+            {{previewItem}}
+          </div>
+        </div>
+        <div class="ti-actions">
+          <span *ngIf="!isTypeProperty" class="btn btn-link text-muted">
+						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}" appCypressData="button-edit-cell"></span>
+          </span>
+
+          <span class="btn btn-link text-muted">
+					  <span class="icon-trash" (click)="deleteMapping($event)" appCypressData="delete-node"
+                  matTooltip="{{'TOOLTIPS.DELETE_VALUE' | translate}}"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #emptyBlock>
+  <div class="ti-row">
+    <!-- empty -->
+  </div>
+</ng-template>

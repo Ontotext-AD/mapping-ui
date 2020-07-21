@@ -1,0 +1,37 @@
+<div fxLayout="row" fxLayoutAlign="space-between center" class="triple-item-empty" appCypressData=triple-item>
+    <span fxFlex="grow" class="ti-placeholder" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
+          (cdkDropListDropped)="drop($event)" (click)="onPreventClick($event)">
+
+      <form>
+        <mat-form-field fxFill>
+          <mat-label>{{getCellType()}}</mat-label>
+          <input matInput #mapping tabIndex="{{tabIndex}}"
+                 appCypressData="cell-value"
+                 tabPosition="{{tabPosition}}"
+                 autocomplete="{{suggestions}}"
+                 [formControl]="autoInput"
+                 [matAutocomplete]="autocInline"
+                 (keydown.tab)="saveInputValue(false)"
+                 (keydown.enter)="saveInputValue(true)"
+                 (blur)="saveInputValueOnBlur($event)">
+          <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="saveInputValue(true)">
+            <mat-option *ngFor="let option of suggestions | async | async" [value]="option.value">
+              {{option.label}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+
+    </span>
+  <div >
+    <div class="ti-actions">
+        <span class="btn btn-link text-muted">
+            <span cdkDrag [cdkDragData]="cellMapping">
+						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}"
+                    appCypressData="button-edit-empty-cell"></span>
+            </span>
+          </span>
+    </div>
+  </div>
+
+</div>

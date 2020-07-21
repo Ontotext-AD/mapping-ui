@@ -10,22 +10,19 @@ import {
   GREL_CONSTANT,
   OBJECT_SELECTOR,
   PREDICATE_SELECTOR,
-  PREFIX_CONSTANT, SOURCE_SIGN,
+  PREFIX_CONSTANT,
   SUBJECT_SELECTOR,
-  MAT_OPTION,
 } from 'src/app/utils/constants';
 import {TranslateService} from '@ngx-translate/core';
-import {Source as SourceEnum, Type} from 'src/app/models/mapping-definition';
+import {Type} from 'src/app/models/mapping-definition';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {TabService} from 'src/app/services/tab.service';
 import {RepositoryService} from 'src/app/services/rest/repository.service';
-import {merge, Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
-import {FormControl} from '@angular/forms';
 import {Helper} from 'src/app/utils/helper';
-import {TypeMapping} from '../../../models/type-mapping';
+import {ViewMode} from 'src/app/services/view-mode.enum';
 
 @Component({
   selector: 'app-mapper-cell',
@@ -33,8 +30,6 @@ import {TypeMapping} from '../../../models/type-mapping';
   styleUrls: ['./cell.component.scss'],
 })
 export class CellComponent extends OnDestroyMixin implements OnInit {
-  autoInput = new FormControl();
-
   @Input() cellMapping: MappingBase;
   @Input() isFirstChild: boolean = true;
   @Input() isTypeProperty: boolean = false;
@@ -45,12 +40,14 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   @Input() namespaces: { [key: string]: string };
   @Input() sources: Array<Source>;
   @Input() tabPosition: number;
+  @Input() viewMode: ViewMode;
   @Output() onDrop = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<any>();
   @Output() onValueSet = new EventEmitter<any>();
   @Output() onEditClick = new EventEmitter<any>();
 
   suggestions: Observable<Observable<any>>;
+  selected: boolean = undefined;
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
@@ -65,7 +62,8 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
 
   GREL = GREL_CONSTANT;
   PREFIX = PREFIX_CONSTANT;
-  selected: boolean = undefined;
+
+  ViewMode = ViewMode;
 
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,
@@ -78,7 +76,6 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
 
 
   ngOnInit(): void {
-    this.subscribeToValueChanges();
   }
 
 
@@ -179,16 +176,6 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
     return false;
   }
 
-  getCellType(): string {
-    if (this.cellType === this.SUBJECT) {
-      return this.translateService.instant('CONSTANTS.SUBJECT');
-    } else if (this.cellType === this.PREDICATE) {
-      return this.translateService.instant('CONSTANTS.PREDICATE');
-    } else if (this.cellType === this.OBJECT) {
-      return this.translateService.instant('CONSTANTS.OBJECT');
-    }
-  }
-
   public getType(): string {
     return this.getValueType() && this.getValueType().getType();
   }
@@ -242,77 +229,8 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
     }
   }
 
-  public onPreventClick(event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
   public onEdit() {
     this.onEditClick.emit();
-  }
-
-  private getSource(value) {
-    if (value) {
-      if (value.startsWith(SOURCE_SIGN.Column)) {
-        return SourceEnum.Column;
-      }
-      if (value.startsWith(SOURCE_SIGN.RecordRowID) && value.substr(1) === SourceEnum.RowIndex || value.substr(1) === SourceEnum.RecordID) {
-        return value.substr(1);
-      }
-    }
-    return SourceEnum.Constant;
-  }
-
-  public saveInputValue(emitTab: boolean) {
-    let value = this.autoInput.value;
-    const source = this.getSource(value);
-    // Remove special chars from columns and indexes
-    if (source !== SourceEnum.Constant && value !== TypeMapping.a) {
-      value = value.substr(1);
-    }
-    this.saveValue(value, emitTab);
-  }
-
-  private saveValue(value, emitTab: boolean) {
-    if (value) {
-      if (emitTab) {
-        this.tabService.selectCommand.emit({index: this.tabIndex, position: this.tabPosition});
-      }
-      this.onValueSet.emit({value: value, source: this.getSource(this.autoInput.value)});
-    }
-  }
-
-  private subscribeToValueChanges() {
-    this.suggestions = merge(this.autoInput.valueChanges)
-        .pipe(untilComponentDestroyed(this),
-            map((value) => {
-              const valueStr = value as String;
-              if (valueStr.startsWith(SOURCE_SIGN.Column)) {
-                return of(this.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase().substr(1)))
-                    .map((source) => {
-                      return {label: source.title, value: SOURCE_SIGN.Column + source.title, source: SourceEnum.Column};
-                    }));
-              }
-              if (valueStr.startsWith(SOURCE_SIGN.RecordRowID)) {
-                return of([{
-                  label: SourceEnum.RowIndex,
-                  value: SOURCE_SIGN.RecordRowID + SourceEnum.RowIndex,
-                  source: SourceEnum.RowIndex,
-                }, {
-                  label: SourceEnum.RecordID,
-                  value: SOURCE_SIGN.RecordRowID + SourceEnum.RecordID,
-                  source: SourceEnum.RecordID,
-                }]);
-              }
-              let autoCompleteObservable = this.repositoryService.autocompleteIRIs(value as string);
-              if (this.cellType === this.PREDICATE) {
-                autoCompleteObservable = this.repositoryService.autocompletePredicates(value as string);
-              }
-              if (this.cellType === this.OBJECT && this.isTypeObject) {
-                autoCompleteObservable = this.repositoryService.autocompleteTypes(value as string);
-              }
-              return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, this.namespaces)));
-            }));
   }
 
   getReasonableLongWord(word: string) {
@@ -321,13 +239,11 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
     }
   }
 
-  public saveInputValueOnBlur($event: FocusEvent) {
-    // @ts-ignore
-    if ($event.relatedTarget && $event.relatedTarget.tagName === MAT_OPTION) {
-      $event.preventDefault();
-      $event.stopPropagation();
-    } else {
-      this.saveInputValue(true);
-    }
+  public setValue(event: any) {
+    this.onValueSet.emit(event);
+  }
+
+  public onDropEvent(event) {
+    this.onDrop.emit(event);
   }
 }

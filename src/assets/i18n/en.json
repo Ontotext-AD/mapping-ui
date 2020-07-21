@@ -7,7 +7,9 @@
     "NEW": "New mapping",
     "SAVE": "Save",
     "PREVIEW": "Preview",
-    "OK": "Ok"
+    "OK": "Ok",
+    "CONFIGURATION": "Configuration",
+    "PREVIEW_AND_CONFIGURATION": "Both"
   },
   "TOOLTIPS": {
     "SAVE_VALUE": "Save value",

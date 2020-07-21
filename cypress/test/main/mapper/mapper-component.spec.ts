@@ -1,4 +1,6 @@
 import {MapperComponentSelectors} from "../../../../cypress/utils/selectors/mapper-component.selectors";
+import HeaderSteps from "../../../../cypress/steps/header-steps";
+
 
 describe('MapperComponent', () => {
   beforeEach(() => {
@@ -80,6 +82,10 @@ describe('MapperComponent', () => {
     // GIVEN:
     // I visit home page
     cy.visit('?dataProviderID=ontorefine:123');
+
+    // TODO mock REST preview endpoint
+    // I switch to configuration view
+    HeaderSteps.getConfigurationButton().click();
 
     // WHEN:
     // I click on edit button of the empty triple's subject
@@ -222,5 +228,11 @@ describe('MapperComponent', () => {
     cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.be.visible');
     cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-2").should('be.visible');
     cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-2").contains('record_id');
+
+    // I see empty triple
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-3").should('be.visible');
+    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + "-3").should('be.visible');
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-3").should('be.visible');
+
   })
 });

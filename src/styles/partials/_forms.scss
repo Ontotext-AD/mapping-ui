@@ -1,0 +1,23 @@
+mat-button-toggle {
+  height: 33px;
+  align-items: center;
+  flex-direction: row;
+  display: flex;
+}
+
+.mat-button-toggle-group {
+  border-radius: 0 !important;
+  border-color:#EBEBEB !important;
+}
+
+.mat-button-toggle {
+  background-color: #EBEBEB !important;
+  color: #04355E !important;
+  border-color:#EBEBEB !important;
+}
+
+.mat-button-toggle-checked {
+  background-color: #ED4F2F !important;
+  color: #fff !important;
+  border-color: #ED4F2F !important;
+}

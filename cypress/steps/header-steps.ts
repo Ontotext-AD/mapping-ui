@@ -40,6 +40,23 @@ class HeaderSteps {
   static enablePreview() {
     return HeaderSteps.getPreviewToggle().click();
   }
+
+  static getViewJSONlButton() {
+    return this.getHeader().find('[appCypressData="view-json-action"]');
+  }
+
+  static viewJSON() {
+    return HeaderSteps.getViewJSONlButton().click();
+  }
+
+  static getConfigurationButton() {
+    return cy.cypressData(HeaderComponentSelectors.BUTTON_CONFIGURATION);
+  }
+
+  static getBothViewButton() {
+    return cy.cypressData(HeaderComponentSelectors.BUTTON_BOTH);
+  }
+
 }
 
 export default HeaderSteps;

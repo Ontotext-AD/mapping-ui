@@ -2,6 +2,7 @@ import MappingSteps from '../steps/mapping-steps';
 import HeaderSteps from '../steps/header-steps';
 import EditDialogSteps from '../steps/edit-dialog-steps';
 
+
 describe('Edit mapping', () => {
 
   beforeEach(() => {
@@ -17,6 +18,9 @@ describe('Edit mapping', () => {
     cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
     cy.visit('?dataProviderID=ontorefine:123');
     cy.wait('@loadColumns');
+    // TODO mock REST preview endpoint
+    // I switch to configuration view
+    HeaderSteps.getConfigurationButton().click();
     // Given I have created a mapping column-type-constant
     MappingSteps.getTriples().should('have.length', 1);
     MappingSteps.completeTriple(0, '@duration', 'a', '123');
@@ -96,6 +100,9 @@ describe('Edit mapping', () => {
       // When I load application
       cy.visit('?dataProviderID=ontorefine:123');
       cy.wait('@loadColumns');
+      // TODO mock REST preview endpoint
+      // I switch to configuration view
+      HeaderSteps.getConfigurationButton().click();
       // Then I expect to see empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I expect the save button to be disabled
@@ -159,5 +166,32 @@ describe('Edit mapping', () => {
         .and('contain', 'Tabular data provider not found: ontorefine:123 (HTTP status 404)');
     });
 
+  });
+
+  context('Update JSON mapping', () => {
+    it('Should update JSON mapping when manipulating the mapping', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+      cy.route({
+        method: 'POST',
+        url: '/rest/rdf-mapper/preview/ontorefine:123',
+        status: 200,
+        response: 'fixture:edit-mapping/simple-mapping-model.json',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      // When I load application
+      cy.visit('?dataProviderID=ontorefine:123');
+      // Then I expect to see a mapping with 2 triples (+1 empty row)
+      MappingSteps.getTriples().should('have.length', 3);
+      // When I click View JSON button
+      HeaderSteps.viewJSON();
+      // Then I expect to view JSON popup window
+      MappingSteps.getViewJSONDialog().should('be.visible')
+
+    });
   });
 });

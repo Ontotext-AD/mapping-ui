@@ -1,0 +1,22 @@
+.mapping-cell {
+  width: 30%;
+  border: solid 1px #ccc;
+  min-height: 120px;
+  display: inline-block;
+  background: floralwhite;
+  border-radius: 4px;
+  cursor: move;
+  overflow: hidden;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.btn-link, .btn-link a {
+  padding: 0.1em 0.1em;
+}
+
+.type-property {
+  font-size: 1.5em;
+}

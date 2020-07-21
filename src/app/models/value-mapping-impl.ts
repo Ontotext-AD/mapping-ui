@@ -1,5 +1,5 @@
 import {Column, IRI, ValueMapping, ValueTransformation} from 'src/app/models/mapping-definition';
-import {Expose, Type} from 'class-transformer';
+import {Expose, Transform, Type} from 'class-transformer';
 import {ValueTransformationImpl} from 'src/app/models/value-transformation-impl';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
@@ -11,6 +11,18 @@ export class ValueMappingImpl implements ValueMapping, MappingBase {
   @Expose() @Type(() => ValueTransformationImpl) transformation?: ValueTransformation;
   @Expose() @Type(() => ColumnImpl) valueSource: Column;
   @Expose() @Type(() => IRIImpl) valueType: IRI;
+
+  // type transformations
+  // 0 - plainToClass - form JSON to classes
+  // 1 - classToPlain - from classes to JSON
+  // 2 - classToClass - deep copy of the classes
+  // Used to sanitize the preview array when requesting new one
+  @Expose() @Transform((value, obj, type) => {
+    if (type === 2) {
+      return value = [];
+    }
+    return value;
+  })
   preview: string[];
 
   constructor(transformation: ValueTransformationImpl, valueSource: ColumnImpl, valueType: IRI) {

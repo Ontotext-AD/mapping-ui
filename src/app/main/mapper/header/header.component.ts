@@ -1,18 +1,13 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {Component, Input, OnInit} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {environment} from 'src/environments/environment';
-import {Convert} from 'src/app/models/mapping-definition';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {TranslateService} from '@ngx-translate/core';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {MessageService} from 'src/app/services/message.service';
 import {ChannelName} from 'src/app/services/channel-name.enum';
-
-export interface JSONDialogData {
-  mapping
-}
+import {ViewMode} from 'src/app/services/view-mode.enum';
 
 @Component({
   selector: 'app-header',
@@ -23,9 +18,9 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
   @Input() mapping: MappingDefinitionImpl;
   isMappingDirty: boolean;
   isSavingInProgress: boolean;
+  ViewMode = ViewMode;
 
-  constructor(public dialog: MatDialog,
-              private modelManagementService: ModelManagementService,
+  constructor(private modelManagementService: ModelManagementService,
               private dialogService: DialogService,
               private translateService: TranslateService,
               private messageService: MessageService) {
@@ -52,13 +47,7 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
   }
 
   openDialog(): void {
-    this.dialog.open(JSONValueDialog, {
-      width: '900px',
-      height: '600px',
-      data: {
-        mapping: this.mapping,
-      },
-    });
+    this.messageService.publish(ChannelName.ViewJSONMapping);
   }
 
   getRDF(): void {
@@ -70,7 +59,7 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
   }
 
   togglePreview($event): void {
-    this.messageService.publish(ChannelName.PreviewToggle, $event.checked);
+    this.messageService.publish(ChannelName.ViewMode, $event.value);
   }
 
   public isDevEnv() {
@@ -86,22 +75,5 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
             this.messageService.publish(ChannelName.NewMapping);
           }
         });
-  }
-}
-
-@Component({
-  selector: 'json-mapping-dialog',
-  templateUrl: 'json-mapping-dialog.html',
-})
-export class JSONValueDialog {
-  constructor(
-    public dialogRef: MatDialogRef<JSONValueDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: JSONDialogData,
-    private modelManagementService: ModelManagementService) {
-  }
-
-  public passTest() {
-    this.modelManagementService.removePreview(this.data.mapping);
-    return Convert.mappingDefinitionToJson(this.data.mapping);
   }
 }

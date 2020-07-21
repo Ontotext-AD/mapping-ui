@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {HeaderComponent, JSONValueDialog} from 'src/app/main/mapper/header/header.component';
+import {HeaderComponent} from 'src/app/main/mapper/header/header.component';
 import {SourceComponent} from 'src/app/main/mapper/sources/source.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -12,7 +12,6 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {MatChipsModule} from '@angular/material/chips';
 import {DirectivesModule} from 'src/app/directives/directives.module';
-import {CellComponent} from 'src/app/main/mapper/cell/cell.component';
 import {IterationComponent} from 'src/app/main/mapper/iteration/iteration.component';
 import {MapperDialogComponent} from './mapper-dialog/mapper-dialog.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -24,6 +23,9 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatDividerModule} from '@angular/material/divider';
+import {CellModule} from 'src/app/main/mapper/cell/cell.module';
+import {ModelManagementService} from 'src/app/services/model-management.service';
+import {JSONValueDialog} from 'src/app/main/mapper/json-value-dialog';
 
 
 @NgModule({
@@ -32,14 +34,12 @@ import {MatDividerModule} from '@angular/material/divider';
     HeaderComponent,
     SourceComponent,
     JSONValueDialog,
-    CellComponent,
     IterationComponent,
     MapperDialogComponent,
   ],
   exports: [
     MapperComponent,
     HeaderComponent,
-    CellComponent,
     IterationComponent,
     SourceComponent,
     JSONValueDialog,
@@ -47,6 +47,7 @@ import {MatDividerModule} from '@angular/material/divider';
   imports: [
     CommonModule,
     TranslateModule.forRoot(),
+    CellModule,
 
     FlexLayoutModule,
     MatFormFieldModule,
@@ -67,5 +68,6 @@ import {MatDividerModule} from '@angular/material/divider';
     MatButtonToggleModule,
     MatDividerModule,
   ],
+  providers: [ModelManagementService],
 })
 export class MapperModule { }

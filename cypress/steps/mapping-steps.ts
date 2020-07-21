@@ -37,7 +37,7 @@ class MappingSteps {
 
   // triple subject
   static getTripleSubject(index: any) {
-    return MappingSteps.getTriple(index).find('.triple-item').eq(0);
+    return MappingSteps.getTriple(index).find('[appCypressData=triple-item]').eq(0);
   }
 
   static getTripleSubjectValue(index: any) {
@@ -70,7 +70,7 @@ class MappingSteps {
 
   // triple predicate
   static getTriplePredicate(index: any) {
-    return MappingSteps.getTriple(index).find('.triple-item').eq(1);
+    return MappingSteps.getTriple(index).find('[appCypressData=triple-item]').eq(1);
   }
 
   static getTriplePredicateValue(index: any) {
@@ -83,7 +83,7 @@ class MappingSteps {
 
   // triple object
   static getTripleObject(index: any) {
-    return MappingSteps.getTriple(index).find('.triple-item').eq(2);
+    return MappingSteps.getTriple(index).find('[appCypressData=triple-item]').eq(2);
   }
 
   static getTripleObjectValue(index: any) {
@@ -131,6 +131,10 @@ class MappingSteps {
   // Notifications
   static getNotification() {
     return cy.get('.mat-simple-snackbar');
+  }
+
+  static getViewJSONDialog() {
+    return cy.get('[appCypressData="view-json-modal"]')
   }
 }
 

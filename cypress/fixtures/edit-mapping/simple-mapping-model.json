@@ -1,0 +1,60 @@
+{
+  "baseIRI": "http://example/base111/",
+  "namespaces": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  },
+  "subjectMappings": [
+    {
+      "propertyMappings": [
+        {
+          "property": {
+            "valueSource": {
+              "source": "constant",
+              "constant": "test"
+            },
+            "preview": [
+              "<test>"
+            ]
+          },
+          "values": [
+            {
+              "valueSource": {
+                "columnName": "movie_imdb_link",
+                "source": "column"
+              },
+              "valueType": {
+                "propertyMappings": [],
+                "type": "iri",
+                "typeMappings": [
+                  {
+                    "valueSource": {
+                      "source": "constant",
+                      "constant": "movie"
+                    },
+                    "preview": [
+                      "<movie>"
+                    ]
+                  }
+                ]
+              },
+              "preview": [
+                "<http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0499549%2F%3Fref_%3Dfn_tt_tt_1>"
+              ]
+            }
+          ]
+        }
+      ],
+      "subject": {
+        "valueSource": {
+          "columnName": "director_name",
+          "source": "column"
+        },
+        "preview": [
+          "<James%20Cameron>"
+        ]
+      },
+      "typeMappings": []
+    }
+  ]
+}
+

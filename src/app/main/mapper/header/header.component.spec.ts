@@ -10,6 +10,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -26,7 +27,8 @@ describe('HeaderComponent', () => {
         MatSnackBarModule,
         MatProgressSpinnerModule,
         MatTooltipModule,
-        MatSlideToggleModule
+        MatSlideToggleModule,
+        MatButtonToggleModule
       ],
       providers: [{provide: APP_BASE_HREF, useValue : '/' }]
 
