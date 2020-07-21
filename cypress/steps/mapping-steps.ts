@@ -61,7 +61,7 @@ class MappingSteps {
 
   // triple subject
   static getTripleSubject(index: any) {
-    return MappingSteps.getTriple(index).find(`[appCypressData=subject-${index}] .triple-item`);
+    return MappingSteps.getTriple(index).find(`[appCypressData=subject-${index}]`);
   }
 
   static getTripleSubjectValue(index: any) {
@@ -94,7 +94,7 @@ class MappingSteps {
 
   // triple predicate
   static getTriplePredicate(index: any) {
-    return MappingSteps.getTriple(index).find(`[appCypressData=predicate-${index}] .triple-item`);
+    return MappingSteps.getTriple(index).find(`[appCypressData=predicate-${index}]`);
   }
 
   static getTriplePredicateValue(index: any) {
@@ -115,7 +115,7 @@ class MappingSteps {
 
   // triple object
   static getTripleObject(index: any) {
-    return MappingSteps.getTriple(index).find(`[appCypressData=object-${index}] .triple-item`);
+    return MappingSteps.getTriple(index).find(`[appCypressData=object-${index}]`);
   }
 
   static getTripleObjectValue(index: any) {
