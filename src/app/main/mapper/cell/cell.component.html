@@ -1,4 +1,5 @@
 <app-configuration-and-preview-cell *ngIf="viewMode === ViewMode.PreviewAndConfiguration"
+  [triple]="triple"
   [cellMapping]="cellMapping"
   [isFirstChild]="isFirstChild"
   [isTypeProperty]="isTypeProperty"
@@ -15,6 +16,7 @@
 </app-configuration-and-preview-cell>
 
 <app-configuration-cell *ngIf="viewMode === ViewMode.Configuration"
+  [triple]="triple"
   [cellMapping]="cellMapping"
   [isFirstChild]="isFirstChild"
   [isTypeProperty]="isTypeProperty"
@@ -31,6 +33,7 @@
 </app-configuration-cell>
 
 <app-preview-cell *ngIf="viewMode === ViewMode.Preview"
+  [triple]="triple"
   [cellMapping]="cellMapping"
   [isFirstChild]="isFirstChild"
   [isTypeProperty]="isTypeProperty"
