@@ -18,6 +18,10 @@ class EditDialogSteps {
     this.getDialog().should('not.be.visible');
   }
 
+  static getWarningMessage() {
+    return this.getDialog().find('[appCypressData=warning-message]');
+  }
+
   // fields
   static getColumnField() {
     return EditDialogSteps.getDialog().find(`[appCypressData=${MapperComponentSelectors.COLUMN_INPUT}]`);
@@ -37,6 +41,10 @@ class EditDialogSteps {
 
   static selectIri() {
     return this.getTypeSection().find('[appCypressData=type-iri]').should('be.visible').click();
+  }
+
+  static selectLiteral() {
+    return this.getTypeSection().find('[appCypressData=type-literal]').should('be.visible').click();
   }
 
   // source section

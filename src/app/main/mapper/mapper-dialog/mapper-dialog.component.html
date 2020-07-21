@@ -1,6 +1,6 @@
 <div class="mapping-dialog" appCypressData="mapping-dialog">
   <h1 mat-dialog-title cdkFocusInitial appCypressData="dialog-title">{{title}}</h1>
-  <div *ngIf="hasChildren" class="alert alert-warning small" role="alert">
+  <div *ngIf="hasChildren" class="alert alert-warning small" role="alert" appCypressData="warning-message">
     {{'MESSAGES.EDIT_SAVED_TRIPLE_REF' | translate}}
   </div>
   <div mat-dialog-content>

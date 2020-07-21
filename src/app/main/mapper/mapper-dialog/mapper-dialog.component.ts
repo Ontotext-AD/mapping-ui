@@ -23,12 +23,12 @@ import {conditionalValidator} from 'src/app/validators/conditional.validator';
 import {environment} from 'src/environments/environment';
 
 export interface SubjectMapperData {
-  mappingData: Triple,
-  selected: string,
-  mappingDetails: MappingDetails,
-  sources: any[],
-  namespaces: { [p: string]: string },
-  repoNamespaces: { [p: string]: string },
+  mappingData: Triple;
+  selected: string;
+  mappingDetails: MappingDetails;
+  sources: any[];
+  namespaces: { [p: string]: string };
+  repoNamespaces: { [p: string]: string };
   dropped;
 }
 
@@ -74,9 +74,9 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   firstGrelPreviewDataTypeTransformation: any;
   title: string;
   hasChildren: boolean;
-  showDataTypeTransformation: boolean = false;
-  showLanguageTransformation: boolean = false;
-  showTransformation: boolean = false;
+  showDataTypeTransformation = false;
+  showLanguageTransformation = false;
+  showTransformation = false;
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
@@ -227,6 +227,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     return this.mapperForm;
   }
 
+  // FIXME: Check if used and remove!
   isDatatype() {
     return this.mapperForm.get('dataTypeValueSource').value;
   }
@@ -238,13 +239,12 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.isColumn = !!this.mappingDetails.columnName;
     this.isConstant = !!this.mappingDetails.constant;
 
-    this.hasDatatype = !!this.mappingDetails.hasDatatype;
+    this.hasDatatype = this.mappingDetails.hasDatatype;
     this.isDatatypeConstant = !!this.mappingDetails.dataTypeConstant;
     this.isDatatypeColumn = !!this.mappingDetails.dataTypeColumnName;
     this.isDataTypePrefixTransformation = this.hasDatatype && !!this.mappingDetails.datatypeLanguage && this.mappingDetails.datatypeLanguage === Language.Prefix;
 
-
-    this.hasLanguage = !!this.mappingDetails.hasLanguage;
+    this.hasLanguage = this.mappingDetails.hasLanguage;
     this.isLanguageColumn = !!this.mappingDetails.languageColumnName;
     this.isLanguageConstant = !!this.mappingDetails.languageConstant;
     this.isLanguagePrefixTransformation = this.hasLanguage && !!this.mappingDetails.languageTransformationLanguage && this.mappingDetails.languageTransformationLanguage === Language.Prefix;
@@ -319,21 +319,21 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           this.isTransformation = value === Language.GREL || value === Language.Prefix;
           this.isPrefixTransformation = this.isTransformation && value === Language.Prefix;
-          this.mapperForm.patchValue({'expression': ''});
+          this.mapperForm.patchValue({expression: ''});
         });
 
     this.mapperForm.get('datatypeLanguage').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
           this.isDataTypePrefixTransformation = value === Language.Prefix;
-          this.mapperForm.patchValue({'datatypeTransformation': ''});
+          this.mapperForm.patchValue({datatypeTransformation: ''});
         });
 
     this.mapperForm.get('languageTransformationLanguage').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
           this.isLanguagePrefixTransformation = value === Language.Prefix;
-          this.mapperForm.patchValue({'languageTransformation': ''});
+          this.mapperForm.patchValue({languageTransformation: ''});
         });
 
     this.filteredConstants = merge(this.mapperForm.get('dataTypeConstant').valueChanges, this.mapperForm.get('constant').valueChanges)
@@ -399,7 +399,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   private filterNamespace(value: string): object[] {
-    return Object.entries({...this.data.namespaces, ...this.data.repoNamespaces}).map(([prefix, value]) => ({prefix, value}))
+    return Object.entries({...this.data.namespaces, ...this.data.repoNamespaces}).map(([prefix, pValue]) => ({prefix, pValue}))
         .filter((namespace) => namespace.prefix.toLowerCase().startsWith(value.toLowerCase()));
   }
 
