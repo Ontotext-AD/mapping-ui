@@ -17,6 +17,7 @@
     "COPY_VALUE": "Copy value",
     "DELETE_VALUE": "Delete value",
     "ADD_TRIPLE": "Add triple",
+    "ADD": "Add",
     "ADD_NESTED_TRIPLE": "Add nested triple",
     "DELETE_TRIPLE": "Delete triple",
     "SAVE_MAPPING": "Save mapping",

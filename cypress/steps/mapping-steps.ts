@@ -88,6 +88,10 @@ class MappingSteps {
     return MappingSteps.getTripleSubject(index).find('[appCypressData="delete-node"]').click();
   }
 
+  static addTripleSubjectSibling(index: number) {
+    MappingSteps.getTripleSubject(index).find('[appCypressData="add-sibling"]').click();
+  }
+
   static editTripleSubject(index: number) {
     return MappingSteps.getTripleSubject(index).find('[appCypressData="button-edit-cell"]').click();
   }
@@ -107,6 +111,11 @@ class MappingSteps {
 
   static getTriplePredicatePreview(index: number) {
     return MappingSteps.getTriplePredicate(index).find('.ti-preview');
+  }
+
+
+  static addTriplePredicateSibling(index: number) {
+    MappingSteps.getTriplePredicate(index).find('[appCypressData="add-sibling"]').click();
   }
 
   static deleteTriplePredicate(index: number) {
@@ -140,6 +149,10 @@ class MappingSteps {
 
   static deleteTripleObject(index: number) {
     return MappingSteps.getTripleObject(index).find('[appCypressData="delete-node"]').click();
+  }
+
+  static addTripleObjectSibling(index: number) {
+    MappingSteps.getTripleObject(index).find('[appCypressData="add-sibling"]').click();
   }
 
   // This is for the empty cell edit!!!

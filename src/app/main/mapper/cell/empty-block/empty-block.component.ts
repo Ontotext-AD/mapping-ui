@@ -1,4 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import {CdkDrag, CdkDragDrop, CdkDropList} from '@angular/cdk/drag-drop';
 import {Source} from 'src/app/models/source';
 import {MappingBase} from 'src/app/models/mapping-base';
@@ -21,10 +31,11 @@ import {TabService} from 'src/app/services/tab.service';
   templateUrl: './empty-block.component.html',
   styleUrls: ['./empty-block.component.scss'],
 })
-export class EmptyBlockComponent extends OnDestroyMixin implements OnInit {
+export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, AfterViewInit {
   @Output() onDrop = new EventEmitter<any>();
   @Output() onValueSet = new EventEmitter<any>();
   @Output() onEditClick = new EventEmitter<any>();
+  @Input() shouldFocus: boolean = false;
   @Input() cellMapping: MappingBase;
   @Input() isFirstChild: boolean = true;
   @Input() isTypeProperty: boolean = false;
@@ -35,6 +46,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit {
   @Input() isTypeObject: boolean = false;
   @Input() namespaces: { [key: string]: string };
 
+  @ViewChild('mapping') mappingInput: ElementRef;
 
   suggestions: Observable<Observable<any>>;
   autoInput = new FormControl();
@@ -47,12 +59,22 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit {
               private translateService: TranslateService,
               private repositoryService: RepositoryService,
               private modelConstructService: ModelConstructService,
-              private tabService: TabService) {
+              private tabService: TabService,
+              private cdRef: ChangeDetectorRef) {
     super();
   }
 
   public ngOnInit(): void {
     this.subscribeToValueChanges();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.shouldFocus) {
+      if (this.mappingInput && this.mappingInput.nativeElement) {
+        this.mappingInput.nativeElement.focus();
+      }
+    }
+    this.cdRef.detectChanges();
   }
 
   public drop($event: CdkDragDrop<Source, any>) {

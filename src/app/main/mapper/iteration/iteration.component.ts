@@ -14,7 +14,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MapperDialogComponent} from 'src/app/main/mapper/mapper-dialog/mapper-dialog.component';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {Triple} from 'src/app/models/triple';
-import {OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
+import {COLUMN, DOT, COMMA, OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
 import {Source as SourceEnum, Type} from 'src/app/models/mapping-definition';
 import {Source} from 'src/app/models/source';
 import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
@@ -283,6 +283,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     if (index === 0) {
       return true;
     }
+    // find previous triple of the same level
     return triple.getSubject() !== this.triples[index - 1].getSubject();
   }
 
@@ -291,7 +292,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       return true;
     }
     const previousTriple = this.triples[index - 1];
-    return triple.getPredicate() !== previousTriple.getPredicate() || triple.isTypeProperty;
+    return this.isFirstSubject(triple, index) || triple.getPredicate() !== previousTriple.getPredicate();
   }
 
   getPropertyMappings(subject): PropertyMappingImpl[] {
@@ -388,10 +389,6 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   public isInsertApplicable(index: number) {
     return index < this.triples.length - 2;
-  }
-
-  public insertMapping($event: MouseEvent, mapping: Triple, index: number) {
-    this.triples.splice(index + 1, 0, new Triple(undefined, undefined, undefined));
   }
 
   public onDrop(dropped, triple: Triple, selected, index) {
@@ -588,5 +585,73 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   public getViewMode() {
     return this.viewMode;
+  }
+
+  addNewSibling($event: any, mapping: Triple, triplePosition: string, index: number) {
+    if (triplePosition === this.SUBJECT) {
+      this.tabService.selectedInput.next({index: this.triples.length - 1, position: 1});
+      this.triples.splice(this.triples.length - 1, 0, new Triple(undefined, undefined, undefined, false, false, false, SUBJECT_SELECTOR));
+    } else if (triplePosition === this.PREDICATE) {
+      let newTripleIndex = index;
+      while (mapping.getSubject() === this.triples[newTripleIndex].getSubject() || mapping.getLevel() < this.triples[newTripleIndex].getLevel()) {
+        newTripleIndex++;
+      }
+      this.triples.splice(newTripleIndex, 0, new Triple(mapping.getSubject(), undefined, undefined, false, false, false, PREDICATE_SELECTOR));
+    } else {
+      let newTripleIndex = index;
+      while (mapping.getPredicate() === this.triples[newTripleIndex].getPredicate() || mapping.getLevel() < this.triples[newTripleIndex].getLevel()) {
+        newTripleIndex++;
+      }
+      this.triples.splice(newTripleIndex, 0, new Triple(mapping.getSubject(), mapping.getPredicate(), undefined, mapping.isTypeProperty, false, false, OBJECT_SELECTOR));
+    }
+  }
+
+  private getRowEnding(triple: Triple) {
+    const subject = triple.getSubject();
+    if (!subject) {
+      return '';
+    }
+    const typeMappings = subject.getTypeMappings();
+    const propertyMappings = subject.getPropertyMappings();
+    const object = triple.getObject();
+    // Has type mappings
+    if (triple.isTypeProperty && typeMappings && typeMappings.length > 0) {
+      const lastTypeMapping = typeMappings[typeMappings.length - 1];
+      if (object === lastTypeMapping) {
+        // This is the last type mapping, but there are other properties on the same subject ;
+        if (propertyMappings.length > 0) {
+          return COLUMN;
+        // This is the last type mapping, no other other properties on the same subject, ends the triple .
+        } else {
+          return DOT;
+        }
+      }
+      // Not the last type mapping ,
+      return COMMA;
+    } else if (propertyMappings && propertyMappings.length > 0) {
+      const predicate = triple.getPredicate();
+      if (!predicate || !predicate.getValues()) {
+        return '';
+      }
+      const predicateValues = predicate.getValues();
+      const lastPredicate = propertyMappings[propertyMappings.length - 1];
+      const lastObject = predicateValues[predicateValues.length - 1];
+      // If it is the last predicate of the subject and the last object if the predicate end with .
+      if (predicate === lastPredicate && object === lastObject) {
+        return DOT;
+      // If it is the last object, but there are other predicates ;
+      } else if (object === lastObject) {
+        return COLUMN;
+      // If is not the last object of the predicate
+      } else {
+        return COMMA;
+      }
+    }
+    return '';
+  }
+
+  getBlockEnd(triple: Triple) {
+    const end = this.getRowEnding(triple);
+    return end ? 'triples-block-end-' + end : '';
   }
 }

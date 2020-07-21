@@ -11,15 +11,17 @@ export class Triple {
   isRoot: boolean;
   isIRI: boolean;
   level?: number;
+  newMappingRole: string;
 
   constructor(subject?: SubjectMappingImpl | ValueMappingImpl, predicate?: PropertyMappingImpl,
-      object?: ValueMappingImpl | SimpleIRIValueMappingImpl, isTypeProperty?: boolean, isRoot?: boolean, isIRI?: boolean) {
+      object?: ValueMappingImpl | SimpleIRIValueMappingImpl, isTypeProperty?: boolean, isRoot?: boolean, isIRI?: boolean, newMappingRole?: string) {
     this.subject = subject;
     this.predicate = predicate;
     this.object = object;
     this.isTypeProperty = isTypeProperty || false;
     this.isRoot = isRoot;
     this.isIRI = isIRI;
+    this.newMappingRole = newMappingRole;
     this.level = 0;
   }
 
