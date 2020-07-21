@@ -154,6 +154,21 @@ describe('Delete', () => {
       // Then I expect the triple to be deleted
       MappingSteps.getTriples().should('have.length', 2);
     });
+
+    it('Should be able to delete all triples on New mapping button click', () => {
+      // stub model
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
+
+      // Given I have opened the mapping UI
+      cy.visit('?dataProviderID=ontorefine:123');
+      // And I see two triples + one empty template
+      MappingSteps.getTriples().should('have.length', 3);
+      // I click and confirm new mapping
+      HeaderSteps.getNewMappingButton().click();
+      MappingSteps.confirm();
+      // I see one empty template
+      MappingSteps.getTriples().should('have.length', 1);
+    });
   });
 
   context('subject', () => {
