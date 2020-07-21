@@ -6,7 +6,7 @@ describe('Delete', () => {
 
   beforeEach(() => {
     // stub labels
-    cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
+    cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json').as('loadLabels');
     // stub namespaces
     cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
     // stub columns
@@ -155,18 +155,18 @@ describe('Delete', () => {
       MappingSteps.getTriples().should('have.length', 2);
     });
 
-    it('Should be able to delete all triples on New mapping button click', () => {
-      // stub model
+    it.only('Should be able to delete all triples on New mapping button click', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
 
       // Given I have opened the mapping UI
       cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadLabels');
       // And I see two triples + one empty template
       MappingSteps.getTriples().should('have.length', 3);
       // I click and confirm new mapping
-      HeaderSteps.getNewMappingButton().click();
+      HeaderSteps.newMapping();
       MappingSteps.confirm();
-      // I see one empty template
+      // // I see one empty template
       MappingSteps.getTriples().should('have.length', 1);
     });
   });
