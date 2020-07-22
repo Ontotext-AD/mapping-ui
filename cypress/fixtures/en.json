@@ -9,7 +9,8 @@
     "PREVIEW": "Preview",
     "OK": "Ok",
     "CONFIGURATION": "Configuration",
-    "PREVIEW_AND_CONFIGURATION": "Both"
+    "PREVIEW_AND_CONFIGURATION": "Both",
+    "UPLOAD_JSON": "Upload JSON"
   },
   "TOOLTIPS": {
     "SAVE_VALUE": "Save value",
@@ -17,6 +18,7 @@
     "COPY_VALUE": "Copy value",
     "DELETE_VALUE": "Delete value",
     "ADD_TRIPLE": "Add triple",
+    "ADD": "Add",
     "ADD_NESTED_TRIPLE": "Add nested triple",
     "DELETE_TRIPLE": "Delete triple",
     "SAVE_MAPPING": "Save mapping",
@@ -28,7 +30,8 @@
     "SAVE_AND_CLOSE": "Save and close configuration",
     "GREL_VALUE_HELP": "Open value type documentation in separate window",
     "CLICK_FOR_MORE": "Click for more examples",
-    "CLICK_TO_HIDE": "Click to hide examples"
+    "CLICK_TO_HIDE": "Click to hide examples",
+    "UPLOAD_JSON": "Click to upload JSON mapping"
   },
   "LABELS": {
     "RDF_VALUE": "RDF value",
@@ -69,7 +72,9 @@
     "CONFIRM_NEW_MAPPING": "All mappings will be lost. Do you want to proceed?",
     "MAPPING_IS_DIRTY": "Mapping has unsaved changes",
     "MAPPING_IS_SAVED": "All mapping changes saved",
-    "EDIT_SAVED_TRIPLE_REF": "Changing the type of this cell will delete all children"
+    "EDIT_SAVED_TRIPLE_REF": "Changing the type of this cell will delete all children",
+    "CONFIRM_MAPPING_UPLOAD": "All mappings will be overwritten. Do you want to proceed?",
+    "MAPPING_UPLOAD_ERROR": "Something went wrong."
   },
   "DIALOG": {
     "TITLE_CONFIRM": "Confirm",

@@ -4,4 +4,5 @@ export class HeaderComponentSelectors {
   static readonly BUTTON_PREVIEW = 'view-preview-button';
   static readonly BUTTON_CONFIGURATION = 'view-configuration-button';
   static readonly BUTTON_BOTH = 'view-both-button';
+  static readonly JSON_INPUT = 'json-file-input';
 }

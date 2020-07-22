@@ -71,6 +71,7 @@
     "@typescript-eslint/parser": "^3.0.1",
     "codelyzer": "^5.1.2",
     "cypress": "^4.5.0",
+    "cypress-file-upload": "^4.0.7",
     "eslint": "^7.0.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-html": "^6.0.2",

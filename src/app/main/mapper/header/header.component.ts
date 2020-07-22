@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {environment} from 'src/environments/environment';
@@ -8,6 +8,10 @@ import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestro
 import {MessageService} from 'src/app/services/message.service';
 import {ChannelName} from 'src/app/services/channel-name.enum';
 import {ViewMode} from 'src/app/services/view-mode.enum';
+import {classToClass, plainToClass} from 'class-transformer';
+import {Convert} from 'src/app/models/mapping-definition';
+import {throwError} from 'rxjs';
+import {NotificationService} from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-header',
@@ -15,17 +19,21 @@ import {ViewMode} from 'src/app/services/view-mode.enum';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent extends OnDestroyMixin implements OnInit {
-  @Input() mapping: MappingDefinitionImpl;
+  @Output() onJsonUpload:EventEmitter<MappingDefinitionImpl> = new EventEmitter<MappingDefinitionImpl>();
+  @ViewChild('fileInput') fileInput;
+
   isMappingDirty: boolean;
   isSavingInProgress: boolean;
   isRdfGenerationInProgress: boolean;
   isSparqlGenerationInProgress: boolean;
   ViewMode = ViewMode;
+  selectedFile: File
 
   constructor(private modelManagementService: ModelManagementService,
               private dialogService: DialogService,
               private translateService: TranslateService,
-              private messageService: MessageService) {
+              private messageService: MessageService,
+              private notificationService: NotificationService) {
     super();
   }
 
@@ -54,6 +62,7 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
           this.isSparqlGenerationInProgress = false;
         });
   }
+
 
   saveMapping(): void {
     this.isSavingInProgress = true;
@@ -91,5 +100,47 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
             this.messageService.publish(ChannelName.NewMapping);
           }
         });
+  }
+
+  public onFileChanged(event) {
+    this.selectedFile = event.target.files[0];
+    this.fileInput.nativeElement.value = '';
+    const fileReader = new FileReader();
+    fileReader.readAsText(this.selectedFile, 'UTF-8');
+    fileReader.onload = () => {
+      if (typeof fileReader.result === 'string') {
+        try {
+          const result = JSON.parse(fileReader.result);
+          const mapping = plainToClass(MappingDefinitionImpl, result);
+          this.checkMappingValidity(mapping);
+
+          this.dialogService.confirm({
+            content: this.translateService.instant('MESSAGES.CONFIRM_MAPPING_UPLOAD'),
+          }).pipe(untilComponentDestroyed(this))
+              .subscribe((result) => {
+                if (result) {
+                  this.onJsonUpload.emit(mapping);
+                }
+              });
+        } catch (e) {
+          this.showErrorWarning(e.message);
+        }
+      } else {
+        this.showErrorWarning();
+      }
+    };
+    fileReader.onerror = (error) => {
+      throwError(error);
+    };
+  }
+
+  private checkMappingValidity(newMapping) {
+    const mapping = classToClass(newMapping);
+    this.modelManagementService.removePreview(mapping);
+    Convert.mappingDefinitionToJson(mapping);
+  }
+
+  private showErrorWarning(message?: any) {
+    this.notificationService.error(message || this.translateService.instant('MESSAGES.MAPPING_UPLOAD_ERROR'));
   }
 }

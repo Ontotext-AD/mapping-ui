@@ -17,6 +17,10 @@
   <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="openDialog()" appCypressData="view-json-action"
           matTooltip="{{'TOOLTIPS.OPEN_JSON' | translate}}">{{"BUTTONS.VIEW_JSON" | translate}}
   </button>
+  <input class="hidden" type="file" (change)="onFileChanged($event)" #fileInput  appCypressData="json-file-input">
+  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="fileInput.click()" appCypressData="upload-json-action"
+          matTooltip="{{'TOOLTIPS.UPLOAD_JSON' | translate}}">{{"BUTTONS.UPLOAD_JSON" | translate}}
+  </button>
   <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getRDF()" appCypressData="generate-rdf-action"
           matTooltip="{{'TOOLTIPS.CONVERT_TO_RDF' | translate}}">
     {{"BUTTONS.RDF" | translate}}

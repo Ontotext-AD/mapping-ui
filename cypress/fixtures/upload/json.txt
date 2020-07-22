@@ -1,0 +1,107 @@
+{
+  "baseIRI": "http://example/base/",
+  "namespaces": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  },
+  "subjectMappings": [
+    {
+      "propertyMappings": [
+        {
+          "property": {
+            "valueSource": {
+              "source": "constant",
+              "constant": "loves"
+            }
+          },
+          "values": [
+            {
+              "valueSource": {
+                "source": "constant",
+                "constant": "Maria"
+              },
+              "valueType": {
+                "propertyMappings": [
+                  {
+                    "property": {
+                      "valueSource": {
+                        "source": "constant",
+                        "constant": "works-in"
+                      }
+                    },
+                    "values": [
+                      {
+                        "valueSource": {
+                          "source": "constant",
+                          "constant": "Ontotext"
+                        },
+                        "valueType": {
+                          "type": "literal"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "property": {
+                      "valueSource": {
+                        "source": "constant",
+                        "constant": "eyes"
+                      }
+                    },
+                    "values": [
+                      {
+                        "valueSource": {
+                          "source": "constant",
+                          "constant": "blue"
+                        },
+                        "valueType": {
+                          "type": "literal"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "type": "iri",
+                "typeMappings": []
+              }
+            }
+          ]
+        },
+        {
+          "property": {
+            "valueSource": {
+              "source": "constant",
+              "constant": "works-in"
+            }
+          },
+          "values": [
+            {
+              "valueSource": {
+                "source": "constant",
+                "constant": "Ontotext"
+              },
+              "valueType": {
+                "type": "literal"
+              }
+            },
+            {
+              "valueSource": {
+                "source": "constant",
+                "constant": "Sirma"
+              },
+              "valueType": {
+                "type": "literal"
+              }
+            }
+          ]
+        }
+      ],
+      "subject": {
+        "valueSource": {
+          "source": "constant",
+          "constant": "Pesho"
+        }
+      },
+      "typeMappings": []
+    }
+  ]
+}

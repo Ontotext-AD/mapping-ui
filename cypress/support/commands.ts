@@ -1,3 +1,5 @@
+import 'cypress-file-upload';
+
 // Must be declared global to be detected by typescript (allows import/export)
 declare global {
   namespace Cypress {
@@ -10,7 +12,6 @@ declare global {
        */
       cypressData(cypressData: string): Chainable<Element>;
       cypressFind(cypressData: string): Chainable<Element>;
-
     }
   }
 }
