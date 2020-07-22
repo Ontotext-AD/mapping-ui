@@ -172,8 +172,7 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
       hasChildren = !!(object && (object.getValueSource() || object.getValueType()));
     } else if (this.cellType === this.OBJECT) {
       const object = this.triple.getObject();
-      hasChildren = !!(object && (object.getTypeMappings() && object.getTypeMappings().length ||
-        object.getPropertyMappings() && object.getPropertyMappings().length));
+      hasChildren = !!(object && (object.getTypeMappings().length || object.getPropertyMappings().length));
     } else {
       throw Error('No such type!');
     }
