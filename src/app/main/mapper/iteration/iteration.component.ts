@@ -501,10 +501,21 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     window.removeEventListener('beforeunload', this.boundCheckDirty);
   }
 
+  private getPreviousRootTriple(prevIndex: number) {
+    if (prevIndex < 0) {
+      return undefined;
+    }
+    let previousRootLevelTriple = this.triples[prevIndex];
+    while (previousRootLevelTriple.getLevel() > 0 && prevIndex > 0) {
+      prevIndex--;
+      previousRootLevelTriple = this.triples[prevIndex];
+    }
+    return previousRootLevelTriple;
+  }
+
   public onValueSet(valueSet, triple: any, selected: string, index: number) {
     const value = valueSet.value;
     const source = valueSet.source;
-    const previousTriple = this.triples[index - 1];
     if (selected === this.SUBJECT && index === this.triples.length - 1) {
       triple.setRoot(true);
     } else if (selected === this.PREDICATE && triple.getSubject()) {
@@ -512,6 +523,10 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         triple.setTypeProperty(true);
       }
     } else if (selected === this.PREDICATE && !triple.getSubject()) {
+      const previousTriple = this.getPreviousRootTriple(index - 1);
+      if (!previousTriple) {
+        return;
+      }
       triple.setSubject(previousTriple.getSubject());
       triple.setPredicate(triple.getPredicate());
       if (value === TypeMapping.a) {
@@ -522,6 +537,10 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         triple.setTypeProperty(true);
       }
     } else if (selected === this.OBJECT && !triple.getSubject() && this.triples.length > 0) {
+      const previousTriple = this.getPreviousRootTriple(index - 1);
+      if (!previousTriple) {
+        return;
+      }
       triple.setSubject(previousTriple.getSubject());
       if (!triple.getPredicate() && !previousTriple.getPredicate()) {
         triple.setTypeProperty(true);
