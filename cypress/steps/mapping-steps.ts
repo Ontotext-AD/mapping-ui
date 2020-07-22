@@ -84,6 +84,10 @@ class MappingSteps {
     return MappingSteps.getTripleSubject(index).find('.ti-preview');
   }
 
+  static getTripleSubjectContent(index: any) {
+    return MappingSteps.getTripleSubject(index).find('.ti-row');
+  }
+
   static deleteTripleSubject(index: number) {
     return MappingSteps.getTripleSubject(index).find('[appCypressData="delete-node"]').click();
   }
@@ -111,6 +115,10 @@ class MappingSteps {
 
   static getTriplePredicatePreview(index: number) {
     return MappingSteps.getTriplePredicate(index).find('.ti-preview');
+  }
+
+  static getTriplePredicateContent(index: any) {
+    return MappingSteps.getTriplePredicate(index).find('.ti-row');
   }
 
 
@@ -145,6 +153,10 @@ class MappingSteps {
 
   static getTripleObjectPreview(index: number) {
     return MappingSteps.getTripleObject(index).find('.ti-preview');
+  }
+
+  static getTripleObjectContent(index: any) {
+    return MappingSteps.getTripleObject(index).find('.ti-row');
   }
 
   static deleteTripleObject(index: number) {
