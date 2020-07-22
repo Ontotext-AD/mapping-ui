@@ -3,6 +3,10 @@
   vertical-align: middle;
 }
 
+.mat-progress-spinner ::ng-deep circle, .mat-spinner ::ng-deep circle {
+  stroke: #ffffff;
+}
+
 .header-component {
   align-items: center !important;
 }

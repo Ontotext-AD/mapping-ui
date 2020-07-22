@@ -119,29 +119,6 @@ describe('Edit mapping', () => {
         .and('contain', 'Tabular data provider not found: ontorefine:2216295245917sd (HTTP status 404)');
     });
 
-    it('Should show error notification when mapping save operation fails', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      // cy.route('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', 'fixture:edit-mapping/save-mapping-success.json');
-      // When I load application
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
-      // TODO mock REST preview endpoint
-      // I switch to configuration view
-      HeaderSteps.getConfigurationButton().click();
-      // Then I expect to see empty mapping
-      MappingSteps.getTriples().should('have.length', 1);
-      // And I expect the save button to be disabled
-      HeaderSteps.getSaveMappingButton().should('be.visible').and('be.disabled');
-      // When I complete a triple
-      MappingSteps.completeTriple(0, '@duration', 'as', '123');
-      // And Click the save button
-      HeaderSteps.saveMapping();
-      // Then I expect an error notification
-      // TODO: complete after https://ontotext.atlassian.net/browse/GDB-4732
-    });
-
     it('Should show error notification when RDF generation fails', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');

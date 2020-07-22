@@ -98,6 +98,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
           link.href = window.URL.createObjectURL(data);
           link.download = DOWNLOAD_RDF_FILE;
           link.click();
+          this.messageService.publish(ChannelName.RDFGenerated);
         });
   }
 
@@ -105,6 +106,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     this.mapperService.getSPARQL(this.mapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe((data) => {
+          this.messageService.publish(ChannelName.SparqlGenerated);
           window.parent.open(window.parent.location.origin + '/sparql?query=' + encodeURIComponent(data));
         });
   }
