@@ -34,28 +34,28 @@ $nested-border-color: rgba(45, 186, 171, 0.3);
 // Generate the styles for the nesting and the default top offset of each nested row
 @for $i from 1 through $nesting-levels {
   .level-#{$i} {
-    margin-left: 20px * $i;
+    margin-left: 30px * $i;
   }
 }
 
 // Put the borders around each triples-block
 @for $i from 1 through $nesting-levels {
   .level-#{$i} .triples-block {
-    border-left: 1em solid $nested-border-color;
-    border-right: 1em solid $nested-border-color;
+    border-left: 0.5em solid $nested-border-color;
+    border-right: 0.5em solid $nested-border-color;
   }
 }
 
 .first-in-group {
-  margin-top: 1em;
+  margin-top: 0.5em;
 }
 
 .first-in-group .triples-block {
-  border-top: 1em solid $nested-border-color !important;
+  border-top: 0.5em solid $nested-border-color !important;
 }
 
 .last-in-group .triples-block {
-  border-bottom: 1em solid $nested-border-color !important;
+  border-bottom: 0.5em solid $nested-border-color !important;
 }
 
 .level-0 {
@@ -63,6 +63,6 @@ $nested-border-color: rgba(45, 186, 171, 0.3);
 }
 
 .level-0 ~ .level-0 {
-  margin-top: 1em;
-  margin-bottom: 1em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
