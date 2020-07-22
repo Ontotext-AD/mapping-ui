@@ -311,6 +311,10 @@ export class ModelManagementService {
       this.addValueType(cellMapping);
     }
 
+    if (type === Type.IRI && (!cellMapping.getValueType().getTypeMappings() && !cellMapping.getValueType().getPropertyMappings())) {
+      cellMapping.getValueType().setPropertyMappings([]);
+      cellMapping.getValueType().setTypeMappings([]);
+    }
     return cellMapping.getValueType() && cellMapping.getValueType().setType(Type[Helper.getEnumKeyByEnumValue(Type, type)]);
   }
 
