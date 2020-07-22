@@ -31,4 +31,19 @@ describe('Nest triples', () => {
     // The template triple is at level-0
     MappingSteps.getTriple(9).should('have.class', 'level-0');
   });
+
+  it('Should nest new triple properly', () => {
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:nest-triples/mapping-model.json');
+    // Given I have created a mapping with multiple nested triples
+    // When I load the mapping
+    cy.visit('?dataProviderID=ontorefine:123');
+    // Then I expect to see 9 triples (+1 empty template)
+    MappingSteps.getTriples().should('have.length', 10);
+    MappingSteps.addNestedTriple(0);
+    MappingSteps.getTriplePredicate(4).find('input').should('have.focus');
+    MappingSteps.getTriple(4).should('have.class', 'level-1');
+    MappingSteps.addNestedTriple(6);
+    MappingSteps.getTriplePredicate(9).find('input').should('have.focus');
+    MappingSteps.getTriple(9).should('have.class', 'level-3');
+  });
 });

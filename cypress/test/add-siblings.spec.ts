@@ -41,7 +41,7 @@ describe('Add siblings', () => {
     // Should insert a new triple after all existing ones
     MappingSteps.getTriples().should('have.length', 8);
     // The focus should be on the subject position of the new triple
-    MappingSteps.getTripleObject(6).find('input').should('have.focus')
+    MappingSteps.getTripleObject(6).find('input').should('have.focus');
 
   });
 
@@ -58,5 +58,10 @@ describe('Add siblings', () => {
     MappingSteps.getTriplePredicateContent(6).should('be.empty');
   });
 
+  it('Should add nested triple object sibling template inside the children block', () => {
+    MappingSteps.addTripleObjectSibling(5);
+    MappingSteps.getTriple(6).should('have.class', 'level-1');
+    MappingSteps.getTripleObject(6).find('input').should('have.focus');
+  });
 
 });
