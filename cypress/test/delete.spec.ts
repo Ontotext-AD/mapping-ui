@@ -126,9 +126,6 @@ describe('Delete', () => {
       cy.visit('?dataProviderID=ontorefine:123');
       // And I see two triples + one empty template
       MappingSteps.getTriples().should('have.length', 3);
-      // TODO mock REST preview endpoint
-      // I switch to configuration view
-      HeaderSteps.getConfigurationButton().click();
       // When I try to delete the nested triple
       MappingSteps.deleteTriple(1);
       // Then I expect confirmation
@@ -206,9 +203,6 @@ describe('Delete', () => {
 
       cy.visit('?dataProviderID=ontorefine:123');
       cy.wait('@loadColumns');
-      // TODO mock REST preview endpoint
-      // I switch to configuration view
-      HeaderSteps.getConfigurationButton().click();
       // Given I have created a mapping column-constant-column
       MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.completeTriple(0, '@duration', 'as', '@color');

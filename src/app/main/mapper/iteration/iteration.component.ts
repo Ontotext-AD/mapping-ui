@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
 import {SimpleIRIValueMappingImpl} from 'src/app/models/simple-iri-value-mapping-impl';
@@ -14,7 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MapperDialogComponent} from 'src/app/main/mapper/mapper-dialog/mapper-dialog.component';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {Triple} from 'src/app/models/triple';
-import {COLUMN, DOT, COMMA, OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
+import {COLUMN, COMMA, DOT, OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
 import {Source as SourceEnum, Type} from 'src/app/models/mapping-definition';
 import {Source} from 'src/app/models/source';
 import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
@@ -64,7 +56,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   private boundCheckDirty: any;
   private isPreviewOn: boolean = true;
-  private viewMode: ViewMode = ViewMode.Preview;
+  private viewMode: ViewMode = ViewMode.Configuration;
 
   constructor(private modelManagementService: ModelManagementService,
               public dialog: MatDialog,
@@ -152,7 +144,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   initWithPreview(isDirty?: boolean) {
-    if (this.mapping.getSubjectMappings() && this.mapping.getSubjectMappings().length && this.isPreviewOn && this.isComplete(this.mapping)) {
+    if (this.shouldPreview()) {
       this.mapperService.preview(classToClass(this.mapping))
           .pipe(untilComponentDestroyed(this))
           .subscribe((data) => {
@@ -163,6 +155,14 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       this.mapping.getSubjectMappings() && this.modelManagementService.removePreview(this.mapping);
       this.init(isDirty);
     }
+  }
+
+  private shouldPreview() {
+    return this.mapping.getSubjectMappings() &&
+      this.mapping.getSubjectMappings().length &&
+      this.isPreviewOn &&
+      this.isComplete(this.mapping) &&
+      (this.viewMode === ViewMode.PreviewAndConfiguration || this.viewMode === ViewMode.Preview);
   }
 
   init(isDirty?: boolean) {
