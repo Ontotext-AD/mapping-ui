@@ -362,9 +362,14 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   continueMapping($event: MouseEvent, mapping: Triple, index: number) {
-    const object = this.getTripleByIndex(index) && this.getTripleByIndex(index).getObject();
-    const triple = new Triple(object as ValueMappingImpl, undefined, undefined);
-    this.triples.splice(index + 1, 0, triple);
+    const tripleByIndex = this.getTripleByIndex(index);
+    const object = tripleByIndex && tripleByIndex.getObject();
+    if (object) {
+      const triple = new Triple(object as ValueMappingImpl, undefined, undefined, false, false, false, PREDICATE_SELECTOR);
+      triple.setLevel(tripleByIndex.getLevel() + 1);
+      const allNestedTriplesSize = object.getPropertyMappings().length + object.getTypeMappings().length;
+      this.triples.splice(index + allNestedTriplesSize + 1, 0, triple);
+    }
   }
 
   /**
@@ -617,13 +622,17 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       while (mapping.getSubject() === this.triples[newTripleIndex].getSubject() || mapping.getLevel() < this.triples[newTripleIndex].getLevel()) {
         newTripleIndex++;
       }
-      this.triples.splice(newTripleIndex, 0, new Triple(mapping.getSubject(), undefined, undefined, false, false, false, PREDICATE_SELECTOR));
+      const newTriple = new Triple(mapping.getSubject(), undefined, undefined, false, false, false, PREDICATE_SELECTOR);
+      newTriple.setLevel(mapping.getLevel());
+      this.triples.splice(newTripleIndex, 0, newTriple);
     } else {
       let newTripleIndex = index;
       while (mapping.getPredicate() === this.triples[newTripleIndex].getPredicate() || mapping.getLevel() < this.triples[newTripleIndex].getLevel()) {
         newTripleIndex++;
       }
-      this.triples.splice(newTripleIndex, 0, new Triple(mapping.getSubject(), mapping.getPredicate(), undefined, mapping.isTypeProperty, false, false, OBJECT_SELECTOR));
+      const newTriple = new Triple(mapping.getSubject(), mapping.getPredicate(), undefined, mapping.isTypeProperty, false, false, OBJECT_SELECTOR);
+      newTriple.setLevel(mapping.getLevel());
+      this.triples.splice(newTripleIndex, 0, newTriple);
     }
   }
 
