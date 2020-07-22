@@ -284,15 +284,16 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       return true;
     }
     // find previous triple of the same level
-    return triple.getSubject() !== this.triples[index - 1].getSubject();
+    const previousTriple = this.getPreviousTriple(index, triple.getLevel());
+    return !previousTriple || triple.getSubject() !== previousTriple.getSubject();
   }
 
   isFirstPredicate(triple, index) {
     if (index === 0) {
       return true;
     }
-    const previousTriple = this.triples[index - 1];
-    return this.isFirstSubject(triple, index) || triple.getPredicate() !== previousTriple.getPredicate();
+    const previousTriple = this.getPreviousTriple(index, triple.getLevel());
+    return !previousTriple || this.isFirstSubject(triple, index) || triple.getPredicate() !== previousTriple.getPredicate();
   }
 
   getPropertyMappings(subject): PropertyMappingImpl[] {
@@ -501,12 +502,13 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     window.removeEventListener('beforeunload', this.boundCheckDirty);
   }
 
-  private getPreviousRootTriple(prevIndex: number) {
+  private getPreviousTriple(prevIndex: number, level: number) {
+    prevIndex--;
     if (prevIndex < 0) {
       return undefined;
     }
     let previousRootLevelTriple = this.triples[prevIndex];
-    while (previousRootLevelTriple.getLevel() > 0 && prevIndex > 0) {
+    while (previousRootLevelTriple.getLevel() != level && prevIndex > 0) {
       prevIndex--;
       previousRootLevelTriple = this.triples[prevIndex];
     }
@@ -523,7 +525,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         triple.setTypeProperty(true);
       }
     } else if (selected === this.PREDICATE && !triple.getSubject()) {
-      const previousTriple = this.getPreviousRootTriple(index - 1);
+      const previousTriple = this.getPreviousTriple(index, 0);
       if (!previousTriple) {
         return;
       }
@@ -537,7 +539,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         triple.setTypeProperty(true);
       }
     } else if (selected === this.OBJECT && !triple.getSubject() && this.triples.length > 0) {
-      const previousTriple = this.getPreviousRootTriple(index - 1);
+      const previousTriple = this.getPreviousTriple(index, 0);
       if (!previousTriple) {
         return;
       }

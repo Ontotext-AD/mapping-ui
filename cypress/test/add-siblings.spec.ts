@@ -48,11 +48,14 @@ describe('Add siblings', () => {
   it('Should add predicate from the last template triple to the last predicate on root level', () => {
     MappingSteps.completeTriple(6, undefined, 'predicate', 'object');
     MappingSteps.getTriple(6).should('have.class', 'level-0');
+    MappingSteps.getTripleSubjectContent(6).should('be.empty');
   });
 
   it('Should add object from the last template triple to the last predicate on root level', () => {
     MappingSteps.completeTriple(6, undefined, undefined, 'object');
     MappingSteps.getTriple(6).should('have.class', 'level-0');
+    MappingSteps.getTripleSubjectContent(6).should('be.empty');
+    MappingSteps.getTriplePredicateContent(6).should('be.empty');
   });
 
 
