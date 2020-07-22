@@ -151,6 +151,10 @@ class MappingSteps {
     return MappingSteps.getTripleObject(index).find('[appCypressData="delete-node"]').click();
   }
 
+  static editTripleObjectWithData(index: number) {
+    return MappingSteps.getTripleObject(index).find('[appCypressData="button-edit-cell"]').click();
+  }
+
   static addTripleObjectSibling(index: number) {
     MappingSteps.getTripleObject(index).find('[appCypressData="add-sibling"]').click();
   }

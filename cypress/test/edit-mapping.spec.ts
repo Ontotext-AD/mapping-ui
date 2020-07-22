@@ -2,13 +2,40 @@ import MappingSteps from '../steps/mapping-steps';
 import HeaderSteps from '../steps/header-steps';
 import EditDialogSteps from '../steps/edit-dialog-steps';
 
-
 describe('Edit mapping', () => {
 
   beforeEach(() => {
     cy.setCookie('com.ontotext.graphdb.repository4200', 'Movies');
     cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
     cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
+  });
+
+  context('Edit IRI', () => {
+    it('Should have a warning message in IRI edit dialog when object has children', () => {
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+      cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:edit-mapping/iri-with-children-model-preview-response.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/iri-with-children-model.json');
+      // Given I have opened a model with triple containing IRI object with some children
+      cy.visit('?dataProviderID=ontorefine:123');
+      MappingSteps.getTriples().should('have.length', 3);
+      // When I open edit dialog of the parent IRI object
+      MappingSteps.editTripleObjectWithData(0);
+      // Then I expect the edit dialog to be opened
+      EditDialogSteps.getDialog().should('be.visible');
+      // And there should be a warning message in the dialog
+      EditDialogSteps.getWarningMessage().should('contain', 'Changing the type of this cell will delete all children');
+      // When I change the IRI type and save configuration
+      EditDialogSteps.selectLiteral();
+      EditDialogSteps.saveConfiguration();
+      // Then I expect the children to be removed
+      MappingSteps.getTriples().should('have.length', 2);
+      // When I open the edit dialog again
+      MappingSteps.editTripleObjectWithData(0);
+      // I expect the warning to be missing
+      EditDialogSteps.getWarningMessage().should('not.be.visible');
+    });
   });
 
   it('Should validate subject edit form', () => {
