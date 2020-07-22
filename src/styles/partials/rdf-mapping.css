@@ -236,14 +236,14 @@
 
 .first-in-group .triples-blocks-subrow::before {
   content: "";
-  border-width: 1em;
+  border-width: 0.5em;
   border-top-width: 0;
   border-style: solid;
   border-left-color: transparent;
   border-right-color: transparent;
   border-bottom-color: rgba(45, 186, 171, 0.3);
   position: absolute;
-  top: -28px;
+  top: -14px;
   right: 16.66666666666%;
   margin-right: -0.5rem;
   display: block;
