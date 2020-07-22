@@ -18,6 +18,8 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
   @Input() mapping: MappingDefinitionImpl;
   isMappingDirty: boolean;
   isSavingInProgress: boolean;
+  isRdfGenerationInProgress: boolean;
+  isSparqlGenerationInProgress: boolean;
   ViewMode = ViewMode;
 
   constructor(private modelManagementService: ModelManagementService,
@@ -39,6 +41,18 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
         .subscribe(() => {
           this.isSavingInProgress = false;
         });
+
+    this.messageService.read(ChannelName.RDFGenerated)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.isRdfGenerationInProgress = false;
+        });
+
+    this.messageService.read(ChannelName.SparqlGenerated)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.isSparqlGenerationInProgress = false;
+        });
   }
 
   saveMapping(): void {
@@ -51,10 +65,12 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
   }
 
   getRDF(): void {
+    this.isRdfGenerationInProgress = true;
     this.messageService.publish(ChannelName.GetRDF);
   }
 
   getSPARQL(): void {
+    this.isSparqlGenerationInProgress = true;
     this.messageService.publish(ChannelName.GetSPARQL);
   }
 
