@@ -33,7 +33,7 @@ describe('Delete', () => {
       // When I try to delete the subject
       MappingSteps.deleteTripleSubject(0);
       // Then I expect a warning
-      MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do You want to remove this mapping?');
+      MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do you want to remove this mapping?');
       MappingSteps.confirm();
       MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.verifyTriple(0, '', '', '');
@@ -48,7 +48,7 @@ describe('Delete', () => {
       // When I try to delete the predicate
       MappingSteps.deleteTriplePredicate(0);
       // Then I expect a warning
-      MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do You want to remove this mapping?');
+      MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do you want to remove this mapping?');
       MappingSteps.confirm();
       MappingSteps.getTriples().should('have.length', 2);
       MappingSteps.verifyTriple(0, 'subject', '', '');
@@ -77,7 +77,7 @@ describe('Delete', () => {
       // When I delete the object for the parent triple
       MappingSteps.deleteTripleObject(0);
       // Then I expect warning
-      MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do You want to remove this mapping?');
+      MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do you want to remove this mapping?');
       MappingSteps.confirm();
       MappingSteps.getTriples().should('have.length', 2);
       MappingSteps.verifyTriple(0, 'subject', 'predicate', '');
@@ -106,7 +106,7 @@ describe('Delete', () => {
       // When I try to delete the first triple
       MappingSteps.deleteTriple(0);
       // Then I expect confirmation
-      MappingSteps.getConfirmationMessage().should('contain', 'Do You want to remove this mapping?');
+      MappingSteps.getConfirmationMessage().should('contain', 'Do you want to remove this mapping?');
       // When I deny confirmation
       MappingSteps.reject();
       // I expect same triples in the mapping
@@ -129,7 +129,7 @@ describe('Delete', () => {
       // When I try to delete the nested triple
       MappingSteps.deleteTriple(1);
       // Then I expect confirmation
-      MappingSteps.getConfirmationMessage().should('contain', 'Do You want to remove this mapping?');
+      MappingSteps.getConfirmationMessage().should('contain', 'Do you want to remove this mapping?');
       // When I deny confirmation
       MappingSteps.reject();
       // I expect same triples in the mapping
@@ -189,7 +189,7 @@ describe('Delete', () => {
       MappingSteps.getTripleObjectPreview(0).should('contain', '"123"');
       // When I delete the subject node
       MappingSteps.deleteTripleSubject(0);
-      MappingSteps.getConfirmationMessage().should('contain', 'Do You want to remove this mapping?');
+      MappingSteps.getConfirmationMessage().should('contain', 'Do you want to remove this mapping?');
       MappingSteps.confirm();
       // Then I expect the whole triple to be deleted
       MappingSteps.getTriples().should('have.length', 1);
