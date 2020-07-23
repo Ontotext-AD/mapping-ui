@@ -132,7 +132,7 @@
 
                     <div class="ml-16" *ngIf="!isDataTypePrefixTransformation">
                       <div
-                        *ngFor="let preview of grelPreviewDataTypeTransformation | async; let index = index;">
+                        *ngFor="let preview of grelPreviewDataTypeTransformation | async; let index = index;" appCypressData="datatype-grel-preview">
                         <div class="mb-2 cursor-pointer" *ngIf="preview"
                              [ngClass]="{hide: index !== 0 && !showDataTypeTransformation}"
                              (click)="showDataTypeTransformation = !showDataTypeTransformation"
@@ -313,7 +313,7 @@
         </div>
 
         <mat-divider class="mt-24"></mat-divider>
-        <div class="transformation-section">
+        <div class="transformation-section" appCypressData="transformation-section">
           <div class="mt-24" fxLayout="row" fxLayoutAlign="start none">
             <div fxFlex="20"><h4>{{'LABELS.TRANSFORMATION' | translate}}</h4></div>
             <div fxFlex="none">
@@ -348,7 +348,7 @@
 
                 <div class="ml-16" *ngIf="!isPrefixTransformation">
                   <div
-                    *ngFor="let preview of grelPreviewExpression | async; let index = index;">
+                    *ngFor="let preview of grelPreviewExpression | async; let index = index;" appCypressData="grel-preview">
                     <div class="mb-2 cursor-pointer" *ngIf="preview"
                          [ngClass]="{hide: index !== 0 && !showTransformation}"
                          (click)="showTransformation = !showTransformation"

@@ -198,4 +198,62 @@ describe('Edit mapping', () => {
 
     });
   });
+
+  context('Preview GREL', () => {
+    function mockPreview(response: string) {
+      cy.route({
+        method: 'POST',
+        url: '/rest/rdf-mapper/grel/ontorefine:123?limit=10',
+        status: 200,
+        response: response,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+
+    it('Should preview empty object', () => {
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+
+      mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
+
+      // When I load application
+      cy.visit('?dataProviderID=ontorefine:123');
+      MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
+      MappingSteps.editTripleObject(0);
+      EditDialogSteps.selectIri();
+      EditDialogSteps.selectColumn();
+      EditDialogSteps.completeColumn('director_name');
+      EditDialogSteps.selectGREL();
+      EditDialogSteps.completeGREL('value');
+      EditDialogSteps.getGRELPreview().first().should('contain', 'James Cameron');
+    });
+
+    it('Should preview datatype expression properly', () => {
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+      mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
+
+      // When I load application
+      cy.visit('?dataProviderID=ontorefine:123');
+      MappingSteps.completeTriple(0, 'subject', 'predicate', '@director_name');
+      MappingSteps.editTripleObjectWithData(0);
+      EditDialogSteps.selectTypeDataTypeLiteral();
+      EditDialogSteps.selectGREL();
+      EditDialogSteps.completeGREL('value');
+      EditDialogSteps.getGRELPreview().first().should('contain', 'James Cameron');
+
+      // Unfortunately cypress cannot return response based on POST data so mock twice the request
+      mockPreview('["alabala"]');
+
+      // Verify datatype GREL preview
+      EditDialogSteps.selectDataTypeConstant();
+      EditDialogSteps.completeDataTypeConstant('foo');
+      EditDialogSteps.selectDataTypeGREL();
+      EditDialogSteps.completeDataTypeGREL('value');
+      EditDialogSteps.getDataTypeGRELPreview().first().should('contain', 'alabala');
+    });
+  });
+
 });

@@ -47,6 +47,22 @@ class EditDialogSteps {
     return this.getTypeSection().find('[appCypressData=type-literal]').should('be.visible').click();
   }
 
+  static selectTypeDataTypeLiteral() {
+    return this.getTypeSection().find('[appCypressData=type-datatype_literal]').should('be.visible').click();
+  }
+
+  static selectDataTypeConstant() {
+    return this.getTypeSection().find('[appCypressData=datatype-constant]').click();
+  }
+
+  static completeDataTypeConstant(value: string) {
+    return this.getTypeSection().find('[appCypressData=datatype-constant-input]').should('be.visible').type(value).blur();
+  }
+
+  static selectTypeLanguageLiteral() {
+    return this.getTypeSection().find('[appCypressData=type-language_literal]').should('be.visible').click();
+  }
+
   // source section
   static getSourceSection() {
     return EditDialogSteps.getDialog().find('[appCypressData=source-section]');
@@ -60,7 +76,44 @@ class EditDialogSteps {
     return this.getSourceSection().find('[appCypressData=constant-input]').should('be.visible').type(value).blur();
   }
 
+  static selectColumn() {
+    return this.getSourceSection().find('[appCypressData=column]').click();
+  }
+
+  static completeColumn(value: string) {
+    return this.getSourceSection().find('[appCypressData=column-input]').should('be.visible').type(value).blur();
+  }
+
   // transformation section
+  static getTransformationSection() {
+    return EditDialogSteps.getDialog().find('[appCypressData=transformation-section]');
+  }
+
+  static selectGREL() {
+    return this.getTransformationSection().find('[appCypressData=transformation-grel]').should('be.visible').click();
+  }
+
+  static selectDataTypeGREL() {
+    return this.getTypeSection().find('[appCypressData=datatype-transformation-grel]').should('be.visible').click();
+  }
+
+  static completeGREL(value: string) {
+    this.getTransformationSection().find('[appCypressData=transformation-expression]').should('be.visible').type(value);
+  }
+
+  static completeDataTypeGREL(value: string) {
+    this.getTypeSection().find('[appCypressData=datatype-transformation-expression]').should('be.visible').type(value);
+  }
+
+  static getGRELPreview() {
+    return this.getTransformationSection().find('[appCypressData=grel-preview]');
+  }
+
+
+  static getDataTypeGRELPreview() {
+    return this.getTypeSection().find('[appCypressData=datatype-grel-preview]');
+  }
+
 }
 
 export default EditDialogSteps;
