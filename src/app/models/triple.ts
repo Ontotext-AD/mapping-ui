@@ -7,21 +7,20 @@ export class Triple {
   subject: SubjectMappingImpl | ValueMappingImpl;
   predicate: PropertyMappingImpl;
   object: ValueMappingImpl | SimpleIRIValueMappingImpl;
-  isTypeProperty: boolean;
-  isRoot: boolean;
-  isIRI: boolean;
+
+  isTypeProperty: boolean = false;
+  isRoot: boolean = false;
+  isIRI: boolean = false;
   level?: number;
   newMappingRole: string;
 
-  constructor(subject?: SubjectMappingImpl | ValueMappingImpl, predicate?: PropertyMappingImpl,
-      object?: ValueMappingImpl | SimpleIRIValueMappingImpl, isTypeProperty?: boolean, isRoot?: boolean, isIRI?: boolean, newMappingRole?: string) {
+  constructor();
+  constructor(subject: SubjectMappingImpl | ValueMappingImpl, predicate: PropertyMappingImpl,
+              object: ValueMappingImpl | SimpleIRIValueMappingImpl);
+  constructor(subject?: any, predicate?: any, object?: any) {
     this.subject = subject;
     this.predicate = predicate;
     this.object = object;
-    this.isTypeProperty = isTypeProperty || false;
-    this.isRoot = isRoot;
-    this.isIRI = isIRI;
-    this.newMappingRole = newMappingRole;
     this.level = 0;
   }
 
@@ -81,5 +80,14 @@ export class Triple {
 
   setLevel(level: number) {
     this.level = level;
+  }
+
+  getNewMappingRole() {
+    return this.newMappingRole;
+  }
+
+  setNewMappingRole(newMappingRole) {
+    this.newMappingRole = newMappingRole;
+    return this;
   }
 }
