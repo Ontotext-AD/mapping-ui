@@ -450,19 +450,28 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     }
   }
 
+  private deletePredicate(propertyMappings: Array<PropertyMappingImpl>, propertyMapping: PropertyMappingImpl) {
+    const propertyMappingIndex = propertyMappings.indexOf(propertyMapping);
+    propertyMappings.splice(propertyMappingIndex, 1);
+  }
+
   private deleteObjectPropertyMapping(mapping: Triple, hardDelete: boolean) {
     const propertyMappings = mapping.getSubject().getPropertyMappings();
     propertyMappings.forEach((propertyMapping) => {
+      // check for object and delete
       const values = propertyMapping.getValues();
-      const index = values.indexOf(mapping.getObject() as ValueMappingImpl);
-      if (index > -1 && hardDelete) {
-        values.splice(index, 1);
-        if (values.length === 0) {
-          const propertyMappingIndex = propertyMappings.indexOf(propertyMapping);
-          propertyMappings.splice(propertyMappingIndex, 1);
+      if (values) {
+        const index = values.indexOf(mapping.getObject() as ValueMappingImpl);
+        if (index > -1 && hardDelete) {
+          values.splice(index, 1);
+          if (values.length === 0) {
+            this.deletePredicate(propertyMappings, propertyMapping);
+          }
+        } else if (index > -1 && !hardDelete) {
+          values.splice(index, 1, new ValueMappingImpl(undefined, undefined, undefined));
         }
-      } else if (index > -1 && !hardDelete) {
-        values.splice(index, 1, new ValueMappingImpl(undefined, undefined, undefined));
+      } else {
+        this.deletePredicate(propertyMappings, propertyMapping);
       }
     });
   }

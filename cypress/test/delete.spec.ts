@@ -126,6 +126,8 @@ describe('Delete', () => {
       cy.visit('?dataProviderID=ontorefine:123');
       // And I see two triples + one empty template
       MappingSteps.getTriples().should('have.length', 3);
+
+      // Delete and reject operation
       // When I try to delete the nested triple
       MappingSteps.deleteTriple(1);
       // Then I expect confirmation
@@ -134,6 +136,8 @@ describe('Delete', () => {
       MappingSteps.reject();
       // I expect same triples in the mapping
       MappingSteps.getTriples().should('have.length', 3);
+
+      // Delete completed nested triple
       // When I delete the nested triple
       MappingSteps.deleteTriple(1);
       MappingSteps.confirm();
@@ -142,9 +146,33 @@ describe('Delete', () => {
       MappingSteps.getTripleSubjectSource(0).should('contain', 'director_name');
       MappingSteps.getTripleObjectType(0).should('contain', 'IRI');
       MappingSteps.getTripleObjectSource(0).should('contain', 'movie_imdb_link');
+
+      // Delete triple with empty predicate and object
       // When I add new nested triple
       MappingSteps.addNestedTriple(0);
       MappingSteps.getTriples().should('have.length', 3);
+      // And I delete the new nested triple
+      MappingSteps.deleteTriple(1);
+      MappingSteps.confirm();
+      // Then I expect the triple to be deleted
+      MappingSteps.getTriples().should('have.length', 2);
+
+      // Delete triple with empty object: predicate is 'a'
+      // When I add new nested triple
+      MappingSteps.addNestedTriple(0);
+      MappingSteps.getTriples().should('have.length', 3);
+      MappingSteps.completeTriple(1, undefined, 'a', undefined);
+      // And I delete the new nested triple
+      MappingSteps.deleteTriple(1);
+      MappingSteps.confirm();
+      // Then I expect the triple to be deleted
+      MappingSteps.getTriples().should('have.length', 2);
+
+      // Delete triple with empty object: predicate is a constant
+      // When I add new nested triple
+      MappingSteps.addNestedTriple(0);
+      MappingSteps.getTriples().should('have.length', 3);
+      MappingSteps.completeTriple(1, undefined, 'predicate', undefined);
       // And I delete the new nested triple
       MappingSteps.deleteTriple(1);
       MappingSteps.confirm();
