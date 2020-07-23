@@ -65,7 +65,7 @@ describe('MapperDialogComponent', () => {
         {
           provide: MAT_DIALOG_DATA,
           useValue: {
-            mappingData: new Triple(undefined, undefined, undefined, false),
+            mappingData: new Triple(),
             selected: ''
           }
         },
