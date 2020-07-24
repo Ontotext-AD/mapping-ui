@@ -405,6 +405,9 @@ export class ModelManagementService {
           pm.getValues().forEach((vm) => {
             vm.clearPreview();
             this.removeFromTypesAndProperties(vm);
+            if (vm.getValueType() && vm.getValueType().getType() === Type.DatatypeLiteral) {
+              vm.getValueType().getDatatype().clearPreview();
+            }
           });
         }
       });

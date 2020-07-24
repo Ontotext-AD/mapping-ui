@@ -194,9 +194,27 @@ describe('Edit mapping', () => {
       // When I click View JSON button
       HeaderSteps.viewJSON();
       // Then I expect to view JSON popup window
-      MappingSteps.getViewJSONDialog().should('be.visible')
-
+      MappingSteps.getViewJSONDialog().should('be.visible');
     });
+
+    it('Should show JSON mapping when type is datatype literal ', () => {
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+      cy.visit('?dataProviderID=ontorefine:123');
+
+      MappingSteps.completeTriple(0, 'subject', 'predicate', 'object');
+      MappingSteps.editTripleObjectWithData(0);
+
+      EditDialogSteps.selectTypeDataTypeLiteral();
+      EditDialogSteps.selectDataTypeConstant();
+      EditDialogSteps.completeDataTypeConstant('constant');
+      EditDialogSteps.saveConfiguration();
+      // When I click View JSON button
+      HeaderSteps.viewJSON();
+      // Then I expect to view JSON popup window
+      MappingSteps.getViewJSONDialog().should('be.visible').and('contain', 'datatype_literal');
+    });
+
   });
 
   context('Preview GREL', () => {
