@@ -101,14 +101,7 @@
               </span>
             </div>
 
-            <div class="ti-type" [fxFlex]="20" fxLayout="column" fxLayoutAlign="space-between end" [ngClass]="{
-              'type-iri': getType() === IRI,
-              'type-literal': getType() === LITERAL,
-              'type-node': getType() === UNIQUE_BNODE || getType() === VALUE_BNODE
-              }">
-              <span *ngIf="getType()">{{getValueTypeLabel()}}</span>
-
-            </div>
+            <app-type-badge [type]="getType()"></app-type-badge>
           </div>
 
           <div class="mt-12">
