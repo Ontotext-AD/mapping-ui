@@ -156,4 +156,9 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   public getNamespaces(): { [p: string]: string } {
     return this.mapping && this.mapping.getNamespaces();
   }
+
+  public onJsonUpload($event: MappingDefinitionImpl) {
+    this.mapping = $event;
+    this.rdfMapping.next(this.mapping);
+  }
 }
