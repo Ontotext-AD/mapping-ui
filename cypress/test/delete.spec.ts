@@ -5,13 +5,10 @@ import EditDialogSteps from '../steps/edit-dialog-steps';
 describe('Delete', () => {
 
   beforeEach(() => {
-    // stub labels
+    cy.setCookie('com.ontotext.graphdb.repository4200', 'Movies');
     cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
-    // stub namespaces
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    // stub columns
+    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json').as('loadNamespaces');
     cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-    // stub socksjs
     cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
   });
 
