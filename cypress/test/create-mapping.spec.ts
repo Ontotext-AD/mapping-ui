@@ -20,18 +20,21 @@ describe('Create mapping', () => {
       method: 'POST',
       url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
       status: 200,
+      delay: 1000,
       response: 'fixture:create-mapping/save-mapping-success.json'
     }).as('saveMapping');
     cy.route({
       method: 'POST',
       url: '/rest/rdf-mapper/rdf/ontorefine:123',
       status: 200,
+      delay: 1000,
       response: ''
     }).as('loadRdf');
     cy.route({
       method: 'POST',
       url: '/rest/rdf-mapper/sparql/ontorefine:123',
       status: 200,
+      delay: 1000,
       response: 'fixture:create-mapping/load-sparql-response',
       headers: {
         Accept: 'application/json'
@@ -49,7 +52,8 @@ describe('Create mapping', () => {
     MappingSteps.completeTriple(0, '@duration', 'as', '@color');
     // And I save the mapping
     HeaderSteps.saveMapping();
-    // Then I expect a loading indicator. This can't be tested reliably.
+    // Then I expect a loading indicator
+    HeaderSteps.getSaveIndicator().should('be.visible');
     // And The mapping should be saved
     cy.fixture('create-mapping/save-mapping-request-body').then((saveResponse: string) => {
       cy.wait('@saveMapping');
@@ -61,6 +65,8 @@ describe('Create mapping', () => {
     });
     // When I generate rdf
     HeaderSteps.generateRdf();
+    // Then I expect loading indicator
+    HeaderSteps.getGenerateRdfIndicator().should('be.visible');
     // Then I expect rdf to be loaded.
     // The actual download can be checked if we verify the dynamically created download link href attribute but it needs to be appended to
     // the DOM. As long it's not we can't find and test it.
@@ -75,6 +81,8 @@ describe('Create mapping', () => {
     });
     // When I generate sparql
     HeaderSteps.generateSparql();
+    // Then I expect loading indicator
+    HeaderSteps.getGenerateSparqlIndicator().should('be.visible');
     // Then I expect sparql to be loaded. The actual download can't be checked
     cy.wait('@loadSparql');
     cy.get('@loadSparql').should((xhr: any) => {

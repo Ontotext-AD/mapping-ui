@@ -17,6 +17,10 @@ class HeaderSteps {
     return HeaderSteps.getSaveMappingButton().click();
   }
 
+  static getSaveIndicator() {
+    return this.getSaveMappingButton().find('.mat-spinner');
+  }
+
   static getGenerateRdfButton() {
     return this.getHeader().find('[appCypressData="generate-rdf-action"]');
   }
@@ -25,12 +29,20 @@ class HeaderSteps {
     return HeaderSteps.getGenerateRdfButton().click();
   }
 
+  static getGenerateRdfIndicator() {
+    return this.getGenerateRdfButton().find('.mat-spinner');
+  }
+
   static getGenerateSparqlButton() {
     return this.getHeader().find('[appCypressData="generate-sparql-action"]');
   }
 
   static generateSparql() {
     return HeaderSteps.getGenerateSparqlButton().click();
+  }
+
+  static getGenerateSparqlIndicator() {
+    return this.getGenerateSparqlButton().find('.mat-spinner');
   }
 
   static getPreviewToggle() {
