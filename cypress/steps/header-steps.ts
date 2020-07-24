@@ -77,6 +77,9 @@ class HeaderSteps {
     return cy.cypressData(HeaderComponentSelectors.BUTTON_BOTH);
   }
 
+  static getPreviewButton() {
+    return cy.cypressData(HeaderComponentSelectors.BUTTON_PREVIEW);
+  }
 }
 
 export default HeaderSteps;

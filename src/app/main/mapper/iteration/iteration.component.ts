@@ -29,6 +29,7 @@ import {Helper} from 'src/app/utils/helper';
 import {classToClass, plainToClass} from 'class-transformer';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {ViewMode} from 'src/app/services/view-mode.enum';
+import {NotificationService} from 'src/app/services/notification.service';
 
 export interface JSONDialogData {
   mapping
@@ -67,7 +68,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
               private tabService: TabService,
               private sourceService: SourceService,
               private messageService: MessageService,
-              private mapperService: MapperService) {
+              private mapperService: MapperService,
+              private notificationService: NotificationService) {
     super();
   }
 
@@ -75,9 +77,14 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     this.messageService.read(ChannelName.ViewMode)
         .pipe(untilComponentDestroyed(this))
         .subscribe((event) => {
-          this.viewMode = event.getMessage();
-          this.isPreviewOn = this.viewMode === ViewMode.Preview || this.viewMode === ViewMode.PreviewAndConfiguration;
-          this.initWithPreview();
+          if (this.modelManagementService.isValidMapping(this.mapping)) {
+            this.viewMode = event.getMessage().source.buttonToggleGroup.value;
+            this.isPreviewOn = this.viewMode === ViewMode.Preview || this.viewMode === ViewMode.PreviewAndConfiguration;
+            this.initWithPreview();
+          } else {
+            event.getMessage().source.buttonToggleGroup.value = this.viewMode;
+            this.notificationService.error(this.translateService.instant('MESSAGES.INCOMPLETE_MAPPING_ERROR'));
+          }
         });
 
     this.boundCheckDirty = this.checkDirty.bind(this);
@@ -158,11 +165,19 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   private shouldPreview() {
-    return this.mapping.getSubjectMappings() &&
-      this.mapping.getSubjectMappings().length &&
-      this.isPreviewOn &&
-      this.isComplete(this.mapping) &&
-      (this.viewMode === ViewMode.PreviewAndConfiguration || this.viewMode === ViewMode.Preview);
+    return this.hasSubjectMappings() && this.isPreviewApplicable() && this.isCompeteAndValidMapping();
+  }
+
+  private hasSubjectMappings() {
+    return this.mapping.getSubjectMappings() && this.mapping.getSubjectMappings().length;
+  }
+
+  private isPreviewApplicable() {
+    return this.isPreviewOn && (this.viewMode === ViewMode.PreviewAndConfiguration || this.viewMode === ViewMode.Preview);
+  }
+
+  private isCompeteAndValidMapping() {
+    return this.isComplete(this.mapping) && this.modelManagementService.isValidMapping(this.mapping);
   }
 
   init(isDirty?: boolean) {

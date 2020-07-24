@@ -13,6 +13,8 @@ import {MessageService} from 'src/app/services/message.service';
 import {JSONValueDialog} from 'src/app/main/mapper/json-value-dialog';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject} from 'rxjs';
+import {NotificationService} from 'src/app/services/notification.service';
+import {TranslateService} from '@ngx-translate/core';
 
 
 @Component({
@@ -31,7 +33,9 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   constructor(private modelManagementService: ModelManagementService,
               private mapperService: MapperService,
               private messageService: MessageService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private notificationService: NotificationService,
+              private translateService: TranslateService) {
     super();
   }
 
@@ -64,30 +68,47 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     this.messageService.read(ChannelName.SaveMapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
-          this.modelManagementService.storeModelMapping(this.mapping)
-              .pipe(untilComponentDestroyed(this))
-              .subscribe(() => {
-                this.messageService.publish(ChannelName.MappingSaved);
-              });
+          this.processCommand(() => this.storeModelMapping());
         });
 
     this.messageService.read(ChannelName.GetRDF)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
-          this.onGetRDF();
+          this.processCommand(() => this.onGetRDF());
         });
 
     this.messageService.read(ChannelName.GetSPARQL)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
-          this.onSPARQL();
+          this.processCommand(() => this.onSPARQL());
         });
 
     this.messageService.read(ChannelName.ViewJSONMapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
-          this.openJSONDialog();
+          this.processCommand(() => this.openJSONDialog());
         });
+  }
+
+  private storeModelMapping() {
+    this.modelManagementService.storeModelMapping(this.mapping)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.messageService.publish(ChannelName.MappingSaved);
+        });
+  }
+
+  private processCommand(command:any ) {
+    if (this.modelManagementService.isValidMapping(this.mapping)) {
+      command();
+    } else {
+      this.showErrorMessage();
+      this.messageService.publish(ChannelName.ProgressCancelled);
+    }
+  }
+
+  private showErrorMessage() {
+    this.notificationService.error(this.translateService.instant('MESSAGES.INCOMPLETE_MAPPING_ERROR'));
   }
 
   onGetRDF() {
@@ -159,6 +180,6 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
 
   public onJsonUpload($event: MappingDefinitionImpl) {
     this.mapping = $event;
-    this.rdfMapping.next(this.mapping);
+    this.rdfMapping.next($event);
   }
 }

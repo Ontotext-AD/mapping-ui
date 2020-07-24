@@ -45,9 +45,6 @@ describe('Edit mapping', () => {
     cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
     cy.visit('?dataProviderID=ontorefine:123');
     cy.wait('@loadColumns');
-    // TODO mock REST preview endpoint
-    // I switch to configuration view
-    HeaderSteps.getConfigurationButton().click();
     // Given I have created a mapping column-type-constant
     MappingSteps.getTriples().should('have.length', 1);
     MappingSteps.completeTriple(0, '@duration', 'a', '123');
@@ -256,4 +253,55 @@ describe('Edit mapping', () => {
     });
   });
 
+
+  context('incomplete mapping', () => {
+    it('Should not allow operations with incomplete mapping', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/incomplete-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+
+      // When I load application
+      cy.visit('?dataProviderID=ontorefine:123');
+
+      // WHEN:
+      // I press View JSON button
+      HeaderSteps.viewJSON();
+      // THEN
+      // I see error message
+      assertNotAllowedNotification();
+
+      // WHEN:
+      // I press RDF button
+      HeaderSteps.generateRdf();
+      // THEN
+      // I see error message
+      assertNotAllowedNotification();
+
+      // WHEN:
+      // I press SPARQL button
+      HeaderSteps.generateSparql();
+      // THEN
+      // I see error message
+      assertNotAllowedNotification();
+
+      // WHEN:
+      // I press Preview button
+      HeaderSteps.getPreviewButton().click();
+      // THEN
+      // I see error message
+      assertNotAllowedNotification();
+
+      // WHEN:
+      // I press Both button
+      HeaderSteps.getBothViewButton().click();
+      // THEN
+      // I see error message
+      assertNotAllowedNotification();
+    });
+  });
 });
+
+function assertNotAllowedNotification() {
+  MappingSteps.getNotification().should('contain', 'The operation is not allowed. You have an incomplete mapping.');
+  MappingSteps.getNotification().should('not.be.visible')
+}
