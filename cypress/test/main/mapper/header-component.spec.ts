@@ -1,6 +1,6 @@
-import {HeaderComponentSelectors} from "../../../../cypress/utils/selectors/header-component.selectors";
-import {MapperComponentSelectors} from "../../../../cypress/utils/selectors/mapper-component.selectors";
-import MappingSteps from "../../../../cypress/steps/mapping-steps";
+import {HeaderComponentSelectors} from '../../../../cypress/utils/selectors/header-component.selectors';
+import {MapperComponentSelectors} from '../../../../cypress/utils/selectors/mapper-component.selectors';
+import MappingSteps from '../../../../cypress/steps/mapping-steps';
 
 
 describe('HeaderComponent', () => {
@@ -29,9 +29,9 @@ describe('HeaderComponent', () => {
     // I see header content
     cy.cypressData(MapperComponentSelectors.MAPPER_SELECTOR).should('be.visible');
     // I see mapping holders
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-0").should('be.visible').and('contain', 'director_name');
-    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + "-0").should('be.visible').and('contain', 'test');
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-0").should('be.visible').and('contain', ' movie_imdb_link');
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-0').should('be.visible').and('contain', 'director_name');
+    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-0').should('be.visible').and('contain', 'test');
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-0').should('be.visible').and('contain', ' movie_imdb_link');
     // WHEN:
     // I upload valid JSON file
     cy.get('[appCypressData=json-file-input]').attachFile('upload/json.txt');
@@ -41,13 +41,13 @@ describe('HeaderComponent', () => {
     MappingSteps.confirm();
     // THEN:
     // A new mapping is loaded
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-0").should('be.visible').and('contain', 'Pesho');
-    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + "-0").should('be.visible').and('contain', 'loves');
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-0").should('be.visible').and('contain', 'Maria');
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-0').should('be.visible').and('contain', 'Pesho');
+    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-0').should('be.visible').and('contain', 'loves');
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-0').should('be.visible').and('contain', 'Maria');
 
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-4").should('be.visible').and('have.length',1);
-    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + "-4").should('be.visible').and('have.length',1);
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-4").should('be.visible').and('contain', 'Sirma');
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-4').should('be.visible').and('have.length', 1);
+    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-4').should('be.visible').and('have.length', 1);
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-4').should('be.visible').and('contain', 'Sirma');
   });
 
   it('should not insert uploaded JSON mapping if not confirmed', () => {
@@ -57,12 +57,12 @@ describe('HeaderComponent', () => {
     // A conformation message pops up
     MappingSteps.getConfirmationMessage().should('contain', 'All mappings will be overwritten. Do you want to proceed?');
     // I reject
-    MappingSteps.reject()
+    MappingSteps.reject();
     // THEN:
     // I see mapping holders
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-0").should('be.visible').and('contain', 'director_name');
-    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + "-0").should('be.visible').and('contain', 'test');
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-0").should('be.visible').and('contain', ' movie_imdb_link');
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-0').should('be.visible').and('contain', 'director_name');
+    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-0').should('be.visible').and('contain', 'test');
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-0').should('be.visible').and('contain', ' movie_imdb_link');
   });
 
   it('should display error message if file is wrong or JSON is corrupted', () => {
