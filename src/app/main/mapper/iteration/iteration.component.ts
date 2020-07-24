@@ -159,7 +159,6 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
             this.init(isDirty);
           });
     } else {
-      this.mapping.getSubjectMappings() && this.modelManagementService.removePreview(this.mapping);
       this.init(isDirty);
     }
   }
