@@ -37,10 +37,10 @@ import {Triple} from '../../../models/triple';
 export class CellComponent extends OnDestroyMixin implements OnInit {
   @Input() triple: Triple;
   @Input() cellMapping: MappingBase;
-  @Input() isFirstChild: boolean = true;
-  @Input() shouldFocus: boolean = false;
-  @Input() isTypeProperty: boolean = false;
-  @Input() isTypeObject: boolean = false;
+  @Input() isFirstChild = true;
+  @Input() shouldFocus = false;
+  @Input() isTypeProperty = false;
+  @Input() isTypeObject = false;
   @Input() cellType: string;
   @Input() nestLevel = 0;
   @Input() tabIndex: number;
@@ -64,9 +64,6 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   IRI = Type.IRI;
   DATATYPE_LITERAL = Type.DatatypeLiteral;
   LANGUAGE_LITERAL = Type.LanguageLiteral;
-  LITERAL = Type.Literal;
-  UNIQUE_BNODE = Type.UniqueBnode;
-  VALUE_BNODE = Type.ValueBnode;
 
   GREL = GREL_CONSTANT;
   PREFIX = PREFIX_CONSTANT;
@@ -206,18 +203,6 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
 
   public getType(): string {
     return this.getValueType() && this.getValueType().getType();
-  }
-
-  public getValueTypeLabel() {
-    if (this.getType() === this.IRI) {
-      return this.translateService.instant('LABELS.IRI');
-    } else if (this.getType() === this.LITERAL) {
-      return this.translateService.instant('LABELS.LITERAL');
-    } else if (this.getType() === this.UNIQUE_BNODE) {
-      return this.translateService.instant('LABELS.UNIQUE_BNODE');
-    } else if (this.getType() === this.VALUE_BNODE) {
-      return this.translateService.instant('LABELS.VALUE_BNODE');
-    }
   }
 
   public getTransformationType() {

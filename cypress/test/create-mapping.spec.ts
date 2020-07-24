@@ -120,4 +120,20 @@ describe('Create mapping', () => {
     // Then I expect an error notification
     // TODO: complete after https://ontotext.atlassian.net/browse/GDB-4732
   });
+
+  it('Should render type in a badge inside the cell', () => {
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:create-mapping/all-types-mapping-model.json');
+    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+    // When I load a mapping containing all type mappings
+    cy.visit('?dataProviderID=ontorefine:123');
+    // Then I expect to see the types displayed in badge inside the cell
+    MappingSteps.getTriples().should('have.length', 7);
+    MappingSteps.getTripleObjectType(0).should('contain', 'Literal');
+    MappingSteps.getTripleObjectType(1).should('contain', 'Language');
+    MappingSteps.getTripleObjectType(2).should('contain', 'IRI');
+    MappingSteps.getTripleObjectType(3).should('contain', 'Datatype');
+    MappingSteps.getTripleObjectType(4).should('contain', 'Unique BNode');
+    MappingSteps.getTripleObjectType(5).should('contain', 'BNode');
+  });
 });

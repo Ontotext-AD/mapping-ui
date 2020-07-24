@@ -194,12 +194,14 @@
 /* Types */
 .ti-type {
   font-weight: 700;
+  white-space: nowrap;
 }
 .ti-type.type-iri {color: rgb(66, 133, 244)}
-.ti-type.type-bnode {color: rgb(191, 144, 0)}
+.ti-type.type-unique_bnode {color: rgb(191, 144, 0)}
+.ti-type.type-value_bnode {color: rgb(191, 144, 0)}
 .ti-type.type-literal {color: rgb(52, 168, 83)}
-.ti-type.type-datatype {color: rgb(160, 190, 0)}
-.ti-type.type-language-literal {color: rgb(160, 190, 0)}
+.ti-type.type-datatype_literal {color: rgb(160, 190, 0)}
+.ti-type.type-language_literal {color: rgb(160, 190, 0)}
 
 
 /* empty row */

@@ -121,7 +121,6 @@ class MappingSteps {
     return MappingSteps.getTriplePredicate(index).find('.ti-row');
   }
 
-
   static addTriplePredicateSibling(index: number) {
     MappingSteps.getTriplePredicate(index).find('[appCypressData="add-sibling"]').click();
   }
