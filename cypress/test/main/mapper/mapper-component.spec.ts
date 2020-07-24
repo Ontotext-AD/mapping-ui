@@ -76,7 +76,7 @@ describe('MapperComponent', () => {
       .should('be.visible')
       .should('be.disabled');
 
-  })
+  });
 
   it('should render mapping dialog and create triple', () => {
     // GIVEN:
