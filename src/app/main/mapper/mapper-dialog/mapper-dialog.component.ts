@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {merge, Observable, of} from 'rxjs';
+import {EMPTY, merge, Observable, of} from 'rxjs';
 import {Triple} from 'src/app/models/triple';
 import {OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
 import {Source, Type} from 'src/app/models/mapping-definition';
@@ -21,6 +21,7 @@ import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {conditionalValidator} from 'src/app/validators/conditional.validator';
 import {environment} from 'src/environments/environment';
+import {ColumnImpl} from '../../../models/column-impl';
 
 export interface SubjectMapperData {
   mappingData: Triple;
@@ -366,7 +367,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
           if (value && !this.isLanguagePrefixTransformation) {
-            this.grelPreviewLanguageTransformation = this.previewGREL(value);
+            this.grelPreviewLanguageTransformation = this.previewLanguageGREL(value);
           }
         });
 
@@ -374,7 +375,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
           if (value && !this.isDataTypePrefixTransformation) {
-            this.grelPreviewDataTypeTransformation = this.previewGREL(value);
+            this.grelPreviewDataTypeTransformation = this.previewDataTypeGREL(value);
             this.firstGrelPreviewDataTypeTransformation = this.grelPreviewDataTypeTransformation[0];
           }
         });
@@ -386,7 +387,38 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   private previewGREL(value) {
-    return this.mapperService.previewGREL(this.modelManagementService.getValueSource(this.selected), value)
+    return this.previewGRELWithValueSource(value, new ColumnImpl(this.mapperForm.get('columnName').value,
+      this.mapperForm.get('source').value as Source, this.mapperForm.get('constant').value));
+  }
+
+  private previewLanguageGREL(value) {
+    return this.previewGRELWithValueSource(value, new ColumnImpl(this.mapperForm.get('languageColumnName').value,
+      this.mapperForm.get('languageValueSource').value as Source, this.mapperForm.get('languageConstant').value));
+  }
+
+  private previewDataTypeGREL(value) {
+    return this.previewGRELWithValueSource(value, new ColumnImpl(this.mapperForm.get('dataTypeColumnName').value,
+      this.mapperForm.get('dataTypeValueSource').value as Source, this.mapperForm.get('dataTypeConstant').value));
+  }
+
+  private canPreviewValueSource(valueSource: ColumnImpl) {
+    if (!valueSource.getSource()) {
+      return false;
+    }
+    if (Source.Column === valueSource.getSource() && !valueSource.columnName) {
+      return false;
+    }
+    if (Source.Constant === valueSource.getSource() && !valueSource.constant) {
+      return false;
+    }
+    return true;
+  }
+
+  private previewGRELWithValueSource(value, valueSource: ColumnImpl) {
+    if (!this.canPreviewValueSource(valueSource)) {
+      return EMPTY;
+    }
+    return this.mapperService.previewGREL(valueSource, value)
         .pipe(untilComponentDestroyed(this), map((value) => {
           const errors = value.map((e) => (e && e.error) ? e.error : e)
               .filter((val, index, self) => self.indexOf(val) === index);
