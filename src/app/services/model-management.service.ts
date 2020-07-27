@@ -5,7 +5,7 @@ import {
   Source,
   Type,
 } from '../models/mapping-definition';
-import {classToPlain, plainToClass} from 'class-transformer';
+import {classToClass, classToPlain, plainToClass} from 'class-transformer';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
 import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
@@ -422,5 +422,32 @@ export class ModelManagementService {
 
   getPreview(cellMapping: MappingBase) {
     return cellMapping && cellMapping.getPreview();
+  }
+
+  isValidMapping(mapping: MappingDefinitionImpl): boolean {
+    try {
+      this.checkSubjectValidity(mapping);
+      this.checkMappingValidity(mapping);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  private checkSubjectValidity(mapping: MappingDefinitionImpl) {
+    mapping.getSubjectMappings().forEach((subject) => {
+      const typeMappingsCount = subject.getTypeMappings() && subject.getTypeMappings().length;
+      const propertyMappingsCount = subject.getPropertyMappings() && subject.getPropertyMappings().length;
+      const count = typeMappingsCount + propertyMappingsCount;
+      if (!count) {
+        throw new Error('Subject has to have at least one type or property mapping');
+      }
+    });
+  }
+
+  private checkMappingValidity(checkedMapping: MappingDefinitionImpl) {
+    const mapping = classToClass(checkedMapping);
+    this.removePreview(mapping);
+    Convert.mappingDefinitionToJson(mapping);
   }
 }

@@ -24,6 +24,10 @@ export class Triple {
     this.level = 0;
   }
 
+  isEmpty(): boolean {
+    return !this.getSubject() && !this.getPredicate() && !this.getObject();
+  }
+
   getSubject() {
     return this.subject;
   }

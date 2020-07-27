@@ -264,12 +264,15 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
     this.onAddNewSibling.emit();
   }
 
-
   public setValue(event: any) {
     this.onValueSet.emit(event);
   }
 
   public onDropEvent(event) {
     this.onDrop.emit(event);
+  }
+
+  public isIncomplete() {
+    return !this.triple.isEmpty() && this.isEmpty();
   }
 }

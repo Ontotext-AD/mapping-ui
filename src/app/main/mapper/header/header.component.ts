@@ -8,8 +8,7 @@ import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestro
 import {MessageService} from 'src/app/services/message.service';
 import {ChannelName} from 'src/app/services/channel-name.enum';
 import {ViewMode} from 'src/app/services/view-mode.enum';
-import {classToClass, plainToClass} from 'class-transformer';
-import {Convert} from 'src/app/models/mapping-definition';
+import {plainToClass} from 'class-transformer';
 import {throwError} from 'rxjs';
 import {NotificationService} from 'src/app/services/notification.service';
 
@@ -50,6 +49,14 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
           this.isSavingInProgress = false;
         });
 
+    this.messageService.read(ChannelName.ProgressCancelled)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(() => {
+          this.isSavingInProgress = false;
+          this.isRdfGenerationInProgress = false;
+          this.isSparqlGenerationInProgress = false;
+        });
+
     this.messageService.read(ChannelName.RDFGenerated)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
@@ -62,7 +69,6 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
           this.isSparqlGenerationInProgress = false;
         });
   }
-
 
   saveMapping(): void {
     this.isSavingInProgress = true;
@@ -84,7 +90,7 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
   }
 
   togglePreview($event): void {
-    this.messageService.publish(ChannelName.ViewMode, $event.value);
+    this.messageService.publish(ChannelName.ViewMode, $event);
   }
 
   public isDevEnv() {
@@ -112,7 +118,7 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
         try {
           const result = JSON.parse(fileReader.result);
           const mapping = plainToClass(MappingDefinitionImpl, result);
-          this.checkMappingValidity(mapping);
+          this.modelManagementService.isValidMapping(mapping);
 
           this.dialogService.confirm({
             content: this.translateService.instant('MESSAGES.CONFIRM_MAPPING_UPLOAD'),
@@ -132,12 +138,6 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
     fileReader.onerror = (error) => {
       throwError(error);
     };
-  }
-
-  private checkMappingValidity(newMapping) {
-    const mapping = classToClass(newMapping);
-    this.modelManagementService.removePreview(mapping);
-    Convert.mappingDefinitionToJson(mapping);
   }
 
   private showErrorWarning(message?: any) {
