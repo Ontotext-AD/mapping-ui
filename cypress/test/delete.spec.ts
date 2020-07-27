@@ -51,8 +51,7 @@ describe('Delete', () => {
       MappingSteps.verifyTriple(0, 'subject', '', '');
     });
 
-    // TODO: skipped untill the issue with preview loading after delete gets fixed
-    it.skip('Should be able to delete an object with nested triples and have a warning', () => {
+    it('Should be able to delete an object with nested triples and have a warning', () => {
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a triple
@@ -239,6 +238,22 @@ describe('Delete', () => {
       MappingSteps.getTriples().should('have.length', 2);
       MappingSteps.getTripleObjectValue(0).should('be.empty');
       MappingSteps.getTripleObjectType(0).should('have.length', 0);
+    });
+
+    it('Should be able to delete the object in a nested triple', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/object-in-nested-triple-mapping-model.json');
+
+      // Given I have loaded a mapping with a nested triple
+      cy.visit('?dataProviderID=ontorefine:123');
+      MappingSteps.getTriples().should('have.length', 3);
+
+      // Delete nested object literal
+      // When I try to delete the object in the nested triple
+      MappingSteps.deleteTripleObject(1);
+      MappingSteps.confirm();
+      // Then I expect the object to be deleted
+      MappingSteps.getTriples().should('have.length', 3);
+      MappingSteps.getTripleObjectValue(1).should('be.empty');
     });
   });
 });
