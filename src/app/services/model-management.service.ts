@@ -375,9 +375,19 @@ export class ModelManagementService {
       if (mapping === predicate) {
         if (!predicate.getValues()) {
           predicate.setValues([]);
+        } else {
+          this.sanitizeValues(predicate);
         }
         predicate.getValues().push(selected);
         return;
+      }
+    });
+  }
+
+  private sanitizeValues(predicate: PropertyMappingImpl): void {
+    predicate.getValues().forEach((value, index) => {
+      if (!value.getValueTransformation() && !value.getValueSource() && !value.getValueType()) {
+        predicate.getValues().splice(index, 1);
       }
     });
   }

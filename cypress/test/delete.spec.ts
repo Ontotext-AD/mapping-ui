@@ -239,6 +239,9 @@ describe('Delete', () => {
       MappingSteps.getTriples().should('have.length', 2);
       MappingSteps.getTripleObjectValue(0).should('be.empty');
       MappingSteps.getTripleObjectType(0).should('have.length', 0);
+      // Then I'll be able to add new object
+      MappingSteps.getTripleObjectValue(0).type('new').blur();
+      MappingSteps.verifyTriple(0, 'duration', 'as', 'new');
     });
   });
 });
