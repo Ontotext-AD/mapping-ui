@@ -638,8 +638,9 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   addNewSibling($event: any, mapping: Triple, triplePosition: string, index: number) {
     if (triplePosition === this.SUBJECT) {
-      this.tabService.selectedInput.next({index: this.triples.length - 1, position: 1});
-      this.triples.splice(this.triples.length - 1, 0, new Triple().setNewMappingRole(SUBJECT_SELECTOR));
+      const insertAt = this.triples.length - 1;
+      this.tabService.selectedInput.next({index: insertAt, position: 1});
+      this.insertTriple(new Triple().setNewMappingRole(SUBJECT_SELECTOR), insertAt);
     } else if (triplePosition === this.PREDICATE) {
       let newTripleIndex = index;
       while (mapping.getSubject() === this.triples[newTripleIndex].getSubject() || mapping.getLevel() < this.triples[newTripleIndex].getLevel()) {
@@ -647,7 +648,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       }
       const newTriple = new Triple(mapping.getSubject(), undefined, undefined).setNewMappingRole(PREDICATE_SELECTOR);
       newTriple.setLevel(mapping.getLevel());
-      this.triples.splice(newTripleIndex, 0, newTriple);
+      this.insertTriple(newTriple, newTripleIndex);
     } else {
       let newTripleIndex = index;
       while (mapping.getPredicate() === this.triples[newTripleIndex].getPredicate() || mapping.getLevel() < this.triples[newTripleIndex].getLevel()) {
@@ -655,8 +656,26 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       }
       const newTriple = new Triple(mapping.getSubject(), mapping.getPredicate(), undefined).setTypeProperty(mapping.isTypeProperty).setNewMappingRole(OBJECT_SELECTOR);
       newTriple.setLevel(mapping.getLevel());
-      this.triples.splice(newTripleIndex, 0, newTriple);
+      this.insertTriple(newTriple, newTripleIndex);
     }
+  }
+
+  private insertTriple(triple, position) {
+    if (this.canAddSubject(triple, position - 1) || this.canAddPredicate(triple, position - 1) || this.canAddObject(triple, position - 1)) {
+      this.triples.splice(position, 0, triple);
+    }
+  }
+
+  private canAddSubject(triple, position): boolean {
+    return triple.getNewMappingRole() === SUBJECT_SELECTOR && !this.triples[position].isEmpty();
+  }
+
+  private canAddPredicate(triple, position): boolean {
+    return triple.getNewMappingRole() === PREDICATE_SELECTOR && !!this.triples[position].getPredicate();
+  }
+
+  private canAddObject(triple, position): boolean {
+    return triple.getNewMappingRole() === OBJECT_SELECTOR && !!this.triples[position].getObject();
   }
 
   private getRowEnding(triple: Triple) {
