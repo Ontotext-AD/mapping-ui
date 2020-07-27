@@ -175,7 +175,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
       if (emitTab) {
         this.tabService.selectCommand.emit({index: this.tabIndex, position: this.tabPosition});
       }
-      this.onValueSet.emit({value: value, source: this.getSource(this.autoInput.value)});
+      this.onValueSet.emit({value, source: this.getSource(this.autoInput.value)});
     }
   }
 

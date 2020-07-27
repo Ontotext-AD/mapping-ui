@@ -157,19 +157,27 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
     };
   }
 
+  private hasTypeMappings(node) {
+    return node && node.getTypeMappings() && node.getTypeMappings().length;
+  }
+
+  private hasPropertyMappings(node) {
+    return node && node.getPropertyMappings() && node.getPropertyMappings().length;
+  }
+
   private getOnDeleteWarningMessage(): string {
     let hasChildren = false;
     let messageKey = 'MESSAGES.CONFIRM_MAPPING_DELETION';
     if (this.cellType === this.SUBJECT) {
-      const hasPredicate = this.cellMapping.getPropertyMappings() && this.cellMapping.getPropertyMappings().length;
-      const hasObject = this.cellMapping.getTypeMappings() && this.cellMapping.getTypeMappings().length;
+      const hasPredicate = this.hasPropertyMappings(this.cellMapping);
+      const hasObject = this.hasTypeMappings(this.cellMapping);
       hasChildren = !!(hasPredicate || hasObject || this.triple.isTypeProperty);
     } else if (this.cellType === this.PREDICATE) {
       const object = this.triple.getObject();
       hasChildren = !!(object && (object.getValueSource() || object.getValueType()));
     } else if (this.cellType === this.OBJECT) {
       const object = this.triple.getObject();
-      hasChildren = !!(object && (object.getTypeMappings().length || object.getPropertyMappings().length));
+      hasChildren = !!(object && (this.hasTypeMappings(object) || this.hasPropertyMappings(object)));
     } else {
       throw Error('No such type!');
     }

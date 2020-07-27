@@ -31,7 +31,7 @@ import {MapperService} from 'src/app/services/rest/mapper.service';
 import {ViewMode} from 'src/app/services/view-mode.enum';
 
 export interface JSONDialogData {
-  mapping
+  mapping;
 }
 
 @Component({
@@ -55,7 +55,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   usedSources: Set<string>;
 
   private boundCheckDirty: any;
-  private isPreviewOn: boolean = true;
+  private isPreviewOn = true;
   private viewMode: ViewMode = ViewMode.Configuration;
 
   constructor(private modelManagementService: ModelManagementService,
