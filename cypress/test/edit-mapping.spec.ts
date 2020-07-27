@@ -211,7 +211,6 @@ describe('Edit mapping', () => {
       // Then I expect to view JSON popup window
       MappingSteps.getViewJSONDialog().should('be.visible').and('contain', 'datatype_literal');
     });
-
   });
 
   context('Preview GREL', () => {
@@ -315,6 +314,28 @@ describe('Edit mapping', () => {
       // THEN
       // I see error message
       assertNotAllowedNotification();
+    });
+
+    it('Should keep preview after deletion', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+
+      // When I load application
+      cy.visit('?dataProviderID=ontorefine:123');
+      // I switch to preview mode
+      HeaderSteps.getPreviewButton().click()
+
+      //WHEN
+      //I delete the object
+      MappingSteps.deleteTripleObject(0);
+      MappingSteps.confirm();
+
+      //THEN
+      // Subject and predicate are in preview mode
+      MappingSteps.getTripleSubject(0).should('contain', '<James%20Cameron>');
+      MappingSteps.getTriplePredicate(0).should('contain', '<test>');
+      MappingSteps.getTripleObject(0).should('have.length',1);
     });
   });
 });
