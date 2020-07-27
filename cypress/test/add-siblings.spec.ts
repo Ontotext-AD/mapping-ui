@@ -64,4 +64,27 @@ describe('Add siblings', () => {
     MappingSteps.getTripleObject(6).find('input').should('have.focus');
   });
 
+  it('Should add only one object sibling', () => {
+    MappingSteps.addTripleObjectSibling(5);
+    MappingSteps.addTripleObjectSibling(5);
+    MappingSteps.addTripleObjectSibling(5);
+    MappingSteps.getTriple(6).should('have.class', 'level-1');
+    MappingSteps.getTriples().should('have.length', 8);
+  });
+
+  it('Should add only one predicate sibling', () => {
+    MappingSteps.addTriplePredicateSibling(5);
+    MappingSteps.addTriplePredicateSibling(5);
+    MappingSteps.addTriplePredicateSibling(5);
+    MappingSteps.getTriple(6).should('have.class', 'level-1');
+    MappingSteps.getTriples().should('have.length', 8);
+  });
+
+  it('Should add only one subject sibling', () => {
+    MappingSteps.addTripleSubjectSibling(0);
+    MappingSteps.addTripleSubjectSibling(0);
+    MappingSteps.addTripleSubjectSibling(0);
+    MappingSteps.getTriples().should('have.length', 8);
+  });
+
 });
