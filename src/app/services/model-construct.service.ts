@@ -125,8 +125,11 @@ export class ModelConstructService {
   private setTypeTransformation(cellMapping: MappingBase, form, settings): void {
     if (settings.isTransformation && this.isAllowedExpression(form.expression, form.language)) {
       this.modelManagementService.setExpression(cellMapping, form.expression);
-      this.modelManagementService.setTransformationLanguage(cellMapping, form.language);
-      if (form.language === Language.Prefix.valueOf() && !settings.namespaces[form.expression]) {
+      // Transformation language should be cleared if the expression is not present.
+      // This would prevent showing an empty badge in the UI and also the mapping would be kept valid.
+      this.modelManagementService.setTransformationLanguage(cellMapping, form.language, form.expression);
+      // Should update the namespaces only if the expression is set
+      if (form.language === Language.Prefix.valueOf() && !settings.namespaces[form.expression] && form.expression) {
         settings.namespaces[form.expression] = settings.repoNamespaces[form.expression];
       }
     }

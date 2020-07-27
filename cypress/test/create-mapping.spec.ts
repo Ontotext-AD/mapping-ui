@@ -136,4 +136,31 @@ describe('Create mapping', () => {
     MappingSteps.getTripleObjectType(4).should('contain', 'Unique BNode');
     MappingSteps.getTripleObjectType(5).should('contain', 'BNode');
   });
+
+  it('Should render prefix in a badge inside the cell', () => {
+    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+    cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
+    cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:create-mapping/preview-response.json');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+
+    // Given I have opened the application with an empty mapping
+    cy.visit('?dataProviderID=ontorefine:123');
+    cy.wait('@loadColumns');
+    // And I have created a triple
+    MappingSteps.completeTriple(0, '@duration', 'as', '@color');
+    MappingSteps.getTriples().should('have.length', 2);
+    // When I set a subject prefix
+    MappingSteps.editTripleSubject(0);
+    EditDialogSteps.selectPrefix();
+    EditDialogSteps.completePrefix('rdf');
+    EditDialogSteps.saveConfiguration();
+    // Then I expect to see the prefix in the subject cell
+    MappingSteps.getTripleSubjectPrefix(0).should('contain', 'rdf');
+    // When I remove the prefix
+    MappingSteps.editTripleSubject(0);
+    EditDialogSteps.clearPrefix();
+    EditDialogSteps.saveConfiguration();
+    // Then I expect the prefix to be removed from cell
+    MappingSteps.getTripleSubjectPrefix(0).should('not.be.visible');
+  });
 });

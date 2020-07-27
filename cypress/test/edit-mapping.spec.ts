@@ -270,7 +270,6 @@ describe('Edit mapping', () => {
     });
   });
 
-
   context('incomplete mapping', () => {
     it('Should not allow operations with incomplete mapping', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/incomplete-mapping-model.json');
@@ -342,5 +341,5 @@ describe('Edit mapping', () => {
 
 function assertNotAllowedNotification() {
   MappingSteps.getNotification().should('contain', 'The operation is not allowed. You have an incomplete mapping.');
-  MappingSteps.getNotification().should('not.be.visible')
+  MappingSteps.getNotification().should('not.be.visible');
 }

@@ -326,18 +326,25 @@ export class ModelManagementService {
     if (!this.getTransformation(cellMapping)) {
       this.addValueTransformation(cellMapping);
     }
-    this.getTransformation(cellMapping) && this.getTransformation(cellMapping).setExpression(transformation);
+    if (this.getTransformation(cellMapping)) {
+      this.getTransformation(cellMapping).setExpression(transformation);
+    }
   }
 
   getTransformationLanguage(cellMapping: MappingBase): string {
     return this.getTransformation(cellMapping) && this.getTransformation(cellMapping).getLanguage();
   }
 
-  setTransformationLanguage(cellMapping: MappingBase, lang: string): void {
+  setTransformationLanguage(cellMapping: MappingBase, lang: string, expression: string): void {
     if (!this.getTransformation(cellMapping)) {
       this.addValueTransformation(cellMapping);
     }
-    this.getTransformation(cellMapping).setLanguage(lang);
+    if (!expression) {
+      cellMapping.setValueTransformation(undefined);
+    }
+    if (this.getTransformation(cellMapping)) {
+      this.getTransformation(cellMapping).setLanguage(lang);
+    }
   }
 
   addValueTransformation(cellMapping: MappingBase) {

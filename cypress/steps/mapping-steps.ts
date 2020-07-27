@@ -76,6 +76,10 @@ class MappingSteps {
     return MappingSteps.getTripleSubject(index).find('.ti-type');
   }
 
+  static getTripleSubjectPrefix(index: any) {
+    return MappingSteps.getTripleSubject(index).find('.ti-transform');
+  }
+
   static getTripleSubjectSource(index: any) {
     return MappingSteps.getTripleSubject(index).find('.ti-source');
   }

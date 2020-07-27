@@ -89,6 +89,10 @@ class EditDialogSteps {
     return EditDialogSteps.getDialog().find('[appCypressData=transformation-section]');
   }
 
+  static getTransformationExpressionField() {
+    return this.getTransformationSection().find('[appCypressData=transformation-expression]');
+  }
+
   static selectGREL() {
     return this.getTransformationSection().find('[appCypressData=transformation-grel]').should('be.visible').click();
   }
@@ -98,7 +102,7 @@ class EditDialogSteps {
   }
 
   static completeGREL(value: string) {
-    this.getTransformationSection().find('[appCypressData=transformation-expression]').should('be.visible').type(value);
+    return this.getTransformationExpressionField().should('be.visible').type(value);
   }
 
   static completeDataTypeGREL(value: string) {
@@ -109,6 +113,22 @@ class EditDialogSteps {
     return this.getTransformationSection().find('[appCypressData=grel-preview]');
   }
 
+  static selectPrefix() {
+    return this.getTransformationSection().find(`[appCypressData=transformation-prefix]`).click();
+  }
+
+  static completePrefix(prefix: string) {
+    // emulate [esc] button hit in order to close the autocomplete
+    return this.getTransformationExpressionField().should('be.visible').type(`${prefix}{esc}`, {
+      parseSpecialCharSequences: true
+    });
+  }
+
+  static clearPrefix() {
+    return this.getTransformationExpressionField().should('be.visible').clear().type('{esc}', {
+      parseSpecialCharSequences: true
+    });
+  }
 
   static getDataTypeGRELPreview() {
     return this.getTypeSection().find('[appCypressData=datatype-grel-preview]');
