@@ -61,8 +61,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     this.messageService.read(ChannelName.NewMapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
-          this.mapping = new MappingDefinitionImpl(EMPTY_MAPPING.baseIRI, EMPTY_MAPPING.namespaces, EMPTY_MAPPING.subjectMappings);
-          this.rdfMapping.next(this.mapping);
+          this.rdfMapping.next(new MappingDefinitionImpl(EMPTY_MAPPING.baseIRI, EMPTY_MAPPING.namespaces, EMPTY_MAPPING.subjectMappings));
         });
 
     this.messageService.read(ChannelName.SaveMapping)
