@@ -9,6 +9,7 @@ export class RestService {
   dataProviderID: Observable<string>;
   apiUrl = environment.restApiUrl;
   httpHeaders: any;
+  readonly httpOptions: { headers: any };
 
   static getPort() {
     let port = window.location.port;
@@ -34,16 +35,12 @@ export class RestService {
       'Content-Type': 'application/json',
       'Authorization': auth,
     });
+    this.httpOptions = {
+      headers: this.httpHeaders,
+    };
     this.dataProviderID = this.route.queryParams.pipe(switchMap((params: Params) => {
       return (params.dataProviderID) ? of(params.dataProviderID) : EMPTY;
     }));
   }
 
-  readonly httpOptions = {
-    /**
-     * ESLint incorrectly finds it as error.
-     */
-    // eslint-disable-next-line no-invalid-this
-    headers: this.httpHeaders,
-  };
 }
