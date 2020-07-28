@@ -47,7 +47,7 @@ describe('Delete', () => {
       // Then I expect a warning
       MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do you want to remove this mapping?');
       MappingSteps.confirm();
-      MappingSteps.getTriples().should('have.length', 2);
+      MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.verifyTriple(0, 'subject', '', '');
     });
 
@@ -75,7 +75,7 @@ describe('Delete', () => {
       // Then I expect warning
       MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do you want to remove this mapping?');
       MappingSteps.confirm();
-      MappingSteps.getTriples().should('have.length', 2);
+      MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.verifyTriple(0, 'subject', 'predicate', '');
     });
   });
@@ -235,7 +235,7 @@ describe('Delete', () => {
       MappingSteps.deleteTripleObject(0);
       MappingSteps.confirm();
       // Then I expect the object to be deleted
-      MappingSteps.getTriples().should('have.length', 2);
+      MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.getTripleObjectValue(0).should('be.empty');
       MappingSteps.getTripleObjectType(0).should('have.length', 0);
       // Then I'll be able to add new object
@@ -255,7 +255,7 @@ describe('Delete', () => {
       MappingSteps.deleteTripleObject(1);
       MappingSteps.confirm();
       // Then I expect the object to be deleted
-      MappingSteps.getTriples().should('have.length', 3);
+      MappingSteps.getTriples().should('have.length', 2);
       MappingSteps.getTripleObjectValue(1).should('be.empty');
     });
   });

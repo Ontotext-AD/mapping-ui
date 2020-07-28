@@ -107,7 +107,7 @@ describe('MapperComponent', () => {
     // I see subject created
     cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.be.visible');
     cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-2").contains('director_name');
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-3").should('be.visible');
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-3").should('not.be.visible');
 
     // WHEN:
     // I click on edit button of the empty triple's predicate
@@ -133,7 +133,7 @@ describe('MapperComponent', () => {
     // I see predicate created
     cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.be.visible');
     cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + "-2").contains('constant123');
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-3").should('be.visible');
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-3").should('not.be.visible');
 
     // WHEN:
     // I click on edit button of the empty triple's object
