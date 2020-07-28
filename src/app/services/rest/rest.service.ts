@@ -25,4 +25,17 @@ export class RestService {
     // eslint-disable-next-line no-invalid-this
     headers: this.httpHeaders,
   };
+
+
+  static getPort() {
+    let port = window.location.port;
+    if (!port) {
+      if (window.location.protocol === 'https:') {
+        port = '443';
+      } else {
+        port = '80';
+      }
+    }
+    return port;
+  }
 }
