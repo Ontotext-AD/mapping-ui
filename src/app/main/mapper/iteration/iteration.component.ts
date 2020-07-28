@@ -341,11 +341,14 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
     dialogRef.afterClosed().subscribe((result) => {
       this.initMappingDetails();
-      this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
-      this.initWithPreview(true);
 
-      const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
-      this.tabService.selectCommand.emit({index: this.triples.length - 2, position});
+      if (result) {
+        this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
+        this.initWithPreview(true);
+
+        const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
+        this.tabService.selectCommand.emit({index: this.triples.length - 2, position});
+      }
     });
   }
 
