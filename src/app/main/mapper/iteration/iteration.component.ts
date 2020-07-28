@@ -188,7 +188,11 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     this.usedSources = new Set();
     this.triples = [];
     this.convertToTriples(this.mapping);
-    this.addTriple(new Triple(), 0);
+
+    if (this.modelManagementService.isValidMapping(this.mapping)) {
+      this.addTriple(new Triple(), 0);
+    }
+
     this.initMappingDetails();
     this.repositoryService.getNamespaces()
         .pipe(untilComponentDestroyed(this))
