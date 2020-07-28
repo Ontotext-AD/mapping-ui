@@ -18,6 +18,7 @@ import {ModelManagementService} from 'src/app/services/model-management.service'
 import {MatDividerModule} from '@angular/material/divider';
 import {EmptyBlockComponent} from './empty-block/empty-block.component';
 import {TypeBadgeComponent} from './type-badge/type-badge.component';
+import {TransformationTypeBadgeComponent} from './transformation-type-badge/transformation-type-badge.component';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import {TypeBadgeComponent} from './type-badge/type-badge.component';
     ConfigurationAndPreviewCellComponent,
     EmptyBlockComponent,
     TypeBadgeComponent,
+    TransformationTypeBadgeComponent,
   ],
   exports: [
     CellComponent,
