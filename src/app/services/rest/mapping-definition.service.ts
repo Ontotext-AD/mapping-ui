@@ -7,6 +7,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Observable, of, EMPTY} from 'rxjs';
 import {map, switchMap, catchError} from 'rxjs/operators';
 import {EMPTY_MAPPING} from 'src/app/utils/constants';
+import {CookieService} from "ngx-cookie-service";
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,9 @@ import {EMPTY_MAPPING} from 'src/app/utils/constants';
 export class MappingDefinitionService extends RestService {
   constructor(protected httpClient: HttpClient,
               protected route: ActivatedRoute,
+              protected cookies: CookieService,
               private errorReporterService: ErrorReporterService) {
-    super(route);
+    super(route, cookies);
     this.apiUrl = environment.mappingApiUrl;
   }
 
@@ -43,7 +45,7 @@ export class MappingDefinitionService extends RestService {
   saveMappingDefinition(mappingDefinition: JSON) {
     return this.getAPIURL('/mapping-editor/save-rdf-mapping/').pipe(switchMap((fullUrl) => {
       const payload = new HttpParams().set('mapping', encodeURIComponent(JSON.stringify(mappingDefinition)));
-      return this.httpClient.post<any>(fullUrl, payload).pipe(catchError((error) => this.errorReporterService.handleError('Mapping save failed.', error)));
+      return this.httpClient.post<any>(fullUrl, payload, this.httpOptions).pipe(catchError((error) => this.errorReporterService.handleError('Mapping save failed.', error)));
     }));
   }
 }

@@ -9,6 +9,7 @@ import {environment} from 'src/environments/environment';
 import {ActivatedRoute} from '@angular/router';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {Column} from '../../models/mapping-definition';
+import {CookieService} from "ngx-cookie-service";
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +17,9 @@ import {Column} from '../../models/mapping-definition';
 export class MapperService extends RestService {
   constructor(protected httpClient: HttpClient,
               protected route: ActivatedRoute,
+              protected cookies: CookieService,
               private errorReporterService: ErrorReporterService) {
-    super(route);
+    super(route, cookies);
     this.apiUrl = environment.restApiUrl;
   }
 
@@ -39,8 +41,10 @@ export class MapperService extends RestService {
   }
 
   getRDF(mappingDefinition: MappingDefinitionImpl): Observable<any> {
+    let headers = this.httpOptions.headers;
+    headers['Accept'] = 'text/turtle';
     const httpOptions = {
-      headers: new HttpHeaders({Accept: 'text/turtle'}),
+      headers: headers,
       responseType: 'blob' as 'json',
     };
     return this.getAPIURL('/rdf/').pipe(switchMap((fullUrl) => {
@@ -51,7 +55,7 @@ export class MapperService extends RestService {
 
   preview(mappingDefinition: MappingDefinitionImpl): Observable<any> {
     return this.getAPIURL('/preview/').pipe(switchMap((fullUrl) => {
-      return this.httpClient.post(fullUrl, mappingDefinition).pipe(
+      return this.httpClient.post(fullUrl, mappingDefinition, this.httpOptions).pipe(
           catchError((error) => this.errorReporterService.handleError('Loading preview failed.', error)));
     }));
   }
@@ -59,16 +63,14 @@ export class MapperService extends RestService {
   previewGREL(valueSource: Column, grelExpression: string, limit?: number): Observable<Array<any>> {
     const payload = {valueSource, grel: grelExpression};
     return this.getAPIURL('/grel/').pipe(switchMap((fullUrl) => {
-      return this.httpClient.post<Array<any>>(fullUrl + '?limit=' + (limit || 10), payload).pipe(
+      return this.httpClient.post<Array<any>>(fullUrl + '?limit=' + (limit || 10), payload, this.httpOptions).pipe(
           catchError((error) => this.errorReporterService.handleError('Loading grel failed.', error)));
     }));
   }
 
   getSPARQL(mappingDefinition: MappingDefinitionImpl): Observable<string> {
-    const httpOptions = this.httpOptions;
-    httpOptions['reponseType'] = 'text';
     return this.getAPIURL('/sparql/').pipe(switchMap((fullUrl) => {
-      return this.httpClient.post<string>(fullUrl, mappingDefinition, httpOptions).pipe(
+      return this.httpClient.post<string>(fullUrl, mappingDefinition, this.httpOptions).pipe(
           catchError((error) => this.errorReporterService.handleError('Loading sparql failed.', error)));
     }));
   }

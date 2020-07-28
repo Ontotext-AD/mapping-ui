@@ -6,28 +6,22 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {ErrorReporterService} from '../error-reporter.service';
 import {SPARQL_AUTOCOMPLETE, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/constants';
+import {RestService} from "./rest.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Injectable({
   providedIn: 'root',
 })
-export class RepositoryService {
+export class RepositoryService extends RestService {
   apiUrl = environment.repositoryApiUrl;
 
-  private static getPort() {
-    let port = window.location.port;
-    if (!port) {
-      if (window.location.protocol === 'https:') {
-        port = '443';
-      } else {
-        port = '80';
-      }
-    }
-    return port;
-  }
 
   constructor(protected httpClient: HttpClient,
+              private errorReporterService: ErrorReporterService,
+              protected route: ActivatedRoute,
               protected cookies: CookieService,
-              private errorReporterService: ErrorReporterService) {
+              ) {
+    super(route, cookies);
   }
 
   getAPIURL(apiName: string): Observable<string> {
@@ -35,13 +29,11 @@ export class RepositoryService {
     return (repo) ? of(`${this.apiUrl}/${repo}${apiName}`) : EMPTY;
   }
 
-  private getCookie(cookieName): string {
-    return this.cookies.get(cookieName + RepositoryService.getPort());
-  }
+
 
   getNamespaces(): Observable<{ [p: string]: string }> {
     return this.getAPIURL('/namespaces').pipe(switchMap((fullUrl) => {
-      return this.httpClient.get<any>(fullUrl, {}).pipe(map((res) => {
+      return this.httpClient.get<any>(fullUrl, this.httpOptions).pipe(map((res) => {
         const obj = {};
         res.results.bindings.forEach((e) => {
           obj[e.prefix.value] = e.namespace.value;
@@ -66,7 +58,7 @@ export class RepositoryService {
   autocomplete(searchKey: string, query: string): Observable<string[]> {
     const payload = new HttpParams().set('query', query.replace('KEY_WORD', searchKey));
     return this.getAPIURL('').pipe(switchMap((fullUrl) => {
-      return this.httpClient.post<any>(fullUrl, payload).pipe(map((res) => {
+      return this.httpClient.post<any>(fullUrl, payload, this.httpOptions).pipe(map((res) => {
         return res.results.bindings.map((binding) => {
           return binding.iri.value;
         });
