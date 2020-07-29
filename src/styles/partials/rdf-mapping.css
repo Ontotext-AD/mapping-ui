@@ -182,6 +182,9 @@
   border-radius: 20rem;
   font-weight: 400;
 }
+.ti-transform:empty {
+  display: none;
+}
 
 .ti-transform-block {
   text-align: right;
