@@ -66,14 +66,7 @@
         <div *ngIf="isFirstChild && !isTypeProperty; else emptyBlock" fxFill>
           <div fxLayout="row" fxLayoutAlign="space-between end">
             <div fxFlex="auto">
-              <div *ngIf="getTransformationType()">
-                <span class="ti-transform" [ngClass]="{
-                  'type-grel': getTransformationType() === GREL,
-                  'type-prefix': getTransformationType() === PREFIX
-                  }">
-                  {{getTransformationLabel()}}
-                </span>
-              </div>
+              <app-transformation-type-badge [cellMapping]="cellMapping" [target]="propertytransformation"></app-transformation-type-badge>
             </div>
 
             <div class="ml-8" fxFlex="grow">
@@ -106,14 +99,7 @@
 
           <div class="mt-12">
             <div fxFlex="auto">
-              <div *ngIf="getSecondaryTransformationType()">
-                <span class="ti-transform" [ngClass]="{
-                  'type-grel': getSecondaryTransformationType().getLanguage() === GREL,
-                  'type-prefix': getSecondaryTransformationType().getLanguage() === PREFIX
-                  }">
-                  {{getSecondaryTransformationLabel()}}
-                </span>
-              </div>
+              <app-transformation-type-badge [cellMapping]="cellMapping" [target]="valuetransformation"></app-transformation-type-badge>
             </div>
 
             <div class="ml-8" fxFlex="grow">
@@ -173,16 +159,7 @@
 
             <div dir="rtl">
               <div [fxFlex]="20">
-                <div *ngIf="getSecondaryTransformationType()">
-                  <span class="ti-transform" [ngClass]="{
-                  'type-datatype': getType() === DATATYPE_LITERAL,
-                  'type-language-literal': getType() === LANGUAGE_LITERAL
-                  }">
-                    <span *ngIf="isSecondaryType()">
-                    {{getSecondaryTypeLabel()}}
-                    </span>
-                  </span>
-                </div>
+                <app-transformation-type-badge [cellMapping]="cellMapping" [target]="datatypetransformation"></app-transformation-type-badge>
               </div>
             </div>
           </div>

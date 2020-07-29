@@ -136,4 +136,36 @@ describe('Create mapping', () => {
     MappingSteps.getTripleObjectType(4).should('contain', 'Unique BNode');
     MappingSteps.getTripleObjectType(5).should('contain', 'BNode');
   });
+
+  context('Transformation type', () => {
+    it('Should render transformation type in a badge in the cell', () => {
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
+      cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:create-mapping/preview-response.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:create-mapping/transformation-types-mapping-model.json');
+
+      // Given I have opened the application with an a mapping containing transformation types
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      MappingSteps.getTriples().should('have.length', 3);
+      // First triple
+      // Then I expect subject to have a property prefix badge
+      MappingSteps.getTripleSubjectPropertyTransformation(0).should('contain', 'rdf');
+      // And I expect predicate to have a property grel transformation badge
+      MappingSteps.getTriplePredicatePropertyTransformation(0).should('contain', 'GREL');
+      // And I expect object to have a prefix, grel and datatype transformation badge
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('contain', 'GREL');
+      MappingSteps.getTripleObjectValueTransformation(0).should('contain', 'rdf');
+      MappingSteps.getTripleObjectDatatypeTransformation(0).should('contain', 'Datatype');
+      // Second triple
+      // Then I expect subject to have a property prefix badge
+      MappingSteps.getTripleSubjectPropertyTransformation(1).should('contain', 'GREL');
+      // And I expect predicate to have a property grel transformation badge
+      MappingSteps.getTriplePredicatePropertyTransformation(1).should('contain', 'GREL');
+      // And I expect object to have a prefix, grel and datatype transformation badge
+      MappingSteps.getTripleObjectPropertyTransformation(1).should('contain', 'GREL');
+      MappingSteps.getTripleObjectValueTransformation(1).should('contain', 'GREL');
+      MappingSteps.getTripleObjectDatatypeTransformation(1).should('contain', 'Language');
+    });
+  });
 });

@@ -16,7 +16,6 @@ import {
   GREL_CONSTANT,
   OBJECT_SELECTOR,
   PREDICATE_SELECTOR,
-  PREFIX_CONSTANT,
   SUBJECT_SELECTOR,
 } from 'src/app/utils/constants';
 import {TranslateService} from '@ngx-translate/core';
@@ -28,6 +27,12 @@ import {Observable} from 'rxjs';
 import {Helper} from 'src/app/utils/helper';
 import {ViewMode} from 'src/app/services/view-mode.enum';
 import {Triple} from '../../../models/triple';
+
+export enum TransformationTarget {
+  PROPERTYTRANSFORMATION = 'propertytransformation',
+  VALUETRANSFORMATION = 'valuetransformation',
+  DATATYPETRANSFORMATION = 'datatypetransformation',
+}
 
 @Component({
   selector: 'app-mapper-cell',
@@ -57,16 +62,15 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   suggestions: Observable<Observable<any>>;
   selected: boolean = undefined;
 
+  propertytransformation = TransformationTarget.PROPERTYTRANSFORMATION;
+  valuetransformation = TransformationTarget.VALUETRANSFORMATION;
+  datatypetransformation = TransformationTarget.DATATYPETRANSFORMATION;
+
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
   OBJECT = OBJECT_SELECTOR;
-
   IRI = Type.IRI;
-  DATATYPE_LITERAL = Type.DatatypeLiteral;
-  LANGUAGE_LITERAL = Type.LanguageLiteral;
-
   GREL = GREL_CONSTANT;
-  PREFIX = PREFIX_CONSTANT;
 
   ViewMode = ViewMode;
 
@@ -211,43 +215,6 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
 
   public getType(): string {
     return this.getValueType() && this.getValueType().getType();
-  }
-
-  public getTransformationType() {
-    return this.getTransformation() && this.getTransformation().getLanguage();
-  }
-
-  public getTransformationLabel() {
-    if (this.getTransformationType() === this.GREL) {
-      return this.translateService.instant('LABELS.GREL');
-    } else if (this.getTransformationType() === this.PREFIX) {
-      return this.getTransformation().getExpression();
-    }
-  }
-
-  public isSecondaryType() {
-    return this.getType() === Type.DatatypeLiteral || this.getType() === Type.LanguageLiteral;
-  }
-
-  public getSecondaryTypeLabel() {
-    if (this.getType() === this.DATATYPE_LITERAL) {
-      return this.translateService.instant('LABELS.DATATYPE_LITERAL');
-    } else if (this.getType() === this.LANGUAGE_LITERAL) {
-      return this.translateService.instant('LABELS.LANGUAGE_LITERAL');
-    }
-  }
-
-  public getSecondaryTransformationType() {
-    return this.modelManagementService.getValueTypeDatatypeTransformation((this.cellMapping)) ||
-      this.modelManagementService.getValueTypeLanguageTransformation((this.cellMapping));
-  }
-
-  public getSecondaryTransformationLabel() {
-    if (this.getSecondaryTransformationType().getLanguage() === this.GREL) {
-      return this.translateService.instant('LABELS.GREL');
-    } else if (this.getSecondaryTransformationType().getLanguage() === this.PREFIX) {
-      return this.getSecondaryTransformationType().getExpression();
-    }
   }
 
   public onEdit() {

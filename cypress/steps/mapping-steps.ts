@@ -76,6 +76,14 @@ class MappingSteps {
     return MappingSteps.getTripleSubject(index).find('.ti-type');
   }
 
+  static getTripleSubjectPropertyTransformation(index: any) {
+    return MappingSteps.getTripleSubject(index).find('.propertytransformation .ti-transform');
+  }
+
+  static getTripleSubjectValueTransformation(index: any) {
+    return MappingSteps.getTripleSubject(index).find('.valuetransformation .ti-transform');
+  }
+
   static getTripleSubjectSource(index: any) {
     return MappingSteps.getTripleSubject(index).find('.ti-source');
   }
@@ -121,6 +129,10 @@ class MappingSteps {
     return MappingSteps.getTriplePredicate(index).find('.ti-row');
   }
 
+  static getTriplePredicatePropertyTransformation(index: any) {
+    return MappingSteps.getTriplePredicate(index).find('.propertytransformation .ti-transform');
+  }
+
   static addTriplePredicateSibling(index: number) {
     MappingSteps.getTriplePredicate(index).find('[appCypressData="add-sibling"]').click();
   }
@@ -156,6 +168,18 @@ class MappingSteps {
 
   static getTripleObjectContent(index: any) {
     return MappingSteps.getTripleObject(index).find('.ti-row');
+  }
+
+  static getTripleObjectPropertyTransformation(index: any) {
+    return MappingSteps.getTripleObject(index).find('.propertytransformation .ti-transform');
+  }
+
+  static getTripleObjectValueTransformation(index: any) {
+    return MappingSteps.getTripleObject(index).find('.valuetransformation .ti-transform');
+  }
+
+  static getTripleObjectDatatypeTransformation(index: any) {
+    return MappingSteps.getTripleObject(index).find('.datatypetransformation .ti-transform');
   }
 
   static deleteTripleObject(index: number) {
