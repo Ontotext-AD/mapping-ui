@@ -52,5 +52,5 @@ export const SPARQL_AUTOCOMPLETE=`SELECT distinct ?iri ?g WHERE {
 }`;
 export const SOURCE_SIGN = {
   Column: '@',
-  RecordRowID: '#',
+  RecordRowID: '$',
 };

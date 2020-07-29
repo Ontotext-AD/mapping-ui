@@ -62,6 +62,28 @@ describe('Edit mapping', () => {
     EditDialogSteps.getOkButton().should('be.visible').and('be.disabled');
   });
 
+  context('edit inline prefix', () => {
+    beforeEach(() => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+    });
+
+    // TODO Complete tests when extend functionality is complete
+    it('Should set prefix expression', () => {
+      MappingSteps.getTriples().should('have.length', 1);
+      // And I have created a subject, a predicate and an object
+      MappingSteps.completeTriple(0, 'rdf:extend/subject', 'rdf:extend/@Title', 'rdf:$row_index');
+      MappingSteps.getTripleSubjectSource(0).contains('subject')
+      MappingSteps.getTriplePredicate(0).contains('Title')
+      MappingSteps.getTripleObjectSource(0).contains(('row_index'))
+
+    });
+  });
+
   // TODO: I add these tests here for now, but later we should distribute them in respective specs with the related operations
   context('Handle errors', () => {
     it('Should show error notification when model could not be loaded', () => {

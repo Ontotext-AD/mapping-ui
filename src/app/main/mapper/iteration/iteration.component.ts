@@ -553,6 +553,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   public onValueSet(valueSet, triple: any, selected: string, index: number) {
     const value = valueSet.value;
     const source = valueSet.source;
+    let prefixTransformation = valueSet.prefixTransformation;
     if (selected === this.SUBJECT && index === this.triples.length - 1) {
       triple.setRoot(true);
     } else if (selected === this.PREDICATE && triple.getSubject()) {
@@ -586,11 +587,13 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       }
     }
 
-    let prefixTransformation;
-    if (source === SourceEnum.Constant) {
+    let prefix;
+    if (prefixTransformation) {
+      prefix = prefixTransformation;
+    } else if (source === SourceEnum.Constant) {
       prefixTransformation = this.modelConstructService.getPrefixTransformation(value, this.getAllNamespaces());
+      prefix = prefixTransformation && prefixTransformation.prefix;
     }
-    const prefix = prefixTransformation && prefixTransformation.prefix;
 
     const data = {
       constant: source === SourceEnum.Constant ? value : undefined,
@@ -598,7 +601,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       source,
       type: this.getType(selected, triple, value),
       typeMapping: triple.isTypeProperty,
-      expression: prefix ? prefixTransformation.prefix : undefined,
+      expression: prefix ? prefix : undefined,
       language: prefix ? Language.Prefix.valueOf() : undefined,
     };
 
