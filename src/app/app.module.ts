@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MapperModule} from 'src/app/main/mapper/mapper.module';
@@ -19,6 +19,7 @@ import {FormsModule} from '@angular/forms';
 import {DirectivesModule} from 'src/app/directives/directives.module';
 import {environment} from 'src/environments/environment';
 import {ComponentsModule} from 'src/app/main/components/components.module';
+import {TokenInterceptor} from './auth/token.interceptor';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, environment.httpLoaderPrefix, environment.httpLoaderSuffix);
@@ -52,7 +53,11 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     FormsModule,
     DirectivesModule,
   ],
-  providers: [TranslateService],
+  providers: [TranslateService, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptor,
+    multi: true,
+  }],
   bootstrap: [AppComponent],
   exports: [TranslateModule],
 })

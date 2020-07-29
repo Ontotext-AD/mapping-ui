@@ -6,6 +6,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {ErrorReporterService} from '../error-reporter.service';
 import {SPARQL_AUTOCOMPLETE, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/constants';
+import {RestService} from './rest.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,17 +14,6 @@ import {SPARQL_AUTOCOMPLETE, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/
 export class RepositoryService {
   apiUrl = environment.repositoryApiUrl;
 
-  private static getPort() {
-    let port = window.location.port;
-    if (!port) {
-      if (window.location.protocol === 'https:') {
-        port = '443';
-      } else {
-        port = '80';
-      }
-    }
-    return port;
-  }
 
   constructor(protected httpClient: HttpClient,
               protected cookies: CookieService,
@@ -36,7 +26,7 @@ export class RepositoryService {
   }
 
   private getCookie(cookieName): string {
-    return this.cookies.get(cookieName + RepositoryService.getPort());
+    return this.cookies.get(cookieName + RestService.getPort());
   }
 
   getNamespaces(): Observable<{ [p: string]: string }> {
