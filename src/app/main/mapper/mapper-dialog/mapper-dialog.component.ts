@@ -22,14 +22,15 @@ import {MapperService} from 'src/app/services/rest/mapper.service';
 import {conditionalValidator} from 'src/app/validators/conditional.validator';
 import {environment} from 'src/environments/environment';
 import {ColumnImpl} from '../../../models/column-impl';
+import {Namespace} from "../../../models/namespace";
 
 export interface SubjectMapperData {
   mappingData: Triple;
   selected: string;
   mappingDetails: MappingDetails;
   sources: any[];
-  namespaces: { [p: string]: string };
-  repoNamespaces: { [p: string]: string };
+  namespaces: Namespace[];
+  repoNamespaces: Namespace[];
   dropped;
 }
 
@@ -347,7 +348,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
               if (this.isPredicate()) {
                 autoCompleteObservable = this.repositoryService.autocompletePredicates(value);
               }
-              return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, {...this.data.namespaces, ...this.data.repoNamespaces})));
+              return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, [...this.data.namespaces, ...this.data.repoNamespaces])));
             }));
 
     this.filteredColumnNames = merge(this.mapperForm.get('columnName').valueChanges, this.mapperForm.get('dataTypeColumnName').valueChanges)

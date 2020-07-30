@@ -13,6 +13,7 @@ import {IRIImpl} from 'src/app/models/iri-impl';
 import {Triple} from 'src/app/models/triple';
 import {Language} from 'src/app/models/language';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
+import {Namespace} from "../models/namespace";
 
 @Injectable({
   providedIn: 'root',
@@ -135,16 +136,16 @@ export class ModelConstructService {
   public getPrefixTransformation(constantValue: string, allNamespaces) {
     let transformed = constantValue;
     let foundPrefix;
-    Object.keys(allNamespaces).forEach((key) => {
-      if (constantValue.startsWith(allNamespaces[key])) {
-        transformed = constantValue.replace(allNamespaces[key], key + ':');
-        foundPrefix = key;
+    allNamespaces.forEach((namespace) => {
+      if (constantValue.startsWith(namespace.getValue())) {
+        transformed = constantValue.replace(namespace.getValue(), namespace.getPrefix());
+        foundPrefix = namespace.getPrefix();
       }
     });
     return {label: transformed, value: constantValue, prefix: foundPrefix, suffix: transformed.substr(transformed.lastIndexOf(':') + 1)};
   }
 
-  public replaceIRIPrefixes(types, namespaces: { [p: string]: string }) {
+  public replaceIRIPrefixes(types, namespaces: Namespace[]) {
     return types.map((t) => {
       return this.getPrefixTransformation(t, namespaces);
     });

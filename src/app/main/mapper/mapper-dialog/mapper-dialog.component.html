@@ -118,8 +118,8 @@
                                 appCypressData="datatype-transformation-expression"></textarea>
                       <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
                         <div *ngIf="isDataTypePrefixTransformation">
-                          <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
-                            {{namespace.prefix}}={{namespace.value}}
+                          <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'">
+                            {{namespace.prefix}}:{{namespace.value}}
                           </mat-option>
                         </div>
                       </mat-autocomplete>
@@ -222,8 +222,8 @@
                                 appCypressData="language-transformation-expression"></textarea>
                       <mat-autocomplete #languagePrefixAuto="matAutocomplete">
                         <div *ngIf="isLanguagePrefixTransformation">
-                          <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
-                            {{namespace.prefix}}={{namespace.value}}
+                          <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'">
+                            {{namespace.prefix}}:{{namespace.value}}
                           </mat-option>
                         </div>
                       </mat-autocomplete>
@@ -334,8 +334,8 @@
                             appCypressData="transformation-expression"></textarea>
                   <mat-autocomplete #prefixAuto="matAutocomplete">
                     <div *ngIf="isPrefixTransformation">
-                      <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix">
-                        {{namespace.prefix}}={{namespace.value}}
+                      <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'">
+                        {{namespace.prefix}}:{{namespace.value}}
                       </mat-option>
                     </div>
                   </mat-autocomplete>

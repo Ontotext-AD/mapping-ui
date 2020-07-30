@@ -25,6 +25,7 @@ import {RepositoryService} from 'src/app/services/rest/repository.service';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {TypeMapping} from 'src/app/models/type-mapping';
 import {TabService} from 'src/app/services/tab.service';
+import {Namespace} from "../../../../models/namespace";
 
 @Component({
   selector: 'app-empty-block',
@@ -44,7 +45,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
   @Input() tabPosition: number;
   @Input() sources: Array<Source>;
   @Input() isTypeObject: boolean = false;
-  @Input() namespaces: { [key: string]: string };
+  @Input() namespaces: Namespace[];
 
   @ViewChild('mapping') mappingInput: ElementRef;
 

@@ -30,6 +30,7 @@ import {classToClass, plainToClass} from 'class-transformer';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {ViewMode} from 'src/app/services/view-mode.enum';
 import {NotificationService} from 'src/app/services/notification.service';
+import {Namespace} from "../../../models/namespace";
 
 export interface JSONDialogData {
   mapping;
@@ -52,7 +53,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   triples: Triple[];
   mappingDetails: MappingDetails;
   isDirty: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  repoNamespaces: { [key: string]: string };
+  repoNamespaces: Namespace[];
   usedSources: Set<string>;
 
   private boundCheckDirty: any;
@@ -205,7 +206,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   getAllNamespaces() {
-    return {...this.repoNamespaces, ...this.mapping.namespaces};
+    return [...this.repoNamespaces, ...this.mapping.getNamespaces()];
   }
 
   isCompleteCell(subject, isRoot) {
@@ -337,7 +338,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         selected,
         mappingDetails: this.mappingDetails,
         sources: this.sources,
-        namespaces: this.mapping.namespaces,
+        namespaces: this.mapping.getNamespaces(),
         repoNamespaces: this.repoNamespaces,
         dropped,
       },
@@ -608,7 +609,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       isTransformation: !!prefix,
       isRoot: selected === this.SUBJECT,
       selected,
-      namespaces: this.mapping.namespaces,
+      namespaces: this.mapping.getNamespaces(),
       repoNamespaces: this.repoNamespaces,
     };
 

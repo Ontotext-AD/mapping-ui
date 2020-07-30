@@ -1,6 +1,7 @@
 import {MappingDefinition, SubjectMapping} from './mapping-definition';
 import {Expose, Type} from 'class-transformer';
 import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
+import {Namespace} from "./namespace";
 
 export class MappingDefinitionImpl implements MappingDefinition {
   @Expose() baseIRI?: string;
@@ -21,12 +22,19 @@ export class MappingDefinitionImpl implements MappingDefinition {
     this.baseIRI = value;
   }
 
-  public getNamespaces(): { [p: string]: string } {
-    return this.namespaces;
+  public getNamespaces(): Namespace[] {
+    console.log(Object.entries(this.namespaces).map(([key, value]) => {
+      return new Namespace(key, value);
+    }));
+    return [];
   }
 
-  public setNamespaces(value: { [p: string]: string }) {
-    this.namespaces = value;
+  public addNamespace(namespace: Namespace) {
+    this.namespaces[namespace.getRawPrefix()] = namespace.getValue();
+  }
+
+  public removeNamespace(namespace: Namespace) {
+    delete this.namespaces[namespace.getRawPrefix()];
   }
 
   public getSubjectMappings(): SubjectMappingImpl[] {

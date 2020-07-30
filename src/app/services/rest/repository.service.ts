@@ -7,6 +7,7 @@ import {CookieService} from 'ngx-cookie-service';
 import {ErrorReporterService} from '../error-reporter.service';
 import {SPARQL_AUTOCOMPLETE, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/constants';
 import {RestService} from './rest.service';
+import {Namespace} from "../../models/namespace";
 
 @Injectable({
   providedIn: 'root',
@@ -29,14 +30,13 @@ export class RepositoryService {
     return this.cookies.get(cookieName + RestService.getPort());
   }
 
-  getNamespaces(): Observable<{ [p: string]: string }> {
+  getNamespaces(): Observable<Namespace[]> {
     return this.getAPIURL('/namespaces').pipe(switchMap((fullUrl) => {
       return this.httpClient.get<any>(fullUrl, {}).pipe(map((res) => {
-        const obj = {};
-        res.results.bindings.forEach((e) => {
-          obj[e.prefix.value] = e.namespace.value;
+        return [];
+        return res.results.bindings.forEach((e) => {
+          return new Namespace(e.prefix.value, e.namespace.value);
         });
-        return obj;
       }), catchError((error) => this.errorReporterService.handleError('Loading namespaces failed.', error)));
     }));
   }

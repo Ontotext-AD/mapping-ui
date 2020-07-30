@@ -15,6 +15,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject} from 'rxjs';
 import {NotificationService} from 'src/app/services/notification.service';
 import {TranslateService} from '@ngx-translate/core';
+import {Namespace} from "../../models/namespace";
 
 
 @Component({
@@ -139,7 +140,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
       const split = value.split(/=(.+)/);
       const key = split[0];
       const val = split[1];
-      this.mapping.namespaces[key] = val;
+      this.mapping.addNamespace(new Namespace(key, val));
     }
 
     if (input) {
@@ -147,8 +148,8 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     }
   }
 
-  removeNamespace(key: string): void {
-    delete this.mapping.namespaces[key];
+  removeNamespace(namespace: Namespace): void {
+    this.mapping.removeNamespace(namespace);
   }
 
   public updateMapping(event: any) {
@@ -173,7 +174,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     return this.mapping && this.mapping.getBaseIRI();
   }
 
-  public getNamespaces(): { [p: string]: string } {
+  public getNamespaces(): Namespace[] {
     return this.mapping && this.mapping.getNamespaces();
   }
 
