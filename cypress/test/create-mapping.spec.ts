@@ -210,6 +210,16 @@ describe('Create mapping', () => {
       EditDialogSteps.getPrefixTransformationButton().should('not.be.visible');
       EditDialogSteps.getGrelTransformationButton().should('be.visible').find('button').should('have.attr', 'aria-pressed', 'false');
       EditDialogSteps.getTransformationExpressionField().should('not.be.visible');
+      EditDialogSteps.saveConfiguration();
+
+      // When I create a mapping with a type predicate
+      MappingSteps.completeTriple(1, '@duration', 'a', '123');
+      MappingSteps.getTriples().should('have.length', 3);
+      // And I open edit dialog
+      MappingSteps.editTripleObjectWithData(1);
+      // Then I expect to be able to set prefix and grel value transformations
+      EditDialogSteps.getPrefixTransformationButton().should('be.visible');
+      EditDialogSteps.getGrelTransformationButton().should('be.visible');
     });
   });
 });
