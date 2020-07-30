@@ -6,7 +6,14 @@ import {MatDialog} from '@angular/material/dialog';
 import {MapperDialogComponent} from 'src/app/main/mapper/mapper-dialog/mapper-dialog.component';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {Triple} from 'src/app/models/triple';
-import {COLUMN, COMMA, DOT, OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
+import {
+  COLUMN,
+  COMMA,
+  DOT,
+  OBJECT_SELECTOR,
+  PREDICATE_SELECTOR,
+  SUBJECT_SELECTOR,
+} from 'src/app/utils/constants';
 import {Source as SourceEnum, Type} from 'src/app/models/mapping-definition';
 import {Source} from 'src/app/models/source';
 import {ValueMappingImpl} from 'src/app/models/value-mapping-impl';
@@ -586,19 +593,22 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       }
     }
 
-    let prefixTransformation;
-    if (source === SourceEnum.Constant) {
+    let prefix;
+    let prefixTransformation = valueSet.prefixTransformation;
+    if (prefixTransformation) {
+      prefix = prefixTransformation;
+    } else if (source === SourceEnum.Constant) {
       prefixTransformation = this.modelConstructService.getPrefixTransformation(value, this.getAllNamespaces());
+      prefix = prefixTransformation && prefixTransformation.prefix;
     }
-    const prefix = prefixTransformation && prefixTransformation.prefix;
 
     const data = {
       constant: source === SourceEnum.Constant ? value : undefined,
       columnName: source === SourceEnum.Column ? value : undefined,
       source,
-      type: this.getType(selected, triple, value),
+      type: this.getType(selected, triple, value, prefix),
       typeMapping: triple.isTypeProperty,
-      expression: prefix ? prefixTransformation.prefix : undefined,
+      expression: prefix,
       language: prefix ? Language.Prefix.valueOf() : undefined,
     };
 
@@ -625,9 +635,9 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     }
   }
 
-  private getType(selected: string, triple: Triple, value: string) {
+  private getType(selected: string, triple: Triple, value: string, prefix:string) {
     if (selected === this.OBJECT) {
-      return triple.getPredicate() ? (Helper.isIRI(value) ? Type.IRI : (Type.Literal)) : TypeMapping.a;
+      return triple.getPredicate() ? (prefix || Helper.isIRI(value) ? Type.IRI : (Type.Literal)) : TypeMapping.a;
     }
     return undefined;
   }

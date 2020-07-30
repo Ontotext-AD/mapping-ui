@@ -14,7 +14,14 @@ import {Source} from 'src/app/models/source';
 import {MappingBase} from 'src/app/models/mapping-base';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {ModelManagementService} from 'src/app/services/model-management.service';
-import {MAT_OPTION, OBJECT_SELECTOR, PREDICATE_SELECTOR, SOURCE_SIGN, SUBJECT_SELECTOR} from 'src/app/utils/constants';
+import {
+  DOUBLE_SLASH, HTTP,
+  MAT_OPTION,
+  OBJECT_SELECTOR,
+  PREDICATE_SELECTOR,
+  SOURCE_SIGN,
+  SUBJECT_SELECTOR,
+} from 'src/app/utils/constants';
 import {TranslateService} from '@ngx-translate/core';
 import {merge, Observable, of} from 'rxjs';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
@@ -25,6 +32,7 @@ import {RepositoryService} from 'src/app/services/rest/repository.service';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {TypeMapping} from 'src/app/models/type-mapping';
 import {TabService} from 'src/app/services/tab.service';
+import * as XRegExp from 'xregexp';
 
 @Component({
   selector: 'app-empty-block',
@@ -54,6 +62,12 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
   OBJECT = OBJECT_SELECTOR;
+
+  regex = XRegExp(`(?<namespace> .+?(?=:)) -?
+                   :
+                   (?<extended> [^@$]*) -?
+                   (?<source> \\@?\\$?) -?
+                   (?<value> .*$)`, 'x');
 
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,
@@ -162,20 +176,44 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
 
   public saveInputValue(emitTab: boolean) {
     let value = this.autoInput.value;
+    let prefixTransformation: string;
+
+    if (this.isExtendedPrefix(value)) {
+      const match = XRegExp.exec(value, this.regex);
+
+      if (this.isValidExtension(match)) {
+        prefixTransformation = match.namespace;
+        if (match.value) {
+          match.extended ? prefixTransformation += ':' + match.extended : prefixTransformation;
+          value = match.source + match.value;
+        } else if (match.extended && !match.value) {
+          value = match.extended;
+        }
+      }
+    }
+
     const source = this.getSource(value);
     // Remove special chars from columns and indexes
     if (source !== SourceEnum.Constant && value !== TypeMapping.a) {
       value = value.substr(1);
     }
-    this.saveValue(value, emitTab);
+    this.saveValue(value, source, prefixTransformation, emitTab);
   }
 
-  private saveValue(value, emitTab: boolean) {
+  isExtendedPrefix(value) {
+    return this.regex.test(value);
+  }
+
+  isValidExtension(match): boolean {
+    return match.namespace !== HTTP && !match.extended.startsWith(DOUBLE_SLASH);
+  }
+
+  private saveValue(value, source, prefixTransformation, emitTab: boolean) {
     if (value) {
       if (emitTab) {
         this.tabService.selectCommand.emit({index: this.tabIndex, position: this.tabPosition});
       }
-      this.onValueSet.emit({value, source: this.getSource(this.autoInput.value)});
+      this.onValueSet.emit({value, source, prefixTransformation});
     }
   }
 
