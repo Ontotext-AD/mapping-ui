@@ -170,7 +170,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   private initTransformations() {
     const iri = this.isOfType(Type.IRI);
     const valueType = this.selected && this.selected.getValueType();
-    const isIri = !!(iri && this.selected && valueType);
+    const isIri = !!(iri && this.selected && valueType || this.isTypeProperty);
     this.initTransformationModels(isIri, this.isOfType(Type.DatatypeLiteral));
   }
 
