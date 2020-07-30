@@ -75,7 +75,8 @@
     "EDIT_SAVED_TRIPLE_REF": "Changing the type of this cell will delete all children",
     "CONFIRM_MAPPING_UPLOAD": "All mappings will be overwritten. Do you want to proceed?",
     "MAPPING_UPLOAD_ERROR": "Something went wrong.",
-    "INCOMPLETE_MAPPING_ERROR": "The operation is not allowed. You have an incomplete mapping."
+    "INCOMPLETE_MAPPING_ERROR": "The operation is not allowed. You have an incomplete mapping.",
+    "UNRECOGNIZED_PREFIX_ERROR": "Unrecognized prefix. "
   },
   "DIALOG": {
     "TITLE_CONFIRM": "Confirm",

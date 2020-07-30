@@ -33,6 +33,7 @@ import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {TypeMapping} from 'src/app/models/type-mapping';
 import {TabService} from 'src/app/services/tab.service';
 import * as XRegExp from 'xregexp';
+import {NotificationService} from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-empty-block',
@@ -74,7 +75,8 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
               private repositoryService: RepositoryService,
               private modelConstructService: ModelConstructService,
               private tabService: TabService,
-              private cdRef: ChangeDetectorRef) {
+              private cdRef: ChangeDetectorRef,
+              private notificationService: NotificationService) {
     super();
   }
 
@@ -183,6 +185,10 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
 
       if (this.isValidExtension(match)) {
         prefixTransformation = match.namespace;
+        if (!this.namespaces[prefixTransformation]) {
+          this.notificationService.error(this.translateService.instant('MESSAGES.UNRECOGNIZED_PREFIX_ERROR') + prefixTransformation);
+          return;
+        }
         if (match.value) {
           match.extended ? prefixTransformation += ':' + match.extended : prefixTransformation;
           value = match.source + match.value;

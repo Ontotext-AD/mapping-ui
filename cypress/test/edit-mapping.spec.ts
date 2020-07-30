@@ -106,25 +106,12 @@ describe('Edit mapping', () => {
       MappingSteps.getTripleObjectSource(0).should('have.text', ' @  actor_1_name ');
     });
 
-    it('Should set extended prefix expressions but namespaces only', () => {
+    it('Should show error on unrecognized prefix', () => {
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a subject, a predicate and an object
       MappingSteps.completeTriple(0, 'rdf:Actor$row_index', 'rdf:Actor2#@actor_1_name', 'www:Actor/actor_1_name');
-      MappingSteps.getTripleSubjectPropertyTransformation(0).should('have.text', 'rdf:Actor');
-      MappingSteps.getTripleSubjectSourceType(0).should('have.text', ' $ ');
-      MappingSteps.getTripleSubjectSource(0).should('have.text', ' $  row_index ');
-
-      MappingSteps.getTriplePredicatePropertyTransformation(0).should('have.text', 'rdf:Actor2#');
-      MappingSteps.getTriplePredicateSourceType(0).should('have.text', ' @ ');
-      MappingSteps.getTriplePredicateValuePreview(0).should('have.text', ' @  actor_1_name ');
-
-      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'www');
-      MappingSteps.getTripleObjectSourceType(0).should('have.text', ' C ');
-      MappingSteps.getTripleObjectSource(0).should('have.text', ' C  Actor/a ... _1_name ');
-      MappingSteps.getTripleObjectType(0).should('contain', 'IRI');
-
-      MappingSteps.getNamespace('rdf').should('be.visible');
-      MappingSteps.getNamespace('www').should('be.visible');
+      MappingSteps.getNotification().should('be.visible').and('contain', 'Unrecognized prefix');
+      MappingSteps.getNamespace('www').should('not.be.visible');
     });
 
 
