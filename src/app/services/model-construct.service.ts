@@ -3,7 +3,7 @@ import {MappingBase} from 'src/app/models/mapping-base';
 import {Helper} from 'src/app/utils/helper';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {TypeMapping} from 'src/app/models/type-mapping';
-import {OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
+import {COLON, OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
 import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
 import {SimpleIRIValueMappingImpl} from 'src/app/models/simple-iri-value-mapping-impl';
 import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
@@ -105,7 +105,7 @@ export class ModelConstructService {
     this.modelManagementService.setValueTypeDatatypeTransformationExpression(cellMapping, datatypeTransformation);
     this.modelManagementService.setDatatypeTransformationLanguage(cellMapping, datatypeLanguage);
     if (datatypeLanguage === Language.Prefix.valueOf() && !settings.namespaces[datatypeTransformation]) {
-      settings.namespaces[datatypeTransformation] = settings.repoNamespaces[datatypeTransformation];
+      this.setNamespaces(datatypeTransformation, settings);
     }
   }
 
@@ -136,8 +136,20 @@ export class ModelConstructService {
       this.modelManagementService.setExpression(cellMapping, transformation);
       this.modelManagementService.setTransformationLanguage(cellMapping, language);
       if (language === Language.Prefix.valueOf() && !settings.namespaces[transformation]) {
-        settings.namespaces[transformation] = settings.repoNamespaces[transformation];
+        this.setNamespaces(transformation, settings);
       }
+    }
+  }
+
+  private setNamespaces(expression, settings) {
+    const index = expression.indexOf(COLON);
+    if (index > -1) {
+      const namespace = expression.substr(0, index);
+      if (!settings.namespaces[namespace]) {
+        settings.namespaces[namespace] = settings.repoNamespaces[namespace];
+      }
+    } else {
+      settings.namespaces[expression] = settings.repoNamespaces[expression];
     }
   }
 
