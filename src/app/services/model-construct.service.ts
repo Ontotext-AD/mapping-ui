@@ -93,8 +93,15 @@ export class ModelConstructService {
       this.modelManagementService.getValueType(cellMapping).setLanguage(undefined);
     }
   }
+  private removePrefixColon(datatypeTransformation: string, datatypeLanguage: string) {
+    if (datatypeLanguage === Language.Prefix.valueOf() && datatypeTransformation.endsWith(':')) {
+      return datatypeTransformation.slice(0, -1);
+    }
+    return datatypeTransformation;
+  }
 
   private setDataTypeTransformation(cellMapping: MappingBase, settings, datatypeTransformation: string, datatypeLanguage: string) {
+    datatypeTransformation = this.removePrefixColon(datatypeTransformation, datatypeLanguage);
     this.modelManagementService.setValueTypeDatatypeTransformationExpression(cellMapping, datatypeTransformation);
     this.modelManagementService.setDatatypeTransformationLanguage(cellMapping, datatypeLanguage);
     if (datatypeLanguage === Language.Prefix.valueOf() && !settings.namespaces[datatypeTransformation]) {
@@ -123,11 +130,13 @@ export class ModelConstructService {
   }
 
   private setTypeTransformation(cellMapping: MappingBase, form, settings): void {
-    if (settings.isTransformation && this.isAllowedExpression(form.expression, form.language)) {
-      this.modelManagementService.setExpression(cellMapping, form.expression);
-      this.modelManagementService.setTransformationLanguage(cellMapping, form.language);
-      if (form.language === Language.Prefix.valueOf() && !settings.namespaces[form.expression]) {
-        settings.namespaces[form.expression] = settings.repoNamespaces[form.expression];
+    const language = form.language;
+    const transformation = this.removePrefixColon(form.expression, language);
+    if (settings.isTransformation && this.isAllowedExpression(transformation, language)) {
+      this.modelManagementService.setExpression(cellMapping, transformation);
+      this.modelManagementService.setTransformationLanguage(cellMapping, language);
+      if (language === Language.Prefix.valueOf() && !settings.namespaces[transformation]) {
+        settings.namespaces[transformation] = settings.repoNamespaces[transformation];
       }
     }
   }
