@@ -14,7 +14,14 @@ import {Source} from 'src/app/models/source';
 import {MappingBase} from 'src/app/models/mapping-base';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {ModelManagementService} from 'src/app/services/model-management.service';
-import {MAT_OPTION, OBJECT_SELECTOR, PREDICATE_SELECTOR, SOURCE_SIGN, SUBJECT_SELECTOR} from 'src/app/utils/constants';
+import {
+  DOUBLE_SLASH, HTTP,
+  MAT_OPTION,
+  OBJECT_SELECTOR,
+  PREDICATE_SELECTOR,
+  SOURCE_SIGN,
+  SUBJECT_SELECTOR,
+} from 'src/app/utils/constants';
 import {TranslateService} from '@ngx-translate/core';
 import {merge, Observable, of} from 'rxjs';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
@@ -58,8 +65,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
 
   regex = XRegExp(`(?<namespace> .+?(?=:)) -?
                    :
-                   (?<extended> [^/@$#]*) -?
-                   (?<extendedEndSymbol> \\/?\\#?\\/?) -?
+                   (?<extended> [^@$]*) -?
                    (?<source> \\@?\\$?) -?
                    (?<value> .*$)`, 'x');
 
@@ -174,12 +180,15 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
 
     if (this.isExtendedPrefix(value)) {
       const match = XRegExp.exec(value, this.regex);
-      prefixTransformation = match.namespace;
-      if (match.value) {
-        match.extended ? prefixTransformation += ':' + match.extended + match.extendedEndSymbol : prefixTransformation;
-        value = match.source + match.value;
-      } else if (match.extended && !match.value) {
-        value = match.extended;
+
+      if (this.isValidExtension(match)) {
+        prefixTransformation = match.namespace;
+        if (match.value) {
+          match.extended ? prefixTransformation += ':' + match.extended : prefixTransformation;
+          value = match.source + match.value;
+        } else if (match.extended && !match.value) {
+          value = match.extended;
+        }
       }
     }
 
@@ -193,6 +202,10 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
 
   isExtendedPrefix(value) {
     return this.regex.test(value);
+  }
+
+  isValidExtension(match): boolean {
+    return match.namespace !== HTTP && !match.extended.startsWith(DOUBLE_SLASH);
   }
 
   private saveValue(value, source, prefixTransformation, emitTab: boolean) {

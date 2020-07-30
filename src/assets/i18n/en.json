@@ -60,7 +60,7 @@
   "CONSTANTS": {
     "COLUMN": "@",
     "CONSTANT": "C",
-    "INDEX": "#",
+    "INDEX": "$",
     "SUBJECT": "+ Subject",
     "PREDICATE": "+ Predicate",
     "OBJECT": "+ Object"

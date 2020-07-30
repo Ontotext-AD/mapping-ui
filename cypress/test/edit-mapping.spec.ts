@@ -72,15 +72,38 @@ describe('Edit mapping', () => {
       cy.wait('@loadColumns');
     });
 
-    // TODO Complete tests when extend functionality is complete
     it('Should set prefix expression', () => {
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a subject, a predicate and an object
-      MappingSteps.completeTriple(0, 'rdf:extend/subject', 'rdf:extend/@Title', 'rdf:$row_index');
-      MappingSteps.getTripleSubjectSource(0).contains('subject')
-      MappingSteps.getTriplePredicate(0).contains('Title')
-      MappingSteps.getTripleObjectSource(0).contains(('row_index'))
+      MappingSteps.completeTriple(0, 'rdf:subject', 'rdf:@Title', 'rdf:$row_index');
+      MappingSteps.getTripleSubjectPropertyTransformation(0).should('have.text', 'rdf');
+      MappingSteps.getTripleSubjectSourceType(0).should('have.text', ' C ');
+      MappingSteps.getTripleSubjectSource(0).should('have.text', ' C  subject ')
 
+      MappingSteps.getTriplePredicatePropertyTransformation(0).should('have.text', 'rdf');
+      MappingSteps.getTriplePredicateSourceType(0).should('have.text', ' @ ');
+      MappingSteps.getTriplePredicateValuePreview(0).should('have.text', ' @  Title ')
+
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf');
+      MappingSteps.getTripleObjectSourceType(0).should('have.text', ' $ ');
+      MappingSteps.getTripleObjectSource(0).should('have.text', ' $  row_index ')
+    });
+
+    it('Should set extended prefix expressions', () => {
+      MappingSteps.getTriples().should('have.length', 1);
+      // And I have created a subject, a predicate and an object
+      MappingSteps.completeTriple(0, 'rdf:Actor@actor_1_name', 'rdf:Actor/@actor_1_name', 'rdf:Actor#@actor_1_name');
+      MappingSteps.getTripleSubjectPropertyTransformation(0).should('have.text', 'rdf:Actor');
+      MappingSteps.getTripleSubjectSourceType(0).should('have.text', ' @ ');
+      MappingSteps.getTripleSubjectSource(0).should('have.text', ' @  actor_1_name ')
+
+      MappingSteps.getTriplePredicatePropertyTransformation(0).should('have.text', 'rdf:Actor/');
+      MappingSteps.getTriplePredicateSourceType(0).should('have.text', ' @ ');
+      MappingSteps.getTriplePredicateValuePreview(0).should('have.text', ' @  actor_1_name ')
+
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf:Actor#');
+      MappingSteps.getTripleObjectSourceType(0).should('have.text', ' @ ');
+      MappingSteps.getTripleObjectSource(0).should('have.text', ' @  actor_1_name ')
     });
   });
 

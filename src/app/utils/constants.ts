@@ -10,6 +10,9 @@ export const MAT_OPTION= 'MAT-OPTION';
 export const COLUMN = 'column';
 export const DOT = 'dot';
 export const COMMA = 'comma';
+export const HTTP = 'http';
+export const DOUBLE_SLASH = '//';
+export const COLON = ':';
 export const SPARQL_TYPES = `
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
