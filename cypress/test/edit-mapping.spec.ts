@@ -95,16 +95,39 @@ describe('Edit mapping', () => {
       MappingSteps.completeTriple(0, 'rdf:Actor@actor_1_name', 'rdf:Actor/@actor_1_name', 'rdf:Actor#@actor_1_name');
       MappingSteps.getTripleSubjectPropertyTransformation(0).should('have.text', 'rdf:Actor');
       MappingSteps.getTripleSubjectSourceType(0).should('have.text', ' @ ');
-      MappingSteps.getTripleSubjectSource(0).should('have.text', ' @  actor_1_name ')
+      MappingSteps.getTripleSubjectSource(0).should('have.text', ' @  actor_1_name ');
 
       MappingSteps.getTriplePredicatePropertyTransformation(0).should('have.text', 'rdf:Actor/');
       MappingSteps.getTriplePredicateSourceType(0).should('have.text', ' @ ');
-      MappingSteps.getTriplePredicateValuePreview(0).should('have.text', ' @  actor_1_name ')
+      MappingSteps.getTriplePredicateValuePreview(0).should('have.text', ' @  actor_1_name ');
 
       MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf:Actor#');
       MappingSteps.getTripleObjectSourceType(0).should('have.text', ' @ ');
-      MappingSteps.getTripleObjectSource(0).should('have.text', ' @  actor_1_name ')
+      MappingSteps.getTripleObjectSource(0).should('have.text', ' @  actor_1_name ');
     });
+
+    it('Should set extended prefix expressions but namespaces only', () => {
+      MappingSteps.getTriples().should('have.length', 1);
+      // And I have created a subject, a predicate and an object
+      MappingSteps.completeTriple(0, 'rdf:Actor$row_index', 'rdf:Actor2#@actor_1_name', 'www:Actor/actor_1_name');
+      MappingSteps.getTripleSubjectPropertyTransformation(0).should('have.text', 'rdf:Actor');
+      MappingSteps.getTripleSubjectSourceType(0).should('have.text', ' $ ');
+      MappingSteps.getTripleSubjectSource(0).should('have.text', ' $  row_index ');
+
+      MappingSteps.getTriplePredicatePropertyTransformation(0).should('have.text', 'rdf:Actor2#');
+      MappingSteps.getTriplePredicateSourceType(0).should('have.text', ' @ ');
+      MappingSteps.getTriplePredicateValuePreview(0).should('have.text', ' @  actor_1_name ');
+
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'www');
+      MappingSteps.getTripleObjectSourceType(0).should('have.text', ' C ');
+      MappingSteps.getTripleObjectSource(0).should('have.text', ' C  Actor/a ... _1_name ');
+      MappingSteps.getTripleObjectType(0).should('contain', 'IRI');
+
+      MappingSteps.getNamespace('rdf').should('be.visible');
+      MappingSteps.getNamespace('www').should('be.visible');
+    });
+
+
   });
 
   // TODO: I add these tests here for now, but later we should distribute them in respective specs with the related operations

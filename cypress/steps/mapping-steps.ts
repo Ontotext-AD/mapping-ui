@@ -241,6 +241,14 @@ class MappingSteps {
   static getViewJSONDialog() {
     return cy.get('[appCypressData="view-json-modal"]')
   }
+
+  static getNamespaces() {
+    return cy.get('[appCypressData="namespace-wrapper"]');
+  }
+
+  static getNamespace(namespace: string) {
+    return MappingSteps.getNamespaces().find(`[appCypressData="namespace-${namespace}"]`);
+  }
 }
 
 export default MappingSteps;
