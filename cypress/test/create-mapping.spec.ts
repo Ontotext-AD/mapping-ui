@@ -129,6 +129,8 @@ describe('Create mapping', () => {
     cy.visit('?dataProviderID=ontorefine:123');
     // Then I expect to see the types displayed in badge inside the cell
     MappingSteps.getTriples().should('have.length', 7);
+    MappingSteps.getTripleSubjectType(0).should('contain', 'IRI');
+    MappingSteps.getTriplePredicateType(0).should('contain', 'IRI');
     MappingSteps.getTripleObjectType(0).should('contain', 'Literal');
     MappingSteps.getTripleObjectType(1).should('contain', 'Language');
     MappingSteps.getTripleObjectType(2).should('contain', 'IRI');

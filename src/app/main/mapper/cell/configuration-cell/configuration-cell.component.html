@@ -18,8 +18,11 @@
     <div class="triple-item-preview" appCypressData=triple-item>
       <div fxFlex="grow" *ngIf="isFirstChild; else emptyBlock">
 
-        <div class="type-property" *ngIf="isFirstChild && isTypeProperty">
-          a
+        <div *ngIf="isFirstChild && isTypeProperty">
+          <div fxLayout="row" fxLayoutAlign="space-between end">
+            <div class="type-property">a</div>
+            <app-type-badge [type]="getType()"></app-type-badge>
+          </div>
         </div>
 
         <div *ngIf="isFirstChild && !isTypeProperty; else emptyBlock" fxFill>

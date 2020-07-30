@@ -19,8 +19,11 @@
          (cdkDropListDropped)="drop($event)" fxFill appCypressData=triple-item>
       <div class="ti-row">
 
-        <div class="type-property" *ngIf="isFirstChild && isTypeProperty">
-          a
+        <div *ngIf="isFirstChild && isTypeProperty" fxFill>
+          <div fxLayout="row" fxLayoutAlign="space-between end">
+            <div class="type-property">a</div>
+            <app-type-badge [type]="getType()"></app-type-badge>
+          </div>
         </div>
 
         <div *ngIf="isFirstChild && !isTypeProperty && nestLevel === 0; else emptyBlock" fxFill>

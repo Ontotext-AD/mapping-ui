@@ -80,6 +80,10 @@ class MappingSteps {
     return MappingSteps.getTripleSubject(index).find('.ti-source-type');
   }
 
+  static getTriplePredicateType(index: any) {
+    return MappingSteps.getTriplePredicate(index).find('.ti-type');
+  }
+
   static getTriplePredicateSourceType(index: any) {
     return MappingSteps.getTriplePredicate(index).find('.ti-source-type');
   }

@@ -214,6 +214,9 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   public getType(): string {
+    if (this.cellType === this.SUBJECT || this.cellType === this.PREDICATE || this.triple.isTypeProperty) {
+      return Type.IRI;
+    }
     return this.getValueType() && this.getValueType().getType();
   }
 
