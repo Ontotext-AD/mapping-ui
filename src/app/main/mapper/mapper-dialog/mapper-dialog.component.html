@@ -102,7 +102,7 @@
                 <div fxFlex="20"><span>{{'LABELS.TYPE_TRANSFORMATION' | translate}}</span></div>
                 <div fxFlex="none">
                   <mat-button-toggle-group formControlName="datatypeLanguage">
-                    <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang" [attr.appCypressData]="'datatype-transformation-'+ lang">
+                    <mat-button-toggle *ngFor="let lang of datatypeTransformationLangs" [value]="lang" [attr.appCypressData]="'datatype-transformation-'+ lang">
                       {{getType(lang)}}
                     </mat-button-toggle>
                   </mat-button-toggle-group>
@@ -206,7 +206,7 @@
                 <div fxFlex="20"><span>{{'LABELS.TYPE_TRANSFORMATION' | translate}}</span></div>
                 <div fxFlex="none">
                   <mat-button-toggle-group formControlName="languageTransformationLanguage">
-                    <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang" [attr.appCypressData]="'language-transformation-'+ lang">
+                    <mat-button-toggle *ngFor="let lang of languageTransformationLangs" [value]="lang" [attr.appCypressData]="'language-transformation-'+ lang">
                       {{getType(lang)}}
                     </mat-button-toggle>
                   </mat-button-toggle-group>
@@ -318,7 +318,7 @@
             <div fxFlex="20"><h4>{{'LABELS.TRANSFORMATION' | translate}}</h4></div>
             <div fxFlex="none">
               <mat-button-toggle-group formControlName="language">
-                <mat-button-toggle *ngFor="let lang of typeTransformationLangs" [value]="lang" [attr.appCypressData]="'transformation-'+ lang">
+                <mat-button-toggle *ngFor="let lang of valueTransformationLangs" [value]="lang" [attr.appCypressData]="'transformation-'+ lang">
                   {{getType(lang)}}
                 </mat-button-toggle>
               </mat-button-toggle-group>

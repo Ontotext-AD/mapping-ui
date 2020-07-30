@@ -167,5 +167,47 @@ describe('Create mapping', () => {
       MappingSteps.getTripleObjectValueTransformation(1).should('contain', 'GREL');
       MappingSteps.getTripleObjectDatatypeTransformation(1).should('contain', 'Language');
     });
+
+    it('Should not be able to set prefix transformation when type is not IRI', () => {
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json').as('loadNamespaces');
+      cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
+      cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:create-mapping/preview-response.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+
+      // Given I have opened the application with an empty mapping
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      // And I have created a triple with a literal as type
+      MappingSteps.completeTriple(0, '@duration', 'is', '123');
+      MappingSteps.getTriples().should('have.length', 2);
+      // When I open the edit object dialog
+      MappingSteps.editTripleObjectWithData(0);
+      // Then I shouldn't be able to set prefix transformation
+      EditDialogSteps.getPrefixTransformationButton().should('not.be.visible');
+      EditDialogSteps.getGrelTransformationButton().should('be.visible');
+      // When I change the object type to IRI
+      EditDialogSteps.selectIri();
+      // Then I expect that the prefix transformation button to be enabled
+      EditDialogSteps.getPrefixTransformationButton().should('be.visible');
+      EditDialogSteps.getGrelTransformationButton().should('be.visible');
+      // When I complete a prefix
+      EditDialogSteps.selectPrefix();
+      EditDialogSteps.completePrefix('rdf');
+      EditDialogSteps.saveConfiguration();
+      // Then I should see the prefix in the object cell
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('contain', 'rdf');
+      // When I open the object edit dialog
+      MappingSteps.editTripleObjectWithData(0);
+      // Then I expect the prefix still to be selected and completed
+      EditDialogSteps.getPrefixTransformationButton().should('be.visible').find('button').should('have.attr', 'aria-pressed', 'true');
+      EditDialogSteps.getGrelTransformationButton().should('be.visible');
+      EditDialogSteps.getTransformationExpressionField().should('have.value', 'rdf');
+      // When I change the object type to something different than IRI
+      EditDialogSteps.selectLiteral();
+      // Then I expect available transformation to be GREL only And the expression field to be cleared
+      EditDialogSteps.getPrefixTransformationButton().should('not.be.visible');
+      EditDialogSteps.getGrelTransformationButton().should('be.visible').find('button').should('have.attr', 'aria-pressed', 'false');
+      EditDialogSteps.getTransformationExpressionField().should('not.be.visible');
+    });
   });
 });

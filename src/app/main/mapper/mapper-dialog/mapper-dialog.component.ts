@@ -50,7 +50,9 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   isTypeProperty: boolean;
   typeKeys: string[];
   types: string[];
-  typeTransformationLangs: string[];
+  valueTransformationLangs: string[];
+  datatypeTransformationLangs: string[];
+  languageTransformationLangs: string[];
   sources: string[];
   mappingDetails: MappingDetails;
   showOptions: boolean;
@@ -111,6 +113,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   private init(): void {
     this.setSelected();
     this.setTypes();
+    this.initTransformations();
     if (this.data.dropped) {
       this.setMappingData(this.data.dropped, this.mappingDetails);
     } else {
@@ -122,10 +125,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   private setHasChildren() {
     let hasChildren = false;
     if (this.selected) {
-      const valueType = this.selected.getValueType();
-      const isIRI = valueType && valueType.getType() === Type.IRI;
       const propMapping = this.selected.getPropertyMappings();
-      if (isIRI && propMapping && propMapping.length) {
+      if (this.isOfType(Type.IRI) && propMapping && propMapping.length) {
         hasChildren = true;
       }
     }
@@ -150,7 +151,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.types = [];
     this.typeKeys = [];
 
-
     if (this.data.selected === this.OBJECT && !this.data.mappingData.isTypeProperty) {
       this.types.push(...Helper.enumToArray(Type));
       this.typeKeys.push(...Helper.enumKeysToArray(Type));
@@ -164,9 +164,44 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
     this.sources = Helper.enumToArray(Source);
     this.typeKeys.push(...Helper.enumKeysToArray(Source));
-
-    this.typeTransformationLangs = Helper.enumToArray(Language);
     this.typeKeys.push(...Helper.enumKeysToArray(Language));
+  }
+
+  private initTransformations() {
+    const iri = this.isOfType(Type.IRI);
+    const valueType = this.selected && this.selected.getValueType();
+    const isIri = !!(iri && this.selected && valueType);
+    this.initTransformationModels(isIri, this.isOfType(Type.DatatypeLiteral));
+  }
+
+  private initTransformationModels(isIri: boolean, isDatatype: boolean) {
+    // If type is IRI: value transformation can be prefix or grel
+    // If type is datatype literal: value transformation is grel, source transformation can be prefix or grel
+    // All other types can have only grel transformation
+    if (this.isObject()) {
+      if (isIri) {
+        this.valueTransformationLangs = [Language.Prefix, Language.GREL];
+        this.datatypeTransformationLangs = [];
+        this.languageTransformationLangs = [];
+      } else if (isDatatype) {
+        this.valueTransformationLangs = [Language.GREL];
+        this.datatypeTransformationLangs = [Language.Prefix, Language.GREL];
+        this.languageTransformationLangs = [];
+      } else {
+        this.valueTransformationLangs = [Language.GREL];
+        this.datatypeTransformationLangs = [Language.GREL];
+        this.languageTransformationLangs = [Language.GREL];
+      }
+    } else {
+      this.valueTransformationLangs = [Language.Prefix, Language.GREL];
+      this.datatypeTransformationLangs = [Language.Prefix, Language.GREL];
+      this.languageTransformationLangs = [Language.Prefix, Language.GREL];
+    }
+  }
+
+  private isOfType(type: Type) {
+    const valueType = this.selected && this.selected.getValueType();
+    return !!(valueType && valueType.getType() === type);
   }
 
   private setMappingData(selected, mappingDetails) {
@@ -228,11 +263,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     return this.mapperForm;
   }
 
-  // FIXME: Check if used and remove!
-  isDatatype() {
-    return this.mapperForm.get('dataTypeValueSource').value;
-  }
-
   private showAppropriateFields() {
     this.showOptions = (this.PREDICATE !== this.data.selected || !this.isTypeProperty) ||
       this.mapperForm.get('typeMapping').value && this.PREDICATE !== this.data.selected;
@@ -276,9 +306,25 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
           this.mapperForm.get('constant').updateValueAndValidity();
         });
 
+    const configureTransformations = (value) => {
+      // Reset the transformation buttons status a.k.a. deselect them in order to have a clear state on each type change
+      // otherwise the buttons stays selected and the field might be visible when it shouldn't.
+      this.mapperForm.get('datatypeLanguage').reset();
+      this.mapperForm.get('languageTransformationLanguage').reset();
+      this.mapperForm.get('language').reset();
+      // Clear the expression fields
+      this.mapperForm.patchValue({datatypeTransformation: ''});
+      this.mapperForm.patchValue({languageTransformation: ''});
+      this.mapperForm.patchValue({expression: ''});
+      const isIri = value === Type.IRI;
+      const isDatatypeLiteral = value === Type.DatatypeLiteral;
+      this.initTransformationModels(isIri, isDatatypeLiteral);
+    };
+
     this.mapperForm.get('type').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
+          configureTransformations(value);
           this.hasDatatype = value === Type.DatatypeLiteral;
           this.hasLanguage = value === Type.LanguageLiteral;
           this.mapperForm.get('dataTypeValueSource').updateValueAndValidity();
