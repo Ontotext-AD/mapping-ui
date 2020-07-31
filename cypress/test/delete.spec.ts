@@ -13,15 +13,15 @@ describe('Delete', () => {
   });
 
   context('parent', () => {
-    beforeEach(() => {
+    function stubServices() {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
       cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
       cy.visit('?dataProviderID=ontorefine:123');
       cy.wait('@loadColumns');
-    });
+    }
 
     it('Should be able to delete a subject with a predicate and have a warning', () => {
+      stubServices();
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a subject and a predicate
@@ -37,6 +37,7 @@ describe('Delete', () => {
     });
 
     it('Should be able to delete a predicate with an object and have a warning', () => {
+      stubServices();
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a subject, predicate and an object
@@ -52,6 +53,7 @@ describe('Delete', () => {
     });
 
     it('Should be able to delete an object with nested triples and have a warning', () => {
+      stubServices();
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a triple
@@ -78,42 +80,32 @@ describe('Delete', () => {
       MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.verifyTriple(0, 'subject', 'predicate', '');
     });
+
+    it('Should be able to delete a triple with children and have a warning', () => {
+      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/triple-with-children-mapping-model.json');
+      cy.visit('?dataProviderID=ontorefine:123');
+      // Given I have opened a mapping which contains triple with children
+      MappingSteps.getTriples().should('have.length', 4);
+      // When I try to delete a nested triple which doesn't have children
+      MappingSteps.deleteTriple(2);
+      // Then I expect confirmation with the default warning
+      MappingSteps.getConfirmationMessage().should('contain', 'Do you want to remove this mapping?');
+      MappingSteps.reject();
+      // When I try to delete a nested triple which has children
+      MappingSteps.deleteTriple(1);
+      // Then I expect confirmation with warning for triple with children deletion
+      MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do you want to remove this mapping?');
+      MappingSteps.reject();
+      // When I try to delete a nested triple which has children
+      MappingSteps.deleteTriple(0);
+      // Then I expect confirmation with warning for triple with children deletion
+      MappingSteps.getConfirmationMessage().should('contain', 'Do you want to remove this mapping?');
+      MappingSteps.reject();
+    });
   });
 
   context('triple', () => {
-    // TODO: Skipped because in a view where the nested triple's subject is not rendered we can't perform a delete
-    // If the layout stays this way, we should delete the test. Otherwise enable it.
-    it.skip('Should be able to delete root level triple with IRI object and all its children', () => {
-      // stub model
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
-
-      // Given I have opened the mapping UI
-      cy.visit('?dataProviderID=ontorefine:123');
-      // And I see two triples + one empty template
-      MappingSteps.getTriples().should('have.length', 3);
-      // And The first triple has IRI as object
-      MappingSteps.getTripleObjectType(0).should('contain', 'IRI');
-      MappingSteps.getTripleObjectSource(0).should('contain', 'movie_imdb_link');
-      // And The second triple has the IRI as subject
-      MappingSteps.getTripleSubjectType(1).should('contain', 'IRI');
-      MappingSteps.getTripleSubjectSource(1).should('contain', 'movie_imdb_link');
-      // And The second triple is nested
-      MappingSteps.getNestedTriple(1).should('have.length', 1);
-      // When I try to delete the first triple
-      MappingSteps.deleteTriple(0);
-      // Then I expect confirmation
-      MappingSteps.getConfirmationMessage().should('contain', 'Do you want to remove this mapping?');
-      // When I deny confirmation
-      MappingSteps.reject();
-      // I expect same triples in the mapping
-      MappingSteps.getTriples().should('have.length', 3);
-      // When I delete the first triple
-      MappingSteps.deleteTriple(0);
-      MappingSteps.confirm();
-      // Then I expect both triples to be deleted
-      MappingSteps.getTriples().should('have.length', 1);
-    });
-
     it('Should be able to delete nested triple', () => {
       // stub model
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');

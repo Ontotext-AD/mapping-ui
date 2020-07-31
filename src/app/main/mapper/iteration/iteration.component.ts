@@ -504,9 +504,31 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     });
   }
 
+  private hasTypeMappings(node) {
+    return node && node.getTypeMappings() && node.getTypeMappings().length;
+  }
+
+  private hasPropertyMappings(node) {
+    return node && node.getPropertyMappings() && node.getPropertyMappings().length;
+  }
+
+  private getOnDeleteWarningMessage(triple: Triple): string {
+    let hasChildren = false;
+    let messageKey = 'MESSAGES.CONFIRM_MAPPING_DELETION';
+    const object = triple.getObject();
+    if (object) {
+      hasChildren = !!(object && (this.hasTypeMappings(object) || this.hasPropertyMappings(object)));
+    }
+    if (hasChildren) {
+      messageKey = 'MESSAGES.CONFIRM_MAPPING_WITH_CHILDREN_DELETION';
+    }
+    return messageKey;
+  }
+
   public deleteTripleMapping(mapping: Triple) {
+    const messageKey = this.getOnDeleteWarningMessage(mapping);
     this.dialogService.confirm({
-      content: this.translateService.instant('MESSAGES.CONFIRM_MAPPING_DELETION'),
+      content: this.translateService.instant(messageKey),
     }).pipe(untilComponentDestroyed(this))
         .subscribe((result) => {
           if (result) {
