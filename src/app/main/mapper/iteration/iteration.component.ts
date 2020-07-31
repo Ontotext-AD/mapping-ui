@@ -146,7 +146,9 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       isLast = false;
     } else {
       const rowsCount = this.triples.length;
-      if (index < rowsCount - 1) {
+      if (index === rowsCount - 1) {
+        isLast = true;
+      } else if (index < rowsCount - 1) {
         const nextTripleLevel = this.triples[index + 1].getLevel();
         // if next triple is nested or is root level we consider current as last in the group
         if (nextTripleLevel > level || nextTripleLevel === 0) {
