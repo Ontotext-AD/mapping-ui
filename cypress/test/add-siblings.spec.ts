@@ -87,4 +87,13 @@ describe('Add siblings', () => {
     MappingSteps.getTriples().should('have.length', 8);
   });
 
+  it('Should add predicate sibling after type predicate', () => {
+    // Insert a new triple after all existing ones
+    MappingSteps.completeTriple(6, 'subject', 'a', 'object');
+    // Add subject sibling
+    MappingSteps.addTriplePredicateSibling(6)
+    MappingSteps.getTriples().should('have.length', 9);
+
+  });
+
 });

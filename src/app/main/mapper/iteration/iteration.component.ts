@@ -712,7 +712,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   private canAddPredicate(triple, position): boolean {
-    return triple.getNewMappingRole() === PREDICATE_SELECTOR && !!this.triples[position].getPredicate();
+    return triple.getNewMappingRole() === PREDICATE_SELECTOR && (!!this.triples[position].getPredicate() || this.triples[position].isTypeProperty);
   }
 
   private canAddObject(triple, position): boolean {
