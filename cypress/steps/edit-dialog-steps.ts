@@ -63,6 +63,15 @@ class EditDialogSteps {
     return this.getTypeSection().find('[appCypressData=type-language_literal]').should('be.visible').click();
   }
 
+  static selectLanguageConstant() {
+    return this.getTypeSection().find('[appCypressData=language-constant]').click();
+  }
+
+  static completeLanguageConstant(value: string) {
+    return this.getTypeSection().find('[appCypressData=language-constant-input]').should('be.visible').type(value).blur();
+  }
+
+
   // source section
   static getSourceSection() {
     return EditDialogSteps.getDialog().find('[appCypressData=source-section]');
@@ -82,6 +91,10 @@ class EditDialogSteps {
 
   static completeColumn(value: string) {
     return this.getSourceSection().find('[appCypressData=column-input]').should('be.visible').type(value).blur();
+  }
+
+  static selectRowIndex() {
+    return this.getSourceSection().find('[appCypressData=row_index]').click();
   }
 
   // transformation section
@@ -105,11 +118,19 @@ class EditDialogSteps {
     return this.getTypeSection().find('[appCypressData=datatype-transformation-grel]').should('be.visible').click();
   }
 
+  static selectDataTypePrefix() {
+    return this.getTypeSection().find('[appCypressData=datatype-transformation-prefix]').should('be.visible').click();
+  }
+
   static completeGREL(value: string) {
     return this.getTransformationExpressionField().should('be.visible').type(value);
   }
 
   static completeDataTypeGREL(value: string) {
+    this.getTypeSection().find('[appCypressData=datatype-transformation-expression]').should('be.visible').type(value);
+  }
+
+  static completeDataTypePrefix(value: string) {
     this.getTypeSection().find('[appCypressData=datatype-transformation-expression]').should('be.visible').type(value);
   }
 
