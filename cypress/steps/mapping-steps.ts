@@ -286,6 +286,10 @@ class MappingSteps {
   static getNamespace(namespace: string) {
     return MappingSteps.getNamespaces().find(`[appCypressData="namespace-${namespace}"]`);
   }
+
+  static getSuggestions(index: any) {
+    return cy.get(`[appCypressData="cell-option"]`);
+  }
 }
 
 export default MappingSteps;
