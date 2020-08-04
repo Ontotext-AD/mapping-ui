@@ -77,9 +77,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   firstGrelPreviewDataTypeTransformation: any;
   title: string;
   hasChildren: boolean;
-  showDataTypeTransformation = false;
-  showLanguageTransformation = false;
-  showTransformation = false;
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
@@ -103,6 +100,21 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.subscribeToValueChanges();
 
     this.subscribeToCheckDirty();
+  }
+
+  public onExpressionGrelPreviewOpen() {
+    const expressionValue = this.mapperForm.get('expression').value;
+    this.resolveGrelExpressionPreview(expressionValue);
+  }
+
+  public onLanguageGrelPreviewOpen() {
+    const languageTransformation = this.mapperForm.get('languageTransformation').value;
+    this.resolveGrelLanguagePreview(languageTransformation);
+  }
+
+  public onDataTypeGrelPreviewOpen() {
+    const datatypeTransformation = this.mapperForm.get('datatypeTransformation').value;
+    this.resolveGrelDataTypePreview(datatypeTransformation);
   }
 
   private setDialogStyle() {
@@ -284,6 +296,31 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.isPrefixTransformation = this.isTransformation && this.mappingDetails.language === Language.Prefix;
   }
 
+  private resolveGrelExpressionPreview(value?: string) {
+    if (value && !this.isPrefixTransformation) {
+      this.grelPreviewExpression = this.previewGREL(value);
+    } else {
+      this.grelPreviewExpression = EMPTY;
+    }
+  }
+
+  private resolveGrelLanguagePreview(value?: string) {
+    if (value && !this.isLanguagePrefixTransformation) {
+      this.grelPreviewLanguageTransformation = this.previewLanguageGREL(value);
+    } else {
+      this.grelPreviewLanguageTransformation = EMPTY;
+    }
+  }
+
+  private resolveGrelDataTypePreview(value?: string) {
+    if (value && !this.isDataTypePrefixTransformation) {
+      this.grelPreviewDataTypeTransformation = this.previewDataTypeGREL(value);
+      this.firstGrelPreviewDataTypeTransformation = this.grelPreviewDataTypeTransformation[0];
+    } else {
+      this.grelPreviewDataTypeTransformation = EMPTY;
+    }
+  }
+
   private subscribeToValueChanges() {
     this.mapperForm.get('typeMapping').valueChanges
         .pipe(untilComponentDestroyed(this))
@@ -404,32 +441,19 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.mapperForm.get('expression').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
-          if (value && !this.isPrefixTransformation) {
-            this.grelPreviewExpression = this.previewGREL(value);
-          } else {
-            this.grelPreviewExpression = EMPTY;
-          }
+          this.resolveGrelExpressionPreview(value);
         });
 
     this.mapperForm.get('languageTransformation').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
-          if (value && !this.isLanguagePrefixTransformation) {
-            this.grelPreviewLanguageTransformation = this.previewLanguageGREL(value);
-          } else {
-            this.grelPreviewLanguageTransformation = EMPTY;
-          }
+          this.resolveGrelLanguagePreview(value);
         });
 
     this.mapperForm.get('datatypeTransformation').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
-          if (value && !this.isDataTypePrefixTransformation) {
-            this.grelPreviewDataTypeTransformation = this.previewDataTypeGREL(value);
-            this.firstGrelPreviewDataTypeTransformation = this.grelPreviewDataTypeTransformation[0];
-          } else {
-            this.grelPreviewDataTypeTransformation = EMPTY;
-          }
+          this.resolveGrelDataTypePreview(value);
         });
 
     this.filteredNamespaces = merge(this.mapperForm.get('expression').valueChanges, this.mapperForm.get('datatypeTransformation').valueChanges, this.mapperForm.get('languageTransformation').valueChanges)

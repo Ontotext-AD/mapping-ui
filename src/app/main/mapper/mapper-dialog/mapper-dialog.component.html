@@ -136,7 +136,8 @@
                   </mat-icon>
                 </mat-form-field>
 
-                <sat-popover #expressionGrelPreview verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
+                <sat-popover #expressionGrelPreview (opened)="onExpressionGrelPreviewOpen()"
+                             verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
                   <mat-card class="grel-preview-content" appCypressData="expression-grel-preview">
                     <mat-card-content *ngIf="(grelPreviewExpression | async)">
                       <div *ngFor="let preview of grelPreviewExpression | async; let index = index;" appCypressData="grel-preview">
@@ -258,7 +259,8 @@
                       </mat-icon>
                     </mat-form-field>
 
-                    <sat-popover #datatypeGrelPreview verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
+                    <sat-popover #datatypeGrelPreview (opened)="onDataTypeGrelPreviewOpen()"
+                                 verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
                       <mat-card class="grel-preview-content" appCypressData="datatype-grel-preview-content">
                         <mat-card-content *ngIf="(grelPreviewDataTypeTransformation | async)">
                           <div *ngFor="let preview of grelPreviewDataTypeTransformation | async; let index = index;" appCypressData="datatype-grel-preview">
@@ -372,7 +374,8 @@
                       </mat-icon>
                     </mat-form-field>
 
-                    <sat-popover #languageGrelPreview verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
+                    <sat-popover #languageGrelPreview (opened)="onLanguageGrelPreviewOpen()"
+                                 verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
                       <mat-card class="grel-preview-content" appCypressData="language-grel-preview-content">
                         <mat-card-content *ngIf="(grelPreviewLanguageTransformation | async)">
                           <div *ngFor="let preview of grelPreviewLanguageTransformation | async; let index = index;" appCypressData="language-grel-preview">

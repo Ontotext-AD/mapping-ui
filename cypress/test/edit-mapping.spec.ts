@@ -333,6 +333,7 @@ describe('Edit mapping', () => {
       MappingSteps.getTriples().should('have.length', 2);
 
       // Verify source GREL transformation preview
+
       // When I open the subject edit dialog and focus on source GREL field
       MappingSteps.editTripleSubject(0);
       EditDialogSteps.selectGREL();
@@ -357,12 +358,22 @@ describe('Edit mapping', () => {
       // Then I expect error message to appear in the popover
       EditDialogSteps.getGRELPreview().find('[appCypressData=grel-preview]')
         .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
+      // When I complete a valid expression, close edit dialog and open it again
+      cy.wait('@loadGrelPreview');
+      mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
       EditDialogSteps.clearGREL();
+      EditDialogSteps.completeGREL('value');
+      EditDialogSteps.saveConfiguration();
+      MappingSteps.editTripleSubject(0);
+      // Then I expect the grel preview to be properly loaded again
+      EditDialogSteps.getTransformationExpressionField().focus();
+      EditDialogSteps.getGRELPreview().find('[appCypressData=grel-preview]')
+        .should('have.length', 4).first().should('contain', 'James Cameron');
       EditDialogSteps.saveConfiguration();
 
       // Verify language GREL transformation preview
+
       // When I open the subject edit dialog and focus on language GREL field
-      cy.wait('@loadGrelPreview');
       mockPreview('[null]');
       MappingSteps.editTripleObjectWithData(0);
       EditDialogSteps.selectLanguageGREL();
@@ -388,9 +399,21 @@ describe('Edit mapping', () => {
       EditDialogSteps.getLanguageGRELPreview().find('[appCypressData=language-grel-preview]')
         .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
       EditDialogSteps.clearLanguageGREL();
+      // When I complete a valid expression, close edit dialog and open it again
+      cy.wait('@loadGrelPreview');
+      mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
+      EditDialogSteps.clearLanguageGREL();
+      EditDialogSteps.completeLanguageGREL('value');
+      EditDialogSteps.saveConfiguration();
+      MappingSteps.editTripleObjectWithData(0);
+      // Then I expect the grel preview to be properly loaded again
+      EditDialogSteps.getLanguageTransformationExpressionField().focus();
+      EditDialogSteps.getLanguageGRELPreview().find('[appCypressData=language-grel-preview]')
+        .should('have.length', 4).first().should('contain', 'James Cameron');
       EditDialogSteps.saveConfiguration();
 
       // Verify datatype GREL transformation preview
+
       // When I open the subject edit dialog and focus on datatype GREL field
       mockPreview('[null]');
       MappingSteps.editTripleObjectWithData(0);
@@ -419,7 +442,17 @@ describe('Edit mapping', () => {
       // Then I expect error message to appear in the popover
       EditDialogSteps.getDataTypeGRELPreview().find('[appCypressData=datatype-grel-preview]')
         .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
+      // When I complete a valid expression, close edit dialog and open it again
+      cy.wait('@loadGrelPreview');
+      mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
       EditDialogSteps.clearDataTypeGREL();
+      EditDialogSteps.completeDataTypeGREL('value');
+      EditDialogSteps.saveConfiguration();
+      MappingSteps.editTripleObjectWithData(0);
+      // Then I expect the grel preview to be properly loaded again
+      EditDialogSteps.getLanguageDataTypeGrelField().focus();
+      EditDialogSteps.getDataTypeGRELPreview().find('[appCypressData=datatype-grel-preview]')
+        .should('have.length', 4).first().should('contain', 'James Cameron');
       EditDialogSteps.saveConfiguration();
     });
   });
