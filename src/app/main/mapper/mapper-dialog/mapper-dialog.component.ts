@@ -406,6 +406,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           if (value && !this.isPrefixTransformation) {
             this.grelPreviewExpression = this.previewGREL(value);
+          } else {
+            this.grelPreviewExpression = EMPTY;
           }
         });
 
@@ -414,6 +416,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           if (value && !this.isLanguagePrefixTransformation) {
             this.grelPreviewLanguageTransformation = this.previewLanguageGREL(value);
+          } else {
+            this.grelPreviewLanguageTransformation = EMPTY;
           }
         });
 
@@ -423,6 +427,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
           if (value && !this.isDataTypePrefixTransformation) {
             this.grelPreviewDataTypeTransformation = this.previewDataTypeGREL(value);
             this.firstGrelPreviewDataTypeTransformation = this.grelPreviewDataTypeTransformation[0];
+          } else {
+            this.grelPreviewDataTypeTransformation = EMPTY;
           }
         });
 
@@ -465,14 +471,15 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
       return EMPTY;
     }
     return this.mapperService.previewGREL(valueSource, value)
-        .pipe(untilComponentDestroyed(this), map((value) => {
-          const errors = value.map((e) => (e && e.error) ? e.error : e)
+        .pipe(untilComponentDestroyed(this), map((response) => {
+          const errors = response.map((e) => (e && e.error) ? e.error : e)
               .filter((val, index, self) => self.indexOf(val) === index);
           // Do not show the same error multiple times if it is the same for all results
           if (errors.length === 1) {
-            return errors;
+            // there might be an element with null value
+            return errors[0] !== null && errors;
           }
-          return value;
+          return response;
         }));
   }
 

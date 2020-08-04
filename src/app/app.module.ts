@@ -20,6 +20,7 @@ import {DirectivesModule} from 'src/app/directives/directives.module';
 import {environment} from 'src/environments/environment';
 import {ComponentsModule} from 'src/app/main/components/components.module';
 import {TokenInterceptor} from './auth/token.interceptor';
+import {SatPopoverModule} from '@ncstate/sat-popover';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, environment.httpLoaderPrefix, environment.httpLoaderSuffix);
@@ -52,6 +53,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatSnackBarModule,
     FormsModule,
     DirectivesModule,
+    SatPopoverModule,
   ],
   providers: [TranslateService, {
     provide: HTTP_INTERCEPTORS,
