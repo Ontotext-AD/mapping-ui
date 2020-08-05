@@ -8,10 +8,10 @@ import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {Triple} from 'src/app/models/triple';
 import {
   COLUMN,
-  COMMA,
+  COMMA, DIRTY_MAPPING,
   DOT,
   OBJECT_SELECTOR,
-  PREDICATE_SELECTOR,
+  PREDICATE_SELECTOR, PRISTINE_MAPPING,
   SUBJECT_SELECTOR,
 } from 'src/app/utils/constants';
 import {Source as SourceEnum, Type} from 'src/app/models/mapping-definition';
@@ -102,7 +102,14 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
           this.isDirty.next(false);
         });
 
-    this.isDirty.subscribe((isDirty) => this.messageService.publish(ChannelName.DirtyMapping, isDirty));
+    this.isDirty.subscribe((isDirty) => {
+      this.messageService.publish(ChannelName.DirtyMapping, isDirty);
+      if (isDirty) {
+        window.parent.postMessage(DIRTY_MAPPING, '*');
+      } else {
+        window.parent.postMessage(PRISTINE_MAPPING, '*');
+      }
+    });
 
     this.rdfMapping.subscribe((mapping) => {
       this.mapping = mapping;
