@@ -551,13 +551,11 @@ describe('Edit mapping', () => {
       HeaderSteps.getBothViewButton().click();
       // I see mapping preview
       MappingSteps.getTripleSubjectPreview(0).contains('<James%20Cameron>');
-      MappingSteps.getTripleObjectPreview(0).contains('person');
-      MappingSteps.getTriplePredicatePreview(1).contains('test');
+      MappingSteps.getTripleObjectPreview(0).contains('<person>');
+      MappingSteps.getTriplePredicatePreview(1).contains('<test>');
       MappingSteps.getTripleObjectPreview(1).contains('<http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0499549%2F%3Fref_%3Dfn_tt_tt_1>');
       // And I save the mapping
       HeaderSteps.saveMapping();
-      // Then I expect a loading indicator
-      HeaderSteps.getSaveIndicator().should('be.visible');
       // And The mapping should be saved
       cy.fixture('create-mapping/save-mapping-request-body').then((saveResponse: string) => {
         cy.wait('@saveMapping');
