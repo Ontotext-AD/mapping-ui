@@ -8,44 +8,37 @@ class MappingSteps {
    * REST calls to complete: e.g. autocomplete
    *
    * @param value the string value to be completed in the field
-   * @param field the field where to type
+   * @param fieldAccessorCb a function which must return a field
    */
-  static type(value: string, field: any) {
-    [...value].forEach((ch: any) => {
-      field.type(ch, {
-        delay: 100
-      });
-    });
+  static type(value: string, fieldAccessorCb: any) {
+    fieldAccessorCb().type(value);
   }
 
   static completeTriple(index: number, subject?: string, predicate?: string, object?: string) {
     if (subject) {
-      const field = MappingSteps.getTripleSubjectValue(index);
-      this.type(subject, field);
-      field.blur();
+      this.completeSubject(index, subject);
     }
     if (predicate) {
-      const field = MappingSteps.getTriplePredicateValue(index);
-      this.type(predicate, field);
-      field.blur();
+      this.completePredicate(index, predicate);
     }
     if (object) {
-      const field = MappingSteps.getTripleObjectValue(index);
-      this.type(object, field);
-      field.blur();
+      this.completeObject(index, object);
     }
   }
 
   static completeSubject(index: number, value: string) {
-    MappingSteps.getTripleSubjectValue(index).type(value).blur();
+    this.type(value, () => MappingSteps.getTripleSubjectValue(index));
+    MappingSteps.getTripleSubjectValue(index).blur();
   }
 
   static completePredicate(index: number, value: string) {
-    MappingSteps.getTriplePredicateValue(index).type(value).blur();
+    this.type(value, () => MappingSteps.getTriplePredicateValue(index));
+    MappingSteps.getTriplePredicateValue(index).blur();
   }
 
   static completeObject(index: number, value: string) {
-    MappingSteps.getTripleObjectValue(index).type(value).blur();
+    this.type(value, () => MappingSteps.getTripleObjectValue(index));
+    MappingSteps.getTripleObjectValue(index).blur();
   }
 
   static verifyTriple(index: number, subject: string, predicate: string, object: string) {
@@ -98,7 +91,8 @@ class MappingSteps {
   }
 
   static getTripleSubjectValue(index: any) {
-    return MappingSteps.getTripleSubject(index).find('[appCypressData="cell-value"]');
+    // wait for a while to prevent element to be found in detached state
+    return MappingSteps.getTripleSubject(index).find('[appCypressData="cell-value"]').wait(150);
   }
 
   static getTripleSubjectValuePreview(index: any) {
@@ -163,7 +157,8 @@ class MappingSteps {
   }
 
   static getTriplePredicateValue(index: any) {
-    return MappingSteps.getTriplePredicate(index).find('[appCypressData="cell-value"]');
+    // wait for a while to prevent element to be found in detached state
+    return MappingSteps.getTriplePredicate(index).find('[appCypressData="cell-value"]').wait(150);
   }
 
   static getTriplePredicateValuePreview(index: any) {
@@ -196,7 +191,8 @@ class MappingSteps {
   }
 
   static getTripleObjectValue(index: any) {
-    return MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]');
+    // wait for a while to prevent element to be found in detached state
+    return MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').wait(150);
   }
 
   static getTripleObjectValuePreview(index: any) {

@@ -19,10 +19,10 @@ describe('Autocomplete mapping', () => {
     it('Should autocomplete prefix in the table', () => {
       MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
-      MappingSteps.type('w', MappingSteps.getTripleObjectValue(0));
+      MappingSteps.type('w', () => MappingSteps.getTripleObjectValue(0));
       MappingSteps.getSuggestions(0).should('have.length', 5);
       MappingSteps.getSuggestions(0).first().should('contain', 'wgs:').click();
-      MappingSteps.type('test', MappingSteps.getTripleObjectValue(0));
+      MappingSteps.type('test', () => MappingSteps.getTripleObjectValue(0));
       MappingSteps.getTripleObjectValue(0).blur();
       MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'wgs');
       MappingSteps.getTripleObjectSource(0).should('have.text', ' C  test ');
@@ -32,7 +32,7 @@ describe('Autocomplete mapping', () => {
     it('Should autocomplete column after prefix in the table', () => {
       MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
-      MappingSteps.type('rdf:@', MappingSteps.getTripleObjectValue(0));
+      MappingSteps.type('rdf:@', () => MappingSteps.getTripleObjectValue(0));
       MappingSteps.getSuggestions(0).should('have.length', 28);
       MappingSteps.getSuggestions(0).first().should('contain', 'color').click();
       MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf');
@@ -42,7 +42,7 @@ describe('Autocomplete mapping', () => {
     it('Should show IRI description on hover', () => {
       MappingSteps.getTriples().should('have.length', 1);
       // I type a letter to show autocomplete
-      MappingSteps.type('w', MappingSteps.getTripleSubjectValue(0));
+      MappingSteps.type('w', () => MappingSteps.getTripleSubjectValue(0));
       // Call POST again to load tooltips
       cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-iri-description-response.json').as('loadDescr');
       // When I hover an autocomplete
