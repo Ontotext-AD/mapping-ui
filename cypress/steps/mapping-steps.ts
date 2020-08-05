@@ -3,27 +3,48 @@
  */
 class MappingSteps {
 
+  /**
+   * Type the value string one character at a time with a bit of delay giving a chance to
+   * REST calls to complete: e.g. autocomplete
+   *
+   * @param value the string value to be completed in the field
+   * @param field the field where to type
+   */
+  static type(value: string, field: any) {
+    [...value].forEach((ch: any) => {
+      field.type(ch, {
+        delay: 100
+      });
+    });
+  }
+
   static completeTriple(index: number, subject?: string, predicate?: string, object?: string) {
     if (subject) {
-      MappingSteps.completeSubject(index , subject);
+      const field = MappingSteps.getTripleSubjectValue(index);
+      this.type(subject, field);
+      field.blur();
     }
     if (predicate) {
-      MappingSteps.completePredicate(index, predicate);
+      const field = MappingSteps.getTriplePredicateValue(index);
+      this.type(predicate, field);
+      field.blur();
     }
     if (object) {
-      MappingSteps.completeObject(index, object);
+      const field = MappingSteps.getTripleObjectValue(index);
+      this.type(object, field);
+      field.blur();
     }
   }
 
-  static completeSubject(index:number, value:string) {
+  static completeSubject(index: number, value: string) {
     MappingSteps.getTripleSubjectValue(index).type(value).blur();
   }
 
-  static completePredicate(index:number, value:string) {
+  static completePredicate(index: number, value: string) {
     MappingSteps.getTriplePredicateValue(index).type(value).blur();
   }
 
-  static completeObject(index:number, value:string) {
+  static completeObject(index: number, value: string) {
     MappingSteps.getTripleObjectValue(index).type(value).blur();
   }
 
