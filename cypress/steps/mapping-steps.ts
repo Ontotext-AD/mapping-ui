@@ -5,14 +5,26 @@ class MappingSteps {
 
   static completeTriple(index: number, subject?: string, predicate?: string, object?: string) {
     if (subject) {
-      MappingSteps.getTripleSubjectValue(index).type(subject).blur();
+      MappingSteps.completeSubject(index , subject);
     }
     if (predicate) {
-      MappingSteps.getTriplePredicateValue(index).type(predicate).blur();
+      MappingSteps.completePredicate(index, predicate);
     }
     if (object) {
-      MappingSteps.getTripleObjectValue(index).type(object).blur();
+      MappingSteps.completeObject(index, object);
     }
+  }
+
+  static completeSubject(index:number, value:string) {
+    MappingSteps.getTripleSubjectValue(index).type(value).blur();
+  }
+
+  static completePredicate(index:number, value:string) {
+    MappingSteps.getTriplePredicateValue(index).type(value).blur();
+  }
+
+  static completeObject(index:number, value:string) {
+    MappingSteps.getTripleObjectValue(index).type(value).blur();
   }
 
   static verifyTriple(index: number, subject: string, predicate: string, object: string) {
