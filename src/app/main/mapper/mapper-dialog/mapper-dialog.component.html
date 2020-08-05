@@ -110,11 +110,18 @@
               <div fxLayout="column" fxLayoutAlign="space-around stretch">
                 <mat-form-field class="ml-16">
                   <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
-                  <textarea matInput formControlName="expression" name="expression"
+                  <textarea matInput formControlName="expression" name="expression" *ngIf="isPrefixTransformation"
                             cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                             [matAutocomplete]="prefixAuto"
                             [placeholder]="!isPrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
                             appCypressData="transformation-expression"></textarea>
+                  <textarea matInput formControlName="expression" name="expression" *ngIf="!isPrefixTransformation"
+                            cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+                            [matAutocomplete]="prefixAuto"
+                            [placeholder]="!isPrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
+                            appCypressData="transformation-expression"
+                            [satPopoverAnchor]='expressionGrelPreview'
+                            (focus)="expressionGrelPreview.open()" (blur)="expressionGrelPreview.close()"></textarea>
                   <mat-autocomplete #prefixAuto="matAutocomplete">
                     <div *ngIf="isPrefixTransformation">
                       <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'">
@@ -129,17 +136,21 @@
                   </mat-icon>
                 </mat-form-field>
 
-                <div class="ml-16" *ngIf="!isPrefixTransformation">
-                  <div
-                    *ngFor="let preview of grelPreviewExpression | async; let index = index;" appCypressData="grel-preview">
-                    <div class="mb-2 cursor-pointer" *ngIf="preview"
-                         [ngClass]="{hide: index !== 0 && !showTransformation}"
-                         (click)="showTransformation = !showTransformation"
-                         matTooltip="{{showTransformation ? ('TOOLTIPS.CLICK_TO_HIDE' | translate) : ('TOOLTIPS.CLICK_FOR_MORE' | translate)}}">
-                      {{preview.error || preview}}
-                    </div>
-                  </div>
-                </div>
+                <sat-popover #expressionGrelPreview (opened)="onExpressionGrelPreviewOpen()"
+                             verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
+                  <mat-card class="grel-preview-content" appCypressData="expression-grel-preview">
+                    <mat-card-content *ngIf="(grelPreviewExpression | async)">
+                      <div *ngFor="let preview of grelPreviewExpression | async; let index = index;" appCypressData="grel-preview">
+                        <div class="mb-2" *ngIf="preview">
+                          {{preview.error || preview}}
+                        </div>
+                      </div>
+                    </mat-card-content>
+                    <mat-card-content *ngIf="!(grelPreviewExpression | async)">
+                      {{'MESSAGES.GREL_NO_PREVIEW' | translate}}
+                    </mat-card-content>
+                  </mat-card>
+                </sat-popover>
               </div>
             </div>
           </div>
@@ -222,11 +233,18 @@
                   <div fxLayout="column" fxLayoutAlign="space-around stretch">
                     <mat-form-field class="ml-16">
                       <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
-                      <textarea matInput formControlName="datatypeTransformation" name="datatypeTransformation"
+                      <textarea matInput formControlName="datatypeTransformation" name="datatypeTransformation" *ngIf="isDataTypePrefixTransformation"
                                 cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                                 [matAutocomplete]="datatypePrefixAuto"
                                 [placeholder]="!isDataTypePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
                                 appCypressData="datatype-transformation-expression"></textarea>
+                      <textarea matInput formControlName="datatypeTransformation" name="datatypeTransformation" *ngIf="!isDataTypePrefixTransformation"
+                                cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+                                [matAutocomplete]="datatypePrefixAuto"
+                                [placeholder]="!isDataTypePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
+                                appCypressData="datatype-transformation-expression"
+                                [satPopoverAnchor]='datatypeGrelPreview'
+                                (focus)="datatypeGrelPreview.open()" (blur)="datatypeGrelPreview.close()"></textarea>
                       <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
                         <div *ngIf="isDataTypePrefixTransformation">
                           <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'">
@@ -241,17 +259,21 @@
                       </mat-icon>
                     </mat-form-field>
 
-                    <div class="ml-16" *ngIf="!isDataTypePrefixTransformation">
-                      <div
-                        *ngFor="let preview of grelPreviewDataTypeTransformation | async; let index = index;" appCypressData="datatype-grel-preview">
-                        <div class="mb-2 cursor-pointer" *ngIf="preview"
-                             [ngClass]="{hide: index !== 0 && !showDataTypeTransformation}"
-                             (click)="showDataTypeTransformation = !showDataTypeTransformation"
-                             matTooltip="{{showDataTypeTransformation ? ('TOOLTIPS.CLICK_TO_HIDE' | translate) : ('TOOLTIPS.CLICK_FOR_MORE' | translate)}}">
-                          {{preview.error || preview}}
-                        </div>
-                      </div>
-                    </div>
+                    <sat-popover #datatypeGrelPreview (opened)="onDataTypeGrelPreviewOpen()"
+                                 verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
+                      <mat-card class="grel-preview-content" appCypressData="datatype-grel-preview-content">
+                        <mat-card-content *ngIf="(grelPreviewDataTypeTransformation | async)">
+                          <div *ngFor="let preview of grelPreviewDataTypeTransformation | async; let index = index;" appCypressData="datatype-grel-preview">
+                            <div class="mb-2" *ngIf="preview">
+                              {{preview.error || preview}}
+                            </div>
+                          </div>
+                        </mat-card-content>
+                        <mat-card-content *ngIf="!(grelPreviewDataTypeTransformation | async)">
+                          {{'MESSAGES.GREL_NO_PREVIEW' | translate}}
+                        </mat-card-content>
+                      </mat-card>
+                    </sat-popover>
                   </div>
                 </div>
               </div>
@@ -326,11 +348,18 @@
                   <div fxLayout="column" fxLayoutAlign="space-around stretch">
                     <mat-form-field class="ml-16">
                       <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
-                      <textarea matInput formControlName="languageTransformation" name="languageTransformation"
+                      <textarea matInput formControlName="languageTransformation" name="languageTransformation" *ngIf="isLanguagePrefixTransformation"
                                 cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                                 [matAutocomplete]="languagePrefixAuto"
                                 [placeholder]="!isLanguagePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
                                 appCypressData="language-transformation-expression"></textarea>
+                      <textarea matInput formControlName="languageTransformation" name="languageTransformation" *ngIf="!isLanguagePrefixTransformation"
+                                cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+                                [matAutocomplete]="languagePrefixAuto"
+                                [placeholder]="!isLanguagePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
+                                appCypressData="language-transformation-expression"
+                                [satPopoverAnchor]='languageGrelPreview'
+                                (focus)="languageGrelPreview.open()" (blur)="languageGrelPreview.close()"></textarea>
                       <mat-autocomplete #languagePrefixAuto="matAutocomplete">
                         <div *ngIf="isLanguagePrefixTransformation">
                           <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'">
@@ -345,17 +374,21 @@
                       </mat-icon>
                     </mat-form-field>
 
-                    <div class="ml-16" *ngIf="!isLanguagePrefixTransformation">
-                      <div
-                        *ngFor="let preview of grelPreviewLanguageTransformation | async; let index = index;">
-                        <div class="mb-2 cursor-pointer" *ngIf="preview"
-                             [ngClass]="{hide: index !== 0 && !showLanguageTransformation}"
-                             (click)="showLanguageTransformation = !showLanguageTransformation"
-                             matTooltip="{{showLanguageTransformation ? ('TOOLTIPS.CLICK_TO_HIDE' | translate) : ('TOOLTIPS.CLICK_FOR_MORE' | translate)}}">
-                          {{preview.error || preview}}
-                        </div>
-                      </div>
-                    </div>
+                    <sat-popover #languageGrelPreview (opened)="onLanguageGrelPreviewOpen()"
+                                 verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
+                      <mat-card class="grel-preview-content" appCypressData="language-grel-preview-content">
+                        <mat-card-content *ngIf="(grelPreviewLanguageTransformation | async)">
+                          <div *ngFor="let preview of grelPreviewLanguageTransformation | async; let index = index;" appCypressData="language-grel-preview">
+                            <div class="mb-2" *ngIf="preview">
+                              {{preview.error || preview}}
+                            </div>
+                          </div>
+                        </mat-card-content>
+                        <mat-card-content *ngIf="!(grelPreviewLanguageTransformation | async)">
+                          {{'MESSAGES.GREL_NO_PREVIEW' | translate}}
+                        </mat-card-content>
+                      </mat-card>
+                    </sat-popover>
                   </div>
                 </div>
               </div>

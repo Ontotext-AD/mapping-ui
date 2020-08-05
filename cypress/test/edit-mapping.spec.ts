@@ -8,6 +8,7 @@ describe('Edit mapping', () => {
     cy.setCookie('com.ontotext.graphdb.repository4200', 'Movies');
     cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
     cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
+    cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
   });
 
   context('Edit IRI', () => {
@@ -66,7 +67,6 @@ describe('Edit mapping', () => {
     beforeEach(() => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
       cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
       cy.visit('?dataProviderID=ontorefine:123');
       cy.wait('@loadColumns');
@@ -78,15 +78,15 @@ describe('Edit mapping', () => {
       MappingSteps.completeTriple(0, 'rdf:subject', 'rdf:@Title', 'rdf:$row_index');
       MappingSteps.getTripleSubjectPropertyTransformation(0).should('have.text', 'rdf');
       MappingSteps.getTripleSubjectSourceType(0).should('have.text', ' C ');
-      MappingSteps.getTripleSubjectSource(0).should('have.text', ' C  subject ')
+      MappingSteps.getTripleSubjectSource(0).should('have.text', ' C  subject ');
 
       MappingSteps.getTriplePredicatePropertyTransformation(0).should('have.text', 'rdf');
       MappingSteps.getTriplePredicateSourceType(0).should('have.text', ' @ ');
-      MappingSteps.getTriplePredicateValuePreview(0).should('have.text', ' @  Title ')
+      MappingSteps.getTriplePredicateValuePreview(0).should('have.text', ' @  Title ');
 
       MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf');
       MappingSteps.getTripleObjectSourceType(0).should('have.text', ' $ ');
-      MappingSteps.getTripleObjectSource(0).should('have.text', ' $  row_index ')
+      MappingSteps.getTripleObjectSource(0).should('have.text', ' $  row_index ');
     });
 
     it('Should set extended prefix expressions', () => {
@@ -113,8 +113,6 @@ describe('Edit mapping', () => {
       MappingSteps.getNotification().should('be.visible').and('contain', 'Unrecognized prefix');
       MappingSteps.getNamespace('www').should('not.be.visible');
     });
-
-
   });
 
   // TODO: I add these tests here for now, but later we should distribute them in respective specs with the related operations
@@ -274,11 +272,11 @@ describe('Edit mapping', () => {
         method: 'POST',
         url: '/rest/rdf-mapper/grel/ontorefine:123?limit=10',
         status: 200,
-        response: response,
+        response,
         headers: {
           'Content-Type': 'application/json'
         }
-      });
+      }).as('loadGrelPreview');
     }
 
     it('Should preview empty object', () => {
@@ -312,6 +310,7 @@ describe('Edit mapping', () => {
       EditDialogSteps.selectGREL();
       EditDialogSteps.completeGREL('value');
       EditDialogSteps.getGRELPreview().first().should('contain', 'James Cameron');
+      EditDialogSteps.getTransformationExpressionField().blur();
 
       // Unfortunately cypress cannot return response based on POST data so mock twice the request
       mockPreview('["alabala"]');
@@ -323,8 +322,140 @@ describe('Edit mapping', () => {
       EditDialogSteps.completeDataTypeGREL('value');
       EditDialogSteps.getDataTypeGRELPreview().first().should('contain', 'alabala');
     });
-  });
 
+    it('Should show GREL preview in a popover', () => {
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/grel-expression-edit-mapping-model.json');
+      mockPreview('[null]');
+      // Given I have created and loaded a mapping
+      cy.visit('?dataProviderID=ontorefine:123');
+      MappingSteps.getTriples().should('have.length', 2);
+
+      // Verify source GREL transformation preview
+
+      // When I open the subject edit dialog and focus on source GREL field
+      MappingSteps.editTripleSubject(0);
+      EditDialogSteps.selectGREL();
+      EditDialogSteps.getTransformationExpressionField().focus();
+      // Then I expect a preview popover to appear which contains no preview message
+      EditDialogSteps.getGRELPreview().first().should('contain', 'No GREL preview');
+      // When I type in the field
+      EditDialogSteps.completeGREL('v');
+      // Then I expect to see the no preview message
+      EditDialogSteps.getGRELPreview().first().should('contain', 'No GREL preview');
+      // When I complete a valid GREL
+      cy.wait('@loadGrelPreview');
+      mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
+      EditDialogSteps.completeGREL('alue');
+      // Then I expect preview results to be rendered in the popover
+      EditDialogSteps.getGRELPreview().find('[appCypressData=grel-preview]')
+        .should('have.length', 4).first().should('contain', 'James Cameron');
+      // When There completed expression is invalid
+      cy.wait('@loadGrelPreview');
+      mockPreview('[{"error":"Parsing error at offset 6: Expecting something more at end of expression"},{"error":"Parsing error at offset 6: Expecting something more at end of expression"}]');
+      EditDialogSteps.completeGREL('+');
+      // Then I expect error message to appear in the popover
+      EditDialogSteps.getGRELPreview().find('[appCypressData=grel-preview]')
+        .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
+      // When I complete a valid expression, close edit dialog and open it again
+      cy.wait('@loadGrelPreview');
+      mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
+      EditDialogSteps.clearGREL();
+      EditDialogSteps.completeGREL('value');
+      EditDialogSteps.saveConfiguration();
+      MappingSteps.editTripleSubject(0);
+      // Then I expect the grel preview to be properly loaded again
+      EditDialogSteps.getTransformationExpressionField().focus();
+      EditDialogSteps.getGRELPreview().find('[appCypressData=grel-preview]')
+        .should('have.length', 4).first().should('contain', 'James Cameron');
+      EditDialogSteps.saveConfiguration();
+
+      // Verify language GREL transformation preview
+
+      // When I open the subject edit dialog and focus on language GREL field
+      mockPreview('[null]');
+      MappingSteps.editTripleObjectWithData(0);
+      EditDialogSteps.selectLanguageGREL();
+      EditDialogSteps.getLanguageTransformationExpressionField().focus();
+      // Then I expect a preview popover to appear which contains no preview message
+      EditDialogSteps.getLanguageGRELPreview().first().should('contain', 'No GREL preview');
+      // When I type in the field
+      EditDialogSteps.completeLanguageGREL('v');
+      // Then I expect to see the no preview message
+      EditDialogSteps.getLanguageGRELPreview().first().should('contain', 'No GREL preview');
+      // When I complete a valid GREL
+      cy.wait('@loadGrelPreview');
+      mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
+      EditDialogSteps.completeLanguageGREL('alue');
+      // Then I expect preview results to be rendered in the popover
+      EditDialogSteps.getLanguageGRELPreview().find('[appCypressData=language-grel-preview]')
+        .should('have.length', 4).first().should('contain', 'James Cameron');
+      // When There completed expression is invalid
+      cy.wait('@loadGrelPreview');
+      mockPreview('[{"error":"Parsing error at offset 6: Expecting something more at end of expression"},{"error":"Parsing error at offset 6: Expecting something more at end of expression"}]');
+      EditDialogSteps.completeLanguageGREL('+');
+      // Then I expect error message to appear in the popover
+      EditDialogSteps.getLanguageGRELPreview().find('[appCypressData=language-grel-preview]')
+        .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
+      EditDialogSteps.clearLanguageGREL();
+      // When I complete a valid expression, close edit dialog and open it again
+      cy.wait('@loadGrelPreview');
+      mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
+      EditDialogSteps.clearLanguageGREL();
+      EditDialogSteps.completeLanguageGREL('value');
+      EditDialogSteps.saveConfiguration();
+      MappingSteps.editTripleObjectWithData(0);
+      // Then I expect the grel preview to be properly loaded again
+      EditDialogSteps.getLanguageTransformationExpressionField().focus();
+      EditDialogSteps.getLanguageGRELPreview().find('[appCypressData=language-grel-preview]')
+        .should('have.length', 4).first().should('contain', 'James Cameron');
+      EditDialogSteps.saveConfiguration();
+
+      // Verify datatype GREL transformation preview
+
+      // When I open the subject edit dialog and focus on datatype GREL field
+      mockPreview('[null]');
+      MappingSteps.editTripleObjectWithData(0);
+      EditDialogSteps.selectTypeDataTypeLiteral();
+      EditDialogSteps.selectSourceTypeColumn();
+      EditDialogSteps.completeSourceTypeColumn('director_name');
+      EditDialogSteps.selectDataTypeGREL();
+      EditDialogSteps.getLanguageDataTypeGrelField().focus();
+      // Then I expect a preview popover to appear which contains no preview message
+      EditDialogSteps.getDataTypeGRELPreview().first().should('contain', 'No GREL preview');
+      // When I type in the field
+      EditDialogSteps.completeDataTypeGREL('v');
+      // Then I expect to see the no preview message
+      EditDialogSteps.getDataTypeGRELPreview().first().should('contain', 'No GREL preview');
+      // When I complete a valid GREL
+      cy.wait('@loadGrelPreview');
+      mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
+      EditDialogSteps.completeDataTypeGREL('alue');
+      // Then I expect preview results to be rendered in the popover
+      EditDialogSteps.getDataTypeGRELPreview().find('[appCypressData=datatype-grel-preview]')
+        .should('have.length', 4).first().should('contain', 'James Cameron');
+      // When There completed expression is invalid
+      cy.wait('@loadGrelPreview');
+      mockPreview('[{"error":"Parsing error at offset 6: Expecting something more at end of expression"},{"error":"Parsing error at offset 6: Expecting something more at end of expression"}]');
+      EditDialogSteps.completeDataTypeGREL('+');
+      // Then I expect error message to appear in the popover
+      EditDialogSteps.getDataTypeGRELPreview().find('[appCypressData=datatype-grel-preview]')
+        .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
+      // When I complete a valid expression, close edit dialog and open it again
+      cy.wait('@loadGrelPreview');
+      mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
+      EditDialogSteps.clearDataTypeGREL();
+      EditDialogSteps.completeDataTypeGREL('value');
+      EditDialogSteps.saveConfiguration();
+      MappingSteps.editTripleObjectWithData(0);
+      // Then I expect the grel preview to be properly loaded again
+      EditDialogSteps.getLanguageDataTypeGrelField().focus();
+      EditDialogSteps.getDataTypeGRELPreview().find('[appCypressData=datatype-grel-preview]')
+        .should('have.length', 4).first().should('contain', 'James Cameron');
+      EditDialogSteps.saveConfiguration();
+    });
+  });
 
   context('incomplete mapping', () => {
     it('Should not allow operations with incomplete mapping', () => {
@@ -379,18 +510,18 @@ describe('Edit mapping', () => {
       // When I load application
       cy.visit('?dataProviderID=ontorefine:123');
       // I switch to preview mode
-      HeaderSteps.getPreviewButton().click()
+      HeaderSteps.getPreviewButton().click();
 
-      //WHEN
-      //I delete the object
+      // WHEN
+      // I delete the object
       MappingSteps.deleteTripleObject(0);
       MappingSteps.confirm();
 
-      //THEN
+      // THEN
       // Subject and predicate are in preview mode
       MappingSteps.getTripleSubject(0).should('contain', '<James%20Cameron>');
       MappingSteps.getTriplePredicate(0).should('contain', '<test>');
-      MappingSteps.getTripleObject(0).should('have.length',1);
+      MappingSteps.getTripleObject(0).should('have.length', 1);
     });
   });
 
@@ -420,13 +551,11 @@ describe('Edit mapping', () => {
       HeaderSteps.getBothViewButton().click();
       // I see mapping preview
       MappingSteps.getTripleSubjectPreview(0).contains('<James%20Cameron>');
-      MappingSteps.getTripleObjectPreview(0).contains('person');
-      MappingSteps.getTriplePredicatePreview(1).contains('test');
+      MappingSteps.getTripleObjectPreview(0).contains('<person>');
+      MappingSteps.getTriplePredicatePreview(1).contains('<test>');
       MappingSteps.getTripleObjectPreview(1).contains('<http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0499549%2F%3Fref_%3Dfn_tt_tt_1>');
       // And I save the mapping
       HeaderSteps.saveMapping();
-      // Then I expect a loading indicator
-      HeaderSteps.getSaveIndicator().should('be.visible');
       // And The mapping should be saved
       cy.fixture('create-mapping/save-mapping-request-body').then((saveResponse: string) => {
         cy.wait('@saveMapping');
@@ -442,5 +571,5 @@ describe('Edit mapping', () => {
 
 function assertNotAllowedNotification() {
   MappingSteps.getNotification().should('contain', 'The operation is not allowed. You have an incomplete mapping.');
-  MappingSteps.getNotification().should('not.be.visible')
+  MappingSteps.getNotification().should('not.be.visible');
 }

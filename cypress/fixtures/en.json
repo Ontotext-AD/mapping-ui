@@ -81,7 +81,8 @@
     "CONFIRM_MAPPING_UPLOAD": "All mappings will be overwritten. Do you want to proceed?",
     "MAPPING_UPLOAD_ERROR": "Something went wrong.",
     "INCOMPLETE_MAPPING_ERROR": "The operation is not allowed. You have an incomplete mapping.",
-    "UNRECOGNIZED_PREFIX_ERROR": "Unrecognized prefix. "
+    "UNRECOGNIZED_PREFIX_ERROR": "Unrecognized prefix.",
+    "GREL_NO_PREVIEW": "No GREL preview"
   },
   "DIALOG": {
     "TITLE_CONFIRM": "Confirm",

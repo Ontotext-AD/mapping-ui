@@ -26,6 +26,8 @@ import './viewport';
 // Import server and stubs
 import './server';
 
+import 'cypress-failed-log';
+
 // WORKAROUND FOR NAVIGATION CONFIRMATION
 // See https://github.com/cypress-io/cypress/issues/2938#issuecomment-549565158
 Cypress.on('window:before:load', function (window: any) {

@@ -26,7 +26,8 @@ import {MatDividerModule} from '@angular/material/divider';
 import {CellModule} from 'src/app/main/mapper/cell/cell.module';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {JSONValueDialog} from 'src/app/main/mapper/json-value-dialog';
-
+import {SatPopoverModule} from '@ncstate/sat-popover';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,8 @@ import {JSONValueDialog} from 'src/app/main/mapper/json-value-dialog';
     MatSlideToggleModule,
     MatButtonToggleModule,
     MatDividerModule,
+    SatPopoverModule,
+    MatCardModule,
   ],
   providers: [ModelManagementService],
 })

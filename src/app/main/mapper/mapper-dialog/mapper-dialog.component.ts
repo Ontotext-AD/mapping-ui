@@ -77,9 +77,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   firstGrelPreviewDataTypeTransformation: any;
   title: string;
   hasChildren: boolean;
-  showDataTypeTransformation = false;
-  showLanguageTransformation = false;
-  showTransformation = false;
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
@@ -103,6 +100,21 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.subscribeToValueChanges();
 
     this.subscribeToCheckDirty();
+  }
+
+  public onExpressionGrelPreviewOpen() {
+    const expressionValue = this.mapperForm.get('expression').value;
+    this.resolveGrelExpressionPreview(expressionValue);
+  }
+
+  public onLanguageGrelPreviewOpen() {
+    const languageTransformation = this.mapperForm.get('languageTransformation').value;
+    this.resolveGrelLanguagePreview(languageTransformation);
+  }
+
+  public onDataTypeGrelPreviewOpen() {
+    const datatypeTransformation = this.mapperForm.get('datatypeTransformation').value;
+    this.resolveGrelDataTypePreview(datatypeTransformation);
   }
 
   private setDialogStyle() {
@@ -284,6 +296,31 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.isPrefixTransformation = this.isTransformation && this.mappingDetails.language === Language.Prefix;
   }
 
+  private resolveGrelExpressionPreview(value?: string) {
+    if (value && !this.isPrefixTransformation) {
+      this.grelPreviewExpression = this.previewGREL(value);
+    } else {
+      this.grelPreviewExpression = EMPTY;
+    }
+  }
+
+  private resolveGrelLanguagePreview(value?: string) {
+    if (value && !this.isLanguagePrefixTransformation) {
+      this.grelPreviewLanguageTransformation = this.previewLanguageGREL(value);
+    } else {
+      this.grelPreviewLanguageTransformation = EMPTY;
+    }
+  }
+
+  private resolveGrelDataTypePreview(value?: string) {
+    if (value && !this.isDataTypePrefixTransformation) {
+      this.grelPreviewDataTypeTransformation = this.previewDataTypeGREL(value);
+      this.firstGrelPreviewDataTypeTransformation = this.grelPreviewDataTypeTransformation[0];
+    } else {
+      this.grelPreviewDataTypeTransformation = EMPTY;
+    }
+  }
+
   private subscribeToValueChanges() {
     this.mapperForm.get('typeMapping').valueChanges
         .pipe(untilComponentDestroyed(this))
@@ -404,26 +441,19 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.mapperForm.get('expression').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
-          if (value && !this.isPrefixTransformation) {
-            this.grelPreviewExpression = this.previewGREL(value);
-          }
+          this.resolveGrelExpressionPreview(value);
         });
 
     this.mapperForm.get('languageTransformation').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
-          if (value && !this.isLanguagePrefixTransformation) {
-            this.grelPreviewLanguageTransformation = this.previewLanguageGREL(value);
-          }
+          this.resolveGrelLanguagePreview(value);
         });
 
     this.mapperForm.get('datatypeTransformation').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
-          if (value && !this.isDataTypePrefixTransformation) {
-            this.grelPreviewDataTypeTransformation = this.previewDataTypeGREL(value);
-            this.firstGrelPreviewDataTypeTransformation = this.grelPreviewDataTypeTransformation[0];
-          }
+          this.resolveGrelDataTypePreview(value);
         });
 
     this.filteredNamespaces = merge(this.mapperForm.get('expression').valueChanges, this.mapperForm.get('datatypeTransformation').valueChanges, this.mapperForm.get('languageTransformation').valueChanges)
@@ -465,14 +495,15 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
       return EMPTY;
     }
     return this.mapperService.previewGREL(valueSource, value)
-        .pipe(untilComponentDestroyed(this), map((value) => {
-          const errors = value.map((e) => (e && e.error) ? e.error : e)
+        .pipe(untilComponentDestroyed(this), map((response) => {
+          const errors = response.map((e) => (e && e.error) ? e.error : e)
               .filter((val, index, self) => self.indexOf(val) === index);
           // Do not show the same error multiple times if it is the same for all results
           if (errors.length === 1) {
-            return errors;
+            // there might be an element with null value
+            return errors[0] !== null && errors;
           }
-          return value;
+          return response;
         }));
   }
 

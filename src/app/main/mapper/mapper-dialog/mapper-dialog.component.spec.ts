@@ -20,7 +20,8 @@ import {MatInputModule} from "@angular/material/input";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatDividerModule} from "@angular/material/divider";
-
+import {SatPopoverModule} from '@ncstate/sat-popover';
+import {MatCardModule} from '@angular/material/card';
 
 
 describe('MapperDialogComponent', () => {
@@ -58,6 +59,8 @@ describe('MapperDialogComponent', () => {
         BrowserAnimationsModule,
         MatSlideToggleModule,
         MatDividerModule,
+        SatPopoverModule,
+        MatCardModule,
       ],
       providers: [
         TranslateService,

@@ -12,7 +12,20 @@ describe('Create Amsterdam restaurants mapping', () => {
     cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:amsterdam/amsterdam-model.json');
   });
 
+  function mockPreview(response: string) {
+    cy.route({
+      method: 'POST',
+      url: '/rest/rdf-mapper/grel/ontorefine:123?limit=10',
+      status: 200,
+      response,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).as('loadGrelPreview');
+  }
+
   it('Should be able to create Amsterdam restaurants mapping', () => {
+    mockPreview('[null]');
     // When I load application
     cy.visit('?dataProviderID=ontorefine:123');
     cy.wait('@loadColumns');
