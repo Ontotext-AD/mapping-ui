@@ -351,8 +351,9 @@ export class ModelManagementService {
   }
 
   storeModelMapping(mappingDefinition: MappingDefinitionImpl): Observable<void> {
-    this.removePreview(mappingDefinition);
-    return this.mappingDefinitionService.saveMappingDefinition(this.mappingDefinitionToJson(mappingDefinition));
+    const mapping = classToClass(mappingDefinition);
+    this.removePreview(mapping);
+    return this.mappingDefinitionService.saveMappingDefinition(this.mappingDefinitionToJson(mapping));
   }
 
   getModelMapping(mapping): {} {

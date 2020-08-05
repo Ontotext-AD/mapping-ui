@@ -393,6 +393,51 @@ describe('Edit mapping', () => {
       MappingSteps.getTripleObject(0).should('have.length',1);
     });
   });
+
+  context('edit and save', () => {
+    it('Should save mapping and preserve preview', () => {
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model-with-preview.json');
+      cy.route({
+        method: 'POST',
+        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
+        status: 200,
+        delay: 1000
+      }).as('saveMapping');
+      // Given I have opened the application
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      // When The mapping is loaded
+      MappingSteps.getTriples().should('have.length', 4);
+      // Then I expect the save button to be disabled
+      HeaderSteps.getSaveMappingButton().should('be.disabled');
+      // I delete a triple
+      MappingSteps.deleteTriple(2);
+      MappingSteps.confirm();
+      // I switch to both preview
+      HeaderSteps.getBothViewButton().click();
+      // I see mapping preview
+      MappingSteps.getTripleSubjectPreview(0).contains('<James%20Cameron>');
+      MappingSteps.getTripleObjectPreview(0).contains('person');
+      MappingSteps.getTriplePredicatePreview(1).contains('test');
+      MappingSteps.getTripleObjectPreview(1).contains('<http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0499549%2F%3Fref_%3Dfn_tt_tt_1>');
+      // And I save the mapping
+      HeaderSteps.saveMapping();
+      // Then I expect a loading indicator
+      HeaderSteps.getSaveIndicator().should('be.visible');
+      // And The mapping should be saved
+      cy.fixture('create-mapping/save-mapping-request-body').then((saveResponse: string) => {
+        cy.wait('@saveMapping');
+        MappingSteps.getTripleSubjectPreview(0).contains('<James%20Cameron>');
+        MappingSteps.getTripleObjectPreview(0).contains('person');
+        MappingSteps.getTriplePredicatePreview(1).contains('test');
+        MappingSteps.getTripleObjectPreview(1).contains('<http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0499549%2F%3Fref_%3Dfn_tt_tt_1>');
+      });
+    });
+
+  });
 });
 
 function assertNotAllowedNotification() {
