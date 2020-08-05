@@ -1,8 +1,8 @@
 <div fxLayout="row" fxLayoutAlign="end end" appCypressData="header" class="header-component py-2">
   <mat-button-toggle-group class="mr-auto" value="{{ViewMode.Configuration}}" (change)="togglePreview($event)">
-    <mat-button-toggle value="{{ViewMode.Configuration}}" appCypressData="view-configuration-button">{{"BUTTONS.CONFIGURATION" | translate}}</mat-button-toggle>
-    <mat-button-toggle value="{{ViewMode.Preview}}" appCypressData="view-preview-button">{{"BUTTONS.PREVIEW" | translate}}</mat-button-toggle>
-    <mat-button-toggle value="{{ViewMode.PreviewAndConfiguration}}" appCypressData="view-both-button">{{"BUTTONS.PREVIEW_AND_CONFIGURATION" | translate}}</mat-button-toggle>
+    <mat-button-toggle value="{{ViewMode.Configuration}}" appCypressData="view-configuration-button" matTooltip="{{'TOOLTIPS.VIEW_MODE_CONFIGURATION' | translate}}">{{"BUTTONS.CONFIGURATION" | translate}}</mat-button-toggle>
+    <mat-button-toggle value="{{ViewMode.Preview}}" appCypressData="view-preview-button" matTooltip="{{'TOOLTIPS.VIEW_MODE_PREVIEW' | translate}}">{{"BUTTONS.PREVIEW" | translate}}</mat-button-toggle>
+    <mat-button-toggle value="{{ViewMode.PreviewAndConfiguration}}" appCypressData="view-both-button" matTooltip="{{'TOOLTIPS.VIEW_MODE_BOTH' | translate}}">{{"BUTTONS.PREVIEW_AND_CONFIGURATION" | translate}}</mat-button-toggle>
   </mat-button-toggle-group>
 
   <span class="mr-12 unsaved-changes-msg">
