@@ -8,6 +8,7 @@
     "SAVE": "Save",
     "PREVIEW": "Preview",
     "OK": "Ok",
+    "CANCEL": "Cancel",
     "CONFIGURATION": "Configuration",
     "PREVIEW_AND_CONFIGURATION": "Both",
     "UPLOAD_JSON": "Upload JSON"
@@ -28,6 +29,7 @@
     "OPEN_PREVIEW": "Open mapping preview",
     "NEW_MAPPING": "Create new mapping",
     "SAVE_AND_CLOSE": "Save and close configuration",
+    "CANCEL_EDIT": "Cancel edit operation",
     "GREL_VALUE_HELP": "Open value type documentation in separate window",
     "CLICK_FOR_MORE": "Click for more examples",
     "CLICK_TO_HIDE": "Click to hide examples",
