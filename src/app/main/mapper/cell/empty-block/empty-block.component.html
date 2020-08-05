@@ -5,10 +5,9 @@
       <form>
         <mat-form-field fxFill>
           <mat-label>{{getCellType()}}</mat-label>
-          <input matInput #mapping tabIndex="{{tabIndex}}"
+          <input matInput #mapping tabIndex="{{tabIndex}}" autocomplete="off"
                  appCypressData="cell-value"
                  tabPosition="{{tabPosition}}"
-                 autocomplete="{{suggestions}}"
                  [formControl]="autoInput"
                  [matAutocomplete]="autocInline"
                  (keydown.tab)="saveInputValue(false)"

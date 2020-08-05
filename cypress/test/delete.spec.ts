@@ -25,8 +25,8 @@ describe('Delete', () => {
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a subject and a predicate
-      MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
-      MappingSteps.verifyTriple(0, 'subject', 'predicate', '');
+      MappingSteps.completeTriple(0, 'sub', 'pre', undefined);
+      MappingSteps.verifyTriple(0, 'sub', 'pre', '');
       // When I try to delete the subject
       MappingSteps.deleteTripleSubject(0);
       // Then I expect a warning
@@ -41,15 +41,15 @@ describe('Delete', () => {
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a subject, predicate and an object
-      MappingSteps.completeTriple(0, 'subject', 'predicate', 'object');
-      MappingSteps.verifyTriple(0, 'subject', 'predicate', 'object');
+      MappingSteps.completeTriple(0, 'sub', 'pre', 'obj');
+      MappingSteps.verifyTriple(0, 'sub', 'pre', 'obj');
       // When I try to delete the predicate
       MappingSteps.deleteTriplePredicate(0);
       // Then I expect a warning
       MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do you want to remove this mapping?');
       MappingSteps.confirm();
       MappingSteps.getTriples().should('have.length', 1);
-      MappingSteps.verifyTriple(0, 'subject', '', '');
+      MappingSteps.verifyTriple(0, 'sub', '', '');
     });
 
     it('Should be able to delete an object with nested triples and have a warning', () => {
@@ -57,28 +57,28 @@ describe('Delete', () => {
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a triple
-      MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
+      MappingSteps.completeTriple(0, 'sub', 'pre', undefined);
       MappingSteps.editTripleObject(0);
       EditDialogSteps.getDialog().should('be.visible');
       EditDialogSteps.selectIri();
       EditDialogSteps.selectConstant();
       EditDialogSteps.completeConstant('iri value');
       EditDialogSteps.saveConfiguration();
-      MappingSteps.verifyTriple(0, 'subject', 'predicate', 'iri value');
+      MappingSteps.verifyTriple(0, 'sub', 'pre', 'iri value');
       // And a nested triple
       MappingSteps.addNestedTriple(0);
-      MappingSteps.getTriplePredicateValue(1).type('nestedPredicate').blur();
+      MappingSteps.completePredicate(1, 'pre2');
       MappingSteps.getTriples().should('have.length', 3);
-      MappingSteps.getTripleObjectValue(1).type('nestedObject').blur();
-      MappingSteps.getTriplePredicateValuePreview(1).should('contain', 'nestedPredicate');
-      MappingSteps.getTripleObjectValuePreview(1).should('contain', 'nestedObject');
+      MappingSteps.completeObject(1, 'obj2');
+      MappingSteps.getTriplePredicateValuePreview(1).should('contain', 'pre2');
+      MappingSteps.getTripleObjectValuePreview(1).should('contain', 'obj2');
       // When I delete the object for the parent triple
       MappingSteps.deleteTripleObject(0);
       // Then I expect warning
       MappingSteps.getConfirmationMessage().should('contain', 'This mapping has children. If you delete it, all its children will be removed. Do you want to remove this mapping?');
       MappingSteps.confirm();
       MappingSteps.getTriples().should('have.length', 1);
-      MappingSteps.verifyTriple(0, 'subject', 'predicate', '');
+      MappingSteps.verifyTriple(0, 'sub', 'pre', '');
     });
 
     it('Should be able to delete a triple with children and have a warning', () => {
@@ -231,7 +231,7 @@ describe('Delete', () => {
       MappingSteps.getTripleObjectValue(0).should('be.empty');
       MappingSteps.getTripleObjectType(0).should('have.length', 0);
       // Then I'll be able to add new object
-      MappingSteps.getTripleObjectValue(0).type('new').blur();
+      MappingSteps.completeObject(0, 'new');
       MappingSteps.verifyTriple(0, 'duration', 'as', 'new');
     });
 
