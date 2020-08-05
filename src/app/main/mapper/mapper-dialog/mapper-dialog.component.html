@@ -365,14 +365,14 @@
       </div>
 
       <mat-divider class="mt-24"></mat-divider>
-      <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end none" class="mb-24">
-        <button class="btn-primary" [mat-dialog-close]="data" (click)="save()" [disabled]="isMappingInvalid()"
-                matTooltip="{{'TOOLTIPS.SAVE_AND_CLOSE' | translate}}" appCypressData="ok-mapping-button">
-          {{'BUTTONS.OK' | translate}}
-        </button>
+      <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end none" class="mb-6">
+        <button class="btn mr-2" appCypressData="cancel-mapping-button" mat-dialog-close matTooltip="{{'TOOLTIPS.CANCEL_EDIT' | translate}}">{{'BUTTONS.CANCEL' | translate}}</button>
+        <span matTooltip="{{'TOOLTIPS.SAVE_AND_CLOSE' | translate}}">
+          <button class="btn btn-primary" [mat-dialog-close]="data" (click)="save()" [disabled]="isMappingInvalid()" appCypressData="ok-mapping-button">
+            {{'BUTTONS.OK' | translate}}
+          </button>
+        </span>
       </div>
     </form>
   </div>
-
-
 </div>
