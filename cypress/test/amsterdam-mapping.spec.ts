@@ -1,6 +1,6 @@
-import HeaderSteps from "../../../cypress/steps/header-steps";
-import MappingSteps from "../../../cypress/steps/mapping-steps";
-import EditDialogSteps from "../../../cypress/steps/edit-dialog-steps";
+import HeaderSteps from '../../cypress/steps/header-steps';
+import MappingSteps from '../../cypress/steps/mapping-steps';
+import EditDialogSteps from '../../cypress/steps/edit-dialog-steps';
 
 describe('Create Amsterdam restaurants mapping', () => {
 
@@ -104,10 +104,10 @@ describe('Create Amsterdam restaurants mapping', () => {
     // THEN
     // I expect to have completed the Amsterdam mapping
     cy.fixture('amsterdam/amsterdam.json').then(json => {
-      const amsterdamJson = JSON.stringify(json).replace(/(\r\n|\n|\r|\s)/gm, "");
+      const amsterdamJson = JSON.stringify(json).replace(/(\r\n|\n|\r|\s)/gm, '');
       HeaderSteps.viewJSON();
-      MappingSteps.getViewJSONDialog().then(mapping =>{
-        const mappingJson = mapping.text().replace(/(\r\n|\n|\r|\s)/gm, "");
+      MappingSteps.getViewJSONDialog().then(mapping => {
+        const mappingJson = mapping.text().replace(/(\r\n|\n|\r|\s)/gm, '');
         expect(mappingJson).to.eq(amsterdamJson);
       });
     });
