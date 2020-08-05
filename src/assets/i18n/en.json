@@ -31,7 +31,10 @@
     "GREL_VALUE_HELP": "Open value type documentation in separate window",
     "CLICK_FOR_MORE": "Click for more examples",
     "CLICK_TO_HIDE": "Click to hide examples",
-    "UPLOAD_JSON": "Click to upload JSON mapping"
+    "UPLOAD_JSON": "Click to upload JSON mapping",
+    "VIEW_MODE_CONFIGURATION": "Enable mapping configuration mode. Only configuration data will be visible.",
+    "VIEW_MODE_PREVIEW": "Enable mapping preview mode. Only data preview will be visible.",
+    "VIEW_MODE_BOTH": "Enable mapping mixed config and preview mode. Both data preview and configurations will be visible."
   },
   "LABELS": {
     "RDF_VALUE": "RDF value",
