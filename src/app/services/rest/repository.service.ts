@@ -63,4 +63,10 @@ export class RepositoryService {
       }), catchError((error) => this.errorReporterService.handleError('Loading columns failed.', error, false)));
     }));
   }
+
+
+  public filterNamespace(namespaces, value: string): object[] {
+    return Object.entries(namespaces).filter(([prefix]) => prefix.toLowerCase().startsWith(value.toLowerCase()))
+        .map((([prefix, pValue]) => ({prefix, pValue})));
+  }
 }

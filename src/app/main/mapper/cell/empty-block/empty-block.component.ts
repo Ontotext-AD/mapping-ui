@@ -148,13 +148,13 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
         .pipe(untilComponentDestroyed(this),
             map((value) => {
               const valueStr = value as String;
-              if (valueStr.startsWith(SOURCE_SIGN.Column)) {
-                return of(this.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase().substr(1)))
+              if (valueStr.indexOf(SOURCE_SIGN.Column) >= 0) {
+                return of(this.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase().substr(valueStr.indexOf(SOURCE_SIGN.Column) + 1)))
                     .map((source) => {
                       return {label: source.title, value: SOURCE_SIGN.Column + source.title, source: SourceEnum.Column};
                     }));
               }
-              if (valueStr.startsWith(SOURCE_SIGN.RecordRowID)) {
+              if (valueStr.indexOf(SOURCE_SIGN.RecordRowID) >= 0) {
                 return of([{
                   label: SourceEnum.RowIndex,
                   value: SOURCE_SIGN.RecordRowID + SourceEnum.RowIndex,
@@ -172,9 +172,21 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
               if (this.cellType === this.OBJECT && this.isTypeObject) {
                 autoCompleteObservable = this.repositoryService.autocompleteTypes(value as string);
               }
-              return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, this.namespaces)));
+              const suggestedNamespaces = this.repositoryService.filterNamespace(this.namespaces, value as string).map((ns) => {
+                const prefixValue = ns['prefix'] + ':';
+                return {label: prefixValue, value: prefixValue};
+              });
+              return autoCompleteObservable.pipe(map((types) => suggestedNamespaces.concat(this.modelConstructService.replaceIRIPrefixes(types, this.namespaces))));
             }));
   }
+
+  public selectPrefixOrValue(emitTab: boolean) {
+    const value = this.autoInput.value;
+    if (value && !value.endsWith(':')) {
+      this.saveInputValue(emitTab);
+    }
+  }
+
 
   public saveInputValue(emitTab: boolean) {
     let value = this.autoInput.value;

@@ -459,7 +459,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.filteredNamespaces = merge(this.mapperForm.get('expression').valueChanges, this.mapperForm.get('datatypeTransformation').valueChanges, this.mapperForm.get('languageTransformation').valueChanges)
         .pipe(untilComponentDestroyed(this),
             startWith(''),
-            map((value) => this.filterNamespace(value)));
+            map((value) => this.repositoryService.filterNamespace({...this.data.namespaces, ...this.data.repoNamespaces}, value)));
   }
 
   private previewGREL(value) {

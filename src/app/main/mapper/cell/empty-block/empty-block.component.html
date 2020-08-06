@@ -12,10 +12,10 @@
                  [formControl]="autoInput"
                  [matAutocomplete]="autocInline"
                  (keydown.tab)="saveInputValue(false)"
-                 (keydown.enter)="saveInputValue(true)"
+                 (keydown.enter)="selectPrefixOrValue(true)"
                  (blur)="saveInputValueOnBlur($event)">
-          <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="saveInputValue(true)">
-            <mat-option *ngFor="let option of suggestions | async | async" [value]="option.value">
+          <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="selectPrefixOrValue(true)">
+            <mat-option appCypressData="cell-option" *ngFor="let option of suggestions | async | async" [value]="(autoInput.value.endsWith('@') || autoInput.value.endsWith('$')) ? autoInput.value.slice(0, -1) + option.value : option.value">
               {{option.label}}
             </mat-option>
           </mat-autocomplete>
