@@ -79,7 +79,7 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
   /**
    * Get the transformation for the cell depending on the cellMapping type
    *
-   * @return value transornmation
+   * @return value transformation
    */
   getTransformation(): ValueTransformationImpl {
     return this.modelManagementService.getTransformation(this.cellMapping);

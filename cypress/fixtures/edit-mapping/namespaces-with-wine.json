@@ -1,0 +1,82 @@
+{
+  "head" : {
+    "vars" : [
+      "prefix",
+      "namespace"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "wgs"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.w3.org/2003/01/geo/wgs84_pos#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "rdf"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "owl"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.w3.org/2002/07/owl#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "gn"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.geonames.org/ontology#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "xsd"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.w3.org/2001/XMLSchema#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "rdfs"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#"
+        }
+      },
+      {
+        "prefix" : {
+          "type" : "literal",
+          "value" : "wine"
+        },
+        "namespace" : {
+          "type" : "literal",
+          "value" : "http://www.ontotext.com/example/wine#"
+        }
+      }
+    ]
+  }
+}

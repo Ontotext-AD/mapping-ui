@@ -1,0 +1,52 @@
+{
+  "head" : {
+    "vars" : [
+      "iri",
+      "g"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "iri" : {
+          "type" : "uri",
+          "value" : "http://www.ontotext.com/example/wine#Wine"
+        },
+        "g" : {
+          "type" : "literal",
+          "value" : "http://www.ontotext.com/example/wine#<b>Wine</b>"
+        }
+      },
+      {
+        "iri" : {
+          "type" : "uri",
+          "value" : "http://www.ontotext.com/example/wine#RedWine"
+        },
+        "g" : {
+          "type" : "literal",
+          "value" : "http://www.ontotext.com/example/wine#Red<b>Wine</b>"
+        }
+      },
+      {
+        "iri" : {
+          "type" : "uri",
+          "value" : "http://www.ontotext.com/example/wine#RoseWine"
+        },
+        "g" : {
+          "type" : "literal",
+          "value" : "http://www.ontotext.com/example/wine#Rose<b>Wine</b>"
+        }
+      },
+      {
+        "iri" : {
+          "type" : "uri",
+          "value" : "http://www.ontotext.com/example/wine#WhiteWine"
+        },
+        "g" : {
+          "type" : "literal",
+          "value" : "http://www.ontotext.com/example/wine#White<b>Wine</b>"
+        }
+      }
+    ]
+  }
+}
