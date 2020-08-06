@@ -37,6 +37,36 @@ describe('Edit mapping', () => {
       // I expect the warning to be missing
       EditDialogSteps.getWarningMessage().should('not.be.visible');
     });
+
+    it('Should set populate the prefix properly if it is autocompleted in the edit dialog', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/prefix-autocomplete-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:edit-mapping/namespaces-with-wine.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-with-prefix-response.json');
+      // Given I have opened a mapping with an IRI object
+      cy.visit('?dataProviderID=ontorefine:123');
+      MappingSteps.getTriples().should('have.length', 2);
+      // When I open the object for edit
+      MappingSteps.editTripleObjectWithData(0);
+      // And I start to type a constant with a prefix
+      EditDialogSteps.clearConstantValue();
+      EditDialogSteps.getConstantField().should('be.empty');
+      EditDialogSteps.getConstantField().type('wi');
+      // And I select a suggested value
+      cy.get('.mat-option').first().click();
+      EditDialogSteps.getConstantField().should('have.value', 'http://www.ontotext.com/example/wine#Wine');
+      // And I save configuration
+      EditDialogSteps.saveConfiguration();
+      // Then I expect the object to have the prefix properly populated
+      MappingSteps.getTripleObjectValuePreview(0).should('contain', 'Wine');
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('contain', 'wine');
+      // When I open the edit object dialog again
+      MappingSteps.editTripleObjectWithData(0);
+      // Then I expect constant and prefix to be set
+      EditDialogSteps.getConstantField().should('have.value', 'Wine');
+      EditDialogSteps.getPrefixTransformationButton().should('be.visible').find('button').should('have.attr', 'aria-pressed', 'true');
+      EditDialogSteps.getTransformationExpressionField().should('have.value', 'wine');
+    });
   });
 
   it('Should validate subject edit form', () => {

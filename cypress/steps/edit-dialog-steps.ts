@@ -92,8 +92,18 @@ class EditDialogSteps {
     return this.getSourceSection().find('[appCypressData=constant]').click();
   }
 
+  static getConstantField() {
+    return this.getSourceSection().find('[appCypressData=constant-input]');
+
+  }
   static completeConstant(value: string) {
-    return this.getSourceSection().find('[appCypressData=constant-input]').should('be.visible').type(value).blur();
+    return this.getConstantField().should('be.visible').type(value).blur();
+  }
+
+  static clearConstantValue() {
+    return EditDialogSteps.getConstantField().clear().type('{esc}', {
+      parseSpecialCharSequences: true
+    });
   }
 
   static selectColumn() {

@@ -581,7 +581,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       return undefined;
     }
     let previousRootLevelTriple = this.triples[prevIndex];
-    while (previousRootLevelTriple.getLevel() != level && prevIndex > 0) {
+    while (previousRootLevelTriple.getLevel() !== level && prevIndex > 0) {
       prevIndex--;
       previousRootLevelTriple = this.triples[prevIndex];
     }

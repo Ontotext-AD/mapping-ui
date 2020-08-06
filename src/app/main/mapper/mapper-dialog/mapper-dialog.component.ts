@@ -555,6 +555,18 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
           const formValue = form.getRawValue();
 
+          if (this.isConstant) {
+            const value = formValue.constant;
+            const combinedNamespaces = {...settings.repoNamespaces, ...settings.namespaces};
+            const prefixTransformation = this.modelConstructService.getPrefixTransformation(value, combinedNamespaces);
+            const prefix = prefixTransformation && prefixTransformation.prefix;
+            if (prefix) {
+              settings.isTransformation = true;
+              formValue.expression = prefix;
+              formValue.language = Language.Prefix;
+            }
+          }
+
           if (this.selected) {
             this.modelConstructService.clearMapping(this.selected);
             this.modelConstructService.setCellMapping(this.selected, formValue, settings);
