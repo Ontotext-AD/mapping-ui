@@ -108,6 +108,7 @@
     "RECORD_ID": "Record ID",
     "ROW_INDEX": "Row Index",
     "PREFIX": "Prefix",
+    "RAW": "Raw IRI",
     "GREL": "GREL",
     "A": "a"
   }

@@ -42,11 +42,13 @@ export class MapperComponentSelectors {
   static readonly DATATYPE_TRANSFORMATION_PREFIX = 'datatype-transformation-prefix';
   static readonly DATATYPE_TRANSFORMATION_GREL = 'datatype-transformation-grel';
   static readonly DATATYPE_TRANSFORMATION_EXPRESSION = 'datatype-transformation-expression';
+  static readonly DATATYPE_TRANSFORMATION_RAW_IRI = 'datatype-transformation-raw';
   static readonly LANGUAGE_TRANSFORMATION_PREFIX = 'language-transformation-prefix';
   static readonly LANGUAGE_TRANSFORMATION_GREL = 'language-transformation-grel';
   static readonly LANGUAGE_TRANSFORMATION_EXPRESSION = 'language-transformation-expression';
   static readonly TRANSFORMATION_PREFIX = 'transformation-prefix';
   static readonly TRANSFORMATION_GREL = 'transformation-grel';
+  static readonly TRANSFORMATION_RAW_IRI = 'transformation-raw';
   static readonly TRANSFORMATION_EXPRESSION = 'transformation-expression';
   static readonly TYPE_DATATYPE_LITERAL = 'type-datatype_literal';
   static readonly TYPE_IRI = 'type-iri';

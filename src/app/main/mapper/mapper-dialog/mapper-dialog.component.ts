@@ -65,7 +65,9 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   isLanguageColumn: boolean;
   isLanguagePrefixTransformation: boolean;
   isTransformation: boolean;
+  isDatatypeTransformation: boolean;
   isPrefixTransformation: boolean;
+  isRawIri: boolean;
   hasDatatype: boolean;
   hasLanguage: boolean;
   filteredColumnNames: Observable<string[]>;
@@ -187,17 +189,17 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   private initTransformationModels(isIri: boolean, isDatatype: boolean) {
-    // If type is IRI: value transformation can be prefix or grel
-    // If type is datatype literal: value transformation is grel, source transformation can be prefix or grel
+    // If type is IRI: value transformation can be prefix, raw or grel
+    // If type is datatype literal: value transformation is grel, source transformation can be prefix,raw or grel
     // All other types can have only grel transformation
     if (this.isObject()) {
       if (isIri) {
-        this.valueTransformationLangs = [Language.Prefix, Language.GREL];
+        this.valueTransformationLangs = [Language.Prefix, Language.GREL, Language.Raw];
         this.datatypeTransformationLangs = [];
         this.languageTransformationLangs = [];
       } else if (isDatatype) {
         this.valueTransformationLangs = [Language.GREL];
-        this.datatypeTransformationLangs = [Language.Prefix, Language.GREL];
+        this.datatypeTransformationLangs = [Language.Prefix, Language.GREL, Language.Raw];
         this.languageTransformationLangs = [];
       } else {
         this.valueTransformationLangs = [Language.GREL];
@@ -205,9 +207,9 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         this.languageTransformationLangs = [Language.GREL];
       }
     } else {
-      this.valueTransformationLangs = [Language.Prefix, Language.GREL];
-      this.datatypeTransformationLangs = [Language.Prefix, Language.GREL];
-      this.languageTransformationLangs = [Language.Prefix, Language.GREL];
+      this.valueTransformationLangs = [Language.Prefix, Language.GREL, Language.Raw];
+      this.datatypeTransformationLangs = [Language.Prefix, Language.GREL, Language.Raw];
+      this.languageTransformationLangs = [Language.Prefix, Language.Raw];
     }
   }
 
@@ -285,6 +287,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.hasDatatype = this.mappingDetails.hasDatatype;
     this.isDatatypeConstant = !!this.mappingDetails.dataTypeConstant;
     this.isDatatypeColumn = !!this.mappingDetails.dataTypeColumnName;
+    this.isDatatypeTransformation = !!this.mappingDetails.datatypeLanguage && this.mappingDetails.datatypeLanguage !== Language.Raw;
     this.isDataTypePrefixTransformation = this.hasDatatype && !!this.mappingDetails.datatypeLanguage && this.mappingDetails.datatypeLanguage === Language.Prefix;
 
     this.hasLanguage = this.mappingDetails.hasLanguage;
@@ -292,7 +295,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.isLanguageConstant = !!this.mappingDetails.languageConstant;
     this.isLanguagePrefixTransformation = this.hasLanguage && !!this.mappingDetails.languageTransformationLanguage && this.mappingDetails.languageTransformationLanguage === Language.Prefix;
 
-    this.isTransformation = !!this.mappingDetails.language;
+    this.isTransformation = !!this.mappingDetails.language && this.mappingDetails.language !== Language.Raw;
     this.isPrefixTransformation = this.isTransformation && this.mappingDetails.language === Language.Prefix;
   }
 
@@ -403,12 +406,14 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           this.isTransformation = value === Language.GREL || value === Language.Prefix;
           this.isPrefixTransformation = this.isTransformation && value === Language.Prefix;
+          this.isRawIri = value === Language.Raw;
           this.mapperForm.patchValue({expression: ''});
         });
 
     this.mapperForm.get('datatypeLanguage').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
+          this.isDatatypeTransformation = value === Language.GREL || value === Language.Prefix;
           this.isDataTypePrefixTransformation = value === Language.Prefix;
           this.mapperForm.patchValue({datatypeTransformation: ''});
         });
