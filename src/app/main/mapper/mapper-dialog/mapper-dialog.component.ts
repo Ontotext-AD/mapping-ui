@@ -6,7 +6,7 @@ import {Triple} from 'src/app/models/triple';
 import {OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
 import {Source, Type} from 'src/app/models/mapping-definition';
 import {Helper} from 'src/app/utils/helper';
-import {map, startWith, takeUntil} from 'rxjs/operators';
+import {map, startWith, takeUntil, debounceTime} from 'rxjs/operators';
 import {componentDestroyed, OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {MappingDetails} from 'src/app/models/mapping-details';
 import {ModelManagementService} from 'src/app/services/model-management.service';
@@ -439,19 +439,19 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
             map((value) => this.filterColumn(value)));
 
     this.mapperForm.get('expression').valueChanges
-        .pipe(untilComponentDestroyed(this))
+        .pipe(untilComponentDestroyed(this), debounceTime(500))
         .subscribe((value) => {
           this.resolveGrelExpressionPreview(value);
         });
 
     this.mapperForm.get('languageTransformation').valueChanges
-        .pipe(untilComponentDestroyed(this))
+        .pipe(untilComponentDestroyed(this), debounceTime(500))
         .subscribe((value) => {
           this.resolveGrelLanguagePreview(value);
         });
 
     this.mapperForm.get('datatypeTransformation').valueChanges
-        .pipe(untilComponentDestroyed(this))
+        .pipe(untilComponentDestroyed(this), debounceTime(500))
         .subscribe((value) => {
           this.resolveGrelDataTypePreview(value);
         });
