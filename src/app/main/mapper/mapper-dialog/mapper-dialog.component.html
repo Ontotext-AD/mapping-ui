@@ -229,7 +229,7 @@
                     </mat-button-toggle>
                   </mat-button-toggle-group>
                 </div>
-                <div fxFlex="65" *ngIf="!!mapperForm.get('datatypeLanguage').value">
+                <div fxFlex="65" *ngIf="isDatatypeTransformation">
                   <div fxLayout="column" fxLayoutAlign="space-around stretch">
                     <mat-form-field class="ml-16">
                       <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>

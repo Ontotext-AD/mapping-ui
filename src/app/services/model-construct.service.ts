@@ -58,9 +58,13 @@ export class ModelConstructService {
         this.modelManagementService.setValueTypeDatatypeValueSource(cellMapping, form.dataTypeValueSource);
       }
 
-      const datatypeTransformation = form.datatypeTransformation;
-      if (this.isAllowedExpression(datatypeTransformation, form.datatypeLanguage)) {
-        this.setDataTypeTransformation(cellMapping, settings, datatypeTransformation, form.datatypeLanguage);
+      if (form.datatypeLanguage === Language.Raw) {
+        this.modelManagementService.setDatatypeTransformationLanguage(cellMapping, Language.Raw);
+      } else {
+        const datatypeTransformation = form.datatypeTransformation;
+        if (this.isAllowedExpression(datatypeTransformation, form.datatypeLanguage)) {
+          this.setDataTypeTransformation(cellMapping, settings, datatypeTransformation, form.datatypeLanguage);
+        }
       }
     } else if (this.modelManagementService.getValueType(cellMapping)) {
       this.modelManagementService.getValueType(cellMapping).setDatatype(undefined);
@@ -131,12 +135,17 @@ export class ModelConstructService {
 
   private setTypeTransformation(cellMapping: MappingBase, form, settings): void {
     const language = form.language;
-    const transformation = this.removePrefixColon(form.expression, language);
-    if (settings.isTransformation && this.isAllowedExpression(transformation, language)) {
-      this.modelManagementService.setExpression(cellMapping, transformation);
+
+    if (language === Language.Raw) {
       this.modelManagementService.setTransformationLanguage(cellMapping, language);
-      if (language === Language.Prefix.valueOf() && !settings.namespaces[transformation]) {
-        this.setNamespaces(transformation, settings);
+    } else {
+      const transformation = this.removePrefixColon(form.expression, language);
+      if (settings.isTransformation && this.isAllowedExpression(transformation, language)) {
+        this.modelManagementService.setExpression(cellMapping, transformation);
+        this.modelManagementService.setTransformationLanguage(cellMapping, language);
+        if (language === Language.Prefix.valueOf() && !settings.namespaces[transformation]) {
+          this.setNamespaces(transformation, settings);
+        }
       }
     }
   }

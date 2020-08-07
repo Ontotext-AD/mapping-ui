@@ -1,4 +1,5 @@
 export enum Language {
   Prefix = 'prefix',
-  GREL = 'grel'
+  GREL = 'grel',
+  Raw = 'raw'
 }
