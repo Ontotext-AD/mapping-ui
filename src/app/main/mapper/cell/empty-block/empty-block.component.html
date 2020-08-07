@@ -14,9 +14,10 @@
                  (keydown.tab)="saveInputValue(false)"
                  (keydown.enter)="selectPrefixOrValue(true)"
                  (blur)="saveInputValueOnBlur($event)">
-          <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="selectPrefixOrValue(true)">
-            <mat-option appCypressData="cell-option" *ngFor="let option of suggestions | async | async" [value]="(autoInput.value.endsWith('@') || autoInput.value.endsWith('$')) ? autoInput.value.slice(0, -1) + option.value : option.value">
-              {{option.label}}
+          <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="selectPrefixOrValue(true)" #tooltip="matTooltip"  [matTooltip]="optionTooltip" appCypressData="autocomplete-tooltip">
+            <mat-option appCypressData="cell-option" *ngFor="let option of suggestions | async | async" [value]="(autoInput.value.endsWith('@') || autoInput.value.endsWith('$')) ? autoInput.value.slice(0, -1) + option.value : option.value"
+                        (mouseover)="getIriDescription(option)" (mouseleave)="clearTooltip()">
+              <span >{{option.label}}</span>
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>

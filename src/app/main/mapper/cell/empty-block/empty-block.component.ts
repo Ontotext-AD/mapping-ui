@@ -25,7 +25,7 @@ import {
 import {TranslateService} from '@ngx-translate/core';
 import {merge, Observable, of} from 'rxjs';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
-import {map} from 'rxjs/operators';
+import {debounceTime, map} from 'rxjs/operators';
 import {Source as SourceEnum} from 'src/app/models/mapping-definition';
 import {FormControl} from '@angular/forms';
 import {RepositoryService} from 'src/app/services/rest/repository.service';
@@ -34,6 +34,7 @@ import {TypeMapping} from 'src/app/models/type-mapping';
 import {TabService} from 'src/app/services/tab.service';
 import * as XRegExp from 'xregexp';
 import {NotificationService} from 'src/app/services/notification.service';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-empty-block',
@@ -56,9 +57,11 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
   @Input() namespaces: { [key: string]: string };
 
   @ViewChild('mapping') mappingInput: ElementRef;
+  @ViewChild('tooltip') tooltip: MatTooltip;
 
   suggestions: Observable<Observable<any>>;
   autoInput = new FormControl();
+  optionTooltip: string;
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
@@ -259,5 +262,19 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
     } else {
       this.saveInputValue(true);
     }
+  }
+
+  public getIriDescription(option) {
+    return this.repositoryService.getIriDescription(option.value as string)
+        .pipe(untilComponentDestroyed(this), debounceTime(500))
+        .subscribe((description) => {
+          this.optionTooltip = description[0];
+          this.cdRef.detectChanges();
+          this.tooltip.show();
+        });
+  }
+
+  public clearTooltip() {
+    this.optionTooltip = '';
   }
 }

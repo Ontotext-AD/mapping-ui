@@ -39,6 +39,18 @@ describe('Autocomplete mapping', () => {
       MappingSteps.getTripleObjectSource(0).should('have.text', ' @  color ');
     });
 
+    it('Should show IRI description on hover', () => {
+      MappingSteps.getTriples().should('have.length', 1);
+      // I type a letter to show autocomplete
+      MappingSteps.type('w', MappingSteps.getTripleSubjectValue(0));
+      // Call POST again to load tooltips
+      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-iri-description-response.json').as('loadDescr');
+      // When I hover an autocomplete
+      MappingSteps.getSuggestions(0).first().trigger('mouseover');
+      // I expect tho see an IRI description
+      MappingSteps.getTooltip().contains('IRI Description');
+    });
+
     it('Should display prefix and value in autocomplete', () => {
       MappingSteps.editEmptyTripleSubject(0);
       EditDialogSteps.getPrefixTransformationButton().click();

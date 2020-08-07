@@ -22,7 +22,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT distinct ?iri ?g WHERE {
     {
         GRAPH ?g {
-            ?iri <http://www.ontotext.com/plugins/autocomplete#query> "KEY_WORD"
+            ?iri <http://www.ontotext.com/plugins/autocomplete#query> "{{iri}}"
         } .
         VALUES ?classClass {
             owl:Class rdfs:Class
@@ -39,7 +39,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT distinct ?iri ?g WHERE {
     {
         GRAPH ?g {
-            ?iri <http://www.ontotext.com/plugins/autocomplete#query> "KEY_WORD"
+            ?iri <http://www.ontotext.com/plugins/autocomplete#query> "{{iri}}"
         } .
         VALUES ?propertyClass {
             owl:DatatypeProperty  owl:ObjectProperty rdf:Property
@@ -52,10 +52,17 @@ SELECT distinct ?iri ?g WHERE {
 export const SPARQL_AUTOCOMPLETE=`SELECT distinct ?iri ?g WHERE {
     {
         GRAPH ?g {
-            ?iri <http://www.ontotext.com/plugins/autocomplete#query> "KEY_WORD"}.
+            ?iri <http://www.ontotext.com/plugins/autocomplete#query> "{{iri}}"}.
     }
 }`;
 export const SOURCE_SIGN = {
   Column: '@',
   RecordRowID: '$',
 };
+
+export const SPARQL_IRI_DESCRIPTION = `
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+select ?description where {
+    <{{iri}}> rdfs:comment ?description
+} limit 1`;
+
