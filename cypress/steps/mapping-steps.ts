@@ -248,6 +248,11 @@ class MappingSteps {
     return MappingSteps.getTripleObject(index).find('[appCypressData="button-edit-empty-cell"]').click();
   }
 
+  // This is for the empty cell edit!!!
+  static editEmptyTripleSubject(index: number) {
+    return MappingSteps.getTripleSubject(index).find('[appCypressData="button-edit-empty-cell"]').click();
+  }
+
   // dialog and confirmation
   static getModalDialog() {
     return cy.get('.modal-dialog');

@@ -124,8 +124,8 @@
                             (focus)="expressionGrelPreview.open()" (blur)="expressionGrelPreview.close()"></textarea>
                   <mat-autocomplete #prefixAuto="matAutocomplete">
                     <div *ngIf="isPrefixTransformation">
-                      <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'">
-                        {{namespace.prefix}}:{{namespace.value}}
+                      <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'" appCypressData="prefix-suggestion">
+                        {{namespace.prefix}}: <{{namespace.pValue}}>
                       </mat-option>
                     </div>
                   </mat-autocomplete>
@@ -248,7 +248,7 @@
                       <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
                         <div *ngIf="isDataTypePrefixTransformation">
                           <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'">
-                            {{namespace.prefix}}:{{namespace.value}}
+                            {{namespace.prefix}}: <{{namespace.pValue}}>
                           </mat-option>
                         </div>
                       </mat-autocomplete>
@@ -363,7 +363,7 @@
                       <mat-autocomplete #languagePrefixAuto="matAutocomplete">
                         <div *ngIf="isLanguagePrefixTransformation">
                           <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'">
-                            {{namespace.prefix}}:{{namespace.value}}
+                            {{namespace.prefix}}: <{{namespace.pValue}}>
                           </mat-option>
                         </div>
                       </mat-autocomplete>
