@@ -26,7 +26,6 @@ export class RestService {
     headers: this.httpHeaders,
   };
 
-
   static getPort() {
     let port = window.location.port;
     if (!port) {

@@ -3,8 +3,7 @@ import {TestBed} from '@angular/core/testing';
 import {MapperService} from './mapper.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
-import {ErrorReporterService} from '../error-reporter.service';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 describe('MapperService', () => {
   let service: MapperService;

@@ -1,6 +1,4 @@
 import MappingSteps from '../steps/mapping-steps';
-import HeaderSteps from '../steps/header-steps';
-import EditDialogSteps from '../steps/edit-dialog-steps';
 
 describe('Autocomplete mapping', () => {
 
@@ -12,6 +10,7 @@ describe('Autocomplete mapping', () => {
     cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
     cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
     cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+    cy.route('GET', '/rest/autocomplete/enabled', 'true');
     cy.visit('?dataProviderID=ontorefine:123');
   });
 
