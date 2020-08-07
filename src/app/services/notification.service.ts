@@ -37,19 +37,30 @@ export class NotificationService {
     });
   }
 
+  public warning(message) {
+    this.zone.run(() => {
+      this.snackBar.open(message, 'action', this.getWarningSnackConfig());
+    });
+  }
+
   public error(message) {
     this.zone.run(() => {
       this.snackBar.open(message, 'action', this.getErrorSnackConfig());
     });
   }
 
-  private getErrorSnackConfig() {
-    const errorConfig = {panelClass: 'error-notification'};
-    return {...this.config, ...errorConfig};
-  }
-
   private getSuccessSnackConfig() {
     const successConfig = {panelClass: 'success-notification'};
     return {...this.config, ...successConfig};
+  }
+
+  private getWarningSnackConfig() {
+    const warningConfig = {panelClass: 'warning-notification'};
+    return {...this.config, ...warningConfig};
+  }
+
+  private getErrorSnackConfig() {
+    const errorConfig = {panelClass: 'error-notification'};
+    return {...this.config, ...errorConfig};
   }
 }

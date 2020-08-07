@@ -3,8 +3,9 @@ import {EMPTY, Observable, of} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {CookieService} from 'ngx-cookie-service';
 import {ErrorReporterService} from '../error-reporter.service';
+import {AutocompleteService} from './autocomplete.service';
+import {CookiesService} from '../cookies.service';
 import {SPARQL_AUTOCOMPLETE, SPARQL_IRI_DESCRIPTION, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/constants';
 import {RestService} from './rest.service';
 
@@ -14,19 +15,15 @@ import {RestService} from './rest.service';
 export class RepositoryService {
   apiUrl = environment.repositoryApiUrl;
 
-
   constructor(protected httpClient: HttpClient,
-              protected cookies: CookieService,
+              protected cookiesService: CookiesService,
+              private autocompleteService: AutocompleteService,
               private errorReporterService: ErrorReporterService) {
   }
 
   getAPIURL(apiName: string): Observable<string> {
-    const repo = this.getCookie('com.ontotext.graphdb.repository');
+    const repo = this.cookiesService.getRepositoryCookie();
     return (repo) ? of(`${this.apiUrl}/${repo}${apiName}`) : EMPTY;
-  }
-
-  private getCookie(cookieName): string {
-    return this.cookies.get(cookieName + RestService.getPort());
   }
 
   getNamespaces(): Observable<{ [p: string]: string }> {
@@ -58,6 +55,9 @@ export class RepositoryService {
   }
 
   executeQueryForIRI(iri: string, query: string, binding: string): Observable<string[]> {
+    if (!this.autocompleteService.isAustocompleteEnabled()) {
+      return EMPTY;
+    }
     const payload = new HttpParams().set('query', query.replace('{{iri}}', iri));
     return this.getAPIURL('').pipe(switchMap((fullUrl) => {
       return this.httpClient.post<any>(fullUrl, payload).pipe(map((res) => {

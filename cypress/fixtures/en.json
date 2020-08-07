@@ -84,7 +84,8 @@
     "MAPPING_UPLOAD_ERROR": "Something went wrong.",
     "INCOMPLETE_MAPPING_ERROR": "The operation is not allowed. You have an incomplete mapping.",
     "UNRECOGNIZED_PREFIX_ERROR": "Unrecognized prefix.",
-    "GREL_NO_PREVIEW": "No GREL preview"
+    "GREL_NO_PREVIEW": "No GREL preview",
+    "AUTOCOMPLETE_OFF_WARNING": "Autocomplete is OFF. Go to Setup -> Autocomplete"
   },
   "DIALOG": {
     "TITLE_CONFIRM": "Confirm",

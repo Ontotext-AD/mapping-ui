@@ -238,6 +238,9 @@ $altTheme: mat-dark-theme($theme-primary, $theme-accent, $theme-warn);
 .mat-snack-bar-container.error-notification {
   background-color: #ed4f2f;
 }
+.mat-snack-bar-container.warning-notification {
+  background-color: #c4781e;
+}
 .mat-snack-bar-container.success-notification {
   background-color: #5cb85c;
 }

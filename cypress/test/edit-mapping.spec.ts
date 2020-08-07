@@ -9,6 +9,7 @@ describe('Edit mapping', () => {
     cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
     cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
     cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
+    cy.route('GET', '/rest/autocomplete/enabled', 'true');
   });
 
   context('Edit IRI', () => {

@@ -150,7 +150,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
     this.suggestions = merge(this.autoInput.valueChanges)
         .pipe(untilComponentDestroyed(this),
             map((value) => {
-              const valueStr = value as String;
+              const valueStr = value as string;
               if (valueStr.indexOf(SOURCE_SIGN.Column) >= 0) {
                 return of(this.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase().substr(valueStr.indexOf(SOURCE_SIGN.Column) + 1)))
                     .map((source) => {
@@ -189,7 +189,6 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
       this.saveInputValue(emitTab);
     }
   }
-
 
   public saveInputValue(emitTab: boolean) {
     let value = this.autoInput.value;
