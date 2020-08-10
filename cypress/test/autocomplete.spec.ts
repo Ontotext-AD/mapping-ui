@@ -1,4 +1,5 @@
 import MappingSteps from '../steps/mapping-steps';
+import EditDialogSteps from '../steps/edit-dialog-steps';
 
 describe('Autocomplete mapping', () => {
 
