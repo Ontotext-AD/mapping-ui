@@ -4,6 +4,10 @@
   }
 }
 
+::ng-deep .sat-popover-container {
+  overflow-y: auto;
+}
+
 .grel-preview-content {
   margin-top: 4px;
   margin-bottom: 4px;
