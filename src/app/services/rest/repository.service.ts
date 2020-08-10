@@ -7,7 +7,6 @@ import {ErrorReporterService} from '../error-reporter.service';
 import {AutocompleteService} from './autocomplete.service';
 import {CookiesService} from '../cookies.service';
 import {SPARQL_AUTOCOMPLETE, SPARQL_IRI_DESCRIPTION, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/constants';
-import {RestService} from './rest.service';
 
 @Injectable({
   providedIn: 'root',
