@@ -224,6 +224,10 @@ class EditDialogSteps {
     });
   }
 
+  static getPrefixSuggestions() {
+    return cy.get('.mat-autocomplete-panel').find(`[appCypressData="prefix-suggestion"]`)
+  }
+
 }
 
 export default EditDialogSteps;

@@ -38,8 +38,13 @@ describe('Autocomplete mapping', () => {
       MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf');
       MappingSteps.getTripleObjectSource(0).should('have.text', ' @  color ');
     });
+
+    it('Should display prefix and value in autocomplete', () => {
+      MappingSteps.editEmptyTripleSubject(0);
+      EditDialogSteps.getPrefixTransformationButton().click();
+      EditDialogSteps.getTransformationExpressionField().click();
+      EditDialogSteps.getPrefixSuggestions().first().contains('rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>');
+    });
   });
-
-
 });
 
