@@ -65,8 +65,9 @@
               <mat-error *ngIf="mapperForm.get('constant').hasError('required')" appCypressData="constant-error">
                 {{ 'ERROR.REQUIRED' | translate }}
               </mat-error>
-              <mat-autocomplete #autoType="matAutocomplete">
-                <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.value">
+              <mat-autocomplete #autoType="matAutocomplete" #tooltip="matTooltip"  [matTooltip]="optionTooltip">
+                <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.value"
+                            (mouseover)="getIriDescription(constant)" (mouseleave)="clearTooltip()">
                   {{constant.label}}
                 </mat-option>
               </mat-autocomplete>
@@ -189,8 +190,9 @@
                              appCypressData="datatype-constant-error">
                     {{ 'ERROR.REQUIRED' | translate }}
                   </mat-error>
-                  <mat-autocomplete #autoDataTypeC="matAutocomplete">
-                    <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.value">
+                  <mat-autocomplete #autoDataTypeC="matAutocomplete" #tooltip="matTooltip"  [matTooltip]="optionTooltip">
+                    <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.value"
+                                (mouseover)="getIriDescription(constant)" (mouseleave)="clearTooltip()">
                       {{constant.label}}
                     </mat-option>
                   </mat-autocomplete>

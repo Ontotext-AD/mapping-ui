@@ -5,7 +5,7 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {ErrorReporterService} from '../error-reporter.service';
-import {SPARQL_AUTOCOMPLETE, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/constants';
+import {SPARQL_AUTOCOMPLETE, SPARQL_IRI_DESCRIPTION, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/constants';
 import {RestService} from './rest.service';
 
 @Injectable({
@@ -42,28 +42,31 @@ export class RepositoryService {
   }
 
   autocompleteTypes(searchKey: string): Observable<string[]> {
-    return this.autocomplete(searchKey, SPARQL_TYPES);
+    return this.executeQueryForIRI(searchKey, SPARQL_TYPES, 'iri');
   }
 
   autocompleteIRIs(searchKey: string): Observable<string[]> {
-    return this.autocomplete(searchKey, SPARQL_AUTOCOMPLETE);
+    return this.executeQueryForIRI(searchKey, SPARQL_AUTOCOMPLETE, 'iri');
   }
 
   autocompletePredicates(searchKey: string): Observable<string[]> {
-    return this.autocomplete(searchKey, SPARQL_PREDICATES);
+    return this.executeQueryForIRI(searchKey, SPARQL_PREDICATES, 'iri');
   }
 
-  autocomplete(searchKey: string, query: string): Observable<string[]> {
-    const payload = new HttpParams().set('query', query.replace('KEY_WORD', searchKey));
+  getIriDescription(iri: string): Observable<string[]> {
+    return this.executeQueryForIRI(iri, SPARQL_IRI_DESCRIPTION, 'description');
+  }
+
+  executeQueryForIRI(iri: string, query: string, binding: string): Observable<string[]> {
+    const payload = new HttpParams().set('query', query.replace('{{iri}}', iri));
     return this.getAPIURL('').pipe(switchMap((fullUrl) => {
       return this.httpClient.post<any>(fullUrl, payload).pipe(map((res) => {
-        return res.results.bindings.map((binding) => {
-          return binding.iri.value;
+        return res.results.bindings.map((bindingArray) => {
+          return bindingArray[binding].value;
         });
       }), catchError((error) => this.errorReporterService.handleError('Loading columns failed.', error, false)));
     }));
   }
-
 
   public filterNamespace(namespaces, value: string): object[] {
     return Object.entries(namespaces).filter(([prefix]) => prefix.toLowerCase().startsWith(value.toLowerCase()))

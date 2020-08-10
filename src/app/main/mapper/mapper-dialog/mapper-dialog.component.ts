@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EMPTY, merge, Observable, of} from 'rxjs';
@@ -22,6 +22,7 @@ import {MapperService} from 'src/app/services/rest/mapper.service';
 import {conditionalValidator} from 'src/app/validators/conditional.validator';
 import {environment} from 'src/environments/environment';
 import {ColumnImpl} from '../../../models/column-impl';
+import {MatTooltip} from '@angular/material/tooltip';
 
 export interface SubjectMapperData {
   mappingData: Triple;
@@ -44,6 +45,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   OBJECT = OBJECT_SELECTOR;
   environment = environment;
 
+  @ViewChild('tooltip') tooltip: MatTooltip;
   mapperForm: FormGroup;
   mapperForm$: Observable<FormGroup>;
   selected: MappingBase;
@@ -79,6 +81,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   firstGrelPreviewDataTypeTransformation: any;
   title: string;
   hasChildren: boolean;
+  optionTooltip: string;
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
@@ -88,7 +91,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
               private translateService: TranslateService,
               private repositoryService: RepositoryService,
               private modelConstructService: ModelConstructService,
-              private mapperService: MapperService) {
+              private mapperService: MapperService,
+              private cdRef: ChangeDetectorRef) {
     super();
   }
 
@@ -641,5 +645,19 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
       invalid = !isFormValid && !isTypeMapping;
     }
     return invalid;
+  }
+
+  public getIriDescription(option) {
+    return this.repositoryService.getIriDescription(option.value as string)
+        .pipe(untilComponentDestroyed(this), debounceTime(500))
+        .subscribe((description) => {
+          this.optionTooltip = description[0];
+          this.cdRef.detectChanges();
+          this.tooltip.show();
+        });
+  }
+
+  public clearTooltip() {
+    this.optionTooltip = '';
   }
 }

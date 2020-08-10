@@ -1,0 +1,17 @@
+{
+  "head" : {
+    "vars" : [
+      "description"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "description": {
+          "type": "literal",
+          "value": "IRI Description"
+        }
+      }
+    ]
+  }
+}

@@ -295,6 +295,10 @@ class MappingSteps {
   static getSuggestions(index: any) {
     return cy.get(`[appCypressData="cell-option"]`);
   }
+
+  static getTooltip() {
+    return cy.get(`.mat-tooltip`);
+  }
 }
 
 export default MappingSteps;
