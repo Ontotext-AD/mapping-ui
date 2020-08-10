@@ -60,7 +60,9 @@
     "GREL_PLACEHOLDER": "Use value, row, cell(s), recon, record",
     "SUBJECT": "Subject mapping",
     "PREDICATE": "Predicate mapping",
-    "OBJECT": "Object mapping"
+    "OBJECT": "Object mapping",
+    "BASE_IRI": "Base IRI",
+    "PREFIX_PLACEHOLDER": "Add new prefix by typing prefix=value, i.e owl=http://www.w3.org/2002/07/owl#"
   },
   "CONSTANTS": {
     "COLUMN": "@",
