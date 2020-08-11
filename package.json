@@ -1,6 +1,6 @@
 {
   "name": "rdf-mapping-editor",
-  "version": "1.0.0-TR16",
+  "version": "1.0.0-TR17",
   "description": "A webrun component to create a table to RDF data mapping.",
   "scripts": {
     "ng": "ng",
