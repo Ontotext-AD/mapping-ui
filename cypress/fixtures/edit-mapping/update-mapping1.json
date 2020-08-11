@@ -1,0 +1,47 @@
+{
+  "baseIRI": "http://example/base/",
+  "namespaces": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  },
+  "subjectMappings": [
+    {
+      "propertyMappings": [
+        {
+          "property": {
+            "valueSource": {
+              "source": "constant",
+              "constant": "test"
+            }
+          },
+          "values": [
+            {
+              "valueSource": {
+                "columnName": "movie_imdb_link",
+                "source": "column"
+              },
+              "valueType": {
+                "propertyMappings": [],
+                "type": "iri",
+                "typeMappings": [
+                  {
+                    "valueSource": {
+                      "source": "constant",
+                      "constant": "movie"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "subject": {
+        "valueSource": {
+          "columnName": "director_name",
+          "source": "column"
+        }
+      },
+      "typeMappings": []
+    }
+  ]
+}

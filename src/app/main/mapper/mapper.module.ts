@@ -25,7 +25,6 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatDividerModule} from '@angular/material/divider';
 import {CellModule} from 'src/app/main/mapper/cell/cell.module';
 import {ModelManagementService} from 'src/app/services/model-management.service';
-import {JSONValueDialog} from 'src/app/main/mapper/json-value-dialog';
 import {SatPopoverModule} from '@ncstate/sat-popover';
 import {MatCardModule} from '@angular/material/card';
 
@@ -34,7 +33,6 @@ import {MatCardModule} from '@angular/material/card';
     MapperComponent,
     HeaderComponent,
     SourceComponent,
-    JSONValueDialog,
     IterationComponent,
     MapperDialogComponent,
   ],
@@ -43,7 +41,6 @@ import {MatCardModule} from '@angular/material/card';
     HeaderComponent,
     IterationComponent,
     SourceComponent,
-    JSONValueDialog,
   ],
   imports: [
     CommonModule,

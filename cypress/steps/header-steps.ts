@@ -61,12 +61,36 @@ class HeaderSteps {
     return HeaderSteps.getNewMappingButton().click();
   }
 
-  static getViewJSONButton() {
-    return this.getHeader().find('[appCypressData="view-json-action"]');
+  static getGetJSONButton() {
+    return this.getHeader().find('[appCypressData="get-json-action"]');
   }
 
-  static viewJSON() {
-    return HeaderSteps.getViewJSONButton().click();
+  static getJSON() {
+    HeaderSteps.getGetJSONButton().click();
+    return cy.get('a[download]')
+      .then((anchor) => (
+        new Cypress.Promise((resolve, reject) => {
+          // Use XHR to get the blob that corresponds to the object URL.
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', anchor.prop('href'), true);
+          xhr.responseType = 'blob';
+
+          // Once loaded, use FileReader to get the string back from the blob.
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              const blob = xhr.response;
+              const reader = new FileReader();
+              reader.onload = () => {
+                // Once we have a string, resolve the promise as JSON to let
+                // the Cypress chain continue, e.g. to assert on the result.
+                resolve(JSON.parse(reader.result as string));
+              };
+              reader.readAsText(blob);
+            }
+          };
+          xhr.send();
+        })
+      ));
   }
 
   static getConfigurationButton() {

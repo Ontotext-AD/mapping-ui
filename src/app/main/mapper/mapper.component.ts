@@ -4,17 +4,17 @@ import {ModelManagementService} from 'src/app/services/model-management.service'
 import {Source} from 'src/app/models/source';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
-import {DOWNLOAD_RDF_FILE, EMPTY_MAPPING} from 'src/app/utils/constants';
+import {DOWNLOAD_JSON_FILE, DOWNLOAD_RDF_FILE, EMPTY_MAPPING} from 'src/app/utils/constants';
 import {classToClass, plainToClass} from 'class-transformer';
 import {MatChipInputEvent} from '@angular/material/chips/chip-input';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {ChannelName} from 'src/app/services/channel-name.enum';
 import {MessageService} from 'src/app/services/message.service';
-import {JSONValueDialog} from 'src/app/main/mapper/json-value-dialog';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject} from 'rxjs';
 import {NotificationService} from 'src/app/services/notification.service';
 import {TranslateService} from '@ngx-translate/core';
+import {Convert} from 'src/app/models/mapping-definition';
 
 
 @Component({
@@ -82,10 +82,10 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
           this.processCommand(() => this.onSPARQL());
         });
 
-    this.messageService.read(ChannelName.ViewJSONMapping)
+    this.messageService.read(ChannelName.GetJSONMapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
-          this.processCommand(() => this.openJSONDialog());
+          this.processCommand(() => this.onGetJSON());
         });
   }
 
@@ -97,7 +97,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         });
   }
 
-  private processCommand(command:any ) {
+  private processCommand(command: any) {
     if (this.modelManagementService.isValidMapping(this.mapping)) {
       command();
     } else {
@@ -155,14 +155,24 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     this.mapping = event;
   }
 
-  openJSONDialog(): void {
-    this.dialog.open(JSONValueDialog, {
-      width: '900px',
-      height: '600px',
-      data: {
-        mapping: classToClass(this.mapping),
-      },
-    });
+  onGetJSON() {
+    const link = document.createElement('a');
+    const mapping = classToClass(this.mapping);
+    this.modelManagementService.removePreview(mapping);
+    link.setAttribute('class', 'download');
+    link.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(Convert.mappingDefinitionToJson(mapping)));
+    link.setAttribute('download', DOWNLOAD_JSON_FILE);
+    document.body.appendChild(link);
+
+    // @ts-ignore
+    if (window.Cypress) {
+      // Do not attempt to actually download the file in test.
+      // Just leave the anchor in there.
+      return;
+    }
+    link.click();
+    // Remove to avoid creating a new link on each click.
+    link.remove();
   }
 
   public getMapping() {
