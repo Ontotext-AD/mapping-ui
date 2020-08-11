@@ -1,7 +1,7 @@
 {
   "BUTTONS": {
     "DONE": "Done",
-    "VIEW_JSON": "View JSON",
+    "DOWNLOAD_JSON": "Download JSON",
     "RDF": "RDF",
     "SPARQL": "SPARQL",
     "NEW": "New mapping",
@@ -23,7 +23,7 @@
     "ADD_NESTED_TRIPLE": "Add nested triple",
     "DELETE_TRIPLE": "Delete triple",
     "SAVE_MAPPING": "Save mapping",
-    "OPEN_JSON": "View JSON model",
+    "DOWNLOAD_JSON": "Download JSON model",
     "CONVERT_TO_RDF": "Convert to RDF",
     "CONVERT_TO_SPARQL": "Convert to SPARQL",
     "OPEN_PREVIEW": "Open mapping preview",

@@ -14,8 +14,8 @@
       <mat-spinner *ngIf="isSavingInProgress" [diameter]="20"></mat-spinner>
     </button>
   </span>
-  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="openDialog()" appCypressData="view-json-action"
-          matTooltip="{{'TOOLTIPS.OPEN_JSON' | translate}}">{{"BUTTONS.VIEW_JSON" | translate}}
+  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getJsonMapping()" appCypressData="get-json-action"
+          matTooltip="{{'TOOLTIPS.DOWNLOAD_JSON' | translate}}">{{"BUTTONS.DOWNLOAD_JSON" | translate}}
   </button>
   <input class="hidden" type="file" (change)="onFileChanged($event)" #fileInput  appCypressData="json-file-input">
   <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="fileInput.click()" appCypressData="upload-json-action"

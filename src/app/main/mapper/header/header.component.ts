@@ -75,10 +75,6 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
     this.messageService.publish(ChannelName.SaveMapping);
   }
 
-  openDialog(): void {
-    this.messageService.publish(ChannelName.ViewJSONMapping);
-  }
-
   getRDF(): void {
     this.isRdfGenerationInProgress = true;
     this.messageService.publish(ChannelName.GetRDF);
@@ -87,6 +83,10 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
   getSPARQL(): void {
     this.isSparqlGenerationInProgress = true;
     this.messageService.publish(ChannelName.GetSPARQL);
+  }
+
+  public getJsonMapping() {
+    this.messageService.publish(ChannelName.GetJSONMapping);
   }
 
   togglePreview($event): void {

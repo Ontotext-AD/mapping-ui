@@ -103,13 +103,8 @@ describe('Create Amsterdam restaurants mapping', () => {
 
     // THEN
     // I expect to have completed the Amsterdam mapping
-    cy.fixture('amsterdam/amsterdam.json').then(json => {
-      const amsterdamJson = JSON.stringify(json).replace(/(\r\n|\n|\r|\s)/gm, '');
-      HeaderSteps.viewJSON();
-      MappingSteps.getViewJSONDialog().then(mapping => {
-        const mappingJson = mapping.text().replace(/(\r\n|\n|\r|\s)/gm, '');
-        expect(mappingJson).to.eq(amsterdamJson);
-      });
+    cy.fixture('amsterdam/amsterdam.json').then(amsterdamJson => {
+      HeaderSteps.getJSON().should('deep.equal', amsterdamJson);
     });
   });
 });

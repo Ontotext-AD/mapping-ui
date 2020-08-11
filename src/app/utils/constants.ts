@@ -3,6 +3,7 @@ export const PREDICATE_SELECTOR = 'predicate';
 export const OBJECT_SELECTOR = 'object';
 export const EMPTY_MAPPING = {'baseIRI': 'http://example/base/', 'namespaces': {'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'}, 'subjectMappings': []};
 export const DOWNLOAD_RDF_FILE = 'result-triples.ttl';
+export const DOWNLOAD_JSON_FILE = 'mapping.json';
 export const GREL_CONSTANT = 'grel';
 export const PREFIX_CONSTANT = 'prefix';
 export const CONSTANT = 'constant';

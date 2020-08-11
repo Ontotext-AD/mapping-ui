@@ -1,0 +1,44 @@
+{
+  "baseIRI": "http://example/base/",
+  "namespaces": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  },
+  "subjectMappings": [
+    {
+      "propertyMappings": [
+        {
+          "property": {
+            "valueSource": {
+              "source": "constant",
+              "constant": "predicate"
+            }
+          },
+          "values": [
+            {
+              "valueSource": {
+                "source": "constant",
+                "constant": "object"
+              },
+              "valueType": {
+                "type": "datatype_literal",
+                "datatype": {
+                  "valueSource": {
+                    "source": "constant",
+                    "constant": "constant"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "subject": {
+        "valueSource": {
+          "source": "constant",
+          "constant": "subject"
+        }
+      },
+      "typeMappings": []
+    }
+  ]
+}

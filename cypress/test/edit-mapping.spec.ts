@@ -254,7 +254,7 @@ describe('Edit mapping', () => {
   });
 
   context('Update JSON mapping', () => {
-    it('Should update JSON mapping when manipulating the mapping', () => {
+    it('Should not update JSON mapping when the mapping is not manipulated', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
       cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
@@ -272,10 +272,12 @@ describe('Edit mapping', () => {
       cy.visit('?dataProviderID=ontorefine:123');
       // Then I expect to see a mapping with 2 triples (+1 empty row)
       MappingSteps.getTriples().should('have.length', 3);
-      // When I click View JSON button
-      HeaderSteps.viewJSON();
-      // Then I expect to view JSON popup window
-      MappingSteps.getViewJSONDialog().should('be.visible');
+
+      // When I click get JSON button
+      // THEN the mapping should not be updated.
+      cy.fixture('edit-mapping/update-mapping1.json').then(updated => {
+        HeaderSteps.getJSON().should("deep.equal", updated);
+      });
     });
 
     it('Should show JSON mapping when type is datatype literal ', () => {
@@ -290,10 +292,12 @@ describe('Edit mapping', () => {
       EditDialogSteps.selectDataTypeConstant();
       EditDialogSteps.completeDataTypeConstant('constant');
       EditDialogSteps.saveConfiguration();
-      // When I click View JSON button
-      HeaderSteps.viewJSON();
-      // Then I expect to view JSON popup window
-      MappingSteps.getViewJSONDialog().should('be.visible').and('contain', 'datatype_literal');
+
+      // When I click get JSON button
+      // THEN the mapping should be updated.
+      cy.fixture('edit-mapping/update-mapping2.json').then(updated => {
+        HeaderSteps.getJSON().should("deep.equal", updated);
+      });
     });
   });
 
@@ -498,8 +502,8 @@ describe('Edit mapping', () => {
       cy.visit('?dataProviderID=ontorefine:123');
 
       // WHEN:
-      // I press View JSON button
-      HeaderSteps.viewJSON();
+      // I press Get JSON button
+      HeaderSteps.getGetJSONButton().click();
       // THEN
       // I see error message
       assertNotAllowedNotification();
