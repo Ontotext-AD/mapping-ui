@@ -27,6 +27,7 @@ import {Observable} from 'rxjs';
 import {Helper} from 'src/app/utils/helper';
 import {ViewMode} from 'src/app/services/view-mode.enum';
 import {Triple} from '../../../models/triple';
+import {Namespaces} from '../../../models/namespaces';
 
 export enum TransformationTarget {
   PROPERTYTRANSFORMATION = 'propertytransformation',
@@ -49,7 +50,7 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   @Input() cellType: string;
   @Input() nestLevel = 0;
   @Input() tabIndex: number;
-  @Input() namespaces: { [key: string]: string };
+  @Input() namespaces: Namespaces;
   @Input() sources: Array<Source>;
   @Input() tabPosition: number;
   @Input() viewMode: ViewMode;

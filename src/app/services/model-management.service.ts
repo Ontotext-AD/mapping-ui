@@ -20,6 +20,7 @@ import {MappingDefinitionService} from './rest/mapping-definition.service';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SubjectMappingImpl} from '../models/subject-mapping-impl';
+import {Language} from '../models/language';
 
 
 @Injectable({
@@ -58,7 +59,8 @@ export class ModelManagementService {
   }
 
   getValueTypeDatatypeTransformationExpression(cellMapping: MappingBase): string {
-    return this.getValueTypeDatatypeTransformation(cellMapping) && this.getValueTypeDatatypeTransformation(cellMapping).getExpression();
+    const transformation = this.getValueTypeDatatypeTransformation(cellMapping);
+    return this.resolveExpressionValue(transformation);
   }
 
   setValueTypeDatatypeTransformationExpression(cellMapping: MappingBase, expression: string): void {
@@ -319,7 +321,7 @@ export class ModelManagementService {
   }
 
   getExpression(cellMapping: MappingBase): string {
-    return this.getTransformation(cellMapping) && this.getTransformation(cellMapping).getExpression();
+    return this.resolveExpressionValue(this.getTransformation(cellMapping));
   }
 
   setExpression(cellMapping: MappingBase, transformation: string): void {
@@ -458,6 +460,16 @@ export class ModelManagementService {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  private resolveExpressionValue(transformation) {
+    if (transformation) {
+      const expression = transformation.getExpression();
+      if (transformation.getLanguage() === Language.Prefix) {
+        return expression || ':';
+      }
+      return expression;
     }
   }
 

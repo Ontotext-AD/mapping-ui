@@ -23,14 +23,16 @@ import {conditionalValidator} from 'src/app/validators/conditional.validator';
 import {environment} from 'src/environments/environment';
 import {ColumnImpl} from '../../../models/column-impl';
 import {MatTooltip} from '@angular/material/tooltip';
+import {Namespaces} from '../../../models/namespaces';
+import {NamespaceService} from '../../../services/namespace.service';
 
 export interface SubjectMapperData {
   mappingData: Triple;
   selected: string;
   mappingDetails: MappingDetails;
   sources: any[];
-  namespaces: { [p: string]: string };
-  repoNamespaces: { [p: string]: string };
+  namespaces: Namespaces;
+  repoNamespaces: Namespaces;
   dropped;
 }
 
@@ -249,7 +251,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   private createMapperForm(mappingDetails): FormGroup {
-    this.mapperForm = this.formBuilder.group({
+    const controlsConfig = {
       typeMapping: [mappingDetails.typeMapping],
 
       // Value type
@@ -276,7 +278,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
       // Value transformation
       expression: [mappingDetails.expression],
       language: [mappingDetails.language],
-    });
+    };
+    this.mapperForm = this.formBuilder.group(controlsConfig);
 
     return this.mapperForm;
   }
@@ -439,7 +442,10 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
               if (this.isPredicate()) {
                 autoCompleteObservable = this.repositoryService.autocompletePredicates(value);
               }
-              return autoCompleteObservable.pipe(untilComponentDestroyed(this), map((types) => this.modelConstructService.replaceIRIPrefixes(types, {...this.data.namespaces, ...this.data.repoNamespaces})));
+              return autoCompleteObservable.pipe(
+                  untilComponentDestroyed(this),
+                  map((types) => this.modelConstructService.replaceIRIPrefixes(types, this.getCombinedNamespaces())),
+              );
             }));
 
     this.filteredColumnNames = merge(this.mapperForm.get('columnName').valueChanges, this.mapperForm.get('dataTypeColumnName').valueChanges)
@@ -468,7 +474,11 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.filteredNamespaces = merge(this.mapperForm.get('expression').valueChanges, this.mapperForm.get('datatypeTransformation').valueChanges, this.mapperForm.get('languageTransformation').valueChanges)
         .pipe(untilComponentDestroyed(this),
             startWith(''),
-            map((value) => this.repositoryService.filterNamespace({...this.data.namespaces, ...this.data.repoNamespaces}, value)));
+            map((value) => this.repositoryService.filterNamespace(this.getCombinedNamespaces(), value)));
+  }
+
+  private getCombinedNamespaces() {
+    return NamespaceService.mergeNamespaces(this.data.namespaces, this.data.repoNamespaces);
   }
 
   private previewGREL(value) {
@@ -516,11 +526,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         }));
   }
 
-  private filterNamespace(value: string): object[] {
-    return Object.entries({...this.data.namespaces, ...this.data.repoNamespaces}).map(([prefix, pValue]) => ({prefix, pValue}))
-        .filter((namespace) => namespace.prefix.toLowerCase().startsWith(value.toLowerCase()));
-  }
-
   private filterColumn(value: string): string[] {
     return this.data.sources.filter((source) => source.title.toLowerCase().includes(value && value.toLowerCase()));
   }
@@ -566,7 +571,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
           if (this.isConstant) {
             const value = formValue.constant;
-            const combinedNamespaces = {...settings.repoNamespaces, ...settings.namespaces};
+            const combinedNamespaces = NamespaceService.mergeNamespaces(settings.repoNamespaces, settings.namespaces);
             const prefixTransformation = this.modelConstructService.getPrefixTransformation(value, combinedNamespaces);
             const prefix = prefixTransformation && prefixTransformation.prefix;
 

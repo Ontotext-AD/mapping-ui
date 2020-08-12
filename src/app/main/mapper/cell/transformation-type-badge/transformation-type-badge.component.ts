@@ -93,7 +93,7 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
     if (this.getTransformationType() === this.GREL) {
       return this.translateService.instant('LABELS.GREL');
     } else if (this.getTransformationType() === this.PREFIX) {
-      return this.getTransformation().getExpression();
+      return this.resolveExpressionValue(this.getTransformation());
     }
   }
 
@@ -111,7 +111,7 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
       if (secondaryTransformationType.getLanguage() === this.GREL) {
         return this.translateService.instant('LABELS.GREL');
       } else if (secondaryTransformationType.getLanguage() === this.PREFIX) {
-        return secondaryTransformationType.getExpression();
+        return this.resolveExpressionValue(secondaryTransformationType);
       }
     }
   }
@@ -146,5 +146,10 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
       cssClass += 'language-literal';
     }
     return cssClass;
+  }
+
+  private resolveExpressionValue(transformation) {
+    const expression = transformation.getExpression();
+    return expression || ':';
   }
 }
