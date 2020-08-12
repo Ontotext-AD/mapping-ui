@@ -15,6 +15,8 @@ import {BehaviorSubject} from 'rxjs';
 import {NotificationService} from 'src/app/services/notification.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Convert} from 'src/app/models/mapping-definition';
+import {NamespaceService} from '../../services/namespace.service';
+import {Namespaces, Namespace} from '../../models/namespaces';
 
 
 @Component({
@@ -133,22 +135,16 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   addNamespace(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
-
-    if ((value.split('=').length > 1)) {
-      const split = value.split(/=(.+)/);
-      const key = split[0];
-      const val = split[1];
-      this.mapping.namespaces[key] = val;
-      this.messageService.publish(ChannelName.DirtyMapping, true);
-    }
-
+    const namespace: Namespace = NamespaceService.toNamespace(value);
+    NamespaceService.addNamespace(this.mapping.namespaces, namespace);
+    this.messageService.publish(ChannelName.DirtyMapping, true);
     if (input) {
       input.value = '';
     }
   }
 
   removeNamespace(key: string): void {
-    delete this.mapping.namespaces[key];
+    NamespaceService.removeNamespace(this.mapping.namespaces, key);
     this.messageService.publish(ChannelName.DirtyMapping, true);
   }
 
@@ -191,8 +187,9 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     }
   }
 
-  public getNamespaces(): { [p: string]: string } {
-    return this.mapping && this.mapping.getNamespaces();
+  public getNamespaces(): Namespaces {
+    const namespaces = this.mapping && this.mapping.getNamespaces();
+    return NamespaceService.toUIModel(namespaces);
   }
 
   public onJsonUpload($event: MappingDefinitionImpl) {

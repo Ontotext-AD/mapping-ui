@@ -123,58 +123,6 @@ describe('Edit mapping', () => {
     EditDialogSteps.getOkButton().should('be.visible').and('be.disabled');
   });
 
-  context('Edit inline prefix', () => {
-    beforeEach(() => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
-    });
-
-    it('Should set prefix expression', () => {
-      MappingSteps.getTriples().should('have.length', 1);
-      // And I have created a subject, a predicate and an object
-      MappingSteps.completeTriple(0, 'rdf:subject', 'rdf:@Title', 'rdf:$row_index');
-      MappingSteps.getTripleSubjectPropertyTransformation(0).should('have.text', 'rdf');
-      MappingSteps.getTripleSubjectSourceType(0).should('have.text', ' C ');
-      MappingSteps.getTripleSubjectSource(0).should('have.text', ' C  subject ');
-
-      MappingSteps.getTriplePredicatePropertyTransformation(0).should('have.text', 'rdf');
-      MappingSteps.getTriplePredicateSourceType(0).should('have.text', ' @ ');
-      MappingSteps.getTriplePredicateValuePreview(0).should('have.text', ' @  Title ');
-
-      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf');
-      MappingSteps.getTripleObjectSourceType(0).should('have.text', ' $ ');
-      MappingSteps.getTripleObjectSource(0).should('have.text', ' $  row_index ');
-    });
-
-    it('Should set extended prefix expressions', () => {
-      MappingSteps.getTriples().should('have.length', 1);
-      // And I have created a subject, a predicate and an object
-      MappingSteps.completeTriple(0, 'rdf:Actor@actor_1_name', 'rdf:Actor/@actor_1_name', 'rdf:Actor#@actor_1_name');
-      MappingSteps.getTripleSubjectPropertyTransformation(0).should('have.text', 'rdf:Actor');
-      MappingSteps.getTripleSubjectSourceType(0).should('have.text', ' @ ');
-      MappingSteps.getTripleSubjectSource(0).should('have.text', ' @  actor_1_name ');
-
-      MappingSteps.getTriplePredicatePropertyTransformation(0).should('have.text', 'rdf:Actor/');
-      MappingSteps.getTriplePredicateSourceType(0).should('have.text', ' @ ');
-      MappingSteps.getTriplePredicateValuePreview(0).should('have.text', ' @  actor_1_name ');
-
-      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf:Actor#');
-      MappingSteps.getTripleObjectSourceType(0).should('have.text', ' @ ');
-      MappingSteps.getTripleObjectSource(0).should('have.text', ' @  actor_1_name ');
-    });
-
-    it('Should show error on unrecognized prefix', () => {
-      MappingSteps.getTriples().should('have.length', 1);
-      // And I have created a subject, a predicate and an object
-      MappingSteps.completeTriple(0, 'rdf:Actor$row_index', 'rdf:Actor2#@actor_1_name', 'www:Actor/actor_1_name');
-      MappingSteps.getNotification().should('be.visible').and('contain', 'Unrecognized prefix');
-      MappingSteps.getNamespace('www').should('not.be.visible');
-    });
-  });
-
   // TODO: I add these tests here for now, but later we should distribute them in respective specs with the related operations
   context('Handle errors', () => {
     it('Should show error notification when model could not be loaded', () => {
@@ -383,7 +331,7 @@ describe('Edit mapping', () => {
       EditDialogSteps.selectDataTypeConstant();
       EditDialogSteps.completeDataTypeConstant('foo');
       EditDialogSteps.selectDataTypeGREL();
-      EditDialogSteps.completeDataTypeGREL('value');
+      EditDialogSteps.completeDataTypeExpression('value');
       EditDialogSteps.getDataTypeGRELPreview().first().should('contain', 'alabala');
     });
 
@@ -485,36 +433,36 @@ describe('Edit mapping', () => {
       EditDialogSteps.selectSourceTypeColumn();
       EditDialogSteps.completeSourceTypeColumn('director_name');
       EditDialogSteps.selectDataTypeGREL();
-      EditDialogSteps.getLanguageDataTypeGrelField().focus();
+      EditDialogSteps.getDataTypeExpressionField().focus();
       // Then I expect a preview popover to appear which contains no preview message
       EditDialogSteps.getDataTypeGRELPreview().first().should('contain', 'No GREL preview');
       // When I type in the field
-      EditDialogSteps.completeDataTypeGREL('v');
+      EditDialogSteps.completeDataTypeExpression('v');
       // Then I expect to see the no preview message
       EditDialogSteps.getDataTypeGRELPreview().first().should('contain', 'No GREL preview');
       // When I complete a valid GREL
       cy.wait('@loadGrelPreview');
       mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
-      EditDialogSteps.completeDataTypeGREL('alue');
+      EditDialogSteps.completeDataTypeExpression('alue');
       // Then I expect preview results to be rendered in the popover
       EditDialogSteps.getDataTypeGRELPreview().find('[appCypressData=datatype-grel-preview]')
         .should('have.length', 4).first().should('contain', 'James Cameron');
       // When There completed expression is invalid
       cy.wait('@loadGrelPreview');
       mockPreview('[{"error":"Parsing error at offset 6: Expecting something more at end of expression"},{"error":"Parsing error at offset 6: Expecting something more at end of expression"}]');
-      EditDialogSteps.completeDataTypeGREL('+');
+      EditDialogSteps.completeDataTypeExpression('+');
       // Then I expect error message to appear in the popover
       EditDialogSteps.getDataTypeGRELPreview().find('[appCypressData=datatype-grel-preview]')
         .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
       // When I complete a valid expression, close edit dialog and open it again
       cy.wait('@loadGrelPreview');
       mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
-      EditDialogSteps.clearDataTypeGREL();
-      EditDialogSteps.completeDataTypeGREL('value');
+      EditDialogSteps.clearDataTypeExpression();
+      EditDialogSteps.completeDataTypeExpression('value');
       EditDialogSteps.saveConfiguration();
       MappingSteps.editTripleObjectWithData(0);
       // Then I expect the grel preview to be properly loaded again
-      EditDialogSteps.getLanguageDataTypeGrelField().focus();
+      EditDialogSteps.getDataTypeExpressionField().focus();
       EditDialogSteps.getDataTypeGRELPreview().find('[appCypressData=datatype-grel-preview]')
         .should('have.length', 4).first().should('contain', 'James Cameron');
       EditDialogSteps.saveConfiguration();
@@ -630,7 +578,7 @@ describe('Edit mapping', () => {
       });
     });
 
-    it('Should change object type save it properly', () => {
+    it('Should change object type and save it properly', () => {
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
       cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
       cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');

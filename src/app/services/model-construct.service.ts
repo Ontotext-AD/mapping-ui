@@ -21,6 +21,8 @@ import {IRIImpl} from 'src/app/models/iri-impl';
 import {Triple} from 'src/app/models/triple';
 import {Language} from 'src/app/models/language';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
+import {Namespace, Namespaces} from '../models/namespaces';
+import {NamespaceService} from './namespace.service';
 
 @Injectable({
   providedIn: 'root',
@@ -70,7 +72,7 @@ export class ModelConstructService {
         this.modelManagementService.setDatatypeTransformationLanguage(cellMapping, Language.Raw);
       } else {
         const datatypeTransformation = form.datatypeTransformation;
-        if (this.isAllowedExpression(datatypeTransformation, form.datatypeLanguage)) {
+        if (this.isAllowedExpression(datatypeTransformation)) {
           this.setDataTypeTransformation(cellMapping, settings, datatypeTransformation, form.datatypeLanguage);
         }
       }
@@ -97,7 +99,7 @@ export class ModelConstructService {
       }
 
       const languageTransformation = form.languageTransformation;
-      if (this.isAllowedExpression(languageTransformation, form.languageTransformationLanguage)) {
+      if (this.isAllowedExpression(languageTransformation)) {
         this.modelManagementService.setValueTypeLanguageTransformationExpression(cellMapping, languageTransformation);
         this.modelManagementService.setValueTypeLanguageTransformationLanguage(cellMapping, form.languageTransformationLanguage);
       }
@@ -105,6 +107,7 @@ export class ModelConstructService {
       this.modelManagementService.getValueType(cellMapping).setLanguage(undefined);
     }
   }
+
   private removePrefixColon(datatypeTransformation: string, datatypeLanguage: string) {
     if (datatypeLanguage === Language.Prefix.valueOf() && datatypeTransformation.endsWith(':')) {
       return datatypeTransformation.slice(0, -1);
@@ -116,9 +119,7 @@ export class ModelConstructService {
     datatypeTransformation = this.removePrefixColon(datatypeTransformation, datatypeLanguage);
     this.modelManagementService.setValueTypeDatatypeTransformationExpression(cellMapping, datatypeTransformation);
     this.modelManagementService.setDatatypeTransformationLanguage(cellMapping, datatypeLanguage);
-    if (datatypeLanguage === Language.Prefix.valueOf() && !settings.namespaces[datatypeTransformation]) {
-      this.setNamespaces(datatypeTransformation, settings);
-    }
+    this.setNamespaces(datatypeLanguage, datatypeTransformation, settings);
   }
 
   private setTypeSource(cellMapping: MappingBase, form, settings): void {
@@ -127,7 +128,7 @@ export class ModelConstructService {
     const constant = form.constant;
     if (settings.isConstant && !Helper.isBlank(constant)) {
       const transformed = this.getPrefixTransformation(constant, {...settings.namespaces, ...settings.repoNamespaces});
-      if (transformed.prefix != undefined) {
+      if (transformed.prefix !== undefined) {
         this.setTypeTransformation(transformed.prefix, Language.Prefix.valueOf(), true);
         this.modelManagementService.setConstant(cellMapping, transformed.suffix);
       } else {
@@ -147,18 +148,20 @@ export class ModelConstructService {
     if (language === Language.Raw) {
       this.modelManagementService.setTransformationLanguage(cellMapping, language);
     } else {
-      const transformation = this.removePrefixColon(form.expression, language);
-      if (settings.isTransformation && this.isAllowedExpression(transformation, language)) {
+      let transformation = form.expression;
+      if (settings.isTransformation && this.isAllowedExpression(transformation)) {
+        transformation = this.removePrefixColon(form.expression, language);
         this.modelManagementService.setExpression(cellMapping, transformation);
         this.modelManagementService.setTransformationLanguage(cellMapping, language);
-        if (language === Language.Prefix.valueOf() && !settings.namespaces[transformation]) {
-          this.setNamespaces(transformation, settings);
-        }
+        this.setNamespaces(language, transformation, settings);
       }
     }
   }
 
-  private setNamespaces(expression, settings) {
+  private setNamespaces(language, expression, settings) {
+    if (language !== Language.Prefix.valueOf() || settings.namespaces[expression]) {
+      return;
+    }
     const index = expression.indexOf(COLON);
     if (index > -1) {
       const namespace = expression.substr(0, index);
@@ -173,24 +176,25 @@ export class ModelConstructService {
   public getPrefixTransformation(constantValue: string, allNamespaces) {
     let transformed = constantValue;
     let foundPrefix;
-    Object.keys(allNamespaces).forEach((key) => {
-      if (constantValue.startsWith(allNamespaces[key])) {
-        transformed = constantValue.replace(allNamespaces[key], key + ':');
-        foundPrefix = key;
+    NamespaceService.walkNamespaces(allNamespaces, (namespace: Namespace) => {
+      const namespaceValue = allNamespaces[namespace.prefix];
+      if (constantValue.startsWith(namespaceValue)) {
+        transformed = constantValue.replace(namespaceValue, namespace.prefix + ':');
+        foundPrefix = namespace.prefix;
       }
     });
     return {label: transformed, value: constantValue, prefix: foundPrefix, suffix: transformed.substr(transformed.lastIndexOf(':') + 1)};
   }
 
-  public replaceIRIPrefixes(types, namespaces: { [p: string]: string }) {
+  public replaceIRIPrefixes(types, namespaces: Namespaces) {
     return types.map((t) => {
       return this.getPrefixTransformation(t, namespaces);
     });
   }
 
-  private isAllowedExpression(expression: string, language: string): boolean {
+  private isAllowedExpression(expression: string): boolean {
     // Allow the empty prefix
-    return !Helper.isBlank(expression) || (language === Language.Prefix.valueOf() && expression === '');
+    return !Helper.isBlank(expression) || expression === ':';
   }
 
   createMappingObject(form, settings): MappingBase {

@@ -37,10 +37,8 @@ import {classToClass, plainToClass} from 'class-transformer';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {ViewMode} from 'src/app/services/view-mode.enum';
 import {NotificationService} from 'src/app/services/notification.service';
-
-export interface JSONDialogData {
-  mapping;
-}
+import {NamespaceService} from '../../../services/namespace.service';
+import {Namespaces} from '../../../models/namespaces';
 
 @Component({
   selector: 'app-iteration',
@@ -59,7 +57,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   triples: Triple[];
   mappingDetails: MappingDetails;
   isDirty: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  repoNamespaces: { [key: string]: string };
+  repoNamespaces: Namespaces;
   usedSources: Set<string>;
 
   private boundCheckDirty: any;
@@ -210,7 +208,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     this.repositoryService.getNamespaces()
         .pipe(untilComponentDestroyed(this))
         .subscribe(
-            (data) => {
+            (data: Namespaces) => {
               this.repoNamespaces = data;
             });
 
@@ -218,7 +216,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   getAllNamespaces() {
-    return {...this.repoNamespaces, ...this.mapping.namespaces};
+    return NamespaceService.mergeNamespaces(this.repoNamespaces, this.mapping.namespaces);
   }
 
   isCompleteCell(subject, isRoot) {

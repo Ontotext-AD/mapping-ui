@@ -1,13 +1,14 @@
 import {MappingDefinition, SubjectMapping} from './mapping-definition';
 import {Expose, Type} from 'class-transformer';
 import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
+import {Namespaces} from './namespaces';
 
 export class MappingDefinitionImpl implements MappingDefinition {
   @Expose() baseIRI?: string;
-  @Expose() namespaces?: { [p: string]: string };
+  @Expose() namespaces?: Namespaces;
   @Expose() @Type(() => SubjectMappingImpl) subjectMappings?: SubjectMapping[];
 
-  constructor(baseIRI: string, namespaces: { [p: string]: string }, subjectMappings: SubjectMapping[]) {
+  constructor(baseIRI: string, namespaces: Namespaces, subjectMappings: SubjectMapping[]) {
     this.baseIRI = baseIRI;
     this.namespaces = namespaces;
     this.subjectMappings = subjectMappings;
@@ -21,11 +22,11 @@ export class MappingDefinitionImpl implements MappingDefinition {
     this.baseIRI = value;
   }
 
-  public getNamespaces(): { [p: string]: string } {
+  public getNamespaces(): Namespaces {
     return this.namespaces;
   }
 
-  public setNamespaces(value: { [p: string]: string }) {
+  public setNamespaces(value: Namespaces) {
     this.namespaces = value;
   }
 

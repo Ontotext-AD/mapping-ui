@@ -159,24 +159,30 @@ class EditDialogSteps {
     return this.getTypeSection().find('[appCypressData=datatype-transformation-grel]').should('be.visible').click();
   }
 
-  static selectDataTypePrefix() {
-    return this.getTypeSection().find('[appCypressData=datatype-transformation-prefix]').should('be.visible').click();
+  static getDatatypePrefixButton() {
+    return this.getTypeSection().find('[appCypressData=datatype-transformation-prefix]');
   }
 
-  static getLanguageDataTypeGrelField() {
+  static selectDataTypePrefix() {
+    this.getDatatypePrefixButton().should('be.visible').click();
+  }
+
+  static getDataTypeExpressionField() {
     return this.getTypeSection().find('[appCypressData=datatype-transformation-expression]');
   }
 
-  static completeDataTypeGREL(value: string) {
-    return this.getLanguageDataTypeGrelField().should('be.visible').type(value);
+  static completeDataTypeExpression(value: string) {
+    return this.getDataTypeExpressionField().should('be.visible').type(value);
   }
 
   static getDataTypeGRELPreview() {
     return cy.get('[appCypressData=datatype-grel-preview-content]');
   }
 
-  static clearDataTypeGREL() {
-    return this.getLanguageDataTypeGrelField().should('be.visible').clear().blur();
+  static clearDataTypeExpression() {
+    return this.getDataTypeExpressionField().should('be.visible').clear().type('{esc}', {
+      parseSpecialCharSequences: true
+    });
   }
 
   // Language GREL transformation

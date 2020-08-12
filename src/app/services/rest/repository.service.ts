@@ -7,6 +7,7 @@ import {ErrorReporterService} from '../error-reporter.service';
 import {AutocompleteService} from './autocomplete.service';
 import {CookiesService} from '../cookies.service';
 import {SPARQL_AUTOCOMPLETE, SPARQL_IRI_DESCRIPTION, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/constants';
+import {Namespaces} from '../../models/namespaces';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,7 @@ export class RepositoryService {
     return (repo) ? of(`${this.apiUrl}/${repo}${apiName}`) : EMPTY;
   }
 
-  getNamespaces(): Observable<{ [p: string]: string }> {
+  getNamespaces(): Observable<Namespaces> {
     return this.getAPIURL('/namespaces').pipe(switchMap((fullUrl) => {
       return this.httpClient.get<any>(fullUrl, {}).pipe(map((res) => {
         const obj = {};
