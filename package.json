@@ -31,6 +31,20 @@
     "name": "\"Sirma AI\" JSC, trading as Ontotext",
     "url": "https://www.ontotext.com/"
   },
+  "contributors": [
+    {
+      "name": "Desislava Hristova",
+      "email": "desislava.hristova@ontotext.com"
+    },
+    {
+      "name": "Teodossi Dossev",
+      "email": "teodossi.dossev@ontotext.com"
+    },
+    {
+      "name": "Svilen Velikov",
+      "email": "svilen.velikov@ontotext.com"
+    }
+  ],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/Ontotext-AD/mapping-ui/issues"
