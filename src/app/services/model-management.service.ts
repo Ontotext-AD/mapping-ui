@@ -365,32 +365,48 @@ export class ModelManagementService {
   }
 
   public setTypeMapping(subject: MappingBase, selected: SimpleIRIValueMappingImpl) {
+    let emptyTypeMappingIndex: number;
     if (!subject.getTypeMappings()) {
       subject.setTypeMappings([]);
+    } else {
+      emptyTypeMappingIndex = this.getEmptyTypeMappingIndex(subject);
     }
-    subject.getTypeMappings().push(selected);
+
+    if (emptyTypeMappingIndex > -1) {
+      subject.getTypeMappings().splice(emptyTypeMappingIndex, 1, selected);
+    } else {
+      subject.getTypeMappings().push(selected);
+    }
+  }
+
+  private getEmptyTypeMappingIndex(subject: MappingBase): number {
+    const emptyTypeMapping = (mapping) => !mapping.getValueSource() && !mapping.getValueTransformation();
+    return subject.getTypeMappings().findIndex(emptyTypeMapping);
   }
 
   public setValueMapping(subject: MappingBase, predicate: PropertyMappingImpl, selected: ValueMappingImpl) {
+    let emptyValueMappingIndex: number;
     subject.getPropertyMappings().forEach((mapping) => {
       if (mapping === predicate) {
         if (!predicate.getValues()) {
           predicate.setValues([]);
         } else {
-          this.sanitizeValues(predicate);
+          emptyValueMappingIndex = this.getEmptyValueIndex(predicate);
         }
-        predicate.getValues().push(selected);
-        return;
+
+        if (emptyValueMappingIndex > -1) {
+          predicate.getValues().splice(emptyValueMappingIndex, 1, selected);
+        } else {
+          predicate.getValues().push(selected);
+          return;
+        }
       }
     });
   }
 
-  private sanitizeValues(predicate: PropertyMappingImpl): void {
-    predicate.getValues().forEach((value, index) => {
-      if (!value.getValueTransformation() && !value.getValueSource() && !value.getValueType()) {
-        predicate.getValues().splice(index, 1);
-      }
-    });
+  private getEmptyValueIndex(predicate: PropertyMappingImpl): number {
+    const emptyValue = (value) => !value.getValueTransformation() && !value.getValueSource() && !value.getValueType();
+    return predicate.getValues().findIndex(emptyValue);
   }
 
   public setPropertyMapping(subject: MappingBase, predicate: PropertyMappingImpl) {
