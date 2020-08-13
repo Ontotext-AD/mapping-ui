@@ -182,6 +182,13 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     return this.mapping && this.mapping.getBaseIRI();
   }
 
+  public setBaseIRI(value) {
+    if (this.mapping) {
+      this.mapping.setBaseIRI(value);
+      this.messageService.publish(ChannelName.DirtyMapping, true);
+    }
+  }
+
   public getNamespaces(): { [p: string]: string } {
     return this.mapping && this.mapping.getNamespaces();
   }
