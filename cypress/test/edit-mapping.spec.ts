@@ -94,7 +94,7 @@ describe('Edit mapping', () => {
     EditDialogSteps.getOkButton().should('be.visible').and('be.disabled');
   });
 
-  context('edit inline prefix', () => {
+  context('Edit inline prefix', () => {
     beforeEach(() => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
@@ -492,7 +492,7 @@ describe('Edit mapping', () => {
     });
   });
 
-  context('incomplete mapping', () => {
+  context('Incomplete mapping', () => {
     it('Should not allow operations with incomplete mapping', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/incomplete-mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
@@ -560,7 +560,7 @@ describe('Edit mapping', () => {
     });
   });
 
-  context('edit and save', () => {
+  context('Edit and save', () => {
     it('Should save mapping and preserve preview', () => {
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
       cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
@@ -643,6 +643,42 @@ describe('Edit mapping', () => {
 
     });
 
+  });
+
+  context('Edit base IRI', () => {
+    it('Should edit and save base IRI', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/base-iri-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.route({
+        method: 'POST',
+        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
+        status: 200,
+        delay: 1000,
+        response: 'fixture:edit-mapping/save-mapping-success.json'
+      }).as('saveMapping');
+      // Given I have loaded a mapping
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      MappingSteps.getTriples().should('have.length', 2);
+      // Then I expect the base IRI to be populated
+      MappingSteps.getBaseIRI().should('have.value', 'http://example/base/');
+      // When I edit the base IRI
+      MappingSteps.getBaseIRI().type('123');
+      MappingSteps.getBaseIRI().should('have.value', 'http://example/base/123');
+      // And I save the mapping
+      HeaderSteps.saveMapping();
+      cy.fixture('edit-mapping/save-mapping-with-updated-iri-request-body').then((saveResponse: string) => {
+        cy.wait('@saveMapping');
+        cy.get('@saveMapping').should((xhr: any) => {
+          expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
+          expect(xhr.method).to.equal('POST');
+          expect(xhr.request.body).to.equal(saveResponse);
+        });
+      });
+      // Then I expect the base IRI to be set in the model properly and sent for save
+      MappingSteps.getBaseIRI().should('have.value', 'http://example/base/123');
+    });
   });
 
   context('type mapping', () => {

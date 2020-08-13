@@ -11,6 +11,7 @@ import {ViewMode} from 'src/app/services/view-mode.enum';
 import {plainToClass} from 'class-transformer';
 import {throwError} from 'rxjs';
 import {NotificationService} from 'src/app/services/notification.service';
+import {DIRTY_MAPPING, PRISTINE_MAPPING} from '../../../utils/constants';
 
 @Component({
   selector: 'app-header',
@@ -26,7 +27,7 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
   isRdfGenerationInProgress: boolean;
   isSparqlGenerationInProgress: boolean;
   ViewMode = ViewMode;
-  selectedFile: File
+  selectedFile: File;
 
   constructor(private modelManagementService: ModelManagementService,
               private dialogService: DialogService,
@@ -41,6 +42,11 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe((event) => {
           this.isMappingDirty = event.getMessage();
+          if (this.isMappingDirty) {
+            window.parent.postMessage(DIRTY_MAPPING, '*');
+          } else {
+            window.parent.postMessage(PRISTINE_MAPPING, '*');
+          }
         });
 
     this.messageService.read(ChannelName.MappingSaved)

@@ -282,7 +282,11 @@ class MappingSteps {
   }
 
   static getViewJSONDialog() {
-    return cy.get('[appCypressData="view-json-modal"]')
+    return cy.get('[appCypressData="view-json-modal"]');
+  }
+
+  static getBaseIRI() {
+    return cy.get('[appCypressData="base-iri"]');
   }
 
   static getNamespaces() {
