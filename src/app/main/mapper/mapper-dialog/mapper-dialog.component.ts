@@ -100,7 +100,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.setDialogStyle();
     this.mappingDetails = {...this.data.mappingDetails, ...{} as MappingDetails};
     this.init();
-    this.mapperForm$ = of(this.createMapperForm(this.mappingDetails));
+    this.mapperForm$ = of(this.createMapperForm(this.mappingDetails)).pipe(untilComponentDestroyed(this));
 
     this.showAppropriateFields();
     this.subscribeToValueChanges();
@@ -307,7 +307,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     if (value && !this.isPrefixTransformation) {
       this.grelPreviewExpression = this.previewGREL(value);
     } else {
-      this.grelPreviewExpression = EMPTY;
+      this.grelPreviewExpression = EMPTY.pipe(untilComponentDestroyed(this));
     }
   }
 
@@ -315,7 +315,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     if (value && !this.isLanguagePrefixTransformation) {
       this.grelPreviewLanguageTransformation = this.previewLanguageGREL(value);
     } else {
-      this.grelPreviewLanguageTransformation = EMPTY;
+      this.grelPreviewLanguageTransformation = EMPTY.pipe(untilComponentDestroyed(this));
     }
   }
 
@@ -324,7 +324,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
       this.grelPreviewDataTypeTransformation = this.previewDataTypeGREL(value);
       this.firstGrelPreviewDataTypeTransformation = this.grelPreviewDataTypeTransformation[0];
     } else {
-      this.grelPreviewDataTypeTransformation = EMPTY;
+      this.grelPreviewDataTypeTransformation = EMPTY.pipe(untilComponentDestroyed(this));
     }
   }
 
@@ -439,7 +439,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
               if (this.isPredicate()) {
                 autoCompleteObservable = this.repositoryService.autocompletePredicates(value);
               }
-              return autoCompleteObservable.pipe(map((types) => this.modelConstructService.replaceIRIPrefixes(types, {...this.data.namespaces, ...this.data.repoNamespaces})));
+              return autoCompleteObservable.pipe(untilComponentDestroyed(this), map((types) => this.modelConstructService.replaceIRIPrefixes(types, {...this.data.namespaces, ...this.data.repoNamespaces})));
             }));
 
     this.filteredColumnNames = merge(this.mapperForm.get('columnName').valueChanges, this.mapperForm.get('dataTypeColumnName').valueChanges)
@@ -501,7 +501,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
   private previewGRELWithValueSource(value, valueSource: ColumnImpl) {
     if (!this.canPreviewValueSource(valueSource)) {
-      return EMPTY;
+      return EMPTY.pipe(untilComponentDestroyed(this));
     }
     return this.mapperService.previewGREL(valueSource, value)
         .pipe(untilComponentDestroyed(this), map((response) => {

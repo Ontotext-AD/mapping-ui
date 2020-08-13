@@ -102,19 +102,21 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
           this.isDirty.next(false);
         });
 
-    this.isDirty.subscribe((isDirty) => {
-      this.messageService.publish(ChannelName.DirtyMapping, isDirty);
-      if (isDirty) {
-        window.parent.postMessage(DIRTY_MAPPING, '*');
-      } else {
-        window.parent.postMessage(PRISTINE_MAPPING, '*');
-      }
-    });
+    this.isDirty.pipe(untilComponentDestroyed(this))
+        .subscribe((isDirty) => {
+          this.messageService.publish(ChannelName.DirtyMapping, isDirty);
+          if (isDirty) {
+            window.parent.postMessage(DIRTY_MAPPING, '*');
+          } else {
+            window.parent.postMessage(PRISTINE_MAPPING, '*');
+          }
+        });
 
-    this.rdfMapping.subscribe((mapping) => {
-      this.mapping = mapping;
-      this.init(false);
-    });
+    this.rdfMapping.pipe(untilComponentDestroyed(this))
+        .subscribe((mapping) => {
+          this.mapping = mapping;
+          this.init(false);
+        });
   }
 
   ngAfterViewInit() {
@@ -359,17 +361,19 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      this.initMappingDetails();
+    dialogRef.afterClosed()
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((result) => {
+          this.initMappingDetails();
 
-      if (result) {
-        this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
-        this.initWithPreview(true);
+          if (result) {
+            this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
+            this.initWithPreview(true);
 
-        const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
-        this.tabService.selectCommand.emit({index: this.triples.length - 2, position});
-      }
-    });
+            const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
+            this.tabService.selectCommand.emit({index: this.triples.length - 2, position});
+          }
+        });
   }
 
   private createNewTriple(triple: Triple, selected?, atIndex?) {
