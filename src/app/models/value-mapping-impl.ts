@@ -67,6 +67,8 @@ export class ValueMappingImpl implements ValueMapping, MappingBase {
   public clearMapping() {
     this.setValueTransformation(undefined);
     this.setValueSource(undefined);
+    this.setTypeMappings(undefined);
+    this.setPropertyMappings(undefined);
     return this;
   }
 
