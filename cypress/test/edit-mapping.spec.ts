@@ -602,6 +602,46 @@ describe('Edit mapping', () => {
     });
 
   });
+
+  context('type mapping', () => {
+    it('Should treat rdf:type as type mapping predicate when inline typing', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+
+      // WHEN I complete inline the triple with `rfd:type` predicate
+      MappingSteps.completeTriple(0, 'sub', 'rdf:type', 'obj');
+      // THEN
+      // It is a type mapping triple
+      MappingSteps.getTripleSubject(0).should('have.text', ' C  sub IRI');
+      MappingSteps.getTriplePredicate(0).should('have.text', 'aIRI');
+      MappingSteps.getTripleObject(0).should('have.text', ' C  obj IRI');
+    });
+
+    it('Should treat rdf:type as type mapping predicate in the edit mapping dialog', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+
+      // WHEN I complete the subject
+      MappingSteps.completeTriple(0, 'sub', undefined, undefined);
+      // And edit the predicate
+      MappingSteps.editEmptyTriplePredicate(0);
+      EditDialogSteps.selectConstant();
+      EditDialogSteps.completeConstant('type');
+      EditDialogSteps.selectPrefix();
+      EditDialogSteps.completePrefix('rdf');
+      EditDialogSteps.saveConfiguration();
+
+      // THEN
+      // It is a type mapping triple
+      MappingSteps.getTriplePredicate(0).should('have.text', 'aIRI');
+    });
+  });
 });
 
 function assertNotAllowedNotification() {

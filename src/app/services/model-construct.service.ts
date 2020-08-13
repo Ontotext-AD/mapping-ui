@@ -3,7 +3,15 @@ import {MappingBase} from 'src/app/models/mapping-base';
 import {Helper} from 'src/app/utils/helper';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {TypeMapping} from 'src/app/models/type-mapping';
-import {COLON, OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
+import {
+  COLON,
+  OBJECT_SELECTOR,
+  PREDICATE_SELECTOR,
+  RDF,
+  RDF_COLON,
+  RDF_FULL,
+  SUBJECT_SELECTOR, TYPE,
+} from 'src/app/utils/constants';
 import {SubjectMappingImpl} from 'src/app/models/subject-mapping-impl';
 import {SimpleIRIValueMappingImpl} from 'src/app/models/simple-iri-value-mapping-impl';
 import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
@@ -250,5 +258,13 @@ export class ModelConstructService {
         subjectMappings.push(subject);
       }
     }
+  }
+
+  isTypeMappingPredicate(value, prefix) {
+    return value === TYPE && this.isRdfTypePrefix(prefix);
+  }
+
+  private isRdfTypePrefix(prefix): boolean {
+    return prefix === RDF || prefix === RDF_COLON || prefix === RDF_FULL;
   }
 }

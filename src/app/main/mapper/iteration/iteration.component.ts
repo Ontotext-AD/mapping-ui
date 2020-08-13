@@ -367,13 +367,20 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
           this.initMappingDetails();
 
           if (result) {
-            this.modelConstructService.setRootMappingInModel(result.mappingData, this.mapping);
-            this.initWithPreview(true);
+            const triple = result.mappingData;
+            this.modelConstructService.setRootMappingInModel(triple, this.mapping);
+            if (this.isTripleComplete(triple)) {
+              this.initWithPreview(true);
+            }
 
             const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
             this.tabService.selectCommand.emit({index: this.triples.length - 2, position});
           }
         });
+  }
+
+  private isTripleComplete(triple): boolean {
+    return !!triple.getSubject() && (!!triple.getPredicate() || triple.isTypeProperty) && !!triple.getObject();
   }
 
   private createNewTriple(triple: Triple, selected?, atIndex?) {
@@ -593,12 +600,15 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   public onValueSet(valueSet, triple: any, selected: string, index: number) {
-    const value = valueSet.value;
+    let value = valueSet.value;
+    let prefixTransformation = valueSet.prefixTransformation;
     const source = valueSet.source;
     if (selected === this.SUBJECT && index === this.triples.length - 1) {
       triple.setRoot(true);
     } else if (selected === this.PREDICATE && triple.getSubject()) {
-      if (value === TypeMapping.a) {
+      if (value === TypeMapping.a || this.modelConstructService.isTypeMappingPredicate(valueSet.value, valueSet.prefixTransformation)) {
+        value = TypeMapping.a;
+        prefixTransformation = undefined;
         triple.setTypeProperty(true);
       }
     } else if (selected === this.PREDICATE && !triple.getSubject()) {
@@ -606,6 +616,12 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       if (!previousTriple) {
         return;
       }
+
+      if (this.modelConstructService.isTypeMappingPredicate(valueSet.value, valueSet.prefixTransformation)) {
+        value = TypeMapping.a;
+        prefixTransformation = undefined;
+      }
+
       triple.setSubject(previousTriple.getSubject());
       triple.setPredicate(triple.getPredicate());
       if (value === TypeMapping.a) {
@@ -629,7 +645,6 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     }
 
     let prefix;
-    let prefixTransformation = valueSet.prefixTransformation;
     if (prefixTransformation) {
       prefix = prefixTransformation;
     } else if (source === SourceEnum.Constant) {
@@ -664,7 +679,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       this.modelConstructService.setCellMapping(mapping, data, settings);
       this.modelConstructService.setMappingObjectInTriple(mapping, data, settings, triple);
       this.modelConstructService.setRootMappingInModel(triple, this.mapping);
-      if (!!triple.getSubject() && (!!triple.getPredicate() || triple.isTypeProperty) && !!triple.getObject()) {
+      if (this.isTripleComplete(triple)) {
         this.initWithPreview(true);
       }
     }
