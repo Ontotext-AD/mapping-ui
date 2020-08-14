@@ -539,6 +539,10 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
           if (event.key === 'Escape' || event.key === 'Esc') {
             this.checkDirty();
           }
+          if (event.ctrlKey && event.keyCode === 13 && !this.isMappingInvalid()) {
+            this.dialogRef.close();
+            this.save();
+          }
         });
   }
 

@@ -12,6 +12,35 @@ describe('Edit mapping', () => {
     cy.route('GET', '/rest/autocomplete/enabled', 'true');
   });
 
+  context('Edit and close dialog with hotkeys', () => {
+    it('Should open and close the edit dialog with a hotkey', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      // Given I have opened an empty mapping
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      MappingSteps.getTriples().should('have.length', 1);
+      // When I focus the first triple's subject and execute ctrl+enter key combination
+      // Add some wait here to prevent finding the input in detached state
+      MappingSteps.getTripleSubjectValue(0).wait(200).focus().type('{ctrl}{enter}', {
+        parseSpecialCharSequences: true
+      });
+      // Then I expect the subject edit dialog to be opened
+      EditDialogSteps.getDialogTitle().should('contain', 'Subject mapping');
+      // When I complete the form
+      EditDialogSteps.selectConstant();
+      EditDialogSteps.completeConstant('1');
+      // And execute ctrl+enter key combination while dialog is opened
+      EditDialogSteps.getPrefixTransformationButton().focus().type('{ctrl}{enter}', {
+        parseSpecialCharSequences: true
+      });
+      // Then I expect subject mapping configuration to be saved
+      MappingSteps.getTripleSubjectValuePreview(0).should('contain', '1');
+      MappingSteps.getTripleSubjectSourceType(0).should('contain', 'C');
+    });
+  });
+
   context('Edit IRI', () => {
     it('Should have a warning message in IRI edit dialog when object has children', () => {
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
