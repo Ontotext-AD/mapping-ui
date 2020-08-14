@@ -297,6 +297,17 @@ class MappingSteps {
     return MappingSteps.getNamespaces().find(`[appCypressData="namespace-${namespace}"]`);
   }
 
+  static addNamespace(namespace: string) {
+    return this.getNamespaces().find('[appCypressData="namespaces-field"]')
+      .should('be.visible')
+      .type(namespace)
+      .blur();
+  }
+
+  static removeNamespace(namespace: string) {
+    return this.getNamespace(namespace).find('.mat-chip-remove').click();
+  }
+
   static getSuggestions(index: any) {
     return cy.get(`[appCypressData="cell-option"]`);
   }
