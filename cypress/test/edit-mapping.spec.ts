@@ -601,6 +601,48 @@ describe('Edit mapping', () => {
       });
     });
 
+    it('Should change object type save it properly', () => {
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route({
+        method: 'POST',
+        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
+        status: 200,
+        delay: 1000,
+        response: 'fixture:edit-mapping/save-mapping-success.json'
+      }).as('saveMapping');
+      // Given I have opened the application
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      // I complete a tripple
+      MappingSteps.completeTriple(0, 'sub', 'pred', 'obj');
+      // I change to object to IRI
+      MappingSteps.editTripleObjectWithData(0);
+      EditDialogSteps.selectIri();
+      EditDialogSteps.saveConfiguration();
+      // Then I change the object to Datatype Literal
+      MappingSteps.editTripleObjectWithData(0);
+      EditDialogSteps.selectTypeDataTypeLiteral()
+      EditDialogSteps.selectDataTypeConstant();
+      EditDialogSteps.completeDataTypeConstant('con');
+      EditDialogSteps.saveConfiguration();
+      // WHEN I save the mapping
+      HeaderSteps.saveMapping();
+
+      // THEN I expect to send the right configuration
+      cy.fixture('edit-mapping/save-mapping-request-body').then((saveResponse: string) => {
+        cy.wait('@saveMapping');
+        cy.get('@saveMapping').should((xhr: any) => {
+          expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
+          expect(xhr.method).to.equal('POST');
+          expect(xhr.request.body).to.equal(saveResponse);
+        });
+      });
+
+    });
+
   });
 });
 
