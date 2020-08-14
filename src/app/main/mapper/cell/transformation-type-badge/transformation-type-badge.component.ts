@@ -6,7 +6,7 @@ import {OnDestroyMixin} from '@w11k/ngx-componentdestroyed';
 import {ValueTransformationImpl} from '../../../../models/value-transformation-impl';
 import {TranslateService} from '@ngx-translate/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
-import {GREL_CONSTANT, PREFIX_CONSTANT} from '../../../../utils/constants';
+import {COLON, GREL_CONSTANT, PREFIX_CONSTANT} from '../../../../utils/constants';
 import {Type} from '../../../../models/mapping-definition';
 import {IRIImpl} from '../../../../models/iri-impl';
 import {TransformationTarget} from '../cell.component';
@@ -150,6 +150,6 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
 
   private resolveExpressionValue(transformation) {
     const expression = transformation.getExpression();
-    return expression || ':';
+    return expression || COLON;
   }
 }

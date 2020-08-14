@@ -21,6 +21,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SubjectMappingImpl} from '../models/subject-mapping-impl';
 import {Language} from '../models/language';
+import {COLON} from '../utils/constants';
 
 
 @Injectable({
@@ -467,7 +468,7 @@ export class ModelManagementService {
     if (transformation) {
       const expression = transformation.getExpression();
       if (transformation.getLanguage() === Language.Prefix) {
-        return expression || ':';
+        return expression || COLON;
       }
       return expression;
     }
