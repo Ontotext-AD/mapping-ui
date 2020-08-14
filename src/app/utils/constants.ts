@@ -16,6 +16,10 @@ export const DOUBLE_SLASH = '//';
 export const COLON = ':';
 export const PRISTINE_MAPPING = 'pristine';
 export const DIRTY_MAPPING = 'dirty';
+export const TYPE = 'type';
+export const RDF = 'rdf';
+export const RDF_COLON = 'rdf:';
+export const RDF_FULL = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
 export const SPARQL_TYPES = `
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
