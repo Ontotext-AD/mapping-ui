@@ -9,6 +9,10 @@ class EditDialogSteps {
     return cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_SELECTOR);
   }
 
+  static getDialogTitle() {
+    return this.getDialog().find('[appCypressData="dialog-title"]');
+  }
+
   static getOkButton() {
     return EditDialogSteps.getDialog().find(`[appCypressData=${MapperComponentSelectors.OK_MAPPING_BUTTON_SELECTOR}]`);
   }
