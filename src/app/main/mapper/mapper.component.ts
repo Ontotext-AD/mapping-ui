@@ -25,7 +25,7 @@ import {Convert} from 'src/app/models/mapping-definition';
 export class MapperComponent extends OnDestroyMixin implements OnInit {
   sources: Array<Source>;
   mapping: MappingDefinitionImpl = plainToClass(MappingDefinitionImpl, EMPTY_MAPPING);
-  rdfMapping: BehaviorSubject<MappingDefinitionImpl>;
+  rdfMapping: BehaviorSubject<{mapping: MappingDefinitionImpl, isDirty:boolean}>;
   rdf: string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   addOnBlur = true;
@@ -40,7 +40,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   }
 
   ngOnInit(): void {
-    this.rdfMapping = new BehaviorSubject<MappingDefinitionImpl>(this.mapping);
+    this.rdfMapping = new BehaviorSubject<any>({mapping: this.mapping, isDirty: false});
 
     this.mapperService.getColumns()
         .pipe(untilComponentDestroyed(this))
@@ -53,15 +53,14 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe((data) => {
           if (data) {
-            this.mapping = data;
-            this.rdfMapping.next(this.mapping);
+            this.rdfMapping.next({mapping: data, isDirty: false});
           }
         });
 
     this.messageService.read(ChannelName.NewMapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
-          this.rdfMapping.next(new MappingDefinitionImpl(EMPTY_MAPPING.baseIRI, EMPTY_MAPPING.namespaces, EMPTY_MAPPING.subjectMappings));
+          this.rdfMapping.next({mapping: new MappingDefinitionImpl(EMPTY_MAPPING.baseIRI, EMPTY_MAPPING.namespaces, EMPTY_MAPPING.subjectMappings), isDirty: false});
         });
 
     this.messageService.read(ChannelName.SaveMapping)
@@ -188,7 +187,6 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   }
 
   public onJsonUpload($event: MappingDefinitionImpl) {
-    this.mapping = $event;
-    this.rdfMapping.next($event);
+    this.rdfMapping.next({mapping: $event, isDirty: true});
   }
 }
