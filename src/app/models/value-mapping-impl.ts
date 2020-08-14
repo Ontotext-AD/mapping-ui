@@ -73,11 +73,11 @@ export class ValueMappingImpl implements ValueMapping, MappingBase {
   }
 
   public setTypeMappings(mappings: SimpleIRIValueMappingImpl[]) {
-    this.getValueType().setTypeMappings(mappings);
+    this.getValueType() && this.getValueType().setTypeMappings(mappings);
   }
 
   public setPropertyMappings(mappings: PropertyMappingImpl[]) {
-    this.getValueType().setPropertyMappings(mappings);
+    this.getValueType() && this.getValueType().setPropertyMappings(mappings);
   }
 
   public getPreview(): string[] {
