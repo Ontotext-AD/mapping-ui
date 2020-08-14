@@ -9,6 +9,10 @@ class HeaderSteps {
     return cy.cypressData(HeaderComponentSelectors.HEADER_SELECTOR);
   }
 
+  static getDirtyMappingBanner() {
+    return this.getHeader().find('[appCypressData="unsaved-changes-msg"]');
+  }
+
   static getSaveMappingButton() {
     return this.getHeader().find('[appCypressData="save-action"]');
   }

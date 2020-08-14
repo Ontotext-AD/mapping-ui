@@ -21,7 +21,7 @@
               {{namespace.key}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
-            <input placeholder="{{'LABELS.PREFIX_PLACEHOLDER' | translate}}"
+            <input placeholder="{{'LABELS.PREFIX_PLACEHOLDER' | translate}}" appCypressData="namespaces-field"
                    [matChipInputFor]="namespaces"
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    [matChipInputAddOnBlur]="addOnBlur"
