@@ -148,6 +148,14 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     this.messageService.publish(ChannelName.DirtyMapping, true);
   }
 
+  editNamespace(target: HTMLElement, namespace) {
+    const input = target?.parentElement?.getElementsByTagName('input')[0];
+    if (input) {
+      input.value = `${namespace.key}=${namespace.value}`;
+      input.focus();
+    }
+  }
+
   public updateMapping(event: any) {
     this.mapping = event;
   }

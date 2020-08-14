@@ -293,15 +293,21 @@ class MappingSteps {
     return cy.get('[appCypressData="namespace-wrapper"]');
   }
 
+  static getNamespaceField() {
+    return this.getNamespaces().find('[appCypressData="namespaces-field"]');
+  }
+
   static getNamespace(namespace: string) {
     return MappingSteps.getNamespaces().find(`[appCypressData="namespace-${namespace}"]`);
   }
 
+  static editNamespace(namespace: string, value: string) {
+    this.getNamespace(namespace).click();
+    this.getNamespaceField().clear().type(value).blur();
+  }
+
   static addNamespace(namespace: string) {
-    return this.getNamespaces().find('[appCypressData="namespaces-field"]')
-      .should('be.visible')
-      .type(namespace)
-      .blur();
+    return this.getNamespaceField().should('be.visible').type(namespace).blur();
   }
 
   static removeNamespace(namespace: string) {
