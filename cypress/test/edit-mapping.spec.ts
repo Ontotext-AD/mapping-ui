@@ -668,16 +668,101 @@ describe('Edit mapping', () => {
       MappingSteps.getBaseIRI().should('have.value', 'http://example/base/123');
       // And I save the mapping
       HeaderSteps.saveMapping();
-      cy.fixture('edit-mapping/save-mapping-with-updated-iri-request-body').then((saveResponse: string) => {
+      cy.fixture('edit-mapping/save-mapping-with-updated-iri-request-body').then((saveRequest: string) => {
         cy.wait('@saveMapping');
         cy.get('@saveMapping').should((xhr: any) => {
           expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
           expect(xhr.method).to.equal('POST');
-          expect(xhr.request.body).to.equal(saveResponse);
+          expect(xhr.request.body).to.equal(saveRequest);
         });
       });
       // Then I expect the base IRI to be set in the model properly and sent for save
       MappingSteps.getBaseIRI().should('have.value', 'http://example/base/123');
+    });
+  });
+
+  context('Edit namespaces', () => {
+    it('Should make the mapping dirty when namespaces are added', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/base-iri-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.route({
+        method: 'POST',
+        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
+        status: 200,
+        delay: 1000,
+        response: 'fixture:edit-mapping/save-mapping-success.json'
+      }).as('saveMapping');
+
+      // Given I have loaded a mapping
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      MappingSteps.getTriples().should('have.length', 2);
+      HeaderSteps.getSaveMappingButton().should('be.disabled');
+      // I expect to see some default namespaces
+      MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
+      MappingSteps.getNamespace('rdf').should('be.visible');
+      // When I add a new namespace
+      MappingSteps.addNamespace('ga=http://google/namespace');
+      MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 2);
+      MappingSteps.getNamespace('ga').should('be.visible');
+      // Then I expect the mapping to become dirty
+      HeaderSteps.getDirtyMappingBanner().should('contain', 'Mapping has unsaved changes');
+      HeaderSteps.getSaveMappingButton().should('be.enabled');
+      // When I save the mapping
+      HeaderSteps.saveMapping();
+      // Then I expect the updated namespaces to be sent for save
+      cy.fixture('edit-mapping/save-mapping-with-new-namespace-request-body').then((saveRequest: string) => {
+        cy.wait('@saveMapping');
+        cy.get('@saveMapping').should((xhr: any) => {
+          expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
+          expect(xhr.method).to.equal('POST');
+          expect(xhr.request.body).to.equal(saveRequest);
+        });
+      });
+      HeaderSteps.getSaveMappingButton().should('be.disabled');
+    });
+
+    it('Should make the mapping dirty when namespaces are removed', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/custom-namespace-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.route({
+        method: 'POST',
+        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
+        status: 200,
+        delay: 1000,
+        response: 'fixture:edit-mapping/save-mapping-success.json'
+      }).as('saveMapping');
+
+      // Given I have loaded a mapping
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      MappingSteps.getTriples().should('have.length', 2);
+      HeaderSteps.getSaveMappingButton().should('be.disabled');
+      // I expect to see some default namespaces
+      MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 2);
+      MappingSteps.getNamespace('rdf').should('be.visible');
+      MappingSteps.getNamespace('ga').should('be.visible');
+      // When I remove a some namespace
+      MappingSteps.removeNamespace('rdf');
+      MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
+      MappingSteps.getNamespace('ga').should('be.visible');
+      // Then I expect the mapping to become dirty
+      HeaderSteps.getDirtyMappingBanner().should('contain', 'Mapping has unsaved changes');
+      HeaderSteps.getSaveMappingButton().should('be.enabled');
+      // When I save the mapping
+      HeaderSteps.saveMapping();
+      // Then I expect the updated namespaces to be sent for save
+      cy.fixture('edit-mapping/save-mapping-with-removed-namespace-request-body').then((saveRequest: string) => {
+        cy.wait('@saveMapping');
+        cy.get('@saveMapping').should((xhr: any) => {
+          expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
+          expect(xhr.method).to.equal('POST');
+          expect(xhr.request.body).to.equal(saveRequest);
+        });
+      });
+      HeaderSteps.getSaveMappingButton().should('be.disabled');
     });
   });
 

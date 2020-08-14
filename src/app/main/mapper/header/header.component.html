@@ -5,7 +5,7 @@
     <mat-button-toggle value="{{ViewMode.PreviewAndConfiguration}}" appCypressData="view-both-button" matTooltip="{{'TOOLTIPS.VIEW_MODE_BOTH' | translate}}">{{"BUTTONS.PREVIEW_AND_CONFIGURATION" | translate}}</mat-button-toggle>
   </mat-button-toggle-group>
 
-  <span class="mr-12 unsaved-changes-msg">
+  <span class="mr-12 unsaved-changes-msg" appCypressData="unsaved-changes-msg">
     {{isMappingDirty ? ('MESSAGES.MAPPING_IS_DIRTY' | translate) : ('MESSAGES.MAPPING_IS_SAVED' | translate)}}
   </span>
   <span matTooltip="{{'TOOLTIPS.SAVE_MAPPING' | translate}}">

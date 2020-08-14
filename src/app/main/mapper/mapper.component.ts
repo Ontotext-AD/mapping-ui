@@ -139,6 +139,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
       const key = split[0];
       const val = split[1];
       this.mapping.namespaces[key] = val;
+      this.messageService.publish(ChannelName.DirtyMapping, true);
     }
 
     if (input) {
@@ -148,6 +149,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
 
   removeNamespace(key: string): void {
     delete this.mapping.namespaces[key];
+    this.messageService.publish(ChannelName.DirtyMapping, true);
   }
 
   public updateMapping(event: any) {
