@@ -1,6 +1,7 @@
 import {HeaderComponentSelectors} from '../../../../cypress/utils/selectors/header-component.selectors';
 import {MapperComponentSelectors} from '../../../../cypress/utils/selectors/mapper-component.selectors';
 import MappingSteps from '../../../../cypress/steps/mapping-steps';
+import HeaderSteps from "../../../../cypress/steps/header-steps";
 
 
 describe('HeaderComponent', () => {
@@ -48,6 +49,8 @@ describe('HeaderComponent', () => {
     cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-4').should('be.visible').and('have.length', 1);
     cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-4').should('be.visible').and('have.length', 1);
     cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-4').should('be.visible').and('contain', 'Sirma');
+
+    HeaderSteps.getSaveMappingButton().should('be.enabled');
   });
 
   it('should not insert uploaded JSON mapping if not confirmed', () => {

@@ -48,7 +48,7 @@ export interface JSONDialogData {
   styleUrls: ['./iteration.component.scss'],
 })
 export class IterationComponent extends OnDestroyMixin implements OnInit, AfterViewInit, OnDestroy {
-  @Input() rdfMapping: Observable<MappingDefinitionImpl>;
+  @Input() rdfMapping: Observable<{mapping: MappingDefinitionImpl, isDirty:boolean}>;
   @Input() sources: Array<Source>;
   @Output() updateMapping: EventEmitter<MappingDefinitionImpl> = new EventEmitter<MappingDefinitionImpl>();
 
@@ -113,9 +113,9 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         });
 
     this.rdfMapping.pipe(untilComponentDestroyed(this))
-        .subscribe((mapping) => {
-          this.mapping = mapping;
-          this.init(false);
+        .subscribe((rdfMapping) => {
+          this.mapping = rdfMapping.mapping;
+          this.init(rdfMapping.isDirty);
         });
   }
 
