@@ -1,8 +1,9 @@
 import {Namespace, Namespaces} from '../models/namespaces';
+import {COLON} from '../utils/constants';
 
 export class NamespaceService {
   static getPrefix(prefix) {
-    return prefix ? prefix : ':';
+    return prefix ? prefix : COLON;
   }
 
   static toUIModel(namespaces: Namespaces): Namespaces {

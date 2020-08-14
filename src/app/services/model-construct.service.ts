@@ -194,7 +194,7 @@ export class ModelConstructService {
 
   private isAllowedExpression(expression: string): boolean {
     // Allow the empty prefix
-    return !Helper.isBlank(expression) || expression === ':';
+    return !Helper.isBlank(expression) || expression === COLON;
   }
 
   createMappingObject(form, settings): MappingBase {
