@@ -82,7 +82,7 @@ describe('Delete', () => {
     });
 
     it('Should be able to delete a triple with children and have a warning', () => {
-      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:delete/autocomplete-response.json');
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/triple-with-children-mapping-model.json');
       cy.visit('?dataProviderID=ontorefine:123');
       // Given I have opened a mapping which contains triple with children
@@ -215,7 +215,7 @@ describe('Delete', () => {
   context('object', () => {
     it('Should be able to delete object', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:delete/autocomplete-response.json');
 
       cy.visit('?dataProviderID=ontorefine:123');
       cy.wait('@loadColumns');
@@ -249,6 +249,62 @@ describe('Delete', () => {
       // Then I expect the object to be deleted
       MappingSteps.getTriples().should('have.length', 2);
       MappingSteps.getTripleObjectValue(1).should('be.empty');
+    });
+
+    it('Should be able to insert subject at same place as the deleted object when type predicate', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:delete/autocomplete-response.json');
+
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      // Given I have created a mapping column-constant-column
+      MappingSteps.getTriples().should('have.length', 1);
+      MappingSteps.completeTriple(0, 'sub', 'a', '111');
+      MappingSteps.completeObject(1, '222');
+      MappingSteps.completeObject(2, '333');
+      MappingSteps.getTriples().should('have.length', 4);
+      // When I delete the object
+      MappingSteps.deleteTripleObject(1);
+      MappingSteps.confirm();
+      // Then I expect the object to be deleted
+      MappingSteps.getTriples().should('have.length', 3);
+      MappingSteps.getTripleObjectValue(1).should('be.empty');
+      MappingSteps.getTripleObjectType(1).should('have.length', 0);
+      // Then I'll be able to add new object
+      MappingSteps.getTripleObjectValue(1).type('222').blur();
+
+      // Then objects keep order
+      MappingSteps.getTripleObjectValuePreview(0).should('contain', '111');
+      MappingSteps.getTripleObjectValuePreview(1).should('contain', '222');
+      MappingSteps.getTripleObjectValuePreview(2).should('contain', '333');
+    });
+
+    it('Should be able to insert subject at same place as the deleted object when property predicate', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:delete/autocomplete-response.json');
+
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      // Given I have created a mapping column-constant-column
+      MappingSteps.getTriples().should('have.length', 1);
+      MappingSteps.completeTriple(0, 'sub', 'pre', '111');
+      MappingSteps.completeObject(1, '222');
+      MappingSteps.completeObject(2, '333');
+      MappingSteps.getTriples().should('have.length', 4);
+      // When I delete the object
+      MappingSteps.deleteTripleObject(1);
+      MappingSteps.confirm();
+      // Then I expect the object to be deleted
+      MappingSteps.getTriples().should('have.length', 3);
+      MappingSteps.getTripleObjectValue(1).should('be.empty');
+      MappingSteps.getTripleObjectType(1).should('have.length', 0);
+      // Then I'll be able to add new object
+      MappingSteps.getTripleObjectValue(1).type('222').blur();
+
+      // Then objects keep order
+      MappingSteps.getTripleObjectValuePreview(0).should('contain', '111');
+      MappingSteps.getTripleObjectValuePreview(1).should('contain', '222');
+      MappingSteps.getTripleObjectValuePreview(2).should('contain', '333');
     });
   });
 });

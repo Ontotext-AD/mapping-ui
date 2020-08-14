@@ -461,7 +461,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   public onDelete($event: any, mapping: Triple, selected: string) {
     if (selected === this.OBJECT && mapping.isTypeProperty) {
-      this.deleteObjectTypeMapping(mapping, true);
+      this.deleteObjectTypeMapping(mapping, false);
     } else if (selected === this.OBJECT) {
       this.deleteObjectPropertyMapping(mapping, false);
     } else if (selected === this.PREDICATE) {
