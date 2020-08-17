@@ -4,7 +4,7 @@ import {ModelManagementService} from 'src/app/services/model-management.service'
 import {Source} from 'src/app/models/source';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
-import {DOWNLOAD_JSON_FILE, DOWNLOAD_RDF_FILE, EMPTY_MAPPING} from 'src/app/utils/constants';
+import {COLON, DOWNLOAD_JSON_FILE, DOWNLOAD_RDF_FILE, EMPTY_MAPPING} from 'src/app/utils/constants';
 import {classToClass, plainToClass} from 'class-transformer';
 import {MatChipInputEvent} from '@angular/material/chips/chip-input';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -31,6 +31,8 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   rdf: string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   addOnBlur = true;
+  showNamespaceErrorMessage: boolean = false;
+  namespaceErrorMessage: string;
 
   constructor(private modelManagementService: ModelManagementService,
               private mapperService: MapperService,
@@ -136,11 +138,41 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     const input = event.input;
     const value = event.value;
     const namespace: Namespace = NamespaceService.toNamespace(value);
+
+    if (!namespace && value.length > 0) {
+      this.showNamespaceErrorMessage = true;
+      this.namespaceErrorMessage = 'ERROR.EMPTY_NAMESPACE';
+      return;
+    } else if (!namespace && value.length === 0) {
+      this.showNamespaceErrorMessage = false;
+      return;
+    }
+
+    if (!this.isPrefixValid(namespace.prefix)) {
+      this.showNamespaceErrorMessage = true;
+      this.namespaceErrorMessage = 'ERROR.COLON_NOT_ALLOWED';
+      return;
+    }
+
+    if (!this.isNamespaceValid(namespace.value)) {
+      this.showNamespaceErrorMessage = true;
+      this.namespaceErrorMessage = 'ERROR.MALFORMED_NAMESPACE';
+      return;
+    }
+
     NamespaceService.addNamespace(this.mapping.namespaces, namespace);
     this.messageService.publish(ChannelName.DirtyMapping, true);
     if (input) {
       input.value = '';
     }
+  }
+
+  private isPrefixValid(prefix: string): boolean {
+    return prefix.indexOf(COLON) === -1;
+  }
+
+  private isNamespaceValid(namespace: string): boolean {
+    return namespace && namespace.trim().length > 0 && namespace.indexOf(COLON) > -1;
   }
 
   removeNamespace(key: string): void {
