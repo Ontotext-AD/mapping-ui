@@ -97,7 +97,10 @@
     "PROCEED": "Proceed"
   },
   "ERROR": {
-    "REQUIRED": "* Required"
+    "REQUIRED": "* Required",
+    "EMPTY_NAMESPACE": "* Namespace required",
+    "COLON_NOT_ALLOWED": "* Colon is not allowed in prefix",
+    "MALFORMED_NAMESPACE": "* Malformed namespace"
   },
   "TYPE": {
     "DATATYPE_LITERAL": "Datatype Literal",

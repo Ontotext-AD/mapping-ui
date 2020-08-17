@@ -310,8 +310,19 @@ class MappingSteps {
     return this.getNamespaceField().should('be.visible').type(namespace).blur();
   }
 
+  static clearNamespace() {
+    return this.getNamespaces().find('[appCypressData="namespaces-field"]')
+      .should('be.visible')
+      .clear()
+      .blur();
+  }
+
   static removeNamespace(namespace: string) {
     return this.getNamespace(namespace).find('.mat-chip-remove').click();
+  }
+
+  static getNamespaceValidationError() {
+    return cy.get('[appCypressData="namespace-error"]');
   }
 
   static getSuggestions(index: any) {

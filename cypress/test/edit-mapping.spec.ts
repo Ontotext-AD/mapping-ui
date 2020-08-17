@@ -783,6 +783,44 @@ describe('Edit mapping', () => {
       });
       HeaderSteps.getSaveMappingButton().should('be.disabled');
     });
+
+    it('Should validate namespaces when added', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/base-iri-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+
+      // Given I have loaded a mapping
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      // When I add a new namespace without equal sign
+      MappingSteps.addNamespace('ga-http://google/namespace');
+      // THEN I expect to see error
+      MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
+      MappingSteps.getNamespace('ga').should('not.be.visible');
+      MappingSteps.getNamespaceValidationError().should('be.visible');
+
+      // I clear the namespace
+      MappingSteps.clearNamespace();
+      MappingSteps.getNamespaceValidationError().should('not.be.visible');
+
+      // When I add a prefix with colon inside
+      MappingSteps.addNamespace('ga:=http://google/namespace');
+      // THEN I expect to see error
+      MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
+      MappingSteps.getNamespace('ga').should('not.be.visible');
+      MappingSteps.getNamespaceValidationError().should('be.visible');
+
+      // I clear the namespace
+      MappingSteps.clearNamespace();
+      MappingSteps.getNamespaceValidationError().should('not.be.visible');
+
+      // When I add a prefix with blank namespace
+      MappingSteps.addNamespace('ga=');
+      // THEN I expect to see error
+      MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
+      MappingSteps.getNamespace('ga').should('not.be.visible');
+      MappingSteps.getNamespaceValidationError().should('be.visible');
+    });
   });
 
   context('type mapping', () => {

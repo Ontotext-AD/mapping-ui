@@ -29,6 +29,9 @@
                    (matChipInputTokenEnd)="addNamespace($event)">
           </mat-chip-list>
         </mat-form-field>
+        <mat-error *ngIf="showNamespaceErrorMessage" appCypressData="namespace-error">
+          {{ namespaceErrorMessage | translate}}
+        </mat-error>
       </div>
 
       <app-iteration [rdfMapping]="getMapping()" [sources]="sources" (updateMapping)="updateMapping($event)"></app-iteration>
