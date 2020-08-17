@@ -39,6 +39,7 @@ import {ViewMode} from 'src/app/services/view-mode.enum';
 import {NotificationService} from 'src/app/services/notification.service';
 import {NamespaceService} from '../../../services/namespace.service';
 import {Namespaces} from '../../../models/namespaces';
+import {TriplesModelService} from '../../../services/triples-model.service';
 
 @Component({
   selector: 'app-iteration',
@@ -46,7 +47,7 @@ import {Namespaces} from '../../../models/namespaces';
   styleUrls: ['./iteration.component.scss'],
 })
 export class IterationComponent extends OnDestroyMixin implements OnInit, AfterViewInit, OnDestroy {
-  @Input() rdfMapping: Observable<{mapping: MappingDefinitionImpl, isDirty:boolean}>;
+  @Input() rdfMapping: Observable<{mapping: MappingDefinitionImpl, isDirty: boolean}>;
   @Input() sources: Array<Source>;
   @Output() updateMapping: EventEmitter<MappingDefinitionImpl> = new EventEmitter<MappingDefinitionImpl>();
 
@@ -117,48 +118,19 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   getRowSize(triple: Triple) {
-    const level = triple.getLevel();
-    if (level === 0) {
-      return '97';
-    }
-    return '66';
+    return TriplesModelService.getRowSize(triple);
   }
 
   getCellSize(triple: Triple) {
-    const level = triple.getLevel();
-    if (level === 0) {
-      return '33';
-    }
-    return '50';
+    return TriplesModelService.getCellSize(triple);
   }
 
   isFirstInGroup(triple: Triple, index: number) {
-    const level = triple.getLevel();
-    let isFirst = false;
-    if (index > 0) {
-      isFirst = this.triples[index - 1].getLevel() < level;
-    }
-    return isFirst;
+    return TriplesModelService.isFirstInGroup(this.triples, triple, index);
   }
 
   isLastInGroup(triple: Triple, index: number) {
-    const level = triple.getLevel();
-    let isLast = false;
-    if (level === 0) {
-      isLast = false;
-    } else {
-      const rowsCount = this.triples.length;
-      if (index === rowsCount - 1) {
-        isLast = true;
-      } else if (index < rowsCount - 1) {
-        const nextTripleLevel = this.triples[index + 1].getLevel();
-        // if next triple is nested or is root level we consider current as last in the group
-        if (nextTripleLevel > level || nextTripleLevel === 0) {
-          isLast = true;
-        }
-      }
-    }
-    return isLast;
+    return TriplesModelService.isLastInGroup(this.triples, triple, index);
   }
 
   initWithPreview(isDirty?: boolean) {
@@ -201,7 +173,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     this.convertToTriples(this.mapping);
 
     if (this.modelManagementService.isValidMapping(this.mapping)) {
-      this.addTriple(new Triple(), 0);
+      TriplesModelService.addTriple(this.triples, new Triple(), 0);
     }
 
     this.initMappingDetails();
@@ -240,7 +212,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     return isCompleteMapping;
   }
 
-  isComplete(mapping) {
+  isComplete(mapping: MappingDefinitionImpl): boolean {
     let isCompleteMapping = true;
     mapping.getSubjectMappings().forEach((subject) => {
       isCompleteMapping = isCompleteMapping && this.isCompleteCell(subject, true);
@@ -248,7 +220,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     return isCompleteMapping;
   }
 
-  convertToTriples(mapping) {
+  convertToTriples(mapping: MappingDefinitionImpl): void {
     mapping.getSubjectMappings().forEach((subject) => {
       this.setUsedSources(subject);
       const isRoot = true;
@@ -259,7 +231,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
               this.setPropertyMappings(subject, root, 0);
             });
       } else {
-        this.addTriple(new Triple(subject, undefined, undefined).setRoot(isRoot), 0);
+        TriplesModelService.addTriple(this.triples, new Triple(subject, undefined, undefined).setRoot(isRoot), 0);
       }
     });
   }
@@ -273,7 +245,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     if (typeMappings) {
       typeMappings.forEach((mapping) => {
         this.setUsedSources(mapping);
-        this.addTriple(new Triple(subject, undefined, mapping).setTypeProperty(true).setRoot(isRoot).setIRI(isIRI), nestingLevel);
+        const triple = new Triple(subject, undefined, mapping).setTypeProperty(true).setRoot(isRoot).setIRI(isIRI);
+        TriplesModelService.addTriple(this.triples, triple, nestingLevel);
         isRoot = false;
       });
     }
@@ -289,7 +262,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         if (property.getValues()) {
           property.getValues().forEach((object) => {
             this.setUsedSources(object);
-            this.addTriple(new Triple(subject, property, object).setRoot(isRoot).setIRI(isIRI), nestingLevel);
+            TriplesModelService.addTriple(this.triples, new Triple(subject, property, object).setRoot(isRoot).setIRI(isIRI), nestingLevel);
             isRoot = false;
             if (object.getValueType() && object.getValueType().getType() === Type.IRI) {
               this.setTypeMappings(object, false, nestingLevel + 1, true);
@@ -297,49 +270,39 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
             }
           });
         } else {
-          this.addTriple(new Triple(subject, property, undefined).setRoot(isRoot), nestingLevel);
+          TriplesModelService.addTriple(this.triples, new Triple(subject, property, undefined).setRoot(isRoot), nestingLevel);
         }
       });
     }
   }
 
-  private addTriple(triple: Triple, level: number) {
-    triple.setLevel(level);
-    this.triples.push(triple);
+  public isFirstSubject(triple, index) {
+    return TriplesModelService.isFirstSubject(this.triples, triple, index);
   }
 
-  isFirstSubject(triple, index) {
+  public isFirstPredicate(triple, index) {
     if (index === 0) {
       return true;
     }
-    // find previous triple of the same level
-    const previousTriple = this.getPreviousTriple(index, triple.getLevel());
-    return !previousTriple || triple.getSubject() !== previousTriple.getSubject();
-  }
-
-  isFirstPredicate(triple, index) {
-    if (index === 0) {
-      return true;
-    }
-    const previousTriple = this.getPreviousTriple(index, triple.getLevel());
+    const previousTriple = TriplesModelService.getPreviousTriple(this.triples, index, triple.getLevel());
     return !previousTriple || this.isFirstSubject(triple, index) || triple.getPredicate() !== previousTriple.getPredicate();
   }
 
-  getPropertyMappings(subject): PropertyMappingImpl[] {
+  public getPropertyMappings(subject): PropertyMappingImpl[] {
     return this.modelManagementService.getPropertyMappings(subject);
   }
 
-  getTypeMappings(subject): SimpleIRIValueMappingImpl[] {
+  public getTypeMappings(subject): SimpleIRIValueMappingImpl[] {
     return this.modelManagementService.getTypeMappings(subject);
   }
 
   public openMapperDialog($event, triple: Triple, selected, index?, dropped?) {
-    const subject = triple && triple.getSubject();
-    const predicate = triple && triple.getPredicate();
-    const object = triple && triple.getObject();
+    const subject = triple?.getSubject();
+    const predicate = triple?.getPredicate();
+    const object = triple?.getObject();
 
     if (!subject && !predicate && !object) {
-      triple = this.createNewTriple(triple, selected, index);
+      triple = TriplesModelService.createNewTriple(this.triples, triple, selected, index);
     }
 
     const dialogRef = this.dialog.open(MapperDialogComponent, {
@@ -360,9 +323,9 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
           this.initMappingDetails();
 
           if (result) {
-            const triple = result.mappingData;
-            this.modelConstructService.setRootMappingInModel(triple, this.mapping);
-            if (this.isTripleComplete(triple)) {
+            const editedTriple = result.mappingData;
+            this.modelConstructService.setRootMappingInModel(editedTriple, this.mapping);
+            if (TriplesModelService.isTripleComplete(editedTriple)) {
               this.initWithPreview(true);
             }
 
@@ -372,38 +335,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         });
   }
 
-  private isTripleComplete(triple): boolean {
-    return !!triple.getSubject() && (!!triple.getPredicate() || triple.isTypeProperty) && !!triple.getObject();
-  }
-
-  private createNewTriple(triple: Triple, selected?, atIndex?) {
-    const index = this.setIndex(atIndex);
-
-    if (selected === this.SUBJECT && atIndex === this.triples.length - 1) {
-      return triple.setRoot(true);
-    } else if (selected === this.SUBJECT && atIndex) {
-      return triple.setSubject(this.triples[index].getSubject());
-    } else if (selected === this.PREDICATE) {
-      return triple.setSubject(this.triples[index].getSubject());
-    } else if (selected === this.OBJECT) {
-      triple.setSubject(this.triples[index].getSubject());
-      triple.setPredicate(this.triples[index].getPredicate());
-      if (!triple.getPredicate()) {
-        return triple.setTypeProperty(true);
-      }
-      return triple;
-    }
-  }
-
-  private setIndex(atIndex): number {
-    if (atIndex) {
-      return atIndex - 1;
-    }
-    return this.triples.length - 2;
-  }
-
-  continueMapping($event: MouseEvent, mapping: Triple, index: number) {
-    const tripleByIndex = this.getTripleByIndex(index);
+  public continueMapping($event: MouseEvent, index: number) {
+    const tripleByIndex = TriplesModelService.getTripleByIndex(this.triples, index);
     const object = tripleByIndex && tripleByIndex.getObject();
     if (object) {
       const triple = new Triple(object as ValueMappingImpl, undefined, undefined).setNewMappingRole(PREDICATE_SELECTOR);
@@ -420,22 +353,13 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
    * @return boolean if the nesting is applicable.
    */
   public isNestApplicable(index) {
-    const object = this.getTripleByIndex(index) && this.getTripleByIndex(index).getObject();
+    const tripleByIndex = TriplesModelService.getTripleByIndex(this.triples, index);
+    const object = tripleByIndex && tripleByIndex.getObject();
     return !!(object && object.getValueType() && object.getValueType().getType() === Type.IRI);
   }
 
   public isDeleteApplicable(index) {
-    return !!this.getTripleByIndex(index).getSubject();
-  }
-
-  private getTripleByIndex(index: number): Triple {
-    if (index > -1 && index < this.triples.length) {
-      return this.triples[index];
-    }
-  }
-
-  public isInsertApplicable(index: number) {
-    return index < this.triples.length - 2;
+    return !!TriplesModelService.getTripleByIndex(this.triples, index).getSubject();
   }
 
   public onDrop(dropped, triple: Triple, selected, index) {
@@ -452,23 +376,15 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     this.openMapperDialog(undefined, triple, selected, index);
   }
 
-  public onDelete($event: any, mapping: Triple, selected: string) {
-    if (selected === this.OBJECT && mapping.isTypeProperty) {
-      this.deleteObjectTypeMapping(mapping, false);
+  public onDelete($event: any, triple: Triple, selected: string) {
+    if (selected === this.OBJECT && triple.isTypeProperty) {
+      TriplesModelService.deleteObjectTypeMapping(triple, false);
     } else if (selected === this.OBJECT) {
-      this.deleteObjectPropertyMapping(mapping, false);
+      TriplesModelService.deleteObjectPropertyMapping(triple, false);
     } else if (selected === this.PREDICATE) {
-      if (mapping.isTypeProperty) {
-        mapping.getSubject().setTypeMappings([]);
-      } else {
-        const propertyMappings = mapping.getSubject().getPropertyMappings();
-        const index = propertyMappings.indexOf(mapping.getPredicate());
-        if (index > -1) {
-          propertyMappings.splice(index, 1);
-        }
-      }
+      TriplesModelService.deletePredicateMapping(triple);
     } else if (selected === this.SUBJECT) {
-      const subject = mapping.getSubject();
+      const subject = triple.getSubject();
       if (subject instanceof SubjectMappingImpl) {
         const mappings = this.mapping.getSubjectMappings();
         const index = mappings.indexOf(subject);
@@ -479,42 +395,6 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       }
     }
     this.initWithPreview(true);
-  }
-
-  private deleteObjectTypeMapping(mapping: Triple, hardDelete: boolean) {
-    const typeMappings = mapping.getSubject().getTypeMappings();
-    const index = typeMappings.indexOf(mapping.getObject());
-    if (index > -1 && hardDelete) {
-      typeMappings.splice(index, 1);
-    } else if (index > -1 && !hardDelete) {
-      typeMappings.splice(index, 1, new SimpleIRIValueMappingImpl(undefined, undefined));
-    }
-  }
-
-  private deletePredicate(propertyMappings: Array<PropertyMappingImpl>, propertyMapping: PropertyMappingImpl) {
-    const propertyMappingIndex = propertyMappings.indexOf(propertyMapping);
-    propertyMappings.splice(propertyMappingIndex, 1);
-  }
-
-  private deleteObjectPropertyMapping(mapping: Triple, hardDelete: boolean) {
-    const propertyMappings = mapping.getSubject().getPropertyMappings();
-    propertyMappings.forEach((propertyMapping) => {
-      // check for object and delete
-      const values = propertyMapping.getValues();
-      if (values) {
-        const index = values.indexOf(mapping.getObject() as ValueMappingImpl);
-        if (index > -1 && hardDelete) {
-          values.splice(index, 1);
-          if (values.length === 0) {
-            this.deletePredicate(propertyMappings, propertyMapping);
-          }
-        } else if (index > -1 && !hardDelete) {
-          values.splice(index, 1, new ValueMappingImpl(undefined, undefined, undefined));
-        }
-      } else {
-        this.deletePredicate(propertyMappings, propertyMapping);
-      }
-    });
   }
 
   private hasTypeMappings(node) {
@@ -538,28 +418,28 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     return messageKey;
   }
 
-  public deleteTripleMapping(mapping: Triple) {
-    const messageKey = this.getOnDeleteWarningMessage(mapping);
+  public deleteTripleMapping(triple: Triple) {
+    const messageKey = this.getOnDeleteWarningMessage(triple);
     this.dialogService.confirm({
       content: this.translateService.instant(messageKey),
     }).pipe(untilComponentDestroyed(this))
         .subscribe((result) => {
           if (result) {
-            if (mapping.isTypeProperty) {
-              this.deleteObjectTypeMapping(mapping, true);
+            if (triple.isTypeProperty) {
+              TriplesModelService.deleteObjectTypeMapping(triple, true);
             } else {
-              this.deleteObjectPropertyMapping(mapping, true);
+              TriplesModelService.deleteObjectPropertyMapping(triple, true);
             }
 
-            if (mapping.isRoot) {
-              let countMappings = mapping.getSubject().getTypeMappings().length;
-              mapping.getSubject().getPropertyMappings().forEach((propertyMapping) => {
+            if (triple.isRoot) {
+              let countMappings = triple.getSubject().getTypeMappings().length;
+              triple.getSubject().getPropertyMappings().forEach((propertyMapping) => {
                 countMappings += propertyMapping.getValues().length;
               });
 
               if (countMappings === 0) {
                 const subjectMappings = this.mapping.getSubjectMappings();
-                const index = subjectMappings.indexOf(mapping.getSubject() as SubjectMappingImpl);
+                const index = subjectMappings.indexOf(triple.getSubject() as SubjectMappingImpl);
                 subjectMappings.splice(index, 1);
               }
             }
@@ -579,20 +459,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     window.removeEventListener('beforeunload', this.boundCheckDirty);
   }
 
-  private getPreviousTriple(prevIndex: number, level: number) {
-    prevIndex--;
-    if (prevIndex < 0) {
-      return undefined;
-    }
-    let previousRootLevelTriple = this.triples[prevIndex];
-    while (previousRootLevelTriple.getLevel() !== level && prevIndex > 0) {
-      prevIndex--;
-      previousRootLevelTriple = this.triples[prevIndex];
-    }
-    return previousRootLevelTriple;
-  }
-
-  public onValueSet(valueSet, triple: any, selected: string, index: number) {
+  public onValueSet(valueSet, triple: Triple, selected: string, index: number) {
     let value = valueSet.value;
     let prefixTransformation = valueSet.prefixTransformation;
     const source = valueSet.source;
@@ -605,7 +472,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         triple.setTypeProperty(true);
       }
     } else if (selected === this.PREDICATE && !triple.getSubject()) {
-      const previousTriple = this.getPreviousTriple(index, 0);
+      const previousTriple = TriplesModelService.getPreviousTriple(this.triples, index, 0);
       if (!previousTriple) {
         return;
       }
@@ -625,7 +492,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
         triple.setTypeProperty(true);
       }
     } else if (selected === this.OBJECT && !triple.getSubject() && this.triples.length > 0) {
-      const previousTriple = this.getPreviousTriple(index, 0);
+      const previousTriple = TriplesModelService.getPreviousTriple(this.triples, index, 0);
       if (!previousTriple) {
         return;
       }
@@ -672,13 +539,13 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       this.modelConstructService.setCellMapping(mapping, data, settings);
       this.modelConstructService.setMappingObjectInTriple(mapping, data, settings, triple);
       this.modelConstructService.setRootMappingInModel(triple, this.mapping);
-      if (this.isTripleComplete(triple)) {
+      if (TriplesModelService.isTripleComplete(triple)) {
         this.initWithPreview(true);
       }
     }
   }
 
-  private getType(selected: string, triple: Triple, value: string, prefix:string) {
+  private getType(selected: string, triple: Triple, value: string, prefix: string) {
     if (selected === this.OBJECT) {
       return triple.getPredicate() ? (prefix || Helper.isIRI(value) ? Type.IRI : (Type.Literal)) : TypeMapping.a;
     }
@@ -696,46 +563,28 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     return this.viewMode;
   }
 
-  addNewSibling($event: any, mapping: Triple, triplePosition: string, index: number) {
+  addNewSibling($event: any, triple: Triple, triplePosition: string, index: number) {
     if (triplePosition === this.SUBJECT) {
       const insertAt = this.triples.length - 1;
       this.tabService.selectedInput.next({index: insertAt, position: 1});
-      this.insertTriple(new Triple().setNewMappingRole(SUBJECT_SELECTOR), insertAt);
+      TriplesModelService.insertTriple(this.triples, new Triple().setNewMappingRole(SUBJECT_SELECTOR), insertAt);
     } else if (triplePosition === this.PREDICATE) {
       let newTripleIndex = index;
-      while (mapping.getSubject() === this.triples[newTripleIndex].getSubject() || mapping.getLevel() < this.triples[newTripleIndex].getLevel()) {
+      while (triple.getSubject() === this.triples[newTripleIndex].getSubject() || triple.getLevel() < this.triples[newTripleIndex].getLevel()) {
         newTripleIndex++;
       }
-      const newTriple = new Triple(mapping.getSubject(), undefined, undefined).setNewMappingRole(PREDICATE_SELECTOR);
-      newTriple.setLevel(mapping.getLevel());
-      this.insertTriple(newTriple, newTripleIndex);
+      const newTriple = new Triple(triple.getSubject(), undefined, undefined).setNewMappingRole(PREDICATE_SELECTOR);
+      newTriple.setLevel(triple.getLevel());
+      TriplesModelService.insertTriple(this.triples, newTriple, newTripleIndex);
     } else {
       let newTripleIndex = index;
-      while (mapping.getPredicate() === this.triples[newTripleIndex].getPredicate() || mapping.getLevel() < this.triples[newTripleIndex].getLevel()) {
+      while (triple.getPredicate() === this.triples[newTripleIndex].getPredicate() || triple.getLevel() < this.triples[newTripleIndex].getLevel()) {
         newTripleIndex++;
       }
-      const newTriple = new Triple(mapping.getSubject(), mapping.getPredicate(), undefined).setTypeProperty(mapping.isTypeProperty).setNewMappingRole(OBJECT_SELECTOR);
-      newTriple.setLevel(mapping.getLevel());
-      this.insertTriple(newTriple, newTripleIndex);
+      const newTriple = new Triple(triple.getSubject(), triple.getPredicate(), undefined).setTypeProperty(triple.isTypeProperty).setNewMappingRole(OBJECT_SELECTOR);
+      newTriple.setLevel(triple.getLevel());
+      TriplesModelService.insertTriple(this.triples, newTriple, newTripleIndex);
     }
-  }
-
-  private insertTriple(triple, position) {
-    if (this.canAddSubject(triple, position - 1) || this.canAddPredicate(triple, position - 1) || this.canAddObject(triple, position - 1)) {
-      this.triples.splice(position, 0, triple);
-    }
-  }
-
-  private canAddSubject(triple, position): boolean {
-    return triple.getNewMappingRole() === SUBJECT_SELECTOR && !this.triples[position].isEmpty();
-  }
-
-  private canAddPredicate(triple, position): boolean {
-    return triple.getNewMappingRole() === PREDICATE_SELECTOR && (!!this.triples[position].getPredicate() || this.triples[position].isTypeProperty);
-  }
-
-  private canAddObject(triple, position): boolean {
-    return triple.getNewMappingRole() === OBJECT_SELECTOR && !!this.triples[position].getObject();
   }
 
   private getRowEnding(triple: Triple) {
