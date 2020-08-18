@@ -56,7 +56,7 @@ export class ModelConstructService {
       } else if (settings.isDatatypeConstant && !Helper.isBlank(dataTypeConstant)) {
         this.modelManagementService.setValueTypeDatatypeValueColumnName(cellMapping, undefined);
         this.modelManagementService.setValueTypeDatatypeValueConstant(cellMapping, dataTypeConstant);
-        const transformed = this.getPrefixTransformation(dataTypeConstant, settings);
+        const transformed = this.getPrefixTransformation(dataTypeConstant, this.getAllNamespaces(settings));
         if (transformed.prefix != undefined) {
           this.modelManagementService.setValueTypeDatatypeValueConstant(cellMapping, transformed.suffix);
           this.setDataTypeTransformation(cellMapping, settings, transformed.prefix, Language.Prefix.valueOf());
@@ -122,12 +122,16 @@ export class ModelConstructService {
     this.setNamespaces(datatypeLanguage, datatypeTransformation, settings);
   }
 
+  private getAllNamespaces(settings) {
+    return {...settings.namespaces, ...settings.repoNamespaces};
+  }
+
   private setTypeSource(cellMapping: MappingBase, form, settings): void {
     this.modelManagementService.setTypeSource(cellMapping, form.source);
 
     const constant = form.constant;
     if (settings.isConstant && !Helper.isBlank(constant)) {
-      const transformed = this.getPrefixTransformation(constant, {...settings.namespaces, ...settings.repoNamespaces});
+      const transformed = this.getPrefixTransformation(constant, this.getAllNamespaces(settings));
       if (transformed.prefix !== undefined) {
         this.setTypeTransformation(transformed.prefix, Language.Prefix.valueOf(), true);
         this.modelManagementService.setConstant(cellMapping, transformed.suffix);

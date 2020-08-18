@@ -66,9 +66,9 @@
                 {{ 'ERROR.REQUIRED' | translate }}
               </mat-error>
               <mat-autocomplete #autoType="matAutocomplete" #tooltip="matTooltip"  [matTooltip]="optionTooltip">
-                <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.value"
+                <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="(constant.prefix === mapperForm.get('expression').value) ? constant.suffix : constant.value"
                             (mouseover)="getIriDescription(constant)" (mouseleave)="clearTooltip()">
-                  {{constant.label}}
+                  {{(constant.prefix === mapperForm.get('expression').value) ? constant.suffix : constant.label}}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
@@ -125,7 +125,7 @@
                             (focus)="expressionGrelPreview.open()" (blur)="expressionGrelPreview.close()"></textarea>
                   <mat-autocomplete #prefixAuto="matAutocomplete">
                     <div *ngIf="isPrefixTransformation">
-                      <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'" appCypressData="prefix-suggestion">
+                      <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
                         {{namespace.prefix}}: <{{namespace.pValue}}>
                       </mat-option>
                     </div>
@@ -191,9 +191,9 @@
                     {{ 'ERROR.REQUIRED' | translate }}
                   </mat-error>
                   <mat-autocomplete #autoDataTypeC="matAutocomplete" #tooltip="matTooltip"  [matTooltip]="optionTooltip">
-                    <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="constant.value"
+                    <mat-option *ngFor="let constant of filteredDatatypeConstants | async | async" [value]="(constant.prefix === mapperForm.get('datatypeTransformation').value) ? constant.suffix : constant.value"
                                 (mouseover)="getIriDescription(constant)" (mouseleave)="clearTooltip()">
-                      {{constant.label}}
+                      {{(constant.prefix === mapperForm.get('datatypeTransformation').value) ? constant.suffix : constant.label}}
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
@@ -249,7 +249,7 @@
                                 (focus)="datatypeGrelPreview.open()" (blur)="datatypeGrelPreview.close()"></textarea>
                       <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
                         <div *ngIf="isDataTypePrefixTransformation">
-                          <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'">
+                          <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'">
                             {{namespace.prefix}}: <{{namespace.pValue}}>
                           </mat-option>
                         </div>
@@ -364,7 +364,7 @@
                                 (focus)="languageGrelPreview.open()" (blur)="languageGrelPreview.close()"></textarea>
                       <mat-autocomplete #languagePrefixAuto="matAutocomplete">
                         <div *ngIf="isLanguagePrefixTransformation">
-                          <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix + ':'">
+                          <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'">
                             {{namespace.prefix}}: <{{namespace.pValue}}>
                           </mat-option>
                         </div>

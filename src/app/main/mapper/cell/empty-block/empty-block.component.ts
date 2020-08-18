@@ -168,6 +168,14 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
                   source: SourceEnum.RecordID,
                 }]);
               }
+              if (this.isExtendedPrefix(value)) {
+                const match = XRegExp.exec(value, this.regex);
+                if (this.isValidExtension(match)) {
+                  if (match.namespace && !match.value) {
+                    value = this.namespaces[match.namespace] + ';' + match.extended;
+                  }
+                }
+              }
               let autoCompleteObservable = this.repositoryService.autocompleteIRIs(value as string);
               if (this.cellType === this.PREDICATE) {
                 autoCompleteObservable = this.repositoryService.autocompletePredicates(value as string);
@@ -187,6 +195,8 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
     const value = this.autoInput.value;
     if (value && !value.endsWith(':')) {
       this.saveInputValue(emitTab);
+    } else {
+      // Trigger the valueChange here
     }
   }
 

@@ -77,6 +77,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   filteredColumnNames: Observable<string[]>;
   filteredNamespaces: Observable<any>;
   filteredConstants: Observable<Observable<any>>;
+  filteredDatatypeConstants: Observable<Observable<any>>;
   grelPreviewExpression: Observable<Array<any>>;
   grelPreviewLanguageTransformation: Observable<Array<any>>;
   grelPreviewDataTypeTransformation: Observable<Array<any>>;
@@ -432,20 +433,19 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
           this.mapperForm.patchValue({languageTransformation: ''});
         });
 
-    this.filteredConstants = merge(this.mapperForm.get('dataTypeConstant').valueChanges, this.mapperForm.get('constant').valueChanges)
+    this.filteredConstants = merge(this.mapperForm.get('constant').valueChanges)
         .pipe(untilComponentDestroyed(this),
             map((value) => {
-              let autoCompleteObservable = this.repositoryService.autocompleteIRIs(value);
-              if (this.isTypeProperty) {
-                autoCompleteObservable = this.repositoryService.autocompleteTypes(value);
+              // Do not autocomplete constants when type is other than IRI
+              if (this.mapperForm.get('type').value === Type.IRI.valueOf()) {
+                return this.autocompleteForPrefixIfPresent(this.mapperForm.get('expression'), value);
               }
-              if (this.isPredicate()) {
-                autoCompleteObservable = this.repositoryService.autocompletePredicates(value);
-              }
-              return autoCompleteObservable.pipe(
-                  untilComponentDestroyed(this),
-                  map((types) => this.modelConstructService.replaceIRIPrefixes(types, this.getCombinedNamespaces())),
-              );
+            }));
+
+    this.filteredDatatypeConstants = merge(this.mapperForm.get('dataTypeConstant').valueChanges)
+        .pipe(untilComponentDestroyed(this),
+            map((value) => {
+              return this.autocompleteForPrefixIfPresent(this.mapperForm.get('datatypeTransformation'), value);
             }));
 
     this.filteredColumnNames = merge(this.mapperForm.get('columnName').valueChanges, this.mapperForm.get('dataTypeColumnName').valueChanges)
@@ -475,6 +475,23 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this),
             startWith(''),
             map((value) => this.repositoryService.filterNamespace(this.getCombinedNamespaces(), value)));
+  }
+
+  private autocompleteForPrefixIfPresent(prefixField, value) {
+    if (prefixField.value) {
+      value = this.getCombinedNamespaces()[prefixField.value.replace(/:$/, '')] + ';' + value;
+    }
+    let autoCompleteObservable = this.repositoryService.autocompleteIRIs(value);
+    if (this.isTypeProperty) {
+      autoCompleteObservable = this.repositoryService.autocompleteTypes(value);
+    }
+    if (this.isPredicate()) {
+      autoCompleteObservable = this.repositoryService.autocompletePredicates(value);
+    }
+    return autoCompleteObservable.pipe(
+        untilComponentDestroyed(this),
+        map((types) => this.modelConstructService.replaceIRIPrefixes(types, this.getCombinedNamespaces())),
+    );
   }
 
   private getCombinedNamespaces() {
