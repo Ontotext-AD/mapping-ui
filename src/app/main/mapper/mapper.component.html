@@ -1,7 +1,7 @@
 <div class="row mb-3">
   <div class="col-lg-12" cdkDropListGroup appCypressData="mapper">
     <div class="top-header">
-      <app-header (onJsonUpload)="onJsonUpload($event)"></app-header>
+      <app-header (onJsonUpload)="onJsonUpload($event)" [rdfMapping]="getMapping()"></app-header>
       <app-sources [sources]="sources"></app-sources>
     </div>
 

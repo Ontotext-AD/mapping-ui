@@ -21,11 +21,12 @@
   <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="fileInput.click()" appCypressData="upload-json-action"
           matTooltip="{{'TOOLTIPS.UPLOAD_JSON' | translate}}">{{"BUTTONS.UPLOAD_JSON" | translate}}
   </button>
-  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getRDF()" appCypressData="generate-rdf-action"
-          matTooltip="{{'TOOLTIPS.CONVERT_TO_RDF' | translate}}">
-    {{"BUTTONS.RDF" | translate}}
-    <mat-spinner *ngIf="isRdfGenerationInProgress" [diameter]="20"></mat-spinner>
-  </button>
+  <span matTooltip="{{'TOOLTIPS.CONVERT_TO_RDF' | translate}}">
+    <button class="mr-12 btn btn-sm btn-primary cursor-pointer" [disabled]="!isRdfGenerationAllowed" (click)="getRDF()" appCypressData="generate-rdf-action">
+      {{"BUTTONS.RDF" | translate}}
+      <mat-spinner *ngIf="isRdfGenerationInProgress" [diameter]="20"></mat-spinner>
+    </button>
+  </span>
   <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getSPARQL()" appCypressData="generate-sparql-action"
           matTooltip="{{'TOOLTIPS.CONVERT_TO_SPARQL' | translate}}">
     {{"BUTTONS.SPARQL" | translate}}
