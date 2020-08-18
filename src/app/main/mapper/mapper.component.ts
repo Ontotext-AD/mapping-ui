@@ -4,7 +4,7 @@ import {ModelManagementService} from 'src/app/services/model-management.service'
 import {Source} from 'src/app/models/source';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
-import {COLON, DOWNLOAD_JSON_FILE, DOWNLOAD_RDF_FILE, EMPTY_MAPPING} from 'src/app/utils/constants';
+import {DOWNLOAD_JSON_FILE, DOWNLOAD_RDF_FILE, EMPTY_MAPPING} from 'src/app/utils/constants';
 import {classToClass, plainToClass} from 'class-transformer';
 import {MatChipInputEvent} from '@angular/material/chips/chip-input';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -17,7 +17,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Convert} from 'src/app/models/mapping-definition';
 import {NamespaceService} from '../../services/namespace.service';
 import {Namespaces, Namespace} from '../../models/namespaces';
-
+import {NamespaceValidator} from '../../validators/namespace.validator';
 
 @Component({
   selector: 'app-mapper',
@@ -27,11 +27,10 @@ import {Namespaces, Namespace} from '../../models/namespaces';
 export class MapperComponent extends OnDestroyMixin implements OnInit {
   sources: Array<Source>;
   mapping: MappingDefinitionImpl = plainToClass(MappingDefinitionImpl, EMPTY_MAPPING);
-  rdfMapping: BehaviorSubject<{mapping: MappingDefinitionImpl, isDirty:boolean}>;
+  rdfMapping: BehaviorSubject<{mapping: MappingDefinitionImpl, isDirty: boolean}>;
   rdf: string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   addOnBlur = true;
-  showNamespaceErrorMessage: boolean = false;
   namespaceErrorMessage: string;
 
   constructor(private modelManagementService: ModelManagementService,
@@ -39,7 +38,8 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
               private messageService: MessageService,
               private dialog: MatDialog,
               private notificationService: NotificationService,
-              private translateService: TranslateService) {
+              private translateService: TranslateService,
+              private namespaceValidator: NamespaceValidator) {
     super();
   }
 
@@ -64,7 +64,11 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     this.messageService.read(ChannelName.NewMapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
-          this.rdfMapping.next({mapping: new MappingDefinitionImpl(EMPTY_MAPPING.baseIRI, EMPTY_MAPPING.namespaces, EMPTY_MAPPING.subjectMappings), isDirty: false});
+          const payload = {
+            mapping: new MappingDefinitionImpl(EMPTY_MAPPING.baseIRI, EMPTY_MAPPING.namespaces, EMPTY_MAPPING.subjectMappings),
+            isDirty: false,
+          };
+          this.rdfMapping.next(payload);
         });
 
     this.messageService.read(ChannelName.SaveMapping)
@@ -139,40 +143,23 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     const value = event.value;
     const namespace: Namespace = NamespaceService.toNamespace(value);
 
-    if (!namespace && value.length > 0) {
-      this.showNamespaceErrorMessage = true;
-      this.namespaceErrorMessage = 'ERROR.EMPTY_NAMESPACE';
-      return;
-    } else if (!namespace && value.length === 0) {
-      this.showNamespaceErrorMessage = false;
-      return;
-    }
-
-    if (!this.isPrefixValid(namespace.prefix)) {
-      this.showNamespaceErrorMessage = true;
-      this.namespaceErrorMessage = 'ERROR.COLON_NOT_ALLOWED';
-      return;
-    }
-
-    if (!this.isNamespaceValid(namespace.value)) {
-      this.showNamespaceErrorMessage = true;
-      this.namespaceErrorMessage = 'ERROR.MALFORMED_NAMESPACE';
-      return;
-    }
-
-    NamespaceService.addNamespace(this.mapping.namespaces, namespace);
-    this.messageService.publish(ChannelName.DirtyMapping, true);
-    if (input) {
-      input.value = '';
+    if (this.validateNamespace(namespace, value)) {
+      NamespaceService.addNamespace(this.mapping.namespaces, namespace);
+      this.messageService.publish(ChannelName.DirtyMapping, true);
+      if (input) {
+        input.value = '';
+      }
     }
   }
 
-  private isPrefixValid(prefix: string): boolean {
-    return prefix.indexOf(COLON) === -1;
-  }
-
-  private isNamespaceValid(namespace: string): boolean {
-    return namespace && namespace.trim().length > 0 && namespace.indexOf(COLON) > -1;
+  validateNamespace(namespace: Namespace, value: string) {
+    const result = this.namespaceValidator.validate(namespace, value);
+    if (!result.valid) {
+      this.namespaceErrorMessage = result.error;
+    } else {
+      this.namespaceErrorMessage = '';
+    }
+    return result.valid;
   }
 
   removeNamespace(key: string): void {

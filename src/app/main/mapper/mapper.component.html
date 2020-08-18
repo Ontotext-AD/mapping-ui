@@ -29,7 +29,7 @@
                    (matChipInputTokenEnd)="addNamespace($event)">
           </mat-chip-list>
         </mat-form-field>
-        <mat-error *ngIf="showNamespaceErrorMessage" appCypressData="namespace-error">
+        <mat-error *ngIf="namespaceErrorMessage" appCypressData="namespace-error">
           {{ namespaceErrorMessage | translate}}
         </mat-error>
       </div>
