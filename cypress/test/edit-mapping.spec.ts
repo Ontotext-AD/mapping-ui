@@ -68,7 +68,7 @@ describe('Edit mapping', () => {
       EditDialogSteps.getWarningMessage().should('not.be.visible');
     });
 
-    it('Should set populate the prefix properly if it is autocompleted in the edit dialog', () => {
+    it('Should populate the prefix properly if it is autocompleted in the edit dialog', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/prefix-autocomplete-mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:edit-mapping/namespaces-with-wine.json');
       cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
@@ -228,54 +228,6 @@ describe('Edit mapping', () => {
         .and('contain', 'Tabular data provider not found: ontorefine:123 (HTTP status 404)');
     });
 
-  });
-
-  context('Update JSON mapping', () => {
-    it('Should not update JSON mapping when the mapping is not manipulated', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
-      cy.route({
-        method: 'POST',
-        url: '/rest/rdf-mapper/preview/ontorefine:123',
-        status: 200,
-        response: 'fixture:edit-mapping/simple-mapping-model.json',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      // When I load application
-      cy.visit('?dataProviderID=ontorefine:123');
-      // Then I expect to see a mapping with 2 triples (+1 empty row)
-      MappingSteps.getTriples().should('have.length', 3);
-
-      // When I click get JSON button
-      // THEN the mapping should not be updated.
-      cy.fixture('edit-mapping/update-mapping1.json').then(updated => {
-        HeaderSteps.getJSON().should("deep.equal", updated);
-      });
-    });
-
-    it('Should show JSON mapping when type is datatype literal ', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
-      cy.visit('?dataProviderID=ontorefine:123');
-
-      MappingSteps.completeTriple(0, 'subject', 'predicate', 'object');
-      MappingSteps.editTripleObjectWithData(0);
-
-      EditDialogSteps.selectTypeDataTypeLiteral();
-      EditDialogSteps.selectDataTypeConstant();
-      EditDialogSteps.completeDataTypeConstant('constant');
-      EditDialogSteps.saveConfiguration();
-
-      // When I click get JSON button
-      // THEN the mapping should be updated.
-      cy.fixture('edit-mapping/update-mapping2.json').then(updated => {
-        HeaderSteps.getJSON().should("deep.equal", updated);
-      });
-    });
   });
 
   context('Preview GREL', () => {
@@ -658,7 +610,7 @@ describe('Edit mapping', () => {
     });
   });
 
-  context('type mapping', () => {
+  context('Type mapping', () => {
     it('Should treat rdf:type as type mapping predicate when inline typing', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
