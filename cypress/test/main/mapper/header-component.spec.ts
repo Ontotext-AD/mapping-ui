@@ -78,21 +78,32 @@ describe('HeaderComponent', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json');
       cy.visit('?dataProviderID=ontorefine:123');
       cy.wait('@loadColumns');
+      cy.route({
+        method: 'POST',
+        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
+        status: 200,
+        delay: 1000,
+        response: 'fixture:save-mapping-success.json'
+      });
       // I see header content
       cy.cypressData(MapperComponentSelectors.MAPPER_SELECTOR).should('be.visible');
       // I see mapping holders
       cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-0').should('be.visible').and('contain', 'director_name');
       cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-0').should('be.visible').and('contain', 'test');
       cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-0').should('be.visible').and('contain', ' movie_imdb_link');
-      // WHEN:
-      // I upload valid JSON file
+      // When I update and save the loaded mapping
+      MappingSteps.completeTriple(2, 's', 'p', 'o');
+      HeaderSteps.saveMapping();
+      MappingSteps.getTriples().should('have.length', 4);
+      // Then I expect the save button to become disabled
+      HeaderSteps.getSaveMappingButton().should('be.disabled');
+      // When I upload valid JSON file
       cy.get('[appCypressData=json-file-input]').attachFile('upload/json.txt');
       // A conformation message pops up
       MappingSteps.getConfirmationMessage().should('contain', 'All mappings will be overwritten. Do you want to proceed?');
-      // I confirm
+      // When I confirm
       MappingSteps.confirm();
-      // THEN:
-      // A new mapping is loaded
+      // Then A new mapping is loaded
       cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-0').should('be.visible').and('contain', 'Pesho');
       cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-0').should('be.visible').and('contain', 'loves');
       cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-0').should('be.visible').and('contain', 'Maria');
@@ -100,7 +111,7 @@ describe('HeaderComponent', () => {
       cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-4').should('be.visible').and('have.length', 1);
       cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-4').should('be.visible').and('have.length', 1);
       cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-4').should('be.visible').and('contain', 'Sirma');
-
+      // And I expect the save button to become enabled so that I can save the new mapping
       HeaderSteps.getSaveMappingButton().should('be.enabled');
     });
 

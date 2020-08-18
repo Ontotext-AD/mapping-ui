@@ -1,0 +1,401 @@
+{
+  "columnModel": {
+    "columns": [
+      {
+        "cellIndex": 0,
+        "originalName": "color",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "color"
+      },
+      {
+        "cellIndex": 1,
+        "originalName": "director_name",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "director_name"
+      },
+      {
+        "cellIndex": 2,
+        "originalName": "num_critic_for_reviews",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "num_critic_for_reviews"
+      },
+      {
+        "cellIndex": 3,
+        "originalName": "duration",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "duration"
+      },
+      {
+        "cellIndex": 4,
+        "originalName": "director_facebook_likes",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "director_facebook_likes"
+      },
+      {
+        "cellIndex": 5,
+        "originalName": "actor_3_facebook_likes",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "actor_3_facebook_likes"
+      },
+      {
+        "cellIndex": 6,
+        "originalName": "actor_2_name",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "actor_2_name"
+      },
+      {
+        "cellIndex": 7,
+        "originalName": "actor_1_facebook_likes",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "actor_1_facebook_likes"
+      },
+      {
+        "cellIndex": 8,
+        "originalName": "gross",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "gross"
+      },
+      {
+        "cellIndex": 9,
+        "originalName": "genres",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "genres"
+      },
+      {
+        "cellIndex": 10,
+        "originalName": "actor_1_name",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "actor_1_name"
+      },
+      {
+        "cellIndex": 11,
+        "originalName": "movie_title",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "movie_title"
+      },
+      {
+        "cellIndex": 12,
+        "originalName": "num_voted_users",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "num_voted_users"
+      },
+      {
+        "cellIndex": 13,
+        "originalName": "cast_total_facebook_likes",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "cast_total_facebook_likes"
+      },
+      {
+        "cellIndex": 14,
+        "originalName": "actor_3_name",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "actor_3_name"
+      },
+      {
+        "cellIndex": 15,
+        "originalName": "facenumber_in_poster",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "facenumber_in_poster"
+      },
+      {
+        "cellIndex": 16,
+        "originalName": "plot_keywords",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "plot_keywords"
+      },
+      {
+        "cellIndex": 17,
+        "originalName": "movie_imdb_link",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "movie_imdb_link"
+      },
+      {
+        "cellIndex": 18,
+        "originalName": "num_user_for_reviews",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "num_user_for_reviews"
+      },
+      {
+        "cellIndex": 19,
+        "originalName": "language",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "language"
+      },
+      {
+        "cellIndex": 20,
+        "originalName": "country",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "country"
+      },
+      {
+        "cellIndex": 21,
+        "originalName": "content_rating",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "content_rating"
+      },
+      {
+        "cellIndex": 22,
+        "originalName": "budget",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "budget"
+      },
+      {
+        "cellIndex": 23,
+        "originalName": "title_year",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "title_year"
+      },
+      {
+        "cellIndex": 24,
+        "originalName": "actor_2_facebook_likes",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "actor_2_facebook_likes"
+      },
+      {
+        "cellIndex": 25,
+        "originalName": "imdb_score",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "imdb_score"
+      },
+      {
+        "cellIndex": 26,
+        "originalName": "aspect_ratio",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "aspect_ratio"
+      },
+      {
+        "cellIndex": 27,
+        "originalName": "movie_facebook_likes",
+        "constraints": "{}",
+        "type": "",
+        "format": "default",
+        "title": "",
+        "description": "",
+        "name": "movie_facebook_likes"
+      }
+    ],
+    "columnGroups": [],
+    "keyCellIndex": 0,
+    "keyColumnName": "color"
+  },
+  "recordModel": {
+    "hasRecords": true
+  },
+  "overlayModels": {
+    "mappingDefinition": {
+      "mappingDefinition": {
+        "baseIRI": "http://example/base/",
+        "namespaces": {
+          "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        },
+        "subjectMappings": [
+          {
+            "propertyMappings": [
+              {
+                "property": {
+                  "valueSource": {
+                    "source": "constant",
+                    "constant": "test"
+                  },
+                  "preview": [
+                    "<test>"
+                  ]
+                },
+                "values": [
+                  {
+                    "valueSource": {
+                      "columnName": "movie_imdb_link",
+                      "source": "column"
+                    },
+                    "valueType": {
+                      "propertyMappings": [],
+                      "type": "iri",
+                      "typeMappings": [
+                        {
+                          "valueSource": {
+                            "source": "constant",
+                            "constant": "movie"
+                          },
+                          "preview": [
+                            "<movie>"
+                          ]
+                        }
+                      ]
+                    },
+                    "preview": [
+                      "<http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0499549%2F%3Fref_%3Dfn_tt_tt_1>"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "subject": {
+              "valueSource": {
+                "columnName": "director_name",
+                "source": "column"
+              },
+              "preview": [
+                "<James%20Cameron>"
+              ]
+            },
+            "typeMappings": []
+          }
+        ]
+      }
+    },
+    "rdfSchema": {
+      "prefixes": [
+        {
+          "name": "rdf",
+          "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        },
+        {
+          "name": "owl",
+          "uri": "http://www.w3.org/2002/07/owl#"
+        },
+        {
+          "name": "rdfs",
+          "uri": "http://www.w3.org/2000/01/rdf-schema#"
+        },
+        {
+          "name": "foaf",
+          "uri": "http://xmlns.com/foaf/0.1/"
+        }
+      ],
+      "baseUri": "http://localhost:3333/",
+      "rootNodes": []
+    }
+  },
+  "scripting": {
+    "grel": {
+      "name": "General Refine Expression Language (GREL)",
+      "defaultExpression": "value"
+    },
+    "clojure": {
+      "name": "Clojure",
+      "defaultExpression": "value"
+    }
+  },
+  "httpHeaders": {
+    "authorization": {
+      "header": "Authorization",
+      "defaultValue": ""
+    },
+    "user-agent": {
+      "header": "User-Agent",
+      "defaultValue": "OpenRefine 2.6 [1]"
+    },
+    "accept": {
+      "header": "Accept",
+      "defaultValue": "*/*"
+    }
+  }
+}
