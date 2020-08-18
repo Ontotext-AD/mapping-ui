@@ -5,18 +5,19 @@
       <form>
         <mat-form-field fxFill>
           <mat-label>{{getCellType()}}</mat-label>
-          <input matInput #mapping tabIndex="{{tabIndex}}" autocomplete="off"
+          <input matInput #mapping #trigger="matAutocompleteTrigger" tabIndex="{{tabIndex}}" autocomplete="off"
                  appCypressData="cell-value"
                  tabPosition="{{tabPosition}}"
                  [formControl]="autoInput"
                  [matAutocomplete]="autocInline"
                  (keydown.tab)="saveInputValue(false)"
-                 (keydown.enter)="selectPrefixOrValue(true)"
+                 (keydown.enter)="selectPrefixOrValue($event, true, trigger)"
                  (keydown.control.Enter)="onEdit()"
                  (blur)="saveInputValueOnBlur($event)">
-          <mat-autocomplete #autocInline="matAutocomplete" (optionSelected)="selectPrefixOrValue(true)" #tooltip="matTooltip"  [matTooltip]="optionTooltip" appCypressData="autocomplete-tooltip">
+          <mat-autocomplete #autocInline="matAutocomplete" #tooltip="matTooltip"  [matTooltip]="optionTooltip" appCypressData="autocomplete-tooltip">
             <mat-option appCypressData="cell-option" *ngFor="let option of suggestions | async | async" [value]="(autoInput.value.endsWith('@') || autoInput.value.endsWith('$')) ? autoInput.value.slice(0, -1) + option.value : option.value"
-                        (mouseover)="getIriDescription(option)" (mouseleave)="clearTooltip()">
+                        (mouseover)="getIriDescription(option)" (mouseleave)="clearTooltip()"
+                        (click)="selectPrefixOrValue($event, true, trigger)">
               <span >{{option.label}}</span>
             </mat-option>
           </mat-autocomplete>
