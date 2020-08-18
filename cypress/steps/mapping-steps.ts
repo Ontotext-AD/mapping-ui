@@ -11,7 +11,7 @@ class MappingSteps {
    * @param fieldAccessorCb a function which must return a field
    */
   static type(value: string, fieldAccessorCb: any) {
-    fieldAccessorCb().type(value);
+    fieldAccessorCb().type(value, { wait: 100 });
   }
 
   static completeTriple(index: number, subject?: string, predicate?: string, object?: string) {
@@ -92,7 +92,7 @@ class MappingSteps {
 
   static getTripleSubjectValue(index: any) {
     // wait for a while to prevent element to be found in detached state
-    return MappingSteps.getTripleSubject(index).find('[appCypressData="cell-value"]').wait(150);
+    return MappingSteps.getTripleSubject(index).find('[appCypressData="cell-value"]').wait(300);
   }
 
   static getTripleSubjectValuePreview(index: any) {
@@ -158,7 +158,7 @@ class MappingSteps {
 
   static getTriplePredicateValue(index: any) {
     // wait for a while to prevent element to be found in detached state
-    return MappingSteps.getTriplePredicate(index).find('[appCypressData="cell-value"]').wait(150);
+    return MappingSteps.getTriplePredicate(index).find('[appCypressData="cell-value"]').wait(300);
   }
 
   static getTriplePredicateValuePreview(index: any) {
@@ -192,7 +192,7 @@ class MappingSteps {
 
   static getTripleObjectValue(index: any) {
     // wait for a while to prevent element to be found in detached state
-    return MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').wait(150);
+    return MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').wait(300);
   }
 
   static getTripleObjectValuePreview(index: any) {
