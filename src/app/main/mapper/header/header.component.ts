@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {environment} from 'src/environments/environment';
@@ -9,7 +9,7 @@ import {MessageService} from 'src/app/services/message.service';
 import {ChannelName} from 'src/app/services/channel-name.enum';
 import {ViewMode} from 'src/app/services/view-mode.enum';
 import {plainToClass} from 'class-transformer';
-import {throwError} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {NotificationService} from 'src/app/services/notification.service';
 import {DIRTY_MAPPING, PRISTINE_MAPPING} from '../../../utils/constants';
 
@@ -19,13 +19,15 @@ import {DIRTY_MAPPING, PRISTINE_MAPPING} from '../../../utils/constants';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent extends OnDestroyMixin implements OnInit {
-  @Output() onJsonUpload:EventEmitter<MappingDefinitionImpl> = new EventEmitter<MappingDefinitionImpl>();
+  @Output() onJsonUpload: EventEmitter<MappingDefinitionImpl> = new EventEmitter<MappingDefinitionImpl>();
+  @Input() rdfMapping: Observable<{mapping: MappingDefinitionImpl, isDirty: boolean}>;
   @ViewChild('fileInput') fileInput;
 
   isMappingDirty: boolean;
   isSavingInProgress: boolean;
   isRdfGenerationInProgress: boolean;
   isSparqlGenerationInProgress: boolean;
+  isRdfGenerationAllowed = true;
   ViewMode = ViewMode;
   selectedFile: File;
 
@@ -38,6 +40,13 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
   }
 
   ngOnInit(): void {
+    this.rdfMapping.pipe(untilComponentDestroyed(this))
+        .subscribe((rdfMapping) => this.toggleGenerateRdfButton(rdfMapping.mapping));
+
+    this.messageService.read(ChannelName.UpdateMapping)
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((event) => this.toggleGenerateRdfButton(event.getMessage()));
+
     this.messageService.read(ChannelName.DirtyMapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe((event) => {
@@ -144,6 +153,10 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
     fileReader.onerror = (error) => {
       throwError(error);
     };
+  }
+
+  private toggleGenerateRdfButton(mapping) {
+    this.isRdfGenerationAllowed = mapping.getSubjectMappings().length > 0;
   }
 
   private showErrorWarning(message?: any) {

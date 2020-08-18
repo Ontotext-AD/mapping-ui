@@ -1,4 +1,5 @@
 export enum ChannelName {
+  UpdateMapping = 'update_mapping',
   SaveMapping = 'save_mapping',
   MappingSaved = 'mapping_saved',
   RDFGenerated = 'rdf_generated',
