@@ -35,6 +35,7 @@ import {TabService} from 'src/app/services/tab.service';
 import * as XRegExp from 'xregexp';
 import {NotificationService} from 'src/app/services/notification.service';
 import {MatTooltip} from '@angular/material/tooltip';
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-empty-block',
@@ -191,12 +192,13 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
             }));
   }
 
-  public selectPrefixOrValue(emitTab: boolean) {
+  public selectPrefixOrValue($event: Event, emitTab: boolean, trigger: MatAutocompleteTrigger) {
     const value = this.autoInput.value;
     if (value && !value.endsWith(':')) {
       this.saveInputValue(emitTab);
     } else {
-      // Trigger the valueChange here
+      $event.stopPropagation();
+      trigger.openPanel();
     }
   }
 
