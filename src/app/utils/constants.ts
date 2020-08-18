@@ -1,7 +1,13 @@
 export const SUBJECT_SELECTOR = 'subject';
 export const PREDICATE_SELECTOR = 'predicate';
 export const OBJECT_SELECTOR = 'object';
-export const EMPTY_MAPPING = {'baseIRI': 'http://example/base/', 'namespaces': {'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'}, 'subjectMappings': []};
+export const EMPTY_MAPPING = {'baseIRI': 'http://example/base/', 'namespaces': {
+  'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+  'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+  'geo': 'http://www.opengis.net/ont/geosparql#',
+  'foaf': 'http://xmlns.com/foaf/0.1/',
+  'skos': 'http://www.w3.org/2004/02/skos/core#',
+  'xsd': 'http://www.w3.org/2001/XMLSchema#'}, 'subjectMappings': []};
 export const DOWNLOAD_RDF_FILE = 'result-triples.ttl';
 export const DOWNLOAD_JSON_FILE = 'mapping.json';
 export const GREL_CONSTANT = 'grel';
@@ -34,7 +40,7 @@ SELECT distinct ?iri ?g WHERE {
         }
         ?classSubject a ?classClass .
         ?x a ?classObject .
-        FILTER (?iri in (?classSubject, ?classObject))
+        FILTER (?iri in (?classSubject, ?classObject) || (regex(str(?iri), "^(http://xmlns.com/foaf/0.1/|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#|http://www.opengis.net/ont/geosparql#|http://www.w3.org/2004/02/skos/core#)")))
     }
 }`;
 export const SPARQL_PREDICATES=`
@@ -51,7 +57,7 @@ SELECT distinct ?iri ?g WHERE {
         }
         ?propertyInstance a ?propertyClass .
         ?s ?property ?o .
-        FILTER (?iri in (?propertyInstance, ?property))
+        FILTER (?iri in (?propertyInstance, ?property) || (regex(str(?iri), "^(http://xmlns.com/foaf/0.1/|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#|http://www.opengis.net/ont/geosparql#|http://www.w3.org/2004/02/skos/core#)")))
     }
 }`;
 export const SPARQL_AUTOCOMPLETE=`SELECT distinct ?iri ?g WHERE {
