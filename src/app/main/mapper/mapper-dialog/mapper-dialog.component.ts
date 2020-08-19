@@ -693,6 +693,14 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         });
   }
 
+  getConstantValue(field, constant) {
+    return constant.prefix === this.mapperForm.get(field).value ? constant.suffix : constant.value;
+  }
+
+  getConstantLabel(field, constant) {
+    return constant.prefix === this.mapperForm.get(field).value ? constant.suffix : constant.label;
+  }
+
   public clearTooltip() {
     this.optionTooltip = '';
   }
