@@ -11,7 +11,7 @@ class MappingSteps {
    * @param fieldAccessorCb a function which must return a field
    */
   static type(value: string, fieldAccessorCb: any) {
-    fieldAccessorCb().type(value, { wait: 100 });
+    fieldAccessorCb().type(value, {force: true}).blur();
   }
 
   static completeTriple(index: number, subject?: string, predicate?: string, object?: string) {
@@ -28,17 +28,14 @@ class MappingSteps {
 
   static completeSubject(index: number, value: string) {
     this.type(value, () => MappingSteps.getTripleSubjectValue(index));
-    MappingSteps.getTripleSubjectValue(index).blur();
   }
 
   static completePredicate(index: number, value: string) {
     this.type(value, () => MappingSteps.getTriplePredicateValue(index));
-    MappingSteps.getTriplePredicateValue(index).blur();
   }
 
   static completeObject(index: number, value: string) {
     this.type(value, () => MappingSteps.getTripleObjectValue(index));
-    MappingSteps.getTripleObjectValue(index).blur();
   }
 
   static verifyTriple(index: number, subject: string, predicate: string, object: string) {
