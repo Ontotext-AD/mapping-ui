@@ -68,7 +68,7 @@ describe('Edit mapping', () => {
       EditDialogSteps.getWarningMessage().should('not.be.visible');
     });
 
-    it('Should set populate the prefix properly if it is autocompleted in the edit dialog', () => {
+    it('Should populate the prefix properly if it is autocompleted in the edit dialog', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/prefix-autocomplete-mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:edit-mapping/namespaces-with-wine.json');
       cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
@@ -228,54 +228,6 @@ describe('Edit mapping', () => {
         .and('contain', 'Tabular data provider not found: ontorefine:123 (HTTP status 404)');
     });
 
-  });
-
-  context('Update JSON mapping', () => {
-    it('Should not update JSON mapping when the mapping is not manipulated', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
-      cy.route({
-        method: 'POST',
-        url: '/rest/rdf-mapper/preview/ontorefine:123',
-        status: 200,
-        response: 'fixture:edit-mapping/simple-mapping-model.json',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      // When I load application
-      cy.visit('?dataProviderID=ontorefine:123');
-      // Then I expect to see a mapping with 2 triples (+1 empty row)
-      MappingSteps.getTriples().should('have.length', 3);
-
-      // When I click get JSON button
-      // THEN the mapping should not be updated.
-      cy.fixture('edit-mapping/update-mapping1.json').then(updated => {
-        HeaderSteps.getJSON().should("deep.equal", updated);
-      });
-    });
-
-    it('Should show JSON mapping when type is datatype literal ', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
-      cy.visit('?dataProviderID=ontorefine:123');
-
-      MappingSteps.completeTriple(0, 'subject', 'predicate', 'object');
-      MappingSteps.editTripleObjectWithData(0);
-
-      EditDialogSteps.selectTypeDataTypeLiteral();
-      EditDialogSteps.selectDataTypeConstant();
-      EditDialogSteps.completeDataTypeConstant('constant');
-      EditDialogSteps.saveConfiguration();
-
-      // When I click get JSON button
-      // THEN the mapping should be updated.
-      cy.fixture('edit-mapping/update-mapping2.json').then(updated => {
-        HeaderSteps.getJSON().should("deep.equal", updated);
-      });
-    });
   });
 
   context('Preview GREL', () => {
@@ -658,134 +610,7 @@ describe('Edit mapping', () => {
     });
   });
 
-  context('Edit namespaces', () => {
-    it('Should make the mapping dirty when namespaces are added', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/base-iri-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.route({
-        method: 'POST',
-        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
-        status: 200,
-        delay: 1000,
-        response: 'fixture:edit-mapping/save-mapping-success.json'
-      }).as('saveMapping');
-
-      // Given I have loaded a mapping
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
-      MappingSteps.getTriples().should('have.length', 2);
-      HeaderSteps.getSaveMappingButton().should('be.disabled');
-      // I expect to see some default namespaces
-      MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
-      MappingSteps.getNamespace('rdf').should('be.visible');
-      // When I add a new namespace
-      MappingSteps.addNamespace('ga=http://google/namespace');
-      MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 2);
-      MappingSteps.getNamespace('ga').should('be.visible');
-      // Then I expect the mapping to become dirty
-      HeaderSteps.getDirtyMappingBanner().should('contain', 'Mapping has unsaved changes');
-      HeaderSteps.getSaveMappingButton().should('be.enabled');
-      // When I save the mapping
-      HeaderSteps.saveMapping();
-      // Then I expect the updated namespaces to be sent for save
-      cy.fixture('edit-mapping/save-mapping-with-new-namespace-request-body').then((saveRequest: string) => {
-        cy.wait('@saveMapping');
-        cy.get('@saveMapping').should((xhr: any) => {
-          expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
-          expect(xhr.method).to.equal('POST');
-          expect(xhr.request.body).to.equal(saveRequest);
-        });
-      });
-      HeaderSteps.getSaveMappingButton().should('be.disabled');
-    });
-
-    it('Should make the mapping dirty when namespaces are removed', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/custom-namespace-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.route({
-        method: 'POST',
-        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
-        status: 200,
-        delay: 1000,
-        response: 'fixture:edit-mapping/save-mapping-success.json'
-      }).as('saveMapping');
-
-      // Given I have loaded a mapping
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
-      MappingSteps.getTriples().should('have.length', 2);
-      HeaderSteps.getSaveMappingButton().should('be.disabled');
-      // I expect to see some default namespaces
-      MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 2);
-      MappingSteps.getNamespace('rdf').should('be.visible');
-      MappingSteps.getNamespace('ga').should('be.visible');
-      // When I remove a some namespace
-      MappingSteps.removeNamespace('rdf');
-      MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
-      MappingSteps.getNamespace('ga').should('be.visible');
-      // Then I expect the mapping to become dirty
-      HeaderSteps.getDirtyMappingBanner().should('contain', 'Mapping has unsaved changes');
-      HeaderSteps.getSaveMappingButton().should('be.enabled');
-      // When I save the mapping
-      HeaderSteps.saveMapping();
-      // Then I expect the updated namespaces to be sent for save
-      cy.fixture('edit-mapping/save-mapping-with-removed-namespace-request-body').then((saveRequest: string) => {
-        cy.wait('@saveMapping');
-        cy.get('@saveMapping').should((xhr: any) => {
-          expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
-          expect(xhr.method).to.equal('POST');
-          expect(xhr.request.body).to.equal(saveRequest);
-        });
-      });
-      HeaderSteps.getSaveMappingButton().should('be.disabled');
-    });
-
-    it('Should edit namespace', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/custom-namespace-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.route({
-        method: 'POST',
-        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
-        status: 200,
-        delay: 1000,
-        response: 'fixture:edit-mapping/save-mapping-success.json'
-      }).as('saveMapping');
-
-      // Given I have loaded a mapping
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
-      MappingSteps.getTriples().should('have.length', 2);
-      // When I click over a namespace
-      MappingSteps.getNamespace('ga').click();
-      // Then I expect the namespace value to be visible in the field
-      MappingSteps.getNamespaceField().should('have.value', 'ga=http://google/namespace');
-      // When I change the namespace value
-      MappingSteps.editNamespace('ga', 'ga=http://google/namespace/123');
-      // Then I expect the namespace to be updated
-      MappingSteps.getNamespace('ga').click();
-      MappingSteps.getNamespaceField().should('have.value', 'ga=http://google/namespace/123');
-      // And the mapping to become dirty
-      HeaderSteps.getDirtyMappingBanner().should('contain', 'Mapping has unsaved changes');
-      HeaderSteps.getSaveMappingButton().should('be.enabled');
-      // When I save the mapping
-      HeaderSteps.saveMapping();
-      // Then I expect the changed namespace to be sent for saving
-      cy.fixture('edit-mapping/save-mapping-with-updated-namespace-request-body').then((saveRequest: string) => {
-        cy.wait('@saveMapping');
-        cy.get('@saveMapping').should((xhr: any) => {
-          expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
-          expect(xhr.method).to.equal('POST');
-          expect(xhr.request.body).to.equal(saveRequest);
-        });
-      });
-      HeaderSteps.getSaveMappingButton().should('be.disabled');
-    });
-  });
-
-  context('type mapping', () => {
+  context('Type mapping', () => {
     it('Should treat rdf:type as type mapping predicate when inline typing', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');

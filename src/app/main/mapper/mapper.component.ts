@@ -17,7 +17,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Convert} from 'src/app/models/mapping-definition';
 import {NamespaceService} from '../../services/namespace.service';
 import {Namespaces, Namespace} from '../../models/namespaces';
-
+import {NamespaceValidator} from '../../validators/namespace.validator';
 
 @Component({
   selector: 'app-mapper',
@@ -27,17 +27,19 @@ import {Namespaces, Namespace} from '../../models/namespaces';
 export class MapperComponent extends OnDestroyMixin implements OnInit {
   sources: Array<Source>;
   mapping: MappingDefinitionImpl = plainToClass(MappingDefinitionImpl, EMPTY_MAPPING);
-  rdfMapping: BehaviorSubject<{mapping: MappingDefinitionImpl, isDirty:boolean}>;
+  rdfMapping: BehaviorSubject<{mapping: MappingDefinitionImpl, isDirty: boolean}>;
   rdf: string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   addOnBlur = true;
+  namespaceErrorMessage: string;
 
   constructor(private modelManagementService: ModelManagementService,
               private mapperService: MapperService,
               private messageService: MessageService,
               private dialog: MatDialog,
               private notificationService: NotificationService,
-              private translateService: TranslateService) {
+              private translateService: TranslateService,
+              private namespaceValidator: NamespaceValidator) {
     super();
   }
 
@@ -62,7 +64,11 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     this.messageService.read(ChannelName.NewMapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
-          this.rdfMapping.next({mapping: new MappingDefinitionImpl(EMPTY_MAPPING.baseIRI, EMPTY_MAPPING.namespaces, EMPTY_MAPPING.subjectMappings), isDirty: false});
+          const payload = {
+            mapping: new MappingDefinitionImpl(EMPTY_MAPPING.baseIRI, EMPTY_MAPPING.namespaces, EMPTY_MAPPING.subjectMappings),
+            isDirty: false,
+          };
+          this.rdfMapping.next(payload);
         });
 
     this.messageService.read(ChannelName.SaveMapping)
@@ -136,11 +142,24 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     const input = event.input;
     const value = event.value;
     const namespace: Namespace = NamespaceService.toNamespace(value);
-    NamespaceService.addNamespace(this.mapping.namespaces, namespace);
-    this.messageService.publish(ChannelName.DirtyMapping, true);
-    if (input) {
-      input.value = '';
+
+    if (this.validateNamespace(namespace, value)) {
+      NamespaceService.addNamespace(this.mapping.namespaces, namespace);
+      this.messageService.publish(ChannelName.DirtyMapping, true);
+      if (input) {
+        input.value = '';
+      }
     }
+  }
+
+  validateNamespace(namespace: Namespace, value: string) {
+    const result = this.namespaceValidator.validate(namespace, value);
+    if (!result.valid) {
+      this.namespaceErrorMessage = result.error;
+    } else {
+      this.namespaceErrorMessage = '';
+    }
+    return result.valid;
   }
 
   removeNamespace(key: string): void {

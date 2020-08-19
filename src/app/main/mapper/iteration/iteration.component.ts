@@ -443,6 +443,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
                 subjectMappings.splice(index, 1);
               }
             }
+            this.messageService.publish(ChannelName.UpdateMapping, this.mapping);
             this.initWithPreview(true);
           }
         });
@@ -540,6 +541,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       this.modelConstructService.setMappingObjectInTriple(mapping, data, settings, triple);
       this.modelConstructService.setRootMappingInModel(triple, this.mapping);
       if (TriplesModelService.isTripleComplete(triple)) {
+        this.messageService.publish(ChannelName.UpdateMapping, this.mapping);
         this.initWithPreview(true);
       }
     }
