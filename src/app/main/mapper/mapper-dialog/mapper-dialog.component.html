@@ -66,9 +66,9 @@
                 {{ 'ERROR.REQUIRED' | translate }}
               </mat-error>
               <mat-autocomplete #autoType="matAutocomplete" #tooltip="matTooltip"  [matTooltip]="optionTooltip">
-                <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="(constant.prefix === mapperForm.get('expression').value) ? constant.suffix : constant.value"
+                <mat-option *ngFor="let constant of filteredConstants | async | async" [value]="getConstantValue('expression', constant)"
                             (mouseover)="getIriDescription(constant)" (mouseleave)="clearTooltip()">
-                  {{(constant.prefix === mapperForm.get('expression').value) ? constant.suffix : constant.label}}
+                  {{getConstantLabel('expression', constant)}}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
@@ -191,9 +191,9 @@
                     {{ 'ERROR.REQUIRED' | translate }}
                   </mat-error>
                   <mat-autocomplete #autoDataTypeC="matAutocomplete" #tooltip="matTooltip"  [matTooltip]="optionTooltip">
-                    <mat-option *ngFor="let constant of filteredDatatypeConstants | async | async" [value]="(constant.prefix === mapperForm.get('datatypeTransformation').value) ? constant.suffix : constant.value"
+                    <mat-option *ngFor="let constant of filteredDatatypeConstants | async | async" [value]="getConstantValue('datatypeTransformation', constant)"
                                 (mouseover)="getIriDescription(constant)" (mouseleave)="clearTooltip()">
-                      {{(constant.prefix === mapperForm.get('datatypeTransformation').value) ? constant.suffix : constant.label}}
+                      {{getConstantLabel('datatypeTransformation', constant)}}
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
