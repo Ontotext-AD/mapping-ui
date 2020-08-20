@@ -15,7 +15,7 @@
                  (keydown.control.Enter)="onEdit()"
                  (blur)="saveInputValueOnBlur($event)">
           <mat-autocomplete #autocInline="matAutocomplete" #tooltip="matTooltip"  [matTooltip]="optionTooltip" appCypressData="autocomplete-tooltip">
-            <mat-option appCypressData="cell-option" *ngFor="let option of suggestions | async | async" [value]="(autoInput.value.endsWith('@') || autoInput.value.endsWith('$')) ? autoInput.value.slice(0, -1) + option.value : option.value"
+            <mat-option appCypressData="cell-option" *ngFor="let option of suggestions | async | async" [value]="option.value"
                         (mouseover)="getIriDescription(option)" (mouseleave)="clearTooltip()"
                         (click)="selectPrefixOrValue($event, true, trigger)">
               <span >{{option.label}}</span>

@@ -36,6 +36,7 @@ import * as XRegExp from 'xregexp';
 import {NotificationService} from 'src/app/services/notification.service';
 import {MatTooltip} from '@angular/material/tooltip';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {Namespace, Namespaces} from '../../../../models/namespaces';
 
 @Component({
   selector: 'app-empty-block',
@@ -55,7 +56,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
   @Input() tabPosition: number;
   @Input() sources: Array<Source>;
   @Input() isTypeObject: boolean = false;
-  @Input() namespaces: { [key: string]: string };
+  @Input() namespaces: Namespaces;
 
   @ViewChild('mapping') mappingInput: ElementRef;
   @ViewChild('tooltip') tooltip: MatTooltip;
@@ -63,6 +64,8 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
   suggestions: Observable<Observable<any>>;
   autoInput = new FormControl();
   optionTooltip: string;
+
+  manualInput: string;
 
   SUBJECT = SUBJECT_SELECTOR;
   PREDICATE = PREDICATE_SELECTOR;
@@ -147,28 +150,42 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
     }
   }
 
+  private filterColumnsUsingValue(value: string) {
+    return this.sources.filter(
+        (source) => {
+          const specialChar = value.toLowerCase().substr(value.indexOf(SOURCE_SIGN.Column) + 1);
+          return source.title.toLowerCase().includes(specialChar);
+        },
+    ).map((source) => {
+      return {label: source.title, value: SOURCE_SIGN.Column + source.title, source: SourceEnum.Column};
+    });
+  }
+
+  private suggestRecordId() {
+    return [{
+      label: SourceEnum.RowIndex,
+      value: SOURCE_SIGN.RecordRowID + SourceEnum.RowIndex,
+      source: SourceEnum.RowIndex,
+    }, {
+      label: SourceEnum.RecordID,
+      value: SOURCE_SIGN.RecordRowID + SourceEnum.RecordID,
+      source: SourceEnum.RecordID,
+    }];
+  }
+
   private subscribeToValueChanges() {
     this.suggestions = merge(this.autoInput.valueChanges)
         .pipe(untilComponentDestroyed(this),
-            map((value) => {
-              const valueStr = value as string;
-              if (valueStr.indexOf(SOURCE_SIGN.Column) >= 0) {
-                return of(this.sources.filter((source) => source.title.toLowerCase().includes(value.toLowerCase().substr(valueStr.indexOf(SOURCE_SIGN.Column) + 1)))
-                    .map((source) => {
-                      return {label: source.title, value: SOURCE_SIGN.Column + source.title, source: SourceEnum.Column};
-                    }));
+            map((value: string) => {
+              if (value.indexOf(SOURCE_SIGN.Column) >= 0) {
+                return of(this.filterColumnsUsingValue(value));
               }
-              if (valueStr.indexOf(SOURCE_SIGN.RecordRowID) >= 0) {
-                return of([{
-                  label: SourceEnum.RowIndex,
-                  value: SOURCE_SIGN.RecordRowID + SourceEnum.RowIndex,
-                  source: SourceEnum.RowIndex,
-                }, {
-                  label: SourceEnum.RecordID,
-                  value: SOURCE_SIGN.RecordRowID + SourceEnum.RecordID,
-                  source: SourceEnum.RecordID,
-                }]);
+              if (value.indexOf(SOURCE_SIGN.RecordRowID) >= 0) {
+                return of(this.suggestRecordId());
               }
+
+              this.manualInput = value;
+
               if (this.isExtendedPrefix(value)) {
                 const match = XRegExp.exec(value, this.regex);
                 if (this.isValidExtension(match)) {
@@ -177,18 +194,20 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
                   }
                 }
               }
-              let autoCompleteObservable = this.repositoryService.autocompleteIRIs(value as string);
+              let autoCompleteObservable = this.repositoryService.autocompleteIRIs(value);
               if (this.cellType === this.PREDICATE) {
-                autoCompleteObservable = this.repositoryService.autocompletePredicates(value as string);
+                autoCompleteObservable = this.repositoryService.autocompletePredicates(value);
               }
               if (this.cellType === this.OBJECT && this.isTypeObject) {
-                autoCompleteObservable = this.repositoryService.autocompleteTypes(value as string);
+                autoCompleteObservable = this.repositoryService.autocompleteTypes(value);
               }
-              const suggestedNamespaces = this.repositoryService.filterNamespace(this.namespaces, value as string).map((ns) => {
-                const prefixValue = ns['prefix'] + ':';
+              const suggestedNamespaces = this.repositoryService.filterNamespace(this.namespaces, value).map((ns: Namespace) => {
+                const prefixValue = ns.prefix + ':';
                 return {label: prefixValue, value: prefixValue};
               });
-              return autoCompleteObservable.pipe(map((types) => suggestedNamespaces.concat(this.modelConstructService.replaceIRIPrefixes(types, this.namespaces))));
+              return autoCompleteObservable.pipe(map(
+                  (types) => suggestedNamespaces.concat(this.modelConstructService.replaceIRIPrefixes(types, this.namespaces)),
+              ));
             }));
   }
 
@@ -204,8 +223,11 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
 
   public saveInputValue(emitTab: boolean) {
     let value = this.autoInput.value;
-    let prefixTransformation: string;
+    if (this.manualInput && !this.autoInput.value.startsWith(this.manualInput)) {
+      value = this.manualInput + this.autoInput.value;
+    }
 
+    let prefixTransformation: string;
     if (this.isExtendedPrefix(value)) {
       const match = XRegExp.exec(value, this.regex);
 
@@ -216,7 +238,9 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
           return;
         }
         if (match.value) {
-          match.extended ? prefixTransformation += ':' + match.extended : prefixTransformation;
+          if (match.extended) {
+            prefixTransformation += ':' + match.extended;
+          }
           value = match.source + match.value;
         } else if (match.extended && !match.value) {
           value = match.extended;
@@ -232,12 +256,14 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
     this.saveValue(value, source, prefixTransformation, emitTab);
   }
 
-  isExtendedPrefix(value) {
-    return this.regex.test(value);
-  }
-
-  isValidExtension(match): boolean {
-    return match.namespace !== HTTP && !match.extended.startsWith(DOUBLE_SLASH);
+  public saveInputValueOnBlur($event: FocusEvent) {
+    // @ts-ignore
+    if ($event.relatedTarget && $event.relatedTarget.tagName === MAT_OPTION) {
+      $event.preventDefault();
+      $event.stopPropagation();
+    } else {
+      this.saveInputValue(true);
+    }
   }
 
   private saveValue(value, source, prefixTransformation, emitTab: boolean) {
@@ -245,8 +271,17 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
       if (emitTab) {
         this.tabService.selectCommand.emit({index: this.tabIndex, position: this.tabPosition});
       }
+      this.manualInput = '';
       this.onValueSet.emit({value, source, prefixTransformation});
     }
+  }
+
+  isExtendedPrefix(value) {
+    return this.regex.test(value);
+  }
+
+  isValidExtension(match): boolean {
+    return match.namespace !== HTTP && !match.extended.startsWith(DOUBLE_SLASH);
   }
 
   private getSource(value) {
@@ -263,16 +298,6 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
 
   public onEdit() {
     this.onEditClick.emit();
-  }
-
-  public saveInputValueOnBlur($event: FocusEvent) {
-    // @ts-ignore
-    if ($event.relatedTarget && $event.relatedTarget.tagName === MAT_OPTION) {
-      $event.preventDefault();
-      $event.stopPropagation();
-    } else {
-      this.saveInputValue(true);
-    }
   }
 
   public getIriDescription(option) {
