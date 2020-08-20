@@ -68,7 +68,7 @@ export class RepositoryService {
     }));
   }
 
-  public filterNamespace(namespaces, value: string): object[] {
+  public filterNamespace(namespaces: Namespaces, value: string): object[] {
     return Object.entries(namespaces).filter(([prefix]) => prefix.toLowerCase().startsWith(value.toLowerCase()))
         .map((([prefix, pValue]) => ({prefix, pValue})));
   }
