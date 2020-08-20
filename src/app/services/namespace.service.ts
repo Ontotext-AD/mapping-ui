@@ -32,13 +32,8 @@ export class NamespaceService {
     }
   }
 
-  static toNamespace(str: string): Namespace | undefined {
-    if ((str.split('=').length > 1)) {
-      const split = str.split(/=(.+)/);
-      const prefix = split[0];
-      const value = split[1];
-      return {prefix, value};
-    }
+  static toNamespace(prefix: string, value: string): Namespace | undefined {
+    return {prefix, value};
   }
 
   static walkNamespaces(namespaces: Namespaces, cb: (namespace: Namespace) => void) {

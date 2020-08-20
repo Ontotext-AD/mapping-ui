@@ -1,4 +1,8 @@
-import {COLON} from '../utils/constants';
+import {
+  COLON, COLON_NOT_ALLOWED_KEY,
+  EMPTY_NAMESPACE_KEY,
+  MALFORMED_NAMESPACE_KEY,
+} from '../utils/constants';
 import {Injectable} from '@angular/core';
 import {ValidatorResult} from '../models/validator';
 import {Namespace} from '../models/namespaces';
@@ -15,27 +19,24 @@ export class NamespaceValidator {
     return namespace && namespace.trim().length > 0 && namespace.indexOf(COLON) > -1;
   }
 
-  public validate(namespace: Namespace, value: string): ValidatorResult {
+  public validate(namespace: Namespace): ValidatorResult {
     const result = {valid: true, error: null};
 
-    if (!namespace && value.length > 0) {
+    if (!namespace.value) {
       result.valid = false;
-      result.error = 'ERROR.EMPTY_NAMESPACE';
-      return result;
-    } else if (!namespace && value.length === 0) {
-      result.valid = true;
+      result.error = EMPTY_NAMESPACE_KEY;
       return result;
     }
 
     if (!NamespaceValidator.isPrefixValid(namespace.prefix)) {
       result.valid = false;
-      result.error = 'ERROR.COLON_NOT_ALLOWED';
+      result.error = COLON_NOT_ALLOWED_KEY;
       return result;
     }
 
     if (!NamespaceValidator.isNamespaceValid(namespace.value)) {
       result.valid = false;
-      result.error = 'ERROR.MALFORMED_NAMESPACE';
+      result.error = MALFORMED_NAMESPACE_KEY;
       return result;
     }
 

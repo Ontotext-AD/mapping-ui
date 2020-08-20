@@ -77,3 +77,6 @@ select ?description where {
     <{{iri}}> rdfs:comment ?description
 } limit 1`;
 
+export const EMPTY_NAMESPACE_KEY = 'ERROR.EMPTY_NAMESPACE';
+export const COLON_NOT_ALLOWED_KEY = 'ERROR.COLON_NOT_ALLOWED';
+export const MALFORMED_NAMESPACE_KEY = 'ERROR.MALFORMED_NAMESPACE';
