@@ -579,14 +579,31 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       newTriple.setLevel(triple.getLevel());
       TriplesModelService.insertTriple(this.triples, newTriple, newTripleIndex);
     } else {
-      let newTripleIndex = index;
-      while (triple.getPredicate() === this.triples[newTripleIndex].getPredicate() || triple.getLevel() < this.triples[newTripleIndex].getLevel()) {
-        newTripleIndex++;
-      }
-      const newTriple = new Triple(triple.getSubject(), triple.getPredicate(), undefined).setTypeProperty(triple.isTypeProperty).setNewMappingRole(OBJECT_SELECTOR);
+      const newTripleIndex = this.calculateNewTripleIndex(triple, index);
+      const newTriple = new Triple(triple.getSubject(), triple.getPredicate(), undefined)
+          .setTypeProperty(triple.isTypeProperty)
+          .setNewMappingRole(OBJECT_SELECTOR);
       newTriple.setLevel(triple.getLevel());
       TriplesModelService.insertTriple(this.triples, newTriple, newTripleIndex);
     }
+  }
+
+  private calculateNewTripleIndex(triple: Triple, index: number): number {
+    let newTripleIndex = index - 1;
+    let next: boolean;
+    do {
+      newTripleIndex++;
+      const currentTriple = this.triples[newTripleIndex];
+      const currentPredicate = currentTriple.getPredicate();
+      const targetPredicate = triple.getPredicate();
+      const isNested = triple.getLevel() < currentTriple.getLevel();
+      const hasEqualPredicates = targetPredicate === currentPredicate;
+      // find a spot for the new sibling where its predicate is not the same as the target one
+      // and both target triple and new sibling triple should not be type properties which is technically the same as above
+      // and the new siblings should not be nested
+      next = (targetPredicate && currentPredicate && hasEqualPredicates) || (triple.isTypeProperty && currentTriple.isTypeProperty) || isNested;
+    } while (next);
+    return newTripleIndex;
   }
 
   private getRowEnding(triple: Triple) {
