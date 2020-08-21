@@ -41,6 +41,30 @@ describe('Edit mapping', () => {
     });
   });
 
+  context('Siblings', () => {
+    it('Should add sibling on a type property object', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      // Given I have opened an empty mapping
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      MappingSteps.getTriples().should('have.length', 1);
+      // And I have created a type property mapping
+      MappingSteps.completeTriple(0, 's', 'a', 'o');
+      MappingSteps.getTriples().should('have.length', 2);
+      // When I add a sibling
+      MappingSteps.addTripleObjectSibling(0);
+      MappingSteps.type('so', () => MappingSteps.getTripleObjectValue(1)).blur();
+      // Then I expect the sibling to be added
+      MappingSteps.getTriples().should('have.length', 3);
+      MappingSteps.getTripleSubject(1).find('.triple-item-preview').should('have.text', '');
+      MappingSteps.getTriplePredicate(1).find('.triple-item-preview').should('have.text', '');
+      MappingSteps.getTripleObjectValuePreview(1).should('contain', 'so');
+      MappingSteps.getTripleObjectType(1).should('contain', 'IRI');
+    });
+  });
+
   context('Edit IRI', () => {
     it('Should have a warning message in IRI edit dialog when object has children', () => {
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
