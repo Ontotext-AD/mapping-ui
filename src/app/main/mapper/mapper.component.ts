@@ -26,7 +26,7 @@ import {NamespaceValidator} from '../../validators/namespace.validator';
 })
 export class MapperComponent extends OnDestroyMixin implements OnInit {
   sources: Array<Source>;
-  mapping: MappingDefinitionImpl = plainToClass(MappingDefinitionImpl, EMPTY_MAPPING);
+  mapping: MappingDefinitionImpl = plainToClass(MappingDefinitionImpl, MapperComponent.createNewMapping());
   rdfMapping: BehaviorSubject<{mapping: MappingDefinitionImpl, isDirty: boolean}>;
   rdf: string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -41,6 +41,12 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
               private translateService: TranslateService,
               private namespaceValidator: NamespaceValidator) {
     super();
+  }
+
+  static createNewMapping() {
+    const newMapping = EMPTY_MAPPING;
+    newMapping.subjectMappings = [];
+    return newMapping;
   }
 
   ngOnInit(): void {
@@ -65,7 +71,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe(() => {
           const payload = {
-            mapping: new MappingDefinitionImpl(EMPTY_MAPPING.baseIRI, EMPTY_MAPPING.namespaces, EMPTY_MAPPING.subjectMappings),
+            mapping: new MappingDefinitionImpl(EMPTY_MAPPING.baseIRI, EMPTY_MAPPING.namespaces, []),
             isDirty: false,
           };
           this.rdfMapping.next(payload);
