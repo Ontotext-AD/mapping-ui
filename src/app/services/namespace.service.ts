@@ -12,7 +12,8 @@ export class NamespaceService {
     if (namespaces) {
       this.walkNamespaces(namespaces, ((namespace) => {
         const prefix = this.getPrefix(namespace.prefix);
-        model[prefix] = namespaces[prefix];
+        const isEmptyPrefix = !namespace.prefix;
+        model[prefix] = isEmptyPrefix ? namespaces[''] : namespaces[prefix];
       }));
     }
     return model;
