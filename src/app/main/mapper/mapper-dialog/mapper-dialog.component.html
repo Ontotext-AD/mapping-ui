@@ -52,12 +52,36 @@
             </div>
           </div>
 
-          <div *ngIf="isConstant" class="mt-24" fxLayout="row" fxLayoutAlign="start start">
+          <div *ngIf="isConstant" class="mt-24" fxLayout="row" fxLayoutAlign="start center">
             <div fxFlex="20">
               <span>{{'LABELS.CONSTANT' | translate}}</span>
             </div>
+            <div fxFlex="none" *ngIf="isIri()">
+              <mat-button-toggle-group formControlName="language" multiple (change)="toggleValueChange($event, 'language')">
+                <mat-button-toggle *ngFor="let lang of valueTransformationLangs" [value]="lang"
+                                   [attr.appCypressData]="'transformation-'+ lang">
+                  {{getType(lang)}}
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <div fxFlex="none" *ngIf="isIri()" class="transformation-section" appCypressData="transformation-section">
+              <mat-form-field class="ml-16">
+                <mat-label>{{'TYPE.PREFIX' | translate}}</mat-label>
+                <input matInput formControlName="expression" name="expression"
+                          [matAutocomplete]="prefixAuto"
+                          appCypressData="transformation-expression">
+                <mat-autocomplete #prefixAuto="matAutocomplete">
+                  <div *ngIf="isPrefixTransformation">
+                    <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
+                      {{namespace.prefix}}: <{{namespace.pValue}}>
+                    </mat-option>
+                  </div>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+            <div *ngIf="isIri()" class="mr-8 ml-8" fxFlex="none">{{"LABELS.COLON_DIVIDER" | translate}}</div>
             <mat-form-field fxFlex="80">
-                    <textarea matInput formControlName="constant" name="constant" cdkTextareaAutosize
+              <textarea matInput formControlName="constant" name="constant" cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                               [placeholder]="('LABELS.CONSTANT' | translate)"
                               [matAutocomplete]="autoType"
@@ -74,10 +98,34 @@
             </mat-form-field>
           </div>
 
-          <div *ngIf="isColumn" class="mt-24" fxLayout="row" fxLayoutAlign="start start">
+          <div *ngIf="isColumn" class="mt-24" fxLayout="row" fxLayoutAlign="start center">
             <div fxFlex="20">
               <span>{{'LABELS.COLUMN_NAME' | translate}}</span>
             </div>
+            <div fxFlex="none" *ngIf="isIri()">
+              <mat-button-toggle-group formControlName="language" multiple (change)="toggleValueChange($event, 'language')">
+                <mat-button-toggle *ngFor="let lang of valueTransformationLangs" [value]="lang"
+                                   [attr.appCypressData]="'transformation-'+ lang">
+                  {{getType(lang)}}
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <div fxFlex="none" *ngIf="isIri()" class="transformation-section" appCypressData="transformation-section">
+              <mat-form-field class="ml-16">
+                <mat-label>{{'TYPE.PREFIX' | translate}}</mat-label>
+                <input matInput formControlName="expression" name="expression"
+                          [matAutocomplete]="prefixAuto"
+                          appCypressData="transformation-expression">
+                <mat-autocomplete #prefixAuto="matAutocomplete">
+                  <div *ngIf="isPrefixTransformation">
+                    <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
+                      {{namespace.prefix}}: <{{namespace.pValue}}>
+                    </mat-option>
+                  </div>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+            <div *ngIf="isIri()" class="mr-8 ml-8" fxFlex="none">{{"LABELS.COLON_DIVIDER" | translate}}</div>
             <mat-form-field fxFlex="80">
                     <textarea matInput formControlName="columnName" name="columnName"
                               cdkTextareaAutosize
@@ -95,77 +143,64 @@
               </mat-autocomplete>
             </mat-form-field>
           </div>
-        </div>
 
-        <div class="transformation-section" appCypressData="transformation-section">
-          <div class="mt-24" fxLayout="row" fxLayoutAlign="start none">
-            <div fxFlex="20"><h4>{{'LABELS.TRANSFORMATION' | translate}}</h4></div>
-            <div fxFlex="none">
-              <mat-button-toggle-group formControlName="language">
-                <mat-button-toggle *ngFor="let lang of valueTransformationLangs" [value]="lang" [attr.appCypressData]="'transformation-'+ lang">
-                  {{getType(lang)}}
-                </mat-button-toggle>
-              </mat-button-toggle-group>
+          <div *ngIf="isGrelTransformation" class="mt-24 transformation-section" fxLayout="row" fxLayoutAlign="start start" appCypressData="transformation-section">
+            <div fxFlex="20">
+              <span>{{'LABELS.GREL' | translate}}</span>
             </div>
-            <div fxFlex="65" *ngIf="isTransformation">
-              <div fxLayout="column" fxLayoutAlign="space-around stretch">
-                <mat-form-field class="ml-16">
-                  <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
-                  <textarea matInput formControlName="expression" name="expression" *ngIf="isPrefixTransformation"
-                            cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                            [matAutocomplete]="prefixAuto"
-                            [placeholder]="!isPrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
-                            appCypressData="transformation-expression"></textarea>
-                  <textarea matInput formControlName="expression" name="expression" *ngIf="!isPrefixTransformation"
-                            cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                            [matAutocomplete]="prefixAuto"
-                            [placeholder]="!isPrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
-                            appCypressData="transformation-expression"
-                            [satPopoverAnchor]='expressionGrelPreview'
-                            (focus)="expressionGrelPreview.open()" (blur)="expressionGrelPreview.close()"></textarea>
-                  <mat-autocomplete #prefixAuto="matAutocomplete">
-                    <div *ngIf="isPrefixTransformation">
-                      <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
-                        {{namespace.prefix}}: <{{namespace.pValue}}>
-                      </mat-option>
+            <mat-form-field fxFlex="80">
+                     <textarea matInput formControlName="grelExpression" name="grelExpression"
+                               cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+                               [placeholder]="('LABELS.GREL_PLACEHOLDER' | translate)"
+                               appCypressData="transformation-expression"
+                               [satPopoverAnchor]='expressionGrelPreview'
+                               (focus)="expressionGrelPreview.open()" (blur)="expressionGrelPreview.close()"></textarea>
+              <mat-icon matSuffix>
+                <a class="icon-info"  target="_blank" href={{environment.openRefineVariables}}
+                   matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
+              </mat-icon>
+            </mat-form-field>
+            <sat-popover #expressionGrelPreview (opened)="onExpressionGrelPreviewOpen()"
+                         verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
+              <mat-card class="grel-preview-content" appCypressData="expression-grel-preview">
+                <mat-card-content *ngIf="(grelPreviewExpression | async)">
+                  <div *ngFor="let preview of grelPreviewExpression | async; let index = index;" appCypressData="grel-preview">
+                    <div class="mb-2" *ngIf="preview">
+                      {{preview.error || preview}}
                     </div>
-                  </mat-autocomplete>
-                  <mat-icon matSuffix>
-                    <a *ngIf="!isPrefixTransformation" class="icon-info"  target="_blank"
-                       href={{environment.openRefineVariables}}
-                       matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
-                  </mat-icon>
-                </mat-form-field>
-
-                <sat-popover #expressionGrelPreview (opened)="onExpressionGrelPreviewOpen()"
-                             verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
-                  <mat-card class="grel-preview-content" appCypressData="expression-grel-preview">
-                    <mat-card-content *ngIf="(grelPreviewExpression | async)">
-                      <div *ngFor="let preview of grelPreviewExpression | async; let index = index;" appCypressData="grel-preview">
-                        <div class="mb-2" *ngIf="preview">
-                          {{preview.error || preview}}
-                        </div>
-                      </div>
-                    </mat-card-content>
-                    <mat-card-content *ngIf="!(grelPreviewExpression | async)">
-                      {{'MESSAGES.GREL_NO_PREVIEW' | translate}}
-                    </mat-card-content>
-                  </mat-card>
-                </sat-popover>
-              </div>
-            </div>
+                  </div>
+                </mat-card-content>
+                <mat-card-content *ngIf="!(grelPreviewExpression | async)">
+                  {{'MESSAGES.GREL_NO_PREVIEW' | translate}}
+                </mat-card-content>
+              </mat-card>
+            </sat-popover>
           </div>
         </div>
 
-        <div class="type-section" appCypressData="type-section" *ngIf="isTypes()" >
+        <div class="literal-type-section" appCypressData="literal-type-section" *ngIf="isTypes()" >
           <div class="mt-24">
-            <div *ngIf="hasDatatype">
-              <mat-divider class="mt-24 mb-24"></mat-divider>
+            <div *ngIf="isLiteral">
+              <mat-divider class="mb-24"></mat-divider>
               <div fxLayout="row" fxLayoutAlign="start start">
-                <div fxFlex="20"><span>{{'LABELS.TYPE_SOURCE' | translate}}</span></div>
+              <div fxFlex="20"><span>{{'LABELS.LITERAL_ATTRIBUTES' | translate}}</span></div>
+              <div fxFlex="80">
+              <mat-button-toggle-group id="123" formControlName="literalType" multiple (change)="toggleValueChange($event, 'literalType')">
+                <mat-button-toggle *ngFor="let type of literalTypes" [value]="type"
+                                   [attr.appCypressData]="'transformation-'+ type">
+                  {{getType(type)}}
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+              </div>
+              </div>
+            </div>
+
+            <div *ngIf="hasDatatype" class="mt-24 mb-24">
+              <div fxLayout="row" fxLayoutAlign="start start">
+                <div fxFlex="20"><span>{{'LABELS.DATATYPE_SOURCE' | translate}}</span></div>
                 <div fxFlex="80">
                   <mat-button-toggle-group formControlName="dataTypeValueSource">
-                    <mat-button-toggle *ngFor="let source of sources" [value]="source" [attr.appCypressData]="'datatype-'+ source">
+                    <mat-button-toggle *ngFor="let source of literalSources" [value]="source" [attr.appCypressData]="'datatype-'+ source">
                       {{getType(source)}}
                     </mat-button-toggle>
                   </mat-button-toggle-group>
@@ -176,10 +211,34 @@
                 </div>
               </div>
 
-              <div *ngIf="isDatatypeConstant" class="mt-24" fxLayout="row" fxLayoutAlign="start start">
+              <div *ngIf="isDatatypeConstant" class="mt-24" fxLayout="row" fxLayoutAlign="start center">
                 <div fxFlex="20">
                   <span>{{'LABELS.CONSTANT' | translate}}</span>
                 </div>
+                <div fxFlex="none">
+                  <mat-button-toggle-group formControlName="datatypeLanguage" multiple (change)="toggleValueChange($event, 'datatypeLanguage')">
+                    <mat-button-toggle *ngFor="let lang of datatypeTransformationLangs" [value]="lang"
+                                       [attr.appCypressData]="'datatype-transformation-'+ lang">
+                      {{getType(lang)}}
+                    </mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+                <div fxFlex="none">
+                  <mat-form-field class="ml-16">
+                    <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
+                    <input matInput formControlName="datatypeTransformation" name="datatypeTransformation"
+                              [matAutocomplete]="datatypePrefixAuto"
+                              appCypressData="datatype-transformation-expression">
+                    <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
+                      <div>
+                        <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'">
+                          {{namespace.prefix}}: <{{namespace.pValue}}>
+                        </mat-option>
+                      </div>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div class="mr-8 ml-8" fxFlex="none">{{"LABELS.COLON_DIVIDER" | translate}}</div>
                 <mat-form-field fxFlex="80">
                     <textarea matInput formControlName="dataTypeConstant" name="dataTypeConstant" cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
@@ -199,10 +258,34 @@
                 </mat-form-field>
               </div>
 
-              <div *ngIf="isDatatypeColumn" class="mt-24" fxLayout="row" fxLayoutAlign="start start">
+              <div *ngIf="isDatatypeColumn" class="mt-24" fxLayout="row" fxLayoutAlign="start center">
                 <div fxFlex="20">
                   <span>{{'LABELS.COLUMN_NAME' | translate}}</span>
                 </div>
+                <div fxFlex="none">
+                  <mat-button-toggle-group formControlName="datatypeLanguage" multiple (change)="toggleValueChange($event, 'datatypeLanguage')">
+                    <mat-button-toggle *ngFor="let lang of datatypeTransformationLangs" [value]="lang"
+                                       [attr.appCypressData]="'datatype-transformation-'+ lang">
+                      {{getType(lang)}}
+                    </mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+                <div fxFlex="none">
+                  <mat-form-field class="ml-16">
+                    <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
+                    <input matInput formControlName="datatypeTransformation" name="datatypeTransformation"
+                              [matAutocomplete]="datatypePrefixAuto"
+                              appCypressData="datatype-transformation-expression">
+                    <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
+                      <div>
+                        <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'">
+                          {{namespace.prefix}}: <{{namespace.pValue}}>
+                        </mat-option>
+                      </div>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div class="mr-8 ml-8" fxFlex="none">{{"LABELS.COLON_DIVIDER" | translate}}</div>
                 <mat-form-field fxFlex="80">
                     <textarea matInput formControlName="dataTypeColumnName" name="dataTypeColumnName"
                               cdkTextareaAutosize
@@ -222,72 +305,46 @@
                 </mat-form-field>
               </div>
 
-              <div class="mt-24" fxLayout="row" fxLayoutAlign="start none">
-                <div fxFlex="20"><span>{{'LABELS.TYPE_TRANSFORMATION' | translate}}</span></div>
-                <div fxFlex="none">
-                  <mat-button-toggle-group formControlName="datatypeLanguage">
-                    <mat-button-toggle *ngFor="let lang of datatypeTransformationLangs" [value]="lang" [attr.appCypressData]="'datatype-transformation-'+ lang">
-                      {{getType(lang)}}
-                    </mat-button-toggle>
-                  </mat-button-toggle-group>
+              <div *ngIf="isDataTypeGrelTransformation" class="mt-24 datatype-transformation-grel" fxLayout="row" fxLayoutAlign="start start" appCypressData="datatype-transformation-grel">
+                <div fxFlex="20">
+                  <span>{{'LABELS.GREL' | translate}}</span>
                 </div>
-                <div fxFlex="65" *ngIf="isDatatypeTransformation">
-                  <div fxLayout="column" fxLayoutAlign="space-around stretch">
-                    <mat-form-field class="ml-16">
-                      <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
-                      <textarea matInput formControlName="datatypeTransformation" name="datatypeTransformation" *ngIf="isDataTypePrefixTransformation"
-                                cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                                [matAutocomplete]="datatypePrefixAuto"
-                                [placeholder]="!isDataTypePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
-                                appCypressData="datatype-transformation-expression"></textarea>
-                      <textarea matInput formControlName="datatypeTransformation" name="datatypeTransformation" *ngIf="!isDataTypePrefixTransformation"
-                                cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                                [matAutocomplete]="datatypePrefixAuto"
-                                [placeholder]="!isDataTypePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
-                                appCypressData="datatype-transformation-expression"
-                                [satPopoverAnchor]='datatypeGrelPreview'
-                                (focus)="datatypeGrelPreview.open()" (blur)="datatypeGrelPreview.close()"></textarea>
-                      <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
-                        <div *ngIf="isDataTypePrefixTransformation">
-                          <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'">
-                            {{namespace.prefix}}: <{{namespace.pValue}}>
-                          </mat-option>
+                <mat-form-field fxFlex="80">
+                     <textarea matInput formControlName="datatypeGrelTransformation" name="datatypeGrelTransformation"
+                               cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+                               [placeholder]="('LABELS.GREL_PLACEHOLDER' | translate)"
+                               appCypressData="datatype-transformation-expression"
+                               [satPopoverAnchor]='datatypeGrelPreview'
+                               (focus)="datatypeGrelPreview.open()" (blur)="datatypeGrelPreview.close()"></textarea>
+                  <mat-icon matSuffix>
+                    <a class="icon-info"  target="_blank" href={{environment.openRefineVariables}}
+                       matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
+                  </mat-icon>
+                </mat-form-field>
+                <sat-popover #datatypeGrelPreview (opened)="onDataTypeGrelPreviewOpen()"
+                             verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
+                  <mat-card class="grel-preview-content" appCypressData="datatype-grel-preview-content">
+                    <mat-card-content *ngIf="(grelPreviewDataTypeTransformation | async)">
+                      <div *ngFor="let preview of grelPreviewDataTypeTransformation | async; let index = index;" appCypressData="datatype-grel-preview">
+                        <div class="mb-2" *ngIf="preview">
+                          {{preview.error || preview}}
                         </div>
-                      </mat-autocomplete>
-                      <mat-icon matSuffix>
-                        <a *ngIf="!isDataTypePrefixTransformation" class="icon-info" target="_blank"
-                           href={{environment.openRefineVariables}}
-                           matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
-                      </mat-icon>
-                    </mat-form-field>
-
-                    <sat-popover #datatypeGrelPreview (opened)="onDataTypeGrelPreviewOpen()"
-                                 verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
-                      <mat-card class="grel-preview-content" appCypressData="datatype-grel-preview-content">
-                        <mat-card-content *ngIf="(grelPreviewDataTypeTransformation | async)">
-                          <div *ngFor="let preview of grelPreviewDataTypeTransformation | async; let index = index;" appCypressData="datatype-grel-preview">
-                            <div class="mb-2" *ngIf="preview">
-                              {{preview.error || preview}}
-                            </div>
-                          </div>
-                        </mat-card-content>
-                        <mat-card-content *ngIf="!(grelPreviewDataTypeTransformation | async)">
-                          {{'MESSAGES.GREL_NO_PREVIEW' | translate}}
-                        </mat-card-content>
-                      </mat-card>
-                    </sat-popover>
-                  </div>
-                </div>
+                      </div>
+                    </mat-card-content>
+                    <mat-card-content *ngIf="!(grelPreviewDataTypeTransformation | async)">
+                      {{'MESSAGES.GREL_NO_PREVIEW' | translate}}
+                    </mat-card-content>
+                  </mat-card>
+                </sat-popover>
               </div>
             </div>
 
-            <div *ngIf="hasLanguage">
-              <mat-divider class="mt-24 mb-24"></mat-divider>
+            <div *ngIf="hasLanguage" class="mt-24 mb-24">
               <div fxLayout="row" fxLayoutAlign="start start">
-                <div fxFlex="20"><span>{{'LABELS.TYPE_SOURCE' | translate}}</span></div>
+                <div fxFlex="20"><span>{{'LABELS.LANGUAGE_SOURCE' | translate}}</span></div>
                 <div fxFlex="80">
                   <mat-button-toggle-group formControlName="languageValueSource">
-                    <mat-button-toggle *ngFor="let source of sources" [value]="source" [attr.appCypressData]="'language-'+ source">
+                    <mat-button-toggle *ngFor="let source of literalSources" [value]="source" [attr.appCypressData]="'language-'+ source">
                       {{getType(source)}}
                     </mat-button-toggle>
                   </mat-button-toggle-group>
@@ -337,62 +394,36 @@
                 </mat-form-field>
               </div>
 
-              <div class="mt-24" fxLayout="row" fxLayoutAlign="start none">
-                <div fxFlex="20"><span>{{'LABELS.TYPE_TRANSFORMATION' | translate}}</span></div>
-                <div fxFlex="none">
-                  <mat-button-toggle-group formControlName="languageTransformationLanguage">
-                    <mat-button-toggle *ngFor="let lang of languageTransformationLangs" [value]="lang" [attr.appCypressData]="'language-transformation-'+ lang">
-                      {{getType(lang)}}
-                    </mat-button-toggle>
-                  </mat-button-toggle-group>
+              <div *ngIf="isLanguageGrelTransformation" class="mt-24" fxLayout="row" fxLayoutAlign="start start">
+                <div fxFlex="20">
+                  <span>{{'LABELS.GREL' | translate}}</span>
                 </div>
-                <div fxFlex="65" *ngIf="!!mapperForm.get('languageTransformationLanguage').value">
-                  <div fxLayout="column" fxLayoutAlign="space-around stretch">
-                    <mat-form-field class="ml-16">
-                      <mat-label>{{'LABELS.EXPRESSION' | translate}}</mat-label>
-                      <textarea matInput formControlName="languageTransformation" name="languageTransformation" *ngIf="isLanguagePrefixTransformation"
-                                cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                                [matAutocomplete]="languagePrefixAuto"
-                                [placeholder]="!isLanguagePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
-                                appCypressData="language-transformation-expression"></textarea>
-                      <textarea matInput formControlName="languageTransformation" name="languageTransformation" *ngIf="!isLanguagePrefixTransformation"
-                                cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                                [matAutocomplete]="languagePrefixAuto"
-                                [placeholder]="!isLanguagePrefixTransformation ? ('LABELS.GREL_PLACEHOLDER' | translate) : ''"
-                                appCypressData="language-transformation-expression"
-                                [satPopoverAnchor]='languageGrelPreview'
-                                (focus)="languageGrelPreview.open()" (blur)="languageGrelPreview.close()"></textarea>
-                      <mat-autocomplete #languagePrefixAuto="matAutocomplete">
-                        <div *ngIf="isLanguagePrefixTransformation">
-                          <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'">
-                            {{namespace.prefix}}: <{{namespace.pValue}}>
-                          </mat-option>
+                <mat-form-field fxFlex="80">
+                    <textarea matInput formControlName="languageTransformation" name="languageTransformation"
+                              cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+                              appCypressData="language-transformation-expression"
+                              [satPopoverAnchor]='languageGrelPreview'
+                              (focus)="languageGrelPreview.open()" (blur)="languageGrelPreview.close()"></textarea>
+                  <mat-icon matSuffix>
+                    <a class="icon-info"  target="_blank" href={{environment.openRefineVariables}}
+                       matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
+                  </mat-icon>
+                </mat-form-field>
+                <sat-popover #languageGrelPreview (opened)="onLanguageGrelPreviewOpen()"
+                             verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
+                  <mat-card class="grel-preview-content" appCypressData="language-grel-preview-content">
+                    <mat-card-content *ngIf="(grelPreviewLanguageTransformation | async)">
+                      <div *ngFor="let preview of grelPreviewLanguageTransformation | async; let index = index;" appCypressData="language-grel-preview">
+                        <div class="mb-2" *ngIf="preview">
+                          {{preview.error || preview}}
                         </div>
-                      </mat-autocomplete>
-                      <mat-icon matSuffix>
-                        <a *ngIf="!isLanguagePrefixTransformation" class="icon-help" target="_blank"
-                           href={{environment.openRefineVariables}}
-                           matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
-                      </mat-icon>
-                    </mat-form-field>
-
-                    <sat-popover #languageGrelPreview (opened)="onLanguageGrelPreviewOpen()"
-                                 verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">
-                      <mat-card class="grel-preview-content" appCypressData="language-grel-preview-content">
-                        <mat-card-content *ngIf="(grelPreviewLanguageTransformation | async)">
-                          <div *ngFor="let preview of grelPreviewLanguageTransformation | async; let index = index;" appCypressData="language-grel-preview">
-                            <div class="mb-2" *ngIf="preview">
-                              {{preview.error || preview}}
-                            </div>
-                          </div>
-                        </mat-card-content>
-                        <mat-card-content *ngIf="!(grelPreviewLanguageTransformation | async)">
-                          {{'MESSAGES.GREL_NO_PREVIEW' | translate}}
-                        </mat-card-content>
-                      </mat-card>
-                    </sat-popover>
-                  </div>
-                </div>
+                      </div>
+                    </mat-card-content>
+                    <mat-card-content *ngIf="!(grelPreviewLanguageTransformation | async)">
+                      {{'MESSAGES.GREL_NO_PREVIEW' | translate}}
+                    </mat-card-content>
+                  </mat-card>
+                </sat-popover>
               </div>
             </div>
           </div>

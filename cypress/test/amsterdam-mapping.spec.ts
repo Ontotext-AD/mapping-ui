@@ -31,8 +31,7 @@ describe('Create Amsterdam restaurants mapping', () => {
     cy.wait('@loadColumns');
 
     // I create subject with GREL transformation
-    MappingSteps.completeSubject(0, '@Trcid');
-    MappingSteps.editTripleSubject(0);
+    MappingSteps.editEmptyTripleSubject(0);
     EditDialogSteps.selectGREL();
     EditDialogSteps.completeGREL('"https://data.amsterdam.nl/resource/restaurant/" + value');
     EditDialogSteps.saveConfiguration();
@@ -73,8 +72,6 @@ describe('Create Amsterdam restaurants mapping', () => {
     // I create object with column source and GREL transformation
     MappingSteps.editTripleObject(6);
     EditDialogSteps.selectIri();
-    EditDialogSteps.selectColumn();
-    EditDialogSteps.completeColumn('Trcid');
     EditDialogSteps.selectGREL();
     EditDialogSteps.completeGREL('"https://data.amsterdam.nl/resource/geometry/" + value');
     EditDialogSteps.saveConfiguration();
@@ -92,7 +89,6 @@ describe('Create Amsterdam restaurants mapping', () => {
     EditDialogSteps.selectTypeDataTypeLiteral();
     EditDialogSteps.selectDataTypeConstant();
     EditDialogSteps.completeDataTypeConstant('wktLiteral');
-    EditDialogSteps.selectDataTypePrefix();
     EditDialogSteps.completeDataTypePrefix('geo');
     EditDialogSteps.selectRowIndex();
     EditDialogSteps.selectGREL();
@@ -102,7 +98,7 @@ describe('Create Amsterdam restaurants mapping', () => {
     EditDialogSteps.saveConfiguration();
 
     // THEN
-    // I expect to have completed the Amsterdam mapping
+    // I expect to have completed the Amsterdam mappingz
     cy.fixture('amsterdam/amsterdam.json').then(amsterdamJson => {
       HeaderSteps.getJSON().should('deep.equal', amsterdamJson);
     });

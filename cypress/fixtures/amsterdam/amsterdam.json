@@ -93,8 +93,7 @@
                 "language": "grel"
               },
               "valueSource": {
-                "columnName": "Trcid",
-                "source": "column"
+                "source": "row_index"
               },
               "valueType": {
                 "propertyMappings": [
@@ -159,8 +158,7 @@
           "language": "grel"
         },
         "valueSource": {
-          "columnName": "Trcid",
-          "source": "column"
+          "source": "row_index"
         }
       },
       "typeMappings": [

@@ -25,7 +25,6 @@ describe('Apply prefixes', () => {
       MappingSteps.getTripleObjectValueTransformation(0).should('not.be.visible');
       // When I set prefix from the edit dialog
       MappingSteps.editTripleObjectWithData(0);
-      EditDialogSteps.selectDataTypePrefix();
       EditDialogSteps.completeDataTypeExpression('wine');
       EditDialogSteps.saveConfiguration();
       // Then I expect to see the prefix badge in the object cell
@@ -33,7 +32,6 @@ describe('Apply prefixes', () => {
       // When I open edit dialog again
       MappingSteps.editTripleObjectWithData(0);
       // Then I expect to see the selected prefix
-      EditDialogSteps.getDatatypePrefixButton().should('be.visible').find('button').should('have.attr', 'aria-pressed', 'true');
       EditDialogSteps.getDataTypeExpressionField().should('have.value', 'wine');
       // When I remove the prefix
       EditDialogSteps.clearDataTypeExpression();
@@ -44,7 +42,6 @@ describe('Apply prefixes', () => {
       // - Try with the empty prefix
       // When I set the empty prefix
       MappingSteps.editTripleObjectWithData(0);
-      EditDialogSteps.selectDataTypePrefix();
       EditDialogSteps.completeDataTypeExpression(':');
       EditDialogSteps.saveConfiguration();
       // Then I expect to see the empty prefix sign ":" in the object cell
@@ -52,17 +49,12 @@ describe('Apply prefixes', () => {
       // When I open the edit dialog
       MappingSteps.editTripleObjectWithData(0);
       // Then I expect to see the empty prefix in the prefix field
-      EditDialogSteps.getDatatypePrefixButton().should('be.visible').find('button').should('have.attr', 'aria-pressed', 'true');
       EditDialogSteps.getDataTypeExpressionField().should('have.value', ':');
       // When I remove the prefix
       EditDialogSteps.clearDataTypeExpression();
       EditDialogSteps.saveConfiguration();
       // Then I expect the prefix badge to not be visible
       MappingSteps.getTripleObjectValueTransformation(0).should('not.be.visible');
-      // When I open the edit dialog again
-      MappingSteps.editTripleObjectWithData(0);
-      // Then I expect the prefix button to be deselected
-      EditDialogSteps.getDatatypePrefixButton().should('be.visible').find('button').should('have.attr', 'aria-pressed', 'false');
     });
 
     it('Should add and remove property prefix during edit', () => {
@@ -78,7 +70,6 @@ describe('Apply prefixes', () => {
       MappingSteps.getTripleObjectPropertyTransformation(0).should('not.be.visible');
       // When I set prefix from the edit dialog
       MappingSteps.editTripleObjectWithData(0);
-      EditDialogSteps.selectPrefix();
       EditDialogSteps.completePrefix('wine');
       EditDialogSteps.saveConfiguration();
       // Then I expect to see the prefix badge in the object cell
@@ -86,7 +77,6 @@ describe('Apply prefixes', () => {
       // When I open edit dialog again
       MappingSteps.editTripleObjectWithData(0);
       // Then I expect to see the selected prefix
-      EditDialogSteps.getPrefixTransformationButton().should('be.visible').find('button').should('have.attr', 'aria-pressed', 'true');
       EditDialogSteps.getTransformationExpressionField().should('have.value', 'wine');
       // When I remove the prefix
       EditDialogSteps.clearPrefix();
@@ -97,7 +87,6 @@ describe('Apply prefixes', () => {
       // - Try with the empty prefix
       // When I set the empty prefix
       MappingSteps.editTripleObjectWithData(0);
-      EditDialogSteps.selectPrefix();
       EditDialogSteps.completePrefix(':');
       EditDialogSteps.saveConfiguration();
       // Then I expect to see the empty prefix sign ":" in the object cell
@@ -105,17 +94,12 @@ describe('Apply prefixes', () => {
       // When I open the edit dialog
       MappingSteps.editTripleObjectWithData(0);
       // Then I expect to see the empty prefix in the prefix field
-      EditDialogSteps.getPrefixTransformationButton().should('be.visible').find('button').should('have.attr', 'aria-pressed', 'true');
       EditDialogSteps.getTransformationExpressionField().should('have.value', ':');
       // When I remove the prefix
       EditDialogSteps.clearPrefix();
       EditDialogSteps.saveConfiguration();
       // Then I expect the prefix badge to not be visible
       MappingSteps.getTripleObjectPropertyTransformation(0).should('not.be.visible');
-      // When I open the edit dialog again
-      MappingSteps.editTripleObjectWithData(0);
-      // Then I expect the prefix button to be deselected
-      EditDialogSteps.getPrefixTransformationButton().should('be.visible').find('button').should('have.attr', 'aria-pressed', 'false');
     });
   });
 

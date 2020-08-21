@@ -27,12 +27,12 @@ describe('Edit mapping', () => {
         parseSpecialCharSequences: true
       });
       // Then I expect the subject edit dialog to be opened
-      EditDialogSteps.getDialogTitle().should('contain', 'Subject mapping');
+      EditDialogSteps.getDialogTitle().should('contain', 'Subject RDF Value Mapping');
       // When I complete the form
       EditDialogSteps.selectConstant();
       EditDialogSteps.completeConstant('1');
       // And execute ctrl+enter key combination while dialog is opened
-      EditDialogSteps.getPrefixTransformationButton().focus().type('{ctrl}{enter}', {
+      EditDialogSteps.selectConstant().focus().type('{ctrl}{enter}', {
         parseSpecialCharSequences: true
       });
       // Then I expect subject mapping configuration to be saved
@@ -118,7 +118,6 @@ describe('Edit mapping', () => {
       MappingSteps.editTripleObjectWithData(0);
       // Then I expect constant and prefix to be set
       EditDialogSteps.getConstantField().should('have.value', 'Wine');
-      EditDialogSteps.getPrefixTransformationButton().should('be.visible').find('button').should('have.attr', 'aria-pressed', 'true');
       EditDialogSteps.getTransformationExpressionField().should('have.value', 'wine');
     });
   });
@@ -278,10 +277,8 @@ describe('Edit mapping', () => {
       MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
       MappingSteps.editTripleObject(0);
       EditDialogSteps.selectIri();
-      EditDialogSteps.selectColumn();
-      EditDialogSteps.completeColumn('director_name');
       EditDialogSteps.selectGREL();
-      EditDialogSteps.completeGREL('value');
+      EditDialogSteps.completeGREL('cells["director_name"].value');
       EditDialogSteps.getGRELPreview().first().should('contain', 'James Cameron');
     });
 
@@ -294,9 +291,10 @@ describe('Edit mapping', () => {
       cy.visit('?dataProviderID=ontorefine:123');
       MappingSteps.completeTriple(0, 'subject', 'predicate', '@director_name');
       MappingSteps.editTripleObjectWithData(0);
+      EditDialogSteps.selectLiteral();
       EditDialogSteps.selectTypeDataTypeLiteral();
       EditDialogSteps.selectGREL();
-      EditDialogSteps.completeGREL('value');
+      EditDialogSteps.completeGREL('cells["director_name"].value');
       EditDialogSteps.getGRELPreview().first().should('contain', 'James Cameron');
       EditDialogSteps.getTransformationExpressionField().blur();
 
@@ -304,10 +302,8 @@ describe('Edit mapping', () => {
       mockPreview('["alabala"]');
 
       // Verify datatype GREL preview
-      EditDialogSteps.selectDataTypeConstant();
-      EditDialogSteps.completeDataTypeConstant('foo');
       EditDialogSteps.selectDataTypeGREL();
-      EditDialogSteps.completeDataTypeExpression('value');
+      EditDialogSteps.completeDataTypeExpression('cells["director_name"].value');
       EditDialogSteps.getDataTypeGRELPreview().first().should('contain', 'alabala');
     });
 
@@ -329,7 +325,7 @@ describe('Edit mapping', () => {
       // Then I expect a preview popover to appear which contains no preview message
       EditDialogSteps.getGRELPreview().first().should('contain', 'No GREL preview');
       // When I type in the field
-      EditDialogSteps.completeGREL('v');
+      EditDialogSteps.completeGREL('cells["director_name"].v');
       // Then I expect to see the no preview message
       EditDialogSteps.getGRELPreview().first().should('contain', 'No GREL preview');
       // When I complete a valid GREL
@@ -350,7 +346,7 @@ describe('Edit mapping', () => {
       cy.wait('@loadGrelPreview');
       mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
       EditDialogSteps.clearGREL();
-      EditDialogSteps.completeGREL('value');
+      EditDialogSteps.completeGREL('cells["director_name"].value');
       EditDialogSteps.saveConfiguration();
       MappingSteps.editTripleSubject(0);
       // Then I expect the grel preview to be properly loaded again
@@ -369,7 +365,7 @@ describe('Edit mapping', () => {
       // Then I expect a preview popover to appear which contains no preview message
       EditDialogSteps.getLanguageGRELPreview().first().should('contain', 'No GREL preview');
       // When I type in the field
-      EditDialogSteps.completeLanguageGREL('v');
+      EditDialogSteps.completeLanguageGREL('cells["director_name"].v');
       // Then I expect to see the no preview message
       EditDialogSteps.getLanguageGRELPreview().first().should('contain', 'No GREL preview');
       // When I complete a valid GREL
@@ -391,7 +387,7 @@ describe('Edit mapping', () => {
       cy.wait('@loadGrelPreview');
       mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
       EditDialogSteps.clearLanguageGREL();
-      EditDialogSteps.completeLanguageGREL('value');
+      EditDialogSteps.completeLanguageGREL('cells["director_name"].value');
       EditDialogSteps.saveConfiguration();
       MappingSteps.editTripleObjectWithData(0);
       // Then I expect the grel preview to be properly loaded again
@@ -405,15 +401,14 @@ describe('Edit mapping', () => {
       // When I open the subject edit dialog and focus on datatype GREL field
       mockPreview('[null]');
       MappingSteps.editTripleObjectWithData(0);
+      EditDialogSteps.selectLiteral();
       EditDialogSteps.selectTypeDataTypeLiteral();
-      EditDialogSteps.selectSourceTypeColumn();
-      EditDialogSteps.completeSourceTypeColumn('director_name');
       EditDialogSteps.selectDataTypeGREL();
       EditDialogSteps.getDataTypeExpressionField().focus();
       // Then I expect a preview popover to appear which contains no preview message
       EditDialogSteps.getDataTypeGRELPreview().first().should('contain', 'No GREL preview');
       // When I type in the field
-      EditDialogSteps.completeDataTypeExpression('v');
+      EditDialogSteps.completeDataTypeExpression('cells["director_name"].v');
       // Then I expect to see the no preview message
       EditDialogSteps.getDataTypeGRELPreview().first().should('contain', 'No GREL preview');
       // When I complete a valid GREL
@@ -434,7 +429,7 @@ describe('Edit mapping', () => {
       cy.wait('@loadGrelPreview');
       mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
       EditDialogSteps.clearDataTypeExpression();
-      EditDialogSteps.completeDataTypeExpression('value');
+      EditDialogSteps.completeDataTypeExpression('cells["director_name"].value');
       EditDialogSteps.saveConfiguration();
       MappingSteps.editTripleObjectWithData(0);
       // Then I expect the grel preview to be properly loaded again
@@ -577,6 +572,7 @@ describe('Edit mapping', () => {
       EditDialogSteps.saveConfiguration();
       // Then I change the object to Datatype Literal
       MappingSteps.editTripleObjectWithData(0);
+      EditDialogSteps.selectLiteral();
       EditDialogSteps.selectTypeDataTypeLiteral()
       EditDialogSteps.selectDataTypeConstant();
       EditDialogSteps.completeDataTypeConstant('con');
@@ -664,7 +660,6 @@ describe('Edit mapping', () => {
       MappingSteps.editEmptyTriplePredicate(0);
       EditDialogSteps.selectConstant();
       EditDialogSteps.completeConstant('type');
-      EditDialogSteps.selectPrefix();
       EditDialogSteps.completePrefix('rdf');
       EditDialogSteps.saveConfiguration();
 
