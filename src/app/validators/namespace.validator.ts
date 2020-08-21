@@ -6,6 +6,7 @@ import {
 import {Injectable} from '@angular/core';
 import {ValidatorResult} from '../models/validator';
 import {Namespace} from '../models/namespaces';
+import {Helper} from '../utils/helper';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class NamespaceValidator {
   }
 
   static isNamespaceValid(namespace: string): boolean {
-    return namespace && namespace.trim().length > 0 && namespace.indexOf(COLON) > -1;
+    return namespace && namespace.trim().length > 0 && namespace.indexOf(COLON) > -1 && Helper.isIRI(namespace);
   }
 
   public validate(namespace: Namespace): ValidatorResult {

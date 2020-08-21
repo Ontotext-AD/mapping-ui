@@ -171,5 +171,13 @@ context('Namespaces', () => {
     MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
     MappingSteps.getNamespace('ga').should('not.be.visible');
     MappingSteps.getNamespaceValidationError().should('be.visible');
+
+    // When I add a prefix with invalid IRI inside the brackets namespace
+    MappingSteps.clearNamespace();
+    MappingSteps.addNamespace('PREFIX ga: {shift}<<http://google/namespace>');
+    // THEN I expect to see error
+    MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
+    MappingSteps.getNamespace('ga').should('not.be.visible');
+    MappingSteps.getNamespaceValidationError().should('be.visible');
   });
 });
