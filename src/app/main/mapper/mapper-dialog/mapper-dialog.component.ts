@@ -6,7 +6,7 @@ import {Triple} from 'src/app/models/triple';
 import {OBJECT_SELECTOR, PREDICATE_SELECTOR, SUBJECT_SELECTOR} from 'src/app/utils/constants';
 import {Source, Type} from 'src/app/models/mapping-definition';
 import {Helper} from 'src/app/utils/helper';
-import {map, startWith, takeUntil, debounceTime} from 'rxjs/operators';
+import {debounceTime, map, startWith, takeUntil} from 'rxjs/operators';
 import {componentDestroyed, OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
 import {MappingDetails} from 'src/app/models/mapping-details';
 import {ModelManagementService} from 'src/app/services/model-management.service';
@@ -404,9 +404,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
       // Clear the expression fields
       this.mapperForm.patchValue({datatypeTransformation: ''});
       this.mapperForm.patchValue({languageTransformation: ''});
-      const isIri = value === Type.IRI;
       const isDatatypeLiteral = value === Type.DatatypeLiteral;
-      this.initTransformationModels(isIri, isDatatypeLiteral);
+      this.initTransformationModels(this.isOfType(Type.IRI), isDatatypeLiteral);
     };
 
     this.mapperForm.get('type').valueChanges
@@ -421,8 +420,15 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
             this.isDatatypeConstant = false;
             this.isLanguageColumn = false;
             this.isLanguageConstant = false;
+
+            this.mapperForm.get('literalType').setValue('');
+            this.mapperForm.get('literalType').updateValueAndValidity();
+
             this.mapperForm.get('dataTypeValueSource').updateValueAndValidity();
             this.mapperForm.get('languageValueSource').updateValueAndValidity();
+          }
+          if (value !== Type.IRI) {
+            this.mapperForm.get('expression').setValue('');
           }
         });
 
@@ -487,7 +493,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
             this.mapperForm.get('expression').setValue('');
             this.mapperForm.get('expression').updateValueAndValidity();
             this.mapperForm.get('expression').disable();
-          } else {
+          } else if (this.isConstant || this.isColumn) {
             this.mapperForm.get('expression').enable();
           }
         });
@@ -500,7 +506,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
             this.mapperForm.get('datatypeTransformation').setValue('');
             this.mapperForm.get('datatypeTransformation').updateValueAndValidity();
             this.mapperForm.get('datatypeTransformation').disable();
-          } else {
+          } else if (this.isDatatypeConstant || this.isDatatypeColumn) {
             this.mapperForm.get('datatypeTransformation').enable();
           }
         });
@@ -561,7 +567,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
           this.resolveGrelDataTypePreview(value);
         });
 
-    this.filteredNamespaces = merge(this.mapperForm.get('expression').valueChanges, this.mapperForm.get('datatypeTransformation').valueChanges, this.mapperForm.get('languageTransformation').valueChanges)
+    this.filteredNamespaces = merge(this.mapperForm.get('expression').valueChanges, this.mapperForm.get('datatypeTransformation').valueChanges)
         .pipe(untilComponentDestroyed(this),
             startWith(''),
             map((value) => this.repositoryService.filterNamespace(this.getCombinedNamespaces(), value)));
