@@ -31,7 +31,7 @@ context('Namespaces', () => {
     MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
     MappingSteps.getNamespace('rdf').should('be.visible');
     // When I add a new namespace
-    MappingSteps.addNamespace('ga=http://google/namespace');
+    MappingSteps.addNamespace('PREFIX ga: {shift}<http://google/namespace>');
     MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 2);
     MappingSteps.getNamespace('ga').should('be.visible');
     // Then I expect the mapping to become dirty
@@ -112,12 +112,12 @@ context('Namespaces', () => {
     // When I click over a namespace
     MappingSteps.getNamespace('ga').click();
     // Then I expect the namespace value to be visible in the field
-    MappingSteps.getNamespaceField().should('have.value', 'ga=http://google/namespace');
+    MappingSteps.getNamespaceField().should('have.value', 'PREFIX ga: <http://google/namespace>');
     // When I change the namespace value
-    MappingSteps.editNamespace('ga', 'ga=http://google/namespace/123');
+    MappingSteps.editNamespace('ga', 'PREFIX ga: {shift}<http://google/namespace/123>');
     // Then I expect the namespace to be updated
     MappingSteps.getNamespace('ga').click();
-    MappingSteps.getNamespaceField().should('have.value', 'ga=http://google/namespace/123');
+    MappingSteps.getNamespaceField().should('have.value', 'PREFIX ga: <http://google/namespace/123>');
     // And the mapping to become dirty
     HeaderSteps.getDirtyMappingBanner().should('contain', 'Mapping has unsaved changes');
     HeaderSteps.getSaveMappingButton().should('be.enabled');
@@ -143,8 +143,8 @@ context('Namespaces', () => {
     // Given I have loaded a mapping
     cy.visit('?dataProviderID=ontorefine:123');
     cy.wait('@loadColumns');
-    // When I add a new namespace without equal sign
-    MappingSteps.addNamespace('ga-http://google/namespace');
+    // When I add a new namespace without value
+    MappingSteps.addNamespace('PREFIX ga:');
     // THEN I expect to see error
     MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
     MappingSteps.getNamespace('ga').should('not.be.visible');
@@ -155,7 +155,7 @@ context('Namespaces', () => {
     MappingSteps.getNamespaceValidationError().should('not.be.visible');
 
     // When I add a prefix with colon inside
-    MappingSteps.addNamespace('ga:=http://google/namespace');
+    MappingSteps.addNamespace('PREFIX ga:ga: {shift}<http://google/namespace>');
     // THEN I expect to see error
     MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
     MappingSteps.getNamespace('ga').should('not.be.visible');
@@ -166,7 +166,15 @@ context('Namespaces', () => {
     MappingSteps.getNamespaceValidationError().should('not.be.visible');
 
     // When I add a prefix with blank namespace
-    MappingSteps.addNamespace('ga=');
+    MappingSteps.addNamespace('PREFIX ga: {shift}<>');
+    // THEN I expect to see error
+    MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
+    MappingSteps.getNamespace('ga').should('not.be.visible');
+    MappingSteps.getNamespaceValidationError().should('be.visible');
+
+    // When I add a prefix with invalid IRI inside the brackets namespace
+    MappingSteps.clearNamespace();
+    MappingSteps.addNamespace('PREFIX ga: {shift}<<http://google/namespace>');
     // THEN I expect to see error
     MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
     MappingSteps.getNamespace('ga').should('not.be.visible');

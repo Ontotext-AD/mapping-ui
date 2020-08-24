@@ -4,7 +4,7 @@ import {ModelManagementService} from 'src/app/services/model-management.service'
 import {Source} from 'src/app/models/source';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
-import {DOWNLOAD_JSON_FILE, DOWNLOAD_RDF_FILE, EMPTY_MAPPING} from 'src/app/utils/constants';
+import {DOWNLOAD_JSON_FILE, DOWNLOAD_RDF_FILE, EMPTY_MAPPING, MALFORMED_NAMESPACE_KEY} from 'src/app/utils/constants';
 import {classToClass, plainToClass} from 'class-transformer';
 import {MatChipInputEvent} from '@angular/material/chips/chip-input';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -18,6 +18,8 @@ import {Convert} from 'src/app/models/mapping-definition';
 import {NamespaceService} from '../../services/namespace.service';
 import {Namespaces, Namespace} from '../../models/namespaces';
 import {NamespaceValidator} from '../../validators/namespace.validator';
+import * as XRegExp from 'xregexp';
+
 
 @Component({
   selector: 'app-mapper',
@@ -31,7 +33,8 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   rdf: string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   addOnBlur = true;
-  namespaceErrorMessage: string;
+  namespaceErrorMessages: {code: string, msg: string}[];
+  namespacesRegex = XRegExp(`(?:\\s*@?prefix +)?(.+?\\s*)(<.*?>)(?:\\s*\\.*\\n*)`, 'gi');
 
   constructor(private modelManagementService: ModelManagementService,
               private mapperService: MapperService,
@@ -147,10 +150,27 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   addNamespace(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
-    const namespace: Namespace = NamespaceService.toNamespace(value);
+    const namespaces = [];
+    this.namespaceErrorMessages = [];
+    let hasMatch = false;
+    XRegExp.forEach(value, this.namespacesRegex, (match) => {
+      hasMatch = true;
+      const namespace: Namespace = NamespaceService.toNamespace(match[1].trim().slice(0, -1), match[2].slice(1, -1));
+      namespaces.push(namespace);
+      const singleError = this.validateNamespace(namespace);
+      if (singleError) {
+        this.namespaceErrorMessages.push(singleError);
+      }
+    });
 
-    if (this.validateNamespace(namespace, value)) {
-      NamespaceService.addNamespace(this.mapping.namespaces, namespace);
+    if (value && !hasMatch) {
+      this.namespaceErrorMessages.push({code: MALFORMED_NAMESPACE_KEY, msg: ''});
+    }
+
+    if (this.namespaceErrorMessages.length === 0) {
+      namespaces.forEach((ns) => {
+        NamespaceService.addNamespace(this.mapping.namespaces, ns);
+      });
       this.messageService.publish(ChannelName.DirtyMapping, true);
       if (input) {
         input.value = '';
@@ -158,14 +178,13 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     }
   }
 
-  validateNamespace(namespace: Namespace, value: string) {
-    const result = this.namespaceValidator.validate(namespace, value);
+  validateNamespace(namespace: Namespace) {
+    const result = this.namespaceValidator.validate(namespace);
     if (!result.valid) {
-      this.namespaceErrorMessage = result.error;
+      return {code: result.error, msg: namespace.prefix};
     } else {
-      this.namespaceErrorMessage = '';
+      return null;
     }
-    return result.valid;
   }
 
   removeNamespace(key: string): void {
@@ -176,7 +195,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   editNamespace(target: HTMLElement, namespace) {
     const input = target?.parentElement?.getElementsByTagName('input')[0];
     if (input) {
-      input.value = `${namespace.key}=${namespace.value}`;
+      input.value = `PREFIX ${namespace.key}: <${namespace.value}>`;
       input.focus();
     }
   }
