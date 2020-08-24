@@ -18,6 +18,7 @@ class EditDialogSteps {
   }
 
   static saveConfiguration() {
+    cy.wait(500)
     this.getOkButton().click();
     this.getDialog().should('not.be.visible');
   }
@@ -43,6 +44,10 @@ class EditDialogSteps {
     return EditDialogSteps.getDialog().find('[appCypressData=type-section]');
   }
 
+  static getLiteralTypeSection() {
+    return EditDialogSteps.getDialog().find('[appCypressData=literal-type-section]');
+  }
+
   static selectIri() {
     return this.getTypeSection().find('[appCypressData=type-iri]').should('be.visible').click();
   }
@@ -52,27 +57,29 @@ class EditDialogSteps {
   }
 
   static selectTypeDataTypeLiteral() {
-    return this.getTypeSection().find('[appCypressData=type-datatype_literal]').should('be.visible').click();
+    this.selectLiteral();
+    return this.getLiteralTypeSection().find('[appCypressData=transformation-datatype_literal]').should('be.visible').click();
   }
 
   static selectDataTypeConstant() {
-    return this.getTypeSection().find('[appCypressData=datatype-constant]').click();
+    return this.getLiteralTypeSection().find('[appCypressData=datatype-constant]').click();
   }
 
   static completeDataTypeConstant(value: string) {
-    return this.getTypeSection().find('[appCypressData=datatype-constant-input]').should('be.visible').type(value).blur();
+    return this.getLiteralTypeSection().find('[appCypressData=datatype-constant-input]').should('be.visible').type(value).blur();
   }
 
   static selectTypeLanguageLiteral() {
-    return this.getTypeSection().find('[appCypressData=type-language_literal]').should('be.visible').click();
+    this.selectLiteral();
+    return this.getLiteralTypeSection().find('[appCypressData=transformation-language_literal]').should('be.visible').click();
   }
 
   static selectLanguageConstant() {
-    return this.getTypeSection().find('[appCypressData=language-constant]').click();
+    return this.getLiteralTypeSection().find('[appCypressData=language-constant]').click();
   }
 
   static completeLanguageConstant(value: string) {
-    return this.getTypeSection().find('[appCypressData=language-constant-input]').should('be.visible').type(value).blur();
+    return this.getLiteralTypeSection().find('[appCypressData=language-constant-input]').should('be.visible').type(value).blur();
   }
 
 
@@ -122,6 +129,10 @@ class EditDialogSteps {
     return this.getSourceSection().find('[appCypressData=row_index]').click();
   }
 
+  static selectGrelButton() {
+    return this.getSourceSection().find('[appCypressData=grel]');
+  }
+
   // transformation section
   static getTransformationSection() {
     return EditDialogSteps.getDialog().find('[appCypressData=transformation-section]');
@@ -134,11 +145,11 @@ class EditDialogSteps {
   }
 
   static getGrelTransformationButton() {
-    return this.getTransformationSection().find('[appCypressData=transformation-grel]');
+    return this.selectGrelButton();
   }
 
   static selectGREL() {
-    return this.getGrelTransformationButton().should('be.visible').click();
+    return this.selectGrelButton().should('be.visible').click();
   }
 
   static completeGREL(value: string) {
@@ -156,19 +167,15 @@ class EditDialogSteps {
   // Datatype GREL transformation
 
   static selectDataTypeGREL() {
-    return this.getTypeSection().find('[appCypressData=datatype-transformation-grel]').should('be.visible').click();
+    return this.getLiteralTypeSection().find('[appCypressData=datatype-grel]').should('be.visible').click();
   }
 
   static getDatatypePrefixButton() {
-    return this.getTypeSection().find('[appCypressData=datatype-transformation-prefix]');
-  }
-
-  static selectDataTypePrefix() {
-    this.getDatatypePrefixButton().should('be.visible').click();
+    return this.getLiteralTypeSection().find('[appCypressData=datatype-transformation-prefix]');
   }
 
   static getDataTypeExpressionField() {
-    return this.getTypeSection().find('[appCypressData=datatype-transformation-expression]');
+    return this.getLiteralTypeSection().find('[appCypressData=datatype-transformation-expression]');
   }
 
   static completeDataTypeExpression(value: string) {
@@ -188,11 +195,11 @@ class EditDialogSteps {
   // Language GREL transformation
 
   static selectLanguageGREL() {
-    return this.getTypeSection().find('[appCypressData=language-transformation-grel]').should('be.visible').click();
+    return this.getLiteralTypeSection().find('[appCypressData=language-grel]').should('be.visible').click();
   }
 
   static getLanguageTransformationExpressionField() {
-    return this.getTypeSection().find('[appCypressData=language-transformation-expression]');
+    return this.getLiteralTypeSection().find('[appCypressData=language-transformation-expression]');
   }
 
   static getLanguageGRELPreview() {
@@ -200,7 +207,7 @@ class EditDialogSteps {
   }
 
   static completeDataTypePrefix(value: string) {
-    this.getTypeSection().find('[appCypressData=datatype-transformation-expression]').should('be.visible').type(value);
+    this.getLiteralTypeSection().find('[appCypressData=datatype-transformation-expression]').should('be.visible').type(value);
   }
 
   static completeLanguageGREL(value: string) {
@@ -208,7 +215,7 @@ class EditDialogSteps {
   }
 
   static clearLanguageGREL() {
-    return this.getLanguageTransformationExpressionField().should('be.visible').clear().blur();
+    return this.getLanguageTransformationExpressionField().should('be.visible').clear();
   }
 
   // Prefix transformation

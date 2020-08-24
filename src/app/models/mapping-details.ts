@@ -8,13 +8,16 @@ export interface MappingDetails {
 
   // Value type
   type?: string;
+  literalType?: string;
 
   // Value transformation
   expression?: string;
+  grelExpression?: string;
   language?: string;
 
   dataTypeValueSource?: string;
   datatypeTransformation?: string;
+  datatypeGrelTransformation?: string;
 
   hasDatatype: boolean;
   dataTypeColumnName?: string;

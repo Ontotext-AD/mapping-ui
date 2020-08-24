@@ -71,8 +71,8 @@ describe('Autocomplete mapping', () => {
 
     it('Should display prefix and value in autocomplete', () => {
       MappingSteps.editEmptyTripleSubject(0);
-      EditDialogSteps.getPrefixTransformationButton().click();
-      EditDialogSteps.getTransformationExpressionField().click();
+      EditDialogSteps.selectConstant()
+      EditDialogSteps.getTransformationExpressionField().type(' ');
       EditDialogSteps.getPrefixSuggestions().first().contains('rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>');
     });
   });
