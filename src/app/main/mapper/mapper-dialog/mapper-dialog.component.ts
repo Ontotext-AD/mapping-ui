@@ -175,9 +175,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     if (this.data.selected === this.OBJECT && !this.data.mappingData.isTypeProperty) {
       this.types.push(...Helper.enumToArray(Type));
       this.typeKeys.push(...Helper.enumKeysToArray(Type));
-    } else if (this.data.selected === this.OBJECT && this.data.mappingData.isTypeProperty) {
-      this.types.push(...Helper.enumToArray(TypeMapping));
-      this.typeKeys.push(...Helper.enumToArray(TypeMapping));
     } else if (this.data.selected === this.SUBJECT && this.data.mappingData.getSubject() instanceof ValueMappingImpl) {
       this.types.push(...Helper.enumToArray(Type));
       this.typeKeys.push(...Helper.enumKeysToArray(Type));
