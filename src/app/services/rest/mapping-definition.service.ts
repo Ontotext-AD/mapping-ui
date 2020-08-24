@@ -6,7 +6,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {ActivatedRoute} from '@angular/router';
 import {Observable, of, EMPTY} from 'rxjs';
 import {map, switchMap, catchError} from 'rxjs/operators';
-import {EMPTY_MAPPING} from 'src/app/utils/constants';
+import {EMPTY_MAPPING} from '../../utils/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +17,12 @@ export class MappingDefinitionService extends RestService {
               private errorReporterService: ErrorReporterService) {
     super(route);
     this.apiUrl = environment.mappingApiUrl;
+  }
+
+  static createNewMapping() {
+    const newMapping = EMPTY_MAPPING;
+    newMapping.subjectMappings = [];
+    return newMapping;
   }
 
   getAPIURL(apiName: string): Observable<string> {
@@ -33,7 +39,7 @@ export class MappingDefinitionService extends RestService {
     return this.getAPIURL('/core/get-models/').pipe(switchMap((fullUrl) => {
       return this.httpClient.get<JSON>(fullUrl, this.httpOptions).pipe(map((json) => {
         if (!json['overlayModels']['mappingDefinition']) {
-          return EMPTY_MAPPING;
+          return MappingDefinitionService.createNewMapping();
         }
         return json['overlayModels']['mappingDefinition']['mappingDefinition'];
       }), catchError((error) => this.errorReporterService.handleError('Loading model failed.', error)));
