@@ -32,32 +32,57 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT distinct ?iri ?g WHERE {
     {
-        GRAPH ?g {
-            ?iri <http://www.ontotext.com/plugins/autocomplete#query> "{{iri}}"
-        } .
-        VALUES ?classClass {
-            owl:Class rdfs:Class
+        SELECT * {
+            GRAPH ?g {
+                ?iri <http://www.ontotext.com/plugins/autocomplete#query> "{{iri}}"
+            }
         }
-        ?classSubject a ?classClass .
-        ?x a ?classObject .
-        FILTER (?iri in (?classSubject, ?classObject) || (regex(str(?iri), "^(http://xmlns.com/foaf/0.1/|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#|http://www.opengis.net/ont/geosparql#|http://www.w3.org/2004/02/skos/core#)")))
+    }
+    {
+        ?iri a owl:Class
+    }
+    UNION
+    {
+        ?iri a rdfs:Class
+    }
+    UNION
+    {
+        [] a ?iri
+    }
+    UNION
+    {
+        FILTER (regex(str(?iri), "^(http://xmlns.com/foaf/0.1/|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#|http://www.opengis.net/ont/geosparql#|http://www.w3.org/2004/02/skos/core#)"))
     }
 }`;
 export const SPARQL_PREDICATES=`
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT distinct ?iri ?g WHERE {
     {
-        GRAPH ?g {
-            ?iri <http://www.ontotext.com/plugins/autocomplete#query> "{{iri}}"
-        } .
-        VALUES ?propertyClass {
-            owl:DatatypeProperty  owl:ObjectProperty rdf:Property
+        SELECT * {
+            GRAPH ?g {
+                ?iri <http://www.ontotext.com/plugins/autocomplete#query> "{{iri}}"
+            }
         }
-        ?propertyInstance a ?propertyClass .
-        ?s ?property ?o .
-        FILTER (?iri in (?propertyInstance, ?property) || (regex(str(?iri), "^(http://xmlns.com/foaf/0.1/|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#|http://www.opengis.net/ont/geosparql#|http://www.w3.org/2004/02/skos/core#)")))
+    }
+    {
+        ?iri a owl:DatatypeProperty
+    }
+    UNION
+    {
+        ?iri a owl:ObjectProperty
+    }
+    UNION
+    {
+        ?iri a rdf:Property
+    }
+    UNION
+    {
+        [] ?iri []
+    }
+    UNION
+    {
+        FILTER (regex(str(?iri), "^(http://xmlns.com/foaf/0.1/|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#|http://www.opengis.net/ont/geosparql#|http://www.w3.org/2004/02/skos/core#)"))
     }
 }`;
 export const SPARQL_AUTOCOMPLETE=`SELECT distinct ?iri ?g WHERE {
