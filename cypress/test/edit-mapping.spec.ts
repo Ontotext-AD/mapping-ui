@@ -642,9 +642,9 @@ describe('Edit mapping', () => {
       MappingSteps.completeTriple(0, 'sub', 'rdf:type', 'obj');
       // THEN
       // It is a type mapping triple
-      MappingSteps.getTripleSubject(0).should('have.text', ' C  sub IRI');
-      MappingSteps.getTriplePredicate(0).should('have.text', 'aIRI');
-      MappingSteps.getTripleObject(0).should('have.text', ' C  obj IRI');
+      MappingSteps.getTripleSubject(0).should('have.text', ' C  sub <IRI>');
+      MappingSteps.getTriplePredicate(0).should('have.text', 'a<IRI>');
+      MappingSteps.getTripleObject(0).should('have.text', ' C  obj <IRI>');
     });
 
     it('Should treat rdf:type as type mapping predicate in the edit mapping dialog', () => {
@@ -665,7 +665,7 @@ describe('Edit mapping', () => {
 
       // THEN
       // It is a type mapping triple
-      MappingSteps.getTriplePredicate(0).should('have.text', 'aIRI');
+      MappingSteps.getTriplePredicate(0).should('have.text', 'a<IRI>');
     });
   });
 });

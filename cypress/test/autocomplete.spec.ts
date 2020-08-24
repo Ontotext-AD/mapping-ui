@@ -24,7 +24,7 @@ describe('Autocomplete mapping', () => {
       MappingSteps.getSuggestions(0).first().should('contain', 'wgs:').click();
       MappingSteps.type('test', () => MappingSteps.getTripleObjectValue(0));
       MappingSteps.getTripleObjectValue(0).blur();
-      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'wgs');
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'wgs:');
       MappingSteps.getTripleObjectSource(0).should('have.text', ' C  test ');
     });
 
@@ -34,7 +34,7 @@ describe('Autocomplete mapping', () => {
       MappingSteps.type('rdf:@', () => MappingSteps.getTripleObjectValue(0));
       MappingSteps.getSuggestions(0).should('have.length', 28);
       MappingSteps.getSuggestions(0).first().should('contain', 'color').click();
-      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf');
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf:');
       MappingSteps.getTripleObjectSource(0).should('have.text', ' @  color ');
       // When I type on the subject position an extended prefix plus column beginning
       MappingSteps.type('rdf:ext@du', () => MappingSteps.getTripleSubjectValue(1));

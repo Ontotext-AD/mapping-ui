@@ -23,16 +23,35 @@ export class TypeBadgeComponent extends OnDestroyMixin {
 
   public getValueTypeLabel() {
     if (this.type) {
-      const typeUpperCase = this.type.toUpperCase();
+      let typeUpperCase;
+      if (this.type === Type.DatatypeLiteral || this.type === Type.LanguageLiteral) {
+        typeUpperCase = Type.Literal.toUpperCase();
+      } else {
+        typeUpperCase = this.type.toUpperCase();
+      }
+
       const labelKey = `LABELS.${typeUpperCase}`;
-      return this.translateService.instant(labelKey);
+      const labelValue = this.translateService.instant(labelKey);
+      if (this.type === Type.IRI) {
+        return '<' + labelValue + '>';
+      }
+      if (this.type === Type.ValueBnode || this.type === Type.UniqueBnode) {
+        return '_:' + labelValue;
+      }
+      if (this.type === Type.DatatypeLiteral || this.type === Type.LanguageLiteral || this.type === Type.Literal) {
+        return '"' + labelValue + '"';
+      }
     }
   }
 
   public getClass() {
     let cssClass = '';
     if (this.type) {
-      cssClass = `type-${this.type}`;
+      if (this.type === Type.LanguageLiteral || this.type === Type.DatatypeLiteral) {
+        cssClass = `type-${Type.Literal}`;
+      } else {
+        cssClass = `type-${this.type}`;
+      }
     }
     return cssClass;
   }

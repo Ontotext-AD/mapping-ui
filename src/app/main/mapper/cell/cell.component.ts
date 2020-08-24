@@ -115,6 +115,16 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   /**
+   * Get the secondary (language or datatype) transformation for the cell
+   *
+   * @return value transornmation
+   */
+  getSecondaryTransformation(): ValueTransformationImpl {
+    return this.modelManagementService.getValueTypeDatatypeTransformation((this.cellMapping)) ||
+      this.modelManagementService.getValueTypeLanguageTransformation((this.cellMapping));
+  }
+
+  /**
    * Get value Type. Returns the ValueType but only when the cellMapping is a ValueMapping
    * Only ValueMappings have such a type
    *
@@ -223,6 +233,10 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
 
   public onEdit() {
     this.onEditClick.emit();
+  }
+
+  isGRELTransformation(transformation: ValueTransformationImpl) {
+    return transformation && transformation.getLanguage() === 'grel';
   }
 
   getReasonableLongWord(word: string) {
