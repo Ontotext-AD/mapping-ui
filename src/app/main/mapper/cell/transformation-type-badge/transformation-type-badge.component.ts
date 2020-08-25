@@ -6,7 +6,13 @@ import {OnDestroyMixin} from '@w11k/ngx-componentdestroyed';
 import {ValueTransformationImpl} from '../../../../models/value-transformation-impl';
 import {TranslateService} from '@ngx-translate/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
-import {COLON, GREL_CONSTANT, PREFIX_CONSTANT} from '../../../../utils/constants';
+import {
+  COLON,
+  DATATYPE_SIGN,
+  GREL_CONSTANT,
+  LANGUAGE_SIGN,
+  PREFIX_CONSTANT,
+} from '../../../../utils/constants';
 import {Type} from '../../../../models/mapping-definition';
 import {IRIImpl} from '../../../../models/iri-impl';
 import {TransformationTarget} from '../cell.component';
@@ -99,9 +105,9 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
 
   getSecondaryTypeLabel() {
     if (this.getType() === this.DATATYPE_LITERAL) {
-      return this.translateService.instant('LABELS.DATATYPE_LITERAL');
+      return DATATYPE_SIGN + this.translateService.instant('LABELS.DATATYPE_LITERAL');
     } else if (this.getType() === this.LANGUAGE_LITERAL) {
-      return this.translateService.instant('LABELS.LANGUAGE_LITERAL');
+      return LANGUAGE_SIGN + this.translateService.instant('LABELS.LANGUAGE_LITERAL');
     }
   }
 
