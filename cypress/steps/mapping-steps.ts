@@ -223,8 +223,8 @@ class MappingSteps {
     return MappingSteps.getTripleObject(index).find('.valuetransformation .ti-transform');
   }
 
-  static getTripleObjectDatatypeTransformation(index: any) {
-    return MappingSteps.getTripleObject(index).find('.datatypetransformation .ti-transform');
+  static getTripleObjectSecondaryType(index: any) {
+    return MappingSteps.getTripleObject(index).find('.datatypetransformation .ti-type');
   }
 
   static deleteTripleObject(index: number) {

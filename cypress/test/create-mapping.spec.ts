@@ -157,7 +157,7 @@ describe('Create mapping', () => {
       // And I expect object to have a prefix, grel and datatype transformation badge
       MappingSteps.getTripleObjectPropertyTransformation(0).should('contain', 'GREL');
       MappingSteps.getTripleObjectValueTransformation(0).should('contain', 'rdf');
-      MappingSteps.getTripleObjectDatatypeTransformation(0).should('contain', 'Datatype');
+      MappingSteps.getTripleObjectSecondaryType(0).should('contain', 'Datatype');
       // Second triple
       // Then I expect subject to have a property prefix badge
       MappingSteps.getTripleSubjectPropertyTransformation(1).should('contain', 'GREL');
@@ -166,7 +166,7 @@ describe('Create mapping', () => {
       // And I expect object to have a prefix, grel and datatype transformation badge
       MappingSteps.getTripleObjectPropertyTransformation(1).should('contain', 'GREL');
       MappingSteps.getTripleObjectValueTransformation(1).should('contain', 'GREL');
-      MappingSteps.getTripleObjectDatatypeTransformation(1).should('contain', 'Language');
+      MappingSteps.getTripleObjectSecondaryType(1).should('contain', 'Language');
     });
 
     it('Should not be able to set prefix transformation when type is not IRI', () => {
@@ -193,7 +193,7 @@ describe('Create mapping', () => {
       EditDialogSteps.completePrefix('rdf');
       EditDialogSteps.saveConfiguration();
       // Then I should see the prefix in the object cell
-      MappingSteps.getTripleObjectPropertyTransformation(0).should('contain', 'rdf');
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('contain', 'rdf:');
       // When I open the object edit dialog
       MappingSteps.editTripleObjectWithData(0);
       // Then I expect the prefix still to be selected and completed

@@ -64,9 +64,9 @@
 }
 
 .triples-block::after {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   padding: 0 0.3rem;
-  color: #ccc;
+  color: #5c5c5c;
   align-self: center;
   margin-top: -0.4rem;
 }
@@ -143,7 +143,8 @@
   border-top:1px solid #eee
 }
 .ti-preview {
-  font-size: 1.5em;
+  font-size: 1.0em;
+  font-family: Menlo, Consolas, "Ubuntu Mono", monospace;
   word-break: break-all;
   margin-right: 0.5rem;
 }
@@ -159,24 +160,24 @@
 }
 
 .ti-source-type {
-  background-color: gray;
+  background-color: #F79F88;
   border-radius: 20rem;
   color: #fff;
-  font-size: 0.875rem;
-  width: 1.2rem;
-  height: 1.2rem;
+  font-size: 0.7rem;
+  width: 1.0rem;
+  height: 1.0rem;
   display: inline-block;
   text-align: center;
-  line-height: 1.2rem;
+  line-height: 1.0rem;
   font-weight: 300;
 }
-.ti-source-type.type-col { background-color: red }
-.ti-source-type.type-const { background-color: #c92d39 }
+.ti-source-type.type-col { background-color: #F79F88 }
+.ti-source-type.type-const { display: none }
 
 
 /* Transformations */
 .ti-transform {
-  background-color: #ED4F2F;
+  background-color: #F79F88;
   color: #fff;
   padding: 0.125rem 0.5rem 0.1rem 0.5rem;
   border-radius: 20rem;
@@ -190,21 +191,27 @@
   text-align: right;
   max-width: 50%;
 }
-.ti-transform.type-grel {background-color: rgb(255, 0, 255)}
-.ti-transform.type-prefix {background-color: rgb(70, 189, 198)}
+.ti-transform.type-prefix {
+  color: #0DB19F;
+  background-color: inherit;
+  font-size: 1rem;
+}
 
+.ti-transform.type-grel {
+  font-size: 0.7rem;
+}
 
 /* Types */
 .ti-type {
-  font-weight: 700;
+  font-family: Menlo, Consolas, "Ubuntu Mono", monospace;
   white-space: nowrap;
 }
 .ti-type.type-iri {color: rgb(66, 133, 244)}
-.ti-type.type-unique_bnode {color: rgb(191, 144, 0)}
-.ti-type.type-value_bnode {color: rgb(191, 144, 0)}
-.ti-type.type-literal {color: rgb(52, 168, 83)}
-.ti-type.type-datatype_literal {color: rgb(160, 190, 0)}
-.ti-type.type-language_literal {color: rgb(160, 190, 0)}
+.ti-type.type-unique_bnode {color: rgb(66, 133, 244)}
+.ti-type.type-value_bnode {color: rgb(66, 133, 244)}
+.ti-type.type-literal {color: rgb(66, 133, 244)}
+.ti-type.type-datatype_literal {color: #7AB2E1}
+.ti-type.type-language_literal {color: #7AB2E1}
 
 
 /* empty row */

@@ -31,8 +31,7 @@
             <div fxFlex="auto">
               <app-transformation-type-badge [cellMapping]="cellMapping" [target]="propertytransformation"></app-transformation-type-badge>
             </div>
-
-            <div class="ml-8" fxFlex="grow">
+            <div *ngIf="!isGRELTransformation(getTransformation())" fxFlex="grow">
              <span class="ti-source">
                 <span *ngIf="getSourceType() === 'column'" matTooltip="{{getValueSource().getColumnName()}}">
                   <span class="ti-source-type type-col" title="column">
@@ -57,6 +56,12 @@
               </span>
             </div>
 
+            <div *ngIf="isGRELTransformation(getTransformation())" class="ml-2" fxFlex="grow">
+             <span class="ti-source" matTooltip="{{getTransformation().getExpression()}}">
+               {{getReasonableLongWord(getTransformation().getExpression())}}
+              </span>
+            </div>
+
             <app-type-badge [type]="getType()"></app-type-badge>
           </div>
 
@@ -65,7 +70,7 @@
               <app-transformation-type-badge [cellMapping]="cellMapping" [target]="valuetransformation"></app-transformation-type-badge>
             </div>
 
-            <div class="ml-8" fxFlex="grow">
+            <div fxFlex="grow" *ngIf="!isGRELTransformation(getSecondaryTransformation())">
               <span class="ti-source">
                 <div *ngIf="getDatatypeSource()">
                   <span *ngIf="getDatatypeSourceType() === 'column'"
@@ -117,6 +122,12 @@
                     {{getValueTypeLanguageSource().source}}
                   </span>
                 </div>
+              </span>
+            </div>
+
+            <div *ngIf="isGRELTransformation(getSecondaryTransformation())" class="ml-2" fxFlex="grow">
+             <span class="ti-source" matTooltip="{{getSecondaryTransformation().getExpression()}}">
+               {{getReasonableLongWord(getSecondaryTransformation().getExpression())}}
               </span>
             </div>
 

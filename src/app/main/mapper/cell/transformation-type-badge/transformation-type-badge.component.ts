@@ -34,7 +34,7 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
     } else if (this.target === TransformationTarget.VALUETRANSFORMATION) {
       return this.getSecondaryTransformationType();
     } else if (this.target === TransformationTarget.DATATYPETRANSFORMATION) {
-      return this.getSecondaryTransformationType() && this.isSecondaryType();
+      return this.getSecondaryTypeLabel() && this.isSecondaryType();
     }
   }
 
@@ -128,7 +128,7 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
     } else {
       transformationType = this.getTransformationType();
     }
-    let cssClass = 'type-';
+    let cssClass = 'ti-transform type-';
     if (transformationType === this.GREL) {
       cssClass += this.GREL;
     } else if (transformationType === this.PREFIX) {
@@ -139,17 +139,17 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
 
   resolveDatatypeTransformationTypeClass() {
     const transformationType = this.getType();
-    let cssClass = 'type-';
+    let cssClass = 'ti-type type-';
     if (transformationType === this.DATATYPE_LITERAL) {
-      cssClass += 'datatype';
+      cssClass += 'datatype_literal';
     } else if (transformationType === this.LANGUAGE_LITERAL) {
-      cssClass += 'language-literal';
+      cssClass += 'language_literal';
     }
     return cssClass;
   }
 
   private resolveExpressionValue(transformation) {
     const expression = transformation.getExpression();
-    return expression || COLON;
+    return expression.indexOf(':') >=0 ? expression : expression + COLON;
   }
 }

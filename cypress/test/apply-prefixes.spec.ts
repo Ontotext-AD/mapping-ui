@@ -116,15 +116,15 @@ describe('Apply prefixes', () => {
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a subject, a predicate and an object
       MappingSteps.completeTriple(0, 'rdf:subject', 'rdf:@Title', 'rdf:$row_index');
-      MappingSteps.getTripleSubjectPropertyTransformation(0).should('have.text', 'rdf');
+      MappingSteps.getTripleSubjectPropertyTransformation(0).should('have.text', 'rdf:');
       MappingSteps.getTripleSubjectSourceType(0).should('have.text', ' C ');
       MappingSteps.getTripleSubjectSource(0).should('have.text', ' C  subject ');
 
-      MappingSteps.getTriplePredicatePropertyTransformation(0).should('have.text', 'rdf');
+      MappingSteps.getTriplePredicatePropertyTransformation(0).should('have.text', 'rdf:');
       MappingSteps.getTriplePredicateSourceType(0).should('have.text', ' @ ');
       MappingSteps.getTriplePredicateValuePreview(0).should('have.text', ' @  Title ');
 
-      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf');
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf:');
       MappingSteps.getTripleObjectSourceType(0).should('have.text', ' $ ');
       MappingSteps.getTripleObjectSource(0).should('have.text', ' $  row_index ');
     });
