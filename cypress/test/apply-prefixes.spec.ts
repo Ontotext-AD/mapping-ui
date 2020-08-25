@@ -154,4 +154,49 @@ describe('Apply prefixes', () => {
       MappingSteps.getNamespace('www').should('not.be.visible');
     });
   });
+
+  context('edit inline empty prefix', () => {
+    beforeEach(() => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+    });
+
+    it('Should add empty prefix inline', () => {
+      MappingSteps.getTriples().should('have.length', 2);
+      // And I have created a subject, a predicate and an object
+      MappingSteps.completeTriple(1, ':@actor_1_name', ':/@actor_1_name', ':#@actor_1_name');
+      MappingSteps.getTripleSubjectPropertyTransformation(1).should('have.text', ':');
+      MappingSteps.getTripleSubjectSourceType(1).should('have.text', ' @ ');
+      MappingSteps.getTripleSubjectSource(1).should('have.text', ' @  actor_1_name ');
+
+      MappingSteps.getTriplePredicatePropertyTransformation(1).should('have.text', ':/');
+      MappingSteps.getTriplePredicateSourceType(1).should('have.text', ' @ ');
+      MappingSteps.getTriplePredicateValuePreview(1).should('have.text', ' @  actor_1_name ');
+
+      MappingSteps.getTripleObjectPropertyTransformation(1).should('have.text', ':#');
+      MappingSteps.getTripleObjectSourceType(1).should('have.text', ' @ ');
+      MappingSteps.getTripleObjectSource(1).should('have.text', ' @  actor_1_name ');
+
+    });
+
+    it('Should set extended empty prefix expressions inline', () => {
+      MappingSteps.getTriples().should('have.length', 2);
+      // And I have created a subject, a predicate and an object
+      MappingSteps.completeTriple(1, ':Actor@actor_1_name', ':Actor/@actor_1_name', ':Actor#@actor_1_name');
+      MappingSteps.getTripleSubjectPropertyTransformation(1).should('have.text', ':Actor');
+      MappingSteps.getTripleSubjectSourceType(1).should('have.text', ' @ ');
+      MappingSteps.getTripleSubjectSource(1).should('have.text', ' @  actor_1_name ');
+
+      MappingSteps.getTriplePredicatePropertyTransformation(1).should('have.text', ':Actor/');
+      MappingSteps.getTriplePredicateSourceType(1).should('have.text', ' @ ');
+      MappingSteps.getTriplePredicateValuePreview(1).should('have.text', ' @  actor_1_name ');
+
+      MappingSteps.getTripleObjectPropertyTransformation(1).should('have.text', ':Actor#');
+      MappingSteps.getTripleObjectSourceType(1).should('have.text', ' @ ');
+      MappingSteps.getTripleObjectSource(1).should('have.text', ' @  actor_1_name ');
+    });
+  });
 });
