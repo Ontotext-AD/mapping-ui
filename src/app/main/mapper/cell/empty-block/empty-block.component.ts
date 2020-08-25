@@ -15,6 +15,7 @@ import {MappingBase} from 'src/app/models/mapping-base';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {
+  COLON,
   DOUBLE_SLASH, HTTP,
   MAT_OPTION,
   OBJECT_SELECTOR,
@@ -71,7 +72,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
   PREDICATE = PREDICATE_SELECTOR;
   OBJECT = OBJECT_SELECTOR;
 
-  regex = XRegExp(`(?<namespace> .+?(?=:)) -?
+  regex = XRegExp(`(?<namespace> .*?(?=:)) -?
                    :
                    (?<extended> [^@$]*) -?
                    (?<source> \\@?\\$?) -?
@@ -202,7 +203,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
                 autoCompleteObservable = this.repositoryService.autocompleteTypes(value);
               }
               const suggestedNamespaces = this.repositoryService.filterNamespace(this.namespaces, value).map((ns: Namespace) => {
-                const prefixValue = ns.prefix + ':';
+                const prefixValue = ns.prefix + COLON;
                 return {label: prefixValue, value: prefixValue};
               });
               return autoCompleteObservable.pipe(map(
@@ -213,7 +214,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
 
   public selectPrefixOrValue($event: Event, emitTab: boolean, trigger: MatAutocompleteTrigger) {
     const value = this.autoInput.value;
-    if (value && !value.endsWith(':')) {
+    if (value && !value.endsWith(COLON)) {
       this.saveInputValue(emitTab);
     } else {
       $event.stopPropagation();
@@ -239,7 +240,9 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
         }
         if (match.value) {
           if (match.extended) {
-            prefixTransformation += ':' + match.extended;
+            prefixTransformation += COLON + match.extended;
+          } else if (prefixTransformation === '' && this.namespaces[prefixTransformation]) {
+            prefixTransformation += COLON;
           }
           value = match.source + match.value;
         } else if (match.extended && !match.value) {
