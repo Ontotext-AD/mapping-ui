@@ -24,7 +24,7 @@
           </div>
 
           <div  *ngIf="isFirstChild && !isTypeProperty; else emptyBlock">
-            <div fxFill class="ti-preview" *ngFor="let previewItem of getPreview();">
+            <div fxFill [ngClass]="['ti-preview', (isEmptyPreview() ? 'empty-preview' : '')]" *ngFor="let previewItem of getPreview();">
               {{previewItem}}
             </div>
           </div>

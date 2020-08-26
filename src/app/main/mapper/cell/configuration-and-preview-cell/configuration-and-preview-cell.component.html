@@ -168,7 +168,7 @@
       </div>
 
       <div class="ti-footer" *ngIf="isFirstChild && nestLevel === 0">
-        <div class="ti-preview">
+        <div [ngClass]="['ti-preview', (isEmptyPreview() ? 'empty-preview' : '')]">
           <div *ngFor="let previewItem of getPreview();">
             {{previewItem}}
           </div>
