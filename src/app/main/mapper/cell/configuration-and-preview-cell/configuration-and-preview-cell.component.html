@@ -15,23 +15,26 @@
 
 
   <ng-template #notEmptyBlock>
-    <div [ngClass]="['triple-item', (nestLevel > 0 ? 'empty-cell' : '')]" cdkDropList [cdkDropListEnterPredicate]="canDrop()"
+    <div [ngClass]="['triple-item', (nestLevel > 0 ? 'empty-cell' : '')]" cdkDropList
+         [cdkDropListEnterPredicate]="canDrop()"
          (cdkDropListDropped)="drop($event)" fxFill appCypressData=triple-item>
-      <div class="ti-row">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div class="ti-row">
 
-        <div *ngIf="isFirstChild && isTypeProperty" fxFill>
-          <div fxLayout="row" fxLayoutAlign="space-between end">
-            <div class="type-property">a</div>
-            <app-type-badge [type]="getType()"></app-type-badge>
-          </div>
-        </div>
-
-        <div *ngIf="isFirstChild && !isTypeProperty && nestLevel === 0; else emptyBlock" fxFill>
-          <div fxLayout="row" fxLayoutAlign="space-between end">
-            <div fxFlex="auto">
-              <app-transformation-type-badge [cellMapping]="cellMapping" [target]="propertytransformation"></app-transformation-type-badge>
+          <div *ngIf="isFirstChild && isTypeProperty" fxFill>
+            <div fxLayout="row" fxLayoutAlign="space-between end">
+              <div class="type-property">a</div>
+              <app-type-badge [type]="getType()"></app-type-badge>
             </div>
-            <div *ngIf="!isGRELTransformation(getTransformation())" fxFlex="grow">
+          </div>
+
+          <div *ngIf="isFirstChild && !isTypeProperty && nestLevel === 0; else emptyBlock" fxFill>
+            <div fxLayout="row" fxLayoutAlign="space-between end">
+              <div fxFlex="auto">
+                <app-transformation-type-badge [cellMapping]="cellMapping"
+                                               [target]="propertytransformation"></app-transformation-type-badge>
+              </div>
+              <div *ngIf="!isGRELTransformation(getTransformation())" fxFlex="grow">
              <span class="ti-source">
                 <span *ngIf="getSourceType() === 'column'" matTooltip="{{getValueSource().getColumnName()}}">
                   <span class="ti-source-type type-col" title="column">
@@ -54,23 +57,24 @@
                   {{getValueSource().source}}
                 </span>
               </span>
-            </div>
+              </div>
 
-            <div *ngIf="isGRELTransformation(getTransformation())" class="ml-2" fxFlex="grow">
+              <div *ngIf="isGRELTransformation(getTransformation())" class="ml-2" fxFlex="grow">
              <span class="ti-source" matTooltip="{{getTransformation().getExpression()}}">
                {{getReasonableLongWord(getTransformation().getExpression())}}
               </span>
+              </div>
+
+              <app-type-badge [type]="getType()"></app-type-badge>
             </div>
 
-            <app-type-badge [type]="getType()"></app-type-badge>
-          </div>
+            <div class="mt-12">
+              <div fxFlex="auto">
+                <app-transformation-type-badge [cellMapping]="cellMapping"
+                                               [target]="valuetransformation"></app-transformation-type-badge>
+              </div>
 
-          <div class="mt-12">
-            <div fxFlex="auto">
-              <app-transformation-type-badge [cellMapping]="cellMapping" [target]="valuetransformation"></app-transformation-type-badge>
-            </div>
-
-            <div fxFlex="grow" *ngIf="!isGRELTransformation(getSecondaryTransformation())">
+              <div fxFlex="grow" *ngIf="!isGRELTransformation(getSecondaryTransformation())">
               <span class="ti-source">
                 <div *ngIf="getDatatypeSource()">
                   <span *ngIf="getDatatypeSourceType() === 'column'"
@@ -123,19 +127,42 @@
                   </span>
                 </div>
               </span>
-            </div>
+              </div>
 
-            <div *ngIf="isGRELTransformation(getSecondaryTransformation())" class="ml-2" fxFlex="grow">
+              <div *ngIf="isGRELTransformation(getSecondaryTransformation())" class="ml-2" fxFlex="grow">
              <span class="ti-source" matTooltip="{{getSecondaryTransformation().getExpression()}}">
                {{getReasonableLongWord(getSecondaryTransformation().getExpression())}}
               </span>
-            </div>
+              </div>
 
-            <div>
-              <div [fxFlex]="20">
-                <app-transformation-type-badge [cellMapping]="cellMapping" [target]="datatypetransformation"></app-transformation-type-badge>
+              <div>
+                <div [fxFlex]="20">
+                  <app-transformation-type-badge [cellMapping]="cellMapping"
+                                                 [target]="datatypetransformation"></app-transformation-type-badge>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div class="ti-actions ml-12" *ngIf="isFirstChild && nestLevel === 0">
+          <div fxLayout="row" fxLayoutAlign="end stretch">
+
+            <mat-divider [vertical]="true"></mat-divider>
+            <span *ngIf="!isTypeProperty" class="btn btn-link text-muted">
+						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}"
+                    appCypressData="button-edit-cell"></span>
+              </span>
+
+            <span class="btn btn-link text-muted add-sibling">
+			      <span class="icon-plus" (click)="addSibling()" appcypressdata="add-sibling"
+                  matTooltip="{{'TOOLTIPS.ADD' | translate}} {{cellType}}"></span>
+			      </span>
+
+            <span class="btn btn-link text-muted">
+					  <span class="icon-trash" (click)="deleteMapping($event)" appCypressData="delete-node"
+                  matTooltip="{{'TOOLTIPS.DELETE_VALUE' | translate}}"></span>
+            </span>
           </div>
         </div>
       </div>
@@ -145,21 +172,6 @@
           <div *ngFor="let previewItem of getPreview();">
             {{previewItem}}
           </div>
-        </div>
-        <div class="ti-actions">
-          <span *ngIf="!isTypeProperty" class="btn btn-link text-muted">
-						  <span class="icon-edit" (click)="onEdit()" matTooltip="{{'TOOLTIPS.EDIT_VALUE' | translate}}" appCypressData="button-edit-cell"></span>
-          </span>
-
-          <span class="btn btn-link text-muted add-sibling">
-			      <span class="icon-plus"  (click)="addSibling()" appcypressdata="add-sibling"
-                  matTooltip="{{'TOOLTIPS.ADD' | translate}} {{cellType}}"></span>
-			    </span>
-
-          <span class="btn btn-link text-muted">
-					  <span class="icon-trash" (click)="deleteMapping($event)" appCypressData="delete-node"
-                  matTooltip="{{'TOOLTIPS.DELETE_VALUE' | translate}}"></span>
-          </span>
         </div>
       </div>
     </div>
