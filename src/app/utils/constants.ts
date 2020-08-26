@@ -22,6 +22,7 @@ export const DOUBLE_SLASH = '//';
 export const COLON = ':';
 export const DATATYPE_SIGN = '^^';
 export const LANGUAGE_SIGN='@';
+export const EMPTY_PREVIEW = 'empty';
 export const PRISTINE_MAPPING = 'pristine';
 export const DIRTY_MAPPING = 'dirty';
 export const TYPE = 'type';

@@ -335,6 +335,63 @@
                     ]
                   }
                 ]
+              },
+              {
+                "property": {
+                  "valueSource": {
+                    "source": "constant",
+                    "constant": "testNoPreview"
+                  },
+                  "preview": [
+                    "<testNoPreview>"
+                  ]
+                },
+                "values": [
+                  {
+                    "valueSource": {
+                      "columnName": "director_facebook_likes",
+                      "source": "column"
+                    },
+                    "valueType": {
+                      "propertyMappings": [
+                        {
+                          "property": {
+                            "valueSource": {
+                              "source": "constant",
+                              "constant": "noPreview"
+                            },
+                            "preview": []
+                          },
+                          "values": [
+                            {
+                              "valueSource": {
+                                "constant": "noPreview",
+                                "source": "constant"
+                              },
+                              "valueType": {
+                                "propertyMappings": [],
+                                "type": "iri",
+                                "typeMappings": []
+                              },
+                              "preview": []
+                            }
+                          ]
+                        }
+                      ],
+                      "type": "iri",
+                      "typeMappings": [
+                        {
+                          "valueSource": {
+                            "source": "constant",
+                            "constant": "movie"
+                          },
+                          "preview": []
+                        }
+                      ]
+                    },
+                    "preview": []
+                  }
+                ]
               }
             ],
             "subject": {

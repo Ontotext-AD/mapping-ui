@@ -13,6 +13,7 @@ import {MappingBase} from 'src/app/models/mapping-base';
 import {CdkDrag, CdkDragDrop, CdkDropList} from '@angular/cdk/drag-drop';
 import {Source} from 'src/app/models/source';
 import {
+  EMPTY_PREVIEW,
   GREL_CONSTANT,
   OBJECT_SELECTOR,
   PREDICATE_SELECTOR,
@@ -153,7 +154,15 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   getPreview(): string[] {
+    if (this.isEmptyPreview()) {
+      return [EMPTY_PREVIEW];
+    }
     return this.modelManagementService.getPreview(this.cellMapping);
+  }
+
+  isEmptyPreview(): boolean {
+    const preview = this.modelManagementService.getPreview(this.cellMapping);
+    return preview && preview[0] === null && preview.length === 1 || preview && preview.length === 0;
   }
 
   public drop($event: CdkDragDrop<Source, any>) {

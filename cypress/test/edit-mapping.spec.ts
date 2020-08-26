@@ -524,9 +524,12 @@ describe('Edit mapping', () => {
       cy.visit('?dataProviderID=ontorefine:123');
       cy.wait('@loadColumns');
       // When The mapping is loaded
-      MappingSteps.getTriples().should('have.length', 4);
+      MappingSteps.getTriples().should('have.length', 7);
       // Then I expect the save button to be disabled
       HeaderSteps.getSaveMappingButton().should('be.disabled');
+      // I delete a triple
+      MappingSteps.deleteTriple(2);
+      MappingSteps.confirm();
       // I delete a triple
       MappingSteps.deleteTriple(2);
       MappingSteps.confirm();
@@ -547,6 +550,35 @@ describe('Edit mapping', () => {
         MappingSteps.getTriplePredicatePreview(1).contains('test');
         MappingSteps.getTripleObjectPreview(1).contains('<http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0499549%2F%3Fref_%3Dfn_tt_tt_1>');
       });
+    });
+
+    it('Should mark empty mapping preview', () => {
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model-with-preview.json');
+
+      // Given I have opened the application
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+      // When The mapping is loaded
+      MappingSteps.getTriples().should('have.length', 7);
+
+      // I delete a triple
+      MappingSteps.deleteTriple(1);
+      MappingSteps.confirm();
+
+      // I switch to both preview
+      HeaderSteps.getBothViewButton().click();
+      // I see mapping preview with empty previews
+      MappingSteps.getTripleSubjectPreview(0).contains('<James%20Cameron>');
+      MappingSteps.getTripleObjectPreview(0).contains('<person>');
+      MappingSteps.getTriplePredicatePreview(1).contains('testNoPreview');
+      MappingSteps.getTripleObjectPreview(1).contains('empty');
+      MappingSteps.getTripleObjectPreview(2).contains('empty');
+      MappingSteps.getTriplePredicatePreview(3).contains('empty');
+      MappingSteps.getTripleObjectPreview(3).contains('empty');
+
     });
 
     it('Should change object type and save it properly', () => {
