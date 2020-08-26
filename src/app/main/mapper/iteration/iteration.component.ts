@@ -566,6 +566,10 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   addNewSibling($event: any, triple: Triple, triplePosition: string, index: number) {
+    if (!this.modelManagementService.isValidMapping(this.mapping)) {
+      return;
+    }
+
     if (triplePosition === this.SUBJECT) {
       const insertAt = this.triples.length - 1;
       this.tabService.selectedInput.next({index: insertAt, position: 1});

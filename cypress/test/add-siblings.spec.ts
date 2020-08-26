@@ -96,4 +96,22 @@ describe('Add siblings', () => {
 
   });
 
+  it('Should not add siblings when mapping is not valid', () => {
+    // Insert a new incomplete triple after all existing ones
+    MappingSteps.completeTriple(6, 'subject', 'a', undefined);
+    MappingSteps.getTriples().should('have.length', 7);
+
+    // Add subject sibling
+    MappingSteps.addTripleSubjectSibling(0)
+    MappingSteps.getTriples().should('have.length', 7);
+
+    // Add predicate sibling
+    MappingSteps.addTriplePredicateSibling(0)
+    MappingSteps.getTriples().should('have.length', 7);
+
+    // Add object sibling
+    MappingSteps.addTripleObjectSibling(0)
+    MappingSteps.getTriples().should('have.length', 7);
+  });
+
 });
