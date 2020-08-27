@@ -172,6 +172,9 @@
           <div *ngFor="let previewItem of getPreview();">
             {{previewItem}}
           </div>
+          <div *ngIf="isFirstChild && isTypeProperty">
+            <div>a</div>
+          </div>
         </div>
       </div>
     </div>
