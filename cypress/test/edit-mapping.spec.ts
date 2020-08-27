@@ -571,10 +571,12 @@ describe('Edit mapping', () => {
       // I switch to both preview
       HeaderSteps.getBothViewButton().click();
       // I see mapping preview with empty previews
-      MappingSteps.getTripleSubjectPreview(0).contains('<James%20Cameron>');
+      MappingSteps.getTripleSubjectPreview(0).contains('<James%20Cameron>')
+      MappingSteps.getTriplePredicatePreview(0).contains('a');
       MappingSteps.getTripleObjectPreview(0).contains('<person>');
       MappingSteps.getTriplePredicatePreview(1).contains('testNoPreview');
       MappingSteps.getTripleObjectPreview(1).contains('empty');
+      MappingSteps.getTriplePredicatePreview(2).contains('a');
       MappingSteps.getTripleObjectPreview(2).contains('empty');
       MappingSteps.getTriplePredicatePreview(3).contains('empty');
       MappingSteps.getTripleObjectPreview(3).contains('empty');
