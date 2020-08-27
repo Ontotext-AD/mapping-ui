@@ -12,6 +12,7 @@ export const DOWNLOAD_RDF_FILE = 'result-triples.ttl';
 export const DOWNLOAD_JSON_FILE = 'mapping.json';
 export const GREL_CONSTANT = 'grel';
 export const PREFIX_CONSTANT = 'prefix';
+export const RAW_CONSTANT = 'raw';
 export const CONSTANT = 'constant';
 export const MAT_OPTION= 'MAT-OPTION';
 export const COLUMN = 'column';
