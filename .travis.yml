@@ -33,6 +33,7 @@ script:
 
 deploy:
   - provider: npm
+    script: npm run build:prod
     skip_cleanup: true
     email:  $NPM_MAIL
     api_key: $NPM_TOKEN
