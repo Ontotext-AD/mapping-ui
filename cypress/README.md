@@ -13,6 +13,6 @@
   * Snapshots will contains snapshots of failed tests.
   Folders are git ignored.
   
-  Run `run cy:run -- --spec "path_to_test"` to execute single test. For example: `npm run cy:run --spec "cypress\test\app\mapper\mapper-component.spec.ts"`
+  Run `run cy:run -- --spec "path_to_test"` to execute single test. For example: `npm run cy:run --spec "cypress\test\amsterdam-mapping.spec.ts"`
   
-  How to pass environment parameters when run/open tests: `npm run cy:run --spec "cypress\test\app\mapper\mapper-component.spec.ts" --env source1=foo,source2=bar`
+  How to pass environment parameters when run/open tests: `npm run cy:run --spec "cypress\test\amsterdam-mapping" --env source1=foo,source2=bar`

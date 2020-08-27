@@ -69,7 +69,7 @@
                 <mat-label>{{'TYPE.PREFIX' | translate}}</mat-label>
                 <input matInput formControlName="expression" name="expression"
                           [matAutocomplete]="prefixAuto"
-                          appCypressData="transformation-expression">
+                          appCypressData="transformation-expression" [readonly]="isRawIri">
                 <mat-autocomplete #prefixAuto="matAutocomplete">
                   <div *ngIf="isPrefixTransformation">
                     <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
@@ -115,7 +115,7 @@
                 <mat-label>{{'TYPE.PREFIX' | translate}}</mat-label>
                 <input matInput formControlName="expression" name="expression"
                           [matAutocomplete]="prefixAuto"
-                          appCypressData="transformation-expression">
+                          appCypressData="transformation-expression" [readonly]="isRawIri">
                 <mat-autocomplete #prefixAuto="matAutocomplete">
                   <div *ngIf="isPrefixTransformation">
                     <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
@@ -228,7 +228,7 @@
                     <mat-label>{{'TYPE.PREFIX' | translate}}</mat-label>
                     <input matInput formControlName="datatypeTransformation" name="datatypeTransformation"
                               [matAutocomplete]="datatypePrefixAuto"
-                              appCypressData="datatype-transformation-expression">
+                              appCypressData="datatype-transformation-expression" [readonly]="isDatatypeRawIri">
                     <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
                       <div>
                         <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'">
@@ -275,7 +275,7 @@
                     <mat-label>{{'TYPE.PREFIX' | translate}}</mat-label>
                     <input matInput formControlName="datatypeTransformation" name="datatypeTransformation"
                               [matAutocomplete]="datatypePrefixAuto"
-                              appCypressData="datatype-transformation-expression">
+                              appCypressData="datatype-transformation-expression" [readonly]="isDatatypeRawIri">
                     <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
                       <div>
                         <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'">

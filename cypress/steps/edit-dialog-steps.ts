@@ -133,6 +133,14 @@ class EditDialogSteps {
     return this.getSourceSection().find('[appCypressData=grel]');
   }
 
+  static setRawIRI() {
+    return this.getSourceSection().find('[appCypressData=transformation-raw]').click();
+  }
+
+  static isRawIRI() {
+    return this.getSourceSection().find('[appCypressData=transformation-raw] button').should('have.attr', 'aria-pressed', 'true');;
+  }
+
   // transformation section
   static getTransformationSection() {
     return EditDialogSteps.getDialog().find('[appCypressData=transformation-section]');
