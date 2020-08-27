@@ -269,7 +269,7 @@ export class ModelConstructService {
   }
 
   isTypeMappingPredicate(value, prefix) {
-    return value === TYPE && this.isRdfTypePrefix(prefix);
+    return value === TYPE && this.isRdfTypePrefix(prefix) || value === RDF_FULL + TYPE;
   }
 
   private isRdfTypePrefix(prefix): boolean {

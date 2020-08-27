@@ -679,6 +679,24 @@ describe('Edit mapping', () => {
       MappingSteps.getTripleObject(0).should('have.text', ' C  obj <IRI>');
     });
 
+    it('Should treat rdf:type as type mapping predicate when select it from autocomplete', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-rdf-type.json');
+      cy.route('GET', '/rest/autocomplete/enabled', 'true');
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+
+      MappingSteps.completeTriple(0, 's', undefined, undefined);
+      MappingSteps.type('rdf:t', () => MappingSteps.getTriplePredicateValue(0));
+      MappingSteps.getSuggestions(0).should('have.length', 1);
+      MappingSteps.getSuggestions(0).first().should('contain', 'rdf:type').click();
+
+      // THEN
+      MappingSteps.getTriplePredicate(0).should('have.text', 'a<IRI>');
+    });
+
     it('Should treat rdf:type as type mapping predicate in the edit mapping dialog', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');

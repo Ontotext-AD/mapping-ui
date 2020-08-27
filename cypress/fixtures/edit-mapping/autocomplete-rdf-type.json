@@ -1,0 +1,22 @@
+{
+  "head" : {
+    "vars" : [
+      "iri",
+      "g"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "iri" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "g" : {
+          "type" : "literal",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#<b>t</b>ype"
+        }
+      }
+    ]
+  }
+}
