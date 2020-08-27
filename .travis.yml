@@ -38,3 +38,6 @@ deploy:
     api_key: $NPM_TOKEN
     on:
       tags: true
+
+  - provider: script
+    script: npm run build:prod
