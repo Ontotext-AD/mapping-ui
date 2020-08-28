@@ -327,6 +327,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
             this.modelConstructService.setRootMappingInModel(editedTriple, this.mapping);
             if (TriplesModelService.isTripleComplete(editedTriple)) {
               this.initWithPreview(true);
+              this.messageService.publish(ChannelName.UpdateMapping, this.mapping);
             }
 
             const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
