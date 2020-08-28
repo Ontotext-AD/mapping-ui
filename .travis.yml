@@ -33,7 +33,7 @@ jobs:
         - npm run test
         - npm run cy:ci
         - npm run build:prod
-      if: NOT branch = master
+      if: type = pull_request
     - stage: npm release
       script: npm run build:prod
       deploy:
