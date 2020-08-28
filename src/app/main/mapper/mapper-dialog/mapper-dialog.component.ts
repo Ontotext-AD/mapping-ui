@@ -545,8 +545,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this), debounceTime(500))
         .subscribe((value) => {
           this.resolveGrelLanguagePreview(value);
-          const isValue = !!value;
-          this.isLanguageGrelTransformation = isValue;
         });
 
     this.mapperForm.get('datatypeTransformation').valueChanges
