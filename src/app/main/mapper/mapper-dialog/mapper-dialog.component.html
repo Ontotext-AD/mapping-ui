@@ -401,6 +401,7 @@
                 <mat-form-field fxFlex="80">
                     <textarea matInput formControlName="languageTransformation" name="languageTransformation"
                               cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+                              [placeholder]="('LABELS.GREL_PLACEHOLDER' | translate)"
                               appCypressData="language-transformation-expression"
                               [satPopoverAnchor]='languageGrelPreview'
                               (focus)="languageGrelPreview.open()" (blur)="languageGrelPreview.close()"></textarea>
