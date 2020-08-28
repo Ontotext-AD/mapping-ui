@@ -25,14 +25,15 @@ cache:
     - ~/.npm
     - ~/.cache
 
-script:
-  - npm run lint
-  - npm run test
-  - npm run cy:ci
-  - npm run build:prod
-
 jobs:
   include:
+    - stage: test
+      script:
+        - npm run lint
+        - npm run test
+        - npm run cy:ci
+        - npm run build:prod
+      if: branch = master
     - stage: npm release
       script: npm run build:prod
       deploy:
