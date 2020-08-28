@@ -1,32 +1,22 @@
-import {MapperComponentSelectors} from '../../../../cypress/utils/selectors/mapper-component.selectors';
+import {MapperComponentSelectors} from '../utils/selectors/mapper-component.selectors';
+import MappingSteps from "../steps/mapping-steps";
+import EditDialogSteps from "../steps/edit-dialog-steps";
 
-describe('MapperComponent', () => {
+describe('MapperDialog', () => {
   beforeEach(() => {
     // stub labels
     cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
     // stub namespaces
     cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    // stub model
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
     // stub columns
     cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
     // stub socksjs
     cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
   });
 
-  it('should render mapper', () => {
+  xit('should render mapping dialog when drag and drop source', () => {
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
     cy.visit('?dataProviderID=ontorefine:123');
-
-    // THEN:
-    // I see header content
-    cy.cypressData(MapperComponentSelectors.MAPPER_SELECTOR).should('be.visible');
-    // I see mapping holders
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-0").should('be.visible');
-    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + "-0").should('be.visible');
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-0").should('be.visible');
-  });
-
-  it('should render mapping dialog when drag and drop source', () => {
     // GIVEN:
     // I visit home page
     cy.visit('?dataProviderID=ontorefine:123');
@@ -44,9 +34,8 @@ describe('MapperComponent', () => {
     cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('be.visible');
   });
 
-  it('should render mapping dialog on subject edit button click', () => {
-    // GIVEN:
-    // I visit home page
+  xit('should render mapping dialog on subject edit button click', () => {
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
     cy.visit('?dataProviderID=ontorefine:123');
 
     // WHEN:
@@ -71,9 +60,9 @@ describe('MapperComponent', () => {
       .should('be.enabled');
   });
 
-  it.only('should render mapping dialog and create triple', () => {
-    // GIVEN:
-    // I visit home page
+  it('should render mapping dialog and create triple', () => {
+    // stub model
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
     cy.visit('?dataProviderID=ontorefine:123');
 
     // WHEN:
@@ -219,4 +208,30 @@ describe('MapperComponent', () => {
     cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-3").should('be.visible');
 
   })
+
+  it('should set Raw IRI properly', () => {
+    // stub empty model
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+    cy.visit('?dataProviderID=ontorefine:123');
+
+    // When I complete a new triple with an IRI object
+    MappingSteps.completeTriple(0, 's', 'p', 'http://some/iri');
+
+    // I set is a Raw IRI through the edit window
+    MappingSteps.editTripleObjectWithData(0);
+    EditDialogSteps.setRawIRI();
+
+    // Raw IRI should be set and prefix field should be disabled
+    EditDialogSteps.isRawIRI();
+    EditDialogSteps.getTransformationExpressionField().should('have.attr', 'readonly');
+    EditDialogSteps.saveConfiguration();
+
+    // When I save and reopen the edit window
+    MappingSteps.editTripleObjectWithData(0);
+
+    // Raw IRI should be set and prefix field should be disabled
+    EditDialogSteps.isRawIRI();
+    EditDialogSteps.getTransformationExpressionField().should('have.attr', 'readonly');
+  });
+
 });

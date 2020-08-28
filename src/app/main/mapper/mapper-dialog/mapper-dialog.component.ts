@@ -330,6 +330,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.isDatatypeTransformation = !!this.mappingDetails.datatypeLanguage && this.mappingDetails.datatypeLanguage !== Language.Raw;
     this.isDataTypePrefixTransformation = this.hasDatatype && !!this.mappingDetails.datatypeLanguage && this.mappingDetails.datatypeLanguage === Language.Prefix;
     this.isDataTypeGrelTransformation = this.hasDatatype && !!this.mappingDetails.datatypeLanguage && this.mappingDetails.datatypeLanguage === Language.GREL;
+    this.isDatatypeRawIri = this.hasDatatype && !!this.mappingDetails.datatypeLanguage && this.mappingDetails.datatypeLanguage === Language.Raw;
 
     this.hasLanguage = this.mappingDetails.hasLanguage;
     this.isLanguageColumn = !!this.mappingDetails.languageColumnName;
@@ -339,6 +340,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.isTransformation = !!this.mappingDetails.language && this.mappingDetails.language !== Language.Raw;
     this.isPrefixTransformation = this.isTransformation && this.mappingDetails.language === Language.Prefix;
     this.isGrelTransformation = this.isTransformation && this.mappingDetails.language === Language.GREL;
+    this.isRawIri = !!this.mappingDetails.language && this.mappingDetails.language === Language.Raw;
   }
 
   private resolveGrelExpressionPreview(value?: string) {
@@ -488,13 +490,10 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.mapperForm.get('language').valueChanges
         .pipe(untilComponentDestroyed(this))
         .subscribe((value) => {
-          this.isRawIri = value && value[0] === Language.Raw;
+          this.isRawIri = value && (value[0] === Language.Raw || value === Language.Raw);
           if (this.isRawIri) {
             this.mapperForm.get('expression').setValue('');
             this.mapperForm.get('expression').updateValueAndValidity();
-            this.mapperForm.get('expression').disable();
-          } else if (this.isConstant || this.isColumn) {
-            this.mapperForm.get('expression').enable();
           }
         });
 
@@ -505,9 +504,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
           if (this.isDatatypeRawIri) {
             this.mapperForm.get('datatypeTransformation').setValue('');
             this.mapperForm.get('datatypeTransformation').updateValueAndValidity();
-            this.mapperForm.get('datatypeTransformation').disable();
-          } else if (this.isDatatypeConstant || this.isDatatypeColumn) {
-            this.mapperForm.get('datatypeTransformation').enable();
           }
         });
 
