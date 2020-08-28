@@ -12,6 +12,7 @@ import {
   GREL_CONSTANT,
   LANGUAGE_SIGN,
   PREFIX_CONSTANT,
+  RAW_CONSTANT,
 } from '../../../../utils/constants';
 import {Type} from '../../../../models/mapping-definition';
 import {IRIImpl} from '../../../../models/iri-impl';
@@ -26,6 +27,7 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
   @Input() target: TransformationTarget;
 
   GREL = GREL_CONSTANT;
+  RAW = RAW_CONSTANT;
   PREFIX = PREFIX_CONSTANT;
   DATATYPE_LITERAL = Type.DatatypeLiteral;
   LANGUAGE_LITERAL = Type.LanguageLiteral;
@@ -100,6 +102,8 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
       return this.translateService.instant('LABELS.GREL');
     } else if (this.getTransformationType() === this.PREFIX) {
       return this.resolveExpressionValue(this.getTransformation());
+    } else if (this.getTransformationType() === this.RAW) {
+      return this.translateService.instant('LABELS.RAW');
     }
   }
 
@@ -118,6 +122,8 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
         return this.translateService.instant('LABELS.GREL');
       } else if (secondaryTransformationType.getLanguage() === this.PREFIX) {
         return this.resolveExpressionValue(secondaryTransformationType);
+      } else if (secondaryTransformationType.getLanguage() === this.RAW) {
+        return this.translateService.instant('LABELS.RAW');
       }
     }
   }
@@ -139,6 +145,8 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
       cssClass += this.GREL;
     } else if (transformationType === this.PREFIX) {
       cssClass += this.PREFIX;
+    } else if (transformationType === this.RAW) {
+      cssClass += this.RAW;
     }
     return cssClass;
   }

@@ -201,6 +201,11 @@
   font-size: 0.7rem;
 }
 
+.ti-transform.type-raw {
+  font-size: 0.7rem;
+  margin-right: 5px;
+}
+
 /* Types */
 .ti-type {
   font-family: Menlo, Consolas, "Ubuntu Mono", monospace;
