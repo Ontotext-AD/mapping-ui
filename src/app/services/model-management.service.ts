@@ -455,14 +455,18 @@ export class ModelManagementService {
   }
 
   isValidMapping(mapping: MappingDefinitionImpl): boolean {
+    return !this.getMappingValidationError(mapping);
+  }
+
+  getMappingValidationError(mapping: MappingDefinitionImpl): string {
     try {
       this.checkSubjectValidity(mapping);
       this.checkMappingValidity(mapping);
-      return true;
     } catch (e) {
-      return false;
+      return e;
     }
   }
+
 
   private resolveExpressionValue(transformation) {
     if (transformation) {
