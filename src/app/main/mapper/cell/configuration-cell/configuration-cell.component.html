@@ -26,13 +26,14 @@
         </div>
 
         <div *ngIf="isFirstChild && !isTypeProperty; else emptyBlock" fxFill>
-          <div fxLayout="row" fxLayoutAlign="space-between end">
-            <div fxFlex="auto">
+          <div fxLayout="row" fxLayoutAlign="space-between baseline">
+            <div class="badge-wrapper" fxFlex="auto">
               <app-transformation-type-badge [cellMapping]="cellMapping" [target]="propertytransformation"></app-transformation-type-badge>
             </div>
 
             <div *ngIf="!(isGRELTransformation(getTransformation()))" fxFlex="grow">
              <span class="ti-source">
+               <div fxLayout="row" fxLayoutAlign="start stretch">
                 <span *ngIf="getSourceType() === 'column'" matTooltip="{{getValueSource().getColumnName()}}">
                   <span class="ti-source-type type-col" title="column">
                     {{'CONSTANTS.COLUMN' | translate}}
@@ -53,6 +54,7 @@
                   </span>
                   {{getValueSource().source}}
                 </span>
+               </div>
               </span>
             </div>
 

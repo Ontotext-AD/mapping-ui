@@ -386,6 +386,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
             this.mapperForm.get('language').setValue([Language.GREL]);
             this.mapperForm.get('language').markAsTouched();
             this.isTransformation = true;
+            this.isPrefixTransformation = false;
           }
 
           if (this.isColumn) {
@@ -743,7 +744,13 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
           }
 
           if (this.selected) {
-            this.modelConstructService.clearMapping(this.selected);
+            if (!this.isOfType(Type.IRI) || this.isOfType(Type.IRI) && (this.selected.getPropertyMappings().length === 0 && this.selected.getTypeMappings().length === 0)) {
+              this.modelConstructService.clearMapping(this.selected);
+            } else {
+              this.selected.setValueTransformation(undefined);
+              this.selected.setValueSource(undefined);
+            }
+
             this.modelConstructService.setCellMapping(this.selected, formValue, settings);
           } else {
             this.selected = this.modelConstructService.createMappingObject(formValue, settings);

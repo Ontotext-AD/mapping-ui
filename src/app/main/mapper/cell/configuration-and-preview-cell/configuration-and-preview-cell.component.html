@@ -29,8 +29,8 @@
           </div>
 
           <div *ngIf="isFirstChild && !isTypeProperty && nestLevel === 0; else emptyBlock" fxFill>
-            <div fxLayout="row" fxLayoutAlign="space-between end">
-              <div fxFlex="auto">
+            <div fxLayout="row" fxLayoutAlign="space-between baseline">
+              <div class="badge-wrapper" fxFlex="auto">
                 <app-transformation-type-badge [cellMapping]="cellMapping"
                                                [target]="propertytransformation"></app-transformation-type-badge>
               </div>
