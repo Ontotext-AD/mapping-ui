@@ -87,6 +87,7 @@
     "CONFIRM_MAPPING_UPLOAD": "All mappings will be overwritten. Do you want to proceed?",
     "MAPPING_UPLOAD_ERROR": "Something went wrong.",
     "INCOMPLETE_MAPPING_ERROR": "The operation is not allowed. You have an incomplete mapping.",
+    "INVALID_MAPPING_ERROR": "Invalid mapping. ",
     "UNRECOGNIZED_PREFIX_ERROR": "Unrecognized prefix.",
     "GREL_NO_PREVIEW": "No GREL preview",
     "AUTOCOMPLETE_OFF_WARNING": "Autocomplete is OFF. Go to Setup -> Autocomplete"

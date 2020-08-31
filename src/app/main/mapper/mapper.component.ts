@@ -245,6 +245,11 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   }
 
   public onJsonUpload($event: MappingDefinitionImpl) {
-    this.rdfMapping.next({mapping: $event, isDirty: true});
+    const error = this.modelManagementService.getMappingValidationError($event);
+    if (!error) {
+      this.rdfMapping.next({mapping: $event, isDirty: true});
+    } else {
+      this.notificationService.error(this.translateService.instant('MESSAGES.INVALID_MAPPING_ERROR') + error);
+    }
   }
 }
