@@ -212,7 +212,9 @@ describe('MapperDialog', () => {
   it('should set Raw IRI properly', () => {
     // stub empty model
     cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
     cy.visit('?dataProviderID=ontorefine:123');
+    cy.wait('@loadColumns');
 
     // When I complete a new triple with an IRI object
     MappingSteps.completeTriple(0, 's', 'p', 'http://some/iri');
