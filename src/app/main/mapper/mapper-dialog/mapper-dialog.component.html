@@ -71,7 +71,7 @@
                           [matAutocomplete]="prefixAuto"
                           appCypressData="transformation-expression" [readonly]="isRawIri">
                 <mat-autocomplete #prefixAuto="matAutocomplete">
-                  <div *ngIf="isPrefixTransformation">
+                  <div>
                     <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
                       {{namespace.prefix}}: <{{namespace.pValue}}>
                     </mat-option>
@@ -117,7 +117,7 @@
                           [matAutocomplete]="prefixAuto"
                           appCypressData="transformation-expression" [readonly]="isRawIri">
                 <mat-autocomplete #prefixAuto="matAutocomplete">
-                  <div *ngIf="isPrefixTransformation">
+                  <div>
                     <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
                       {{namespace.prefix}}: <{{namespace.pValue}}>
                     </mat-option>
