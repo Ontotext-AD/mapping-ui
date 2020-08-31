@@ -32,10 +32,10 @@ jobs:
         - npm run lint
         - npm run test
         - npm run cy:ci
-        - npm run build:prod
       if: type = pull_request
-    - stage: npm release
+    - stage: build
       script: npm run build:prod
+    - stage: npm release
       deploy:
         - provider: npm
           skip_cleanup: true
