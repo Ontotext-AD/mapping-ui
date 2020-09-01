@@ -33,9 +33,8 @@ jobs:
         - npm run test
         - npm run cy:ci
       if: type = pull_request
-    - stage: build
-      script: npm run build:prod
     - stage: npm release
+      script: npm run build:prod
       deploy:
         - provider: npm
           skip_cleanup: true
