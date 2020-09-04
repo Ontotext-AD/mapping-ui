@@ -511,7 +511,9 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
       prefix = prefixTransformation;
     } else if (source === SourceEnum.Constant) {
       prefixTransformation = this.modelConstructService.getPrefixTransformation(value, this.getAllNamespaces());
-      prefix = prefixTransformation && prefixTransformation.prefix;
+      if (this.modelConstructService.isValidPrefixTransformation(prefixTransformation, value)) {
+        prefix = prefixTransformation.prefix;
+      }
     }
 
     const data = {

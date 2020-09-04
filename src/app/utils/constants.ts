@@ -30,6 +30,7 @@ export const TYPE = 'type';
 export const RDF = 'rdf';
 export const RDF_COLON = 'rdf:';
 export const RDF_FULL = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+export const HASH_SIGN = '#';
 export const COLUMN_SIGN = '@';
 export const INDEX_SIGN = '$';
 export const SPARQL_TYPES = `

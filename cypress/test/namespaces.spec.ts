@@ -1,5 +1,6 @@
 import HeaderSteps from '../steps/header-steps';
 import MappingSteps from '../steps/mapping-steps';
+import EditDialogSteps from '../../cypress/steps/edit-dialog-steps';
 
 context('Namespaces', () => {
   beforeEach(() => {
@@ -179,5 +180,65 @@ context('Namespaces', () => {
     MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
     MappingSteps.getNamespace('ga').should('not.be.visible');
     MappingSteps.getNamespaceValidationError().should('be.visible');
+  });
+
+  context('Namespace as constant mapping', () => {
+    it('Should treat namespace as constant when inline typing', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+
+      // WHEN I type namespace inline
+      MappingSteps.completeTriple(0, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', undefined, undefined);
+
+      // THEN I expect to have it as constant
+      MappingSteps.getTripleSubject(0).should('have.text', ' C  http:// ... tax-ns# <IRI>');
+    });
+
+    it('Should treat namespace as constant in IRI', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+
+      // WHEN I complete the subject and predicate
+      MappingSteps.completeTriple(0, 'sub', 'pred', undefined);
+      // And edit the object
+      MappingSteps.editTripleObject(0);
+      EditDialogSteps.selectIri();
+      EditDialogSteps.selectConstant();
+      EditDialogSteps.completeConstant('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+      EditDialogSteps.saveConfiguration();
+
+      // THEN I expect to have it as constant
+      MappingSteps.getTripleObject(0).should('have.text', ' C  http:// ... tax-ns# <IRI>');
+    });
+
+    it('Should treat namespace as constant in datatype', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+
+      // WHEN I complete the subject ans predicate
+      MappingSteps.completeTriple(0, 'sub', 'pred', undefined);
+      // And edit the object
+      MappingSteps.editTripleObject(0);
+      EditDialogSteps.selectLiteral();
+      EditDialogSteps.selectConstant();
+      EditDialogSteps.completeConstant('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+      EditDialogSteps.selectTypeDataTypeLiteral();
+      EditDialogSteps.selectDataTypeConstant();
+      EditDialogSteps.completeDataTypeConstant('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+      EditDialogSteps.saveConfiguration();
+
+      // THEN
+      // It is a literal type with constant with datatype constant
+      MappingSteps.getTripleObject(0).should('have.text', ' C  http:// ... tax-ns# "Literal" C  http:// ... tax-ns# ^^Datatype');
+    });
   });
 });
