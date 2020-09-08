@@ -161,8 +161,8 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   isEmptyPreview(): boolean {
-    const preview = this.modelManagementService.getPreview(this.cellMapping);
-    return preview && preview[0] === null && preview.length === 1 || preview && preview.length === 0;
+    const preview = this.modelManagementService.getPreview(this.cellMapping) || [];
+    return preview.length === 0 || preview.length === 1 && (preview[0] === null || preview[0] === '');
   }
 
   public drop($event: CdkDragDrop<Source, any>) {
