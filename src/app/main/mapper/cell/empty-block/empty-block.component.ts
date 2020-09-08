@@ -15,8 +15,8 @@ import {MappingBase} from 'src/app/models/mapping-base';
 import {ColumnImpl} from 'src/app/models/column-impl';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {
-  COLON,
-  DOUBLE_SLASH, HTTP,
+  COLON, COLUMN_SIGN,
+  DOUBLE_SLASH, HTTP, INDEX_SIGN,
   MAT_OPTION,
   OBJECT_SELECTOR,
   PREDICATE_SELECTOR,
@@ -304,13 +304,16 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
   }
 
   public getIriDescription(option) {
-    return this.repositoryService.getIriDescription(option.value as string)
-        .pipe(untilComponentDestroyed(this), debounceTime(500))
-        .subscribe((description) => {
-          this.optionTooltip = description[0];
-          this.cdRef.detectChanges();
-          this.tooltip.show();
-        });
+    const value: string = option.value;
+    if (!value.startsWith(COLUMN_SIGN) || !value.startsWith(INDEX_SIGN)) {
+      return this.repositoryService.getIriDescription(value)
+          .pipe(untilComponentDestroyed(this), debounceTime(500))
+          .subscribe((description) => {
+            this.optionTooltip = description[0];
+            this.cdRef.detectChanges();
+            this.tooltip.show();
+          });
+    }
   }
 
   public clearTooltip() {
