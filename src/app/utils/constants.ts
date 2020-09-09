@@ -30,6 +30,8 @@ export const TYPE = 'type';
 export const RDF = 'rdf';
 export const RDF_COLON = 'rdf:';
 export const RDF_FULL = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+export const COLUMN_SIGN = '@';
+export const INDEX_SIGN = '$';
 export const SPARQL_TYPES = `
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
