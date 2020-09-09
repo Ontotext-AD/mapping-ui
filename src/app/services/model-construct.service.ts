@@ -4,7 +4,7 @@ import {Helper} from 'src/app/utils/helper';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {TypeMapping} from 'src/app/models/type-mapping';
 import {
-  COLON,
+  COLON, HASH_SIGN,
   OBJECT_SELECTOR,
   PREDICATE_SELECTOR,
   RDF,
@@ -56,8 +56,13 @@ export class ModelConstructService {
       } else if (settings.isDatatypeConstant && !Helper.isBlank(dataTypeConstant)) {
         this.modelManagementService.setValueTypeDatatypeValueColumnName(cellMapping, undefined);
         this.modelManagementService.setValueTypeDatatypeValueConstant(cellMapping, dataTypeConstant);
-        const transformed = this.getPrefixTransformation(dataTypeConstant, this.getAllNamespaces(settings));
-        if (transformed.prefix != undefined) {
+
+        let transformed;
+        if (!this.endsWithHashSign(dataTypeConstant)) {
+          transformed = this.getPrefixTransformation(dataTypeConstant, this.getAllNamespaces(settings));
+        }
+
+        if (transformed && transformed.prefix !== undefined) {
           this.modelManagementService.setValueTypeDatatypeValueConstant(cellMapping, transformed.suffix);
           this.setDataTypeTransformation(cellMapping, settings, transformed.prefix, Language.Prefix.valueOf());
         }
@@ -131,8 +136,11 @@ export class ModelConstructService {
 
     const constant = form.constant;
     if (settings.isConstant && !Helper.isBlank(constant)) {
-      const transformed = this.getPrefixTransformation(constant, this.getAllNamespaces(settings));
-      if (transformed.prefix !== undefined) {
+      let transformed;
+      if (!this.endsWithHashSign(constant)) {
+        transformed = this.getPrefixTransformation(constant, this.getAllNamespaces(settings));
+      }
+      if (transformed && transformed.prefix !== undefined) {
         this.setTypeTransformation(transformed.prefix, Language.Prefix.valueOf(), true);
         this.modelManagementService.setConstant(cellMapping, transformed.suffix);
       } else {
@@ -274,5 +282,13 @@ export class ModelConstructService {
 
   private isRdfTypePrefix(prefix): boolean {
     return prefix === RDF || prefix === RDF_COLON || prefix === RDF_FULL;
+  }
+
+  isValidPrefixTransformation(prefixTransformation, value): boolean {
+    return prefixTransformation && prefixTransformation.value !== value || prefixTransformation && prefixTransformation.value === value && !this.endsWithHashSign(value);
+  }
+
+  private endsWithHashSign(text: string): boolean {
+    return text && text.indexOf(HASH_SIGN) === text.length -1;
   }
 }
