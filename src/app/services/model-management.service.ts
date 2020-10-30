@@ -369,7 +369,7 @@ export class ModelManagementService {
 
   public setTypeMapping(subject: MappingBase, selected: SimpleIRIValueMappingImpl) {
     let emptyTypeMappingIndex: number;
-    if (!subject.getTypeMappings()) {
+    if (!subject.getTypeMappings() || subject.getPropertyMappings().length === 0) {
       subject.setTypeMappings([]);
     } else {
       emptyTypeMappingIndex = this.getEmptyTypeMappingIndex(subject);
@@ -413,7 +413,7 @@ export class ModelManagementService {
   }
 
   public setPropertyMapping(subject: MappingBase, predicate: PropertyMappingImpl) {
-    if (!subject.getPropertyMappings()) {
+    if (!subject.getPropertyMappings() || subject.getPropertyMappings().length === 0) {
       subject.setPropertyMappings([]);
     }
     subject.getPropertyMappings().push(predicate);

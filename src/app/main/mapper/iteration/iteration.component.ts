@@ -193,7 +193,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   isCompleteCell(subject, isRoot) {
     let isCompleteMapping = true;
-    if (isRoot && subject.getPropertyMappings().length === 0 && subject.getTypeMappings().length === 0) {
+    if (isRoot && subject.getPropertyMappings().length === 0 && subject.getTypeMappings().length === 0 &&
+      !(subject.getValueType().getType() === Type.UniqueBnode || subject.getValueType().getType() === Type.ValueBnode)) {
       isCompleteMapping = false;
     }
     if (subject.getPropertyMappings()) {
@@ -264,9 +265,10 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
             this.setUsedSources(object);
             TriplesModelService.addTriple(this.triples, new Triple(subject, property, object).setRoot(isRoot).setIRI(isIRI), nestingLevel);
             isRoot = false;
-            if (object.getValueType() && object.getValueType().getType() === Type.IRI) {
-              this.setTypeMappings(object, false, nestingLevel + 1, true);
-              this.setPropertyMappings(object, false, nestingLevel + 1, true);
+            if (object.getValueType() && (object.getValueType().getType() === Type.IRI ||
+              object.getValueType().getType() === Type.UniqueBnode || object.getValueType().getType() === Type.ValueBnode)) {
+                this.setTypeMappings(object, false, nestingLevel + 1, true);
+                this.setPropertyMappings(object, false, nestingLevel + 1, true);
             }
           });
         } else {
@@ -356,7 +358,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   public isNestApplicable(index) {
     const tripleByIndex = TriplesModelService.getTripleByIndex(this.triples, index);
     const object = tripleByIndex && tripleByIndex.getObject();
-    return !!(object && object.getValueType() && object.getValueType().getType() === Type.IRI);
+     return !!(object && object.getValueType() && (object.getValueType().getType() === Type.IRI ||
+      object.getValueType().getType() === Type.ValueBnode || object.getValueType().getType() === Type.UniqueBnode));
   }
 
   public isDeleteApplicable(index) {
