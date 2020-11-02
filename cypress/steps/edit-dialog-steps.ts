@@ -56,6 +56,14 @@ class EditDialogSteps {
     return this.getTypeSection().find('[appCypressData=type-literal]').should('be.visible').click();
   }
 
+  static selectUniqueBnode() {
+    return this.getTypeSection().find('[appCypressData=type-unique_bnode]').should('be.visible').click();
+  }
+
+  static selectValueBnode() {
+    return this.getTypeSection().find('[appCypressData=type-value_bnode]').should('be.visible').click();
+  }
+
   static selectTypeDataTypeLiteral() {
     this.selectLiteral();
     return this.getLiteralTypeSection().find('[appCypressData=transformation-datatype_literal]').should('be.visible').click();

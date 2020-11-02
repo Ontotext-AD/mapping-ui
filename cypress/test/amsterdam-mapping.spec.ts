@@ -97,8 +97,45 @@ describe('Create Amsterdam restaurants mapping', () => {
       'cells["Latitude"].value.replace(",", ".") + ")"');
     EditDialogSteps.saveConfiguration();
 
+    MappingSteps.completePredicate(9,'valuenode');
+    //I add a value bnode with source column
+    MappingSteps.editTripleObject(9);
+    EditDialogSteps.selectValueBnode();
+    EditDialogSteps.selectColumn();
+    EditDialogSteps.completeColumn('Trcid');
+    EditDialogSteps.saveConfiguration();
+
+    // I create nested triple
+    MappingSteps.addNestedTriple(9);
+    MappingSteps.completePredicate(10,'longdescription');
+    //I add a value bnode with source column
+    MappingSteps.editTripleObject(10);
+    EditDialogSteps.selectLiteral();
+    EditDialogSteps.selectColumn();
+    EditDialogSteps.completeColumn('Longdescription');
+    EditDialogSteps.saveConfiguration();
+
+    // I create nested triple
+    MappingSteps.addNestedTriple(9);
+    MappingSteps.completePredicate(11,'uniquenode');
+    //I add a value bnode with source column
+    MappingSteps.editTripleObject(11);
+    EditDialogSteps.selectUniqueBnode();
+    EditDialogSteps.selectColumn();
+    EditDialogSteps.completeColumn('Media');
+    EditDialogSteps.saveConfiguration();
+
+    MappingSteps.addNestedTriple(11);
+    MappingSteps.completePredicate(12,'city');
+    //I add a value bnode with source column
+    MappingSteps.editTripleObject(12);
+    EditDialogSteps.selectLiteral();
+    EditDialogSteps.selectColumn();
+    EditDialogSteps.completeColumn('City');
+    EditDialogSteps.saveConfiguration();
+
     // THEN
-    // I expect to have completed the Amsterdam mappingz
+    // I expect to have completed the Amsterdam mappings
     cy.fixture('amsterdam/amsterdam.json').then(amsterdamJson => {
       HeaderSteps.getJSON().should('deep.equal', amsterdamJson);
     });

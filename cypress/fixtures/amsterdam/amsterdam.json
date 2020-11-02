@@ -150,6 +150,86 @@
               }
             }
           ]
+        },
+        {
+          "property": {
+            "valueSource": {
+              "source": "constant",
+              "constant": "valuenode"
+            }
+          },
+          "values": [
+            {
+              "valueSource": {
+                "columnName": "Trcid",
+                "source": "column"
+              },
+              "valueType": {
+                "propertyMappings": [
+                  {
+                    "property": {
+                      "valueSource": {
+                        "source": "constant",
+                        "constant": "longdescription"
+                      }
+                    },
+                    "values": [
+                      {
+                        "valueSource": {
+                          "columnName": "Longdescription",
+                          "source": "column"
+                        },
+                        "valueType": {
+                          "type": "literal"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "property": {
+                      "valueSource": {
+                        "source": "constant",
+                        "constant": "uniquenode"
+                      }
+                    },
+                    "values": [
+                      {
+                        "valueSource": {
+                          "columnName": "Media",
+                          "source": "column"
+                        },
+                        "valueType": {
+                          "propertyMappings": [
+                            {
+                              "property": {
+                                "valueSource": {
+                                  "source": "constant",
+                                  "constant": "city"
+                                }
+                              },
+                              "values": [
+                                {
+                                  "valueSource": {
+                                    "columnName": "City",
+                                    "source": "column"
+                                  },
+                                  "valueType": {
+                                    "type": "literal"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "type": "unique_bnode"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "type": "value_bnode"
+              }
+            }
+          ]
         }
       ],
       "subject": {
