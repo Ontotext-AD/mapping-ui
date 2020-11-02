@@ -269,8 +269,8 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
             TriplesModelService.addTriple(this.triples, new Triple(subject, property, object).setRoot(isRoot).setIRI(isIRI), nestingLevel);
             isRoot = false;
             if (object.getValueType() && (object.getValueType().getType() === Type.IRI || this.isBnode(object))) {
-                this.setTypeMappings(object, false, nestingLevel + 1, true);
-                this.setPropertyMappings(object, false, nestingLevel + 1, true);
+              this.setTypeMappings(object, false, nestingLevel + 1, true);
+              this.setPropertyMappings(object, false, nestingLevel + 1, true);
             }
           });
         } else {
@@ -360,7 +360,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   public isNestApplicable(index) {
     const tripleByIndex = TriplesModelService.getTripleByIndex(this.triples, index);
     const object = tripleByIndex && tripleByIndex.getObject();
-     return !!(object && object.getValueType() && (object.getValueType().getType() === Type.IRI || this.isBnode(object)));
+    return !!(object && object.getValueType() && (object.getValueType().getType() === Type.IRI || this.isBnode(object)));
   }
 
   public isDeleteApplicable(index) {
