@@ -68,6 +68,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   isConstant: boolean;
   isColumn: boolean;
   isLiteral: boolean;
+  isBnode: boolean
   isDataTypePrefixTransformation: boolean;
   isDataTypeGrelTransformation: boolean;
   isDatatypeConstant: boolean;
@@ -321,6 +322,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
     this.isColumn = !!this.mappingDetails.columnName;
     this.isConstant = !!this.mappingDetails.constant;
+    this.isBnode = (this.mappingDetails.type === MappingDefinitionType.UniqueBnode ||
+      this.mappingDetails.type === MappingDefinitionType.ValueBnode);
 
     this.isLiteral = this.mappingDetails.type === MappingDefinitionType.Literal;
 
@@ -416,6 +419,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .subscribe((value) => {
           configureTransformations(value);
           this.isLiteral = value === Type.Literal;
+          this.isBnode = (value === Type.UniqueBnode || value === Type.ValueBnode);
           if (!this.isLiteral) {
             this.hasLanguage = false;
             this.hasDatatype = false;
@@ -672,6 +676,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
             isLanguageConstant: this.isLanguageConstant,
             isConstant: this.isConstant,
             isColumn: this.isColumn,
+            isBnode: this.isBnode,
             isTransformation: this.isTransformation,
             isRoot: this.data.mappingData.isRoot,
             selected: this.data.selected,
