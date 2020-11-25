@@ -182,6 +182,20 @@ describe('Apply prefixes', () => {
 
     });
 
+    it('Should add inline empty prefix with constant', () => {
+      MappingSteps.getTriples().should('have.length', 2);
+      // And I have created a subject, a predicate and an object
+      MappingSteps.completeTriple(1, ':subject', 'a', ':Class');
+      MappingSteps.getTripleSubjectPropertyTransformation(1).should('have.text', ':');
+      MappingSteps.getTripleSubjectSourceType(1).should('have.text', ' C ');
+      MappingSteps.getTripleSubjectSource(1).should('have.text', ' C  subject ');
+
+      MappingSteps.getTripleObjectPropertyTransformation(1).should('have.text', ':');
+      MappingSteps.getTripleObjectSourceType(1).should('have.text', ' C ');
+      MappingSteps.getTripleObjectSource(1).should('have.text', ' C  Class ');
+
+    });
+
     it('Should set extended empty prefix expressions inline', () => {
       MappingSteps.getTriples().should('have.length', 2);
       // And I have created a subject, a predicate and an object

@@ -223,7 +223,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
   }
 
   public saveInputValue(emitTab: boolean) {
-    let value = this.autoInput.value;
+    let value = this.autoInput.value.trim();
     if (this.manualInput && !this.autoInput.value.startsWith(this.manualInput)) {
       value = this.manualInput + this.autoInput.value;
     }
@@ -238,15 +238,19 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
           this.notificationService.error(this.translateService.instant('MESSAGES.UNRECOGNIZED_PREFIX_ERROR') + prefixTransformation);
           return;
         }
+        const isEmptyPrefix = prefixTransformation === '' && this.namespaces[prefixTransformation];
         if (match.value) {
           if (match.extended) {
             prefixTransformation += COLON + match.extended;
-          } else if (prefixTransformation === '' && this.namespaces[prefixTransformation]) {
-            prefixTransformation += COLON;
+          } else if (isEmptyPrefix) {
+            prefixTransformation = COLON;
           }
           value = match.source + match.value;
         } else if (match.extended && !match.value) {
           value = match.extended;
+          if (isEmptyPrefix) {
+            prefixTransformation = COLON;
+          }
         }
       }
     }
