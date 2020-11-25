@@ -57,6 +57,22 @@ describe('Apply prefixes', () => {
       MappingSteps.getTripleObjectValueTransformation(0).should('not.be.visible');
     });
 
+    it('Should set a prefix on object when type property', () => {
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json');
+      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.visit('?dataProviderID=ontorefine:123');
+      cy.wait('@loadColumns');
+
+      // Try when the property is type property
+      MappingSteps.completeTriple(1, 'subject', 'a', 'object');
+      MappingSteps.editTripleObjectWithData(1);
+      EditDialogSteps.completePrefix(':');
+      EditDialogSteps.saveConfiguration();
+      // Then I expect to see the empty prefix sign ":" in the object cell
+      MappingSteps.getTripleObjectPropertyTransformation(1).should('contain', ':');
+    });
+
     it('Should add and remove property prefix during edit', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');

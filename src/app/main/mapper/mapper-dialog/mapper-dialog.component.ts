@@ -863,6 +863,6 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   }
 
   isIri(): boolean {
-    return this.isOfType(Type.IRI) || this.isSubject() || this.isPredicate();
+    return this.isOfType(Type.IRI) || this.checkIsTypePropertyObject() || this.isSubject() || this.isPredicate();
   }
 }
