@@ -4,7 +4,13 @@ import {ModelManagementService} from 'src/app/services/model-management.service'
 import {Source} from 'src/app/models/source';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
-import {DOWNLOAD_JSON_FILE, DOWNLOAD_RDF_FILE, EMPTY_MAPPING, MALFORMED_NAMESPACE_KEY} from 'src/app/utils/constants';
+import {
+  COLON,
+  DOWNLOAD_JSON_FILE,
+  DOWNLOAD_RDF_FILE,
+  EMPTY_MAPPING,
+  MALFORMED_NAMESPACE_KEY,
+} from 'src/app/utils/constants';
 import {classToClass, plainToClass} from 'class-transformer';
 import {MatChipInputEvent} from '@angular/material/chips/chip-input';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -188,7 +194,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   }
 
   removeNamespace(key: string): void {
-    NamespaceService.removeNamespace(this.mapping.namespaces, key);
+    NamespaceService.removeNamespace(this.mapping.namespaces, key === COLON ? '' : key);
     this.messageService.publish(ChannelName.DirtyMapping, true);
   }
 
