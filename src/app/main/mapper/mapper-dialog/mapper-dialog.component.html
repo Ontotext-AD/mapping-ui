@@ -159,6 +159,9 @@
                 <a class="icon-info"  target="_blank" href={{environment.openRefineVariables}}
                    matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
               </mat-icon>
+              <mat-hint>
+                {{'LABELS.GREL_HINT' | translate}}
+              </mat-hint>
             </mat-form-field>
             <sat-popover #expressionGrelPreview (opened)="onExpressionGrelPreviewOpen()"
                          verticalAlign="below" horizontalAlign="start" [autoFocus]="false" [restoreFocus]="false">

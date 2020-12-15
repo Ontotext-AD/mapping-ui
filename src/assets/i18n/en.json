@@ -62,6 +62,7 @@
     "GREL": "GREL",
     "RAW": "RAW",
     "GREL_PLACEHOLDER": "Use value, row, cell(s), recon, record",
+    "GREL_HINT": "E.g. cells[\"Website\"].value + \"/address\". Warning: column names are case sensitive.",
     "SUBJECT": "Subject RDF Value Mapping",
     "PREDICATE": "Predicate RDF Value Mapping",
     "OBJECT": "Object RDF Value Mapping",
