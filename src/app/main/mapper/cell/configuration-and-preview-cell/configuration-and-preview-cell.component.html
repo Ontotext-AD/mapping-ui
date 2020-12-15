@@ -170,7 +170,12 @@
       <div class="ti-footer" *ngIf="isFirstChild && nestLevel === 0">
         <div [ngClass]="['ti-preview', (isEmptyPreview() ? 'empty-preview' : '')]">
           <div *ngFor="let previewItem of getPreview();">
-            {{previewItem}}
+            <ng-container *ngIf="this.getType() === IRI; else notIRI">
+              <a routerLink="/resource" [queryParams]="getResourceUri(previewItem)" routerLinkActive="active" target="_blank">{{previewItem}}</a>
+            </ng-container>
+            <ng-template #notIRI>
+              {{previewItem}}
+            </ng-template>
           </div>
           <div *ngIf="isFirstChild && isTypeProperty">
             <div>a</div>

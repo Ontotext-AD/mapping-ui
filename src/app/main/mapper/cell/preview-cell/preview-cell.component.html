@@ -24,8 +24,14 @@
           </div>
 
           <div  *ngIf="isFirstChild && !isTypeProperty; else emptyBlock">
-            <div fxFill [ngClass]="['ti-preview', (isEmptyPreview() ? 'empty-preview' : '')]" *ngFor="let previewItem of getPreview();">
-              {{previewItem}}
+            <div fxFill [ngClass]="['ti-preview', (isEmptyPreview() ? 'empty-preview' : '')]"
+                 *ngFor="let previewItem of getPreview();">
+              <ng-container *ngIf="this.getType() === IRI; else notIRI">
+                <a routerLink="/resource" [queryParams]="getResourceUri(previewItem)" routerLinkActive="active" target="_blank">{{previewItem}}</a>
+              </ng-container>
+              <ng-template #notIRI>
+                {{previewItem}}
+              </ng-template>
             </div>
           </div>
         </div>
@@ -41,7 +47,7 @@
           </div>
 
           <span class="btn btn-link text-muted add-sibling">
-			      <span class="icon-plus"  (click)="addSibling()" appcypressdata="add-sibling"
+			      <span class="icon-plus"  (click)="addSibling()" appCypressData="add-sibling"
                   matTooltip="{{'TOOLTIPS.ADD' | translate}} {{cellType}}"></span>
 			    </span>
 

@@ -19,6 +19,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {EmptyBlockComponent} from './empty-block/empty-block.component';
 import {TypeBadgeComponent} from './type-badge/type-badge.component';
 import {TransformationTypeBadgeComponent} from './transformation-type-badge/transformation-type-badge.component';
+import {RouterModule} from '@angular/router';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import {TransformationTypeBadgeComponent} from './transformation-type-badge/tran
     MatIconModule,
     MatTooltipModule,
     MatDividerModule,
+    RouterModule,
   ],
   providers: [ModelManagementService],
 })
