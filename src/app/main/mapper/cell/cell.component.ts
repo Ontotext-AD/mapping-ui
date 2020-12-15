@@ -277,9 +277,7 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
       previewItem = previewItem.replace(/^<|>$/g, '');
     }
     if (this.getTransformation() && this.getTransformation().getLanguage() === RAW_CONSTANT) {
-      if (previewItem.indexOf(this.baseIRI) > -1) {
-        uri = previewItem;
-      }
+      uri = previewItem;
     } else {
       const separatorIndex = previewItem.indexOf(':');
       if (separatorIndex > -1) {
