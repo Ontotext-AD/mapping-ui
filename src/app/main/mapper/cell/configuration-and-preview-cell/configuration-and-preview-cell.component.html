@@ -166,25 +166,26 @@
           </div>
         </div>
       </div>
-      <div *ngIf="isFirstChild && !isTypeProperty; else emptyBlock">
-        <div class="ti-footer" *ngIf="isFirstChild && nestLevel === 0">
-          <div *ngIf="isFirstChild && !isTypeProperty; else emptyBlock">
-            <div [ngClass]="['ti-preview', (isEmptyPreview() ? 'empty-preview' : '')]">
-              <div *ngFor="let previewItem of getPreview();">
-                <ng-container *ngIf="this.getType() === IRI; else notIRI">
-                  <a routerLink="/resource" [queryParams]="getResourceUri(previewItem)" routerLinkActive="active"
-                     target="_blank">{{previewItem}}</a>
-                </ng-container>
-                <ng-template #notIRI>
-                  {{previewItem}}
-                </ng-template>
-              </div>
-            </div>
-          </div>
+      <div class="ti-footer" *ngIf="isFirstChild && nestLevel === 0; else emptyBlock">
+        <div class="ti-preview" *ngIf="isTypeProperty; else notTypeMapping">
+          a
         </div>
-      </div>
-      <div class="ti-preview" *ngIf="isFirstChild && isTypeProperty">
-        <div>a</div>
+
+        <ng-template #notTypeMapping>
+          <div *ngFor="let previewItem of getPreview();"
+               [ngClass]="['ti-preview', (isEmptyPreview() ? 'empty-preview' : '')]">
+            <a *ngIf="this.getType() === IRI; else notIRI"
+               routerLink="/resource"
+               [queryParams]="getResourceUri(previewItem)"
+               routerLinkActive="active"
+               target="_blank">
+              {{previewItem}}
+            </a>
+            <ng-template #notIRI>
+              {{previewItem}}
+            </ng-template>
+          </div>
+        </ng-template>
       </div>
     </div>
   </ng-template>
