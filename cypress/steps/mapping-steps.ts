@@ -11,7 +11,7 @@ class MappingSteps {
    * @param fieldAccessorCb a function which must return a field
    */
   static type(value: string, fieldAccessorCb: any) {
-    return fieldAccessorCb().type(value, {force: true});
+    return fieldAccessorCb().type(value);
   }
 
   static completeTriple(index: number, subject?: string, predicate?: string, object?: string) {
@@ -27,18 +27,27 @@ class MappingSteps {
   }
 
   static completeSubject(index: number, value: string) {
-    this.type(value, () => MappingSteps.getTripleSubjectValue(index));
-    MappingSteps.getTripleSubjectValue(index).blur();
+    this.type(value, () => MappingSteps.getTripleSubjectValue(index)).then((component) => {
+      if (component) {
+        component.blur();
+      }
+    });
   }
 
   static completePredicate(index: number, value: string) {
-    this.type(value, () => MappingSteps.getTriplePredicateValue(index));
-    MappingSteps.getTriplePredicateValue(index).blur();
+    this.type(value, () => MappingSteps.getTriplePredicateValue(index)).then((component) => {
+      if (component) {
+        component.blur();
+      }
+    });
   }
 
   static completeObject(index: number, value: string) {
-    this.type(value, () => MappingSteps.getTripleObjectValue(index));
-    MappingSteps.getTripleObjectValue(index).blur();
+    this.type(value, () => MappingSteps.getTripleObjectValue(index)).then((component) => {
+      if (component) {
+        component.blur();
+      }
+    });
   }
 
   static verifyTriple(index: number, subject: string, predicate: string, object: string) {
@@ -92,7 +101,7 @@ class MappingSteps {
 
   static getTripleSubjectValue(index: any) {
     // wait for a while to prevent element to be found in detached state
-    return MappingSteps.getTripleSubject(index).find('[appCypressData="cell-value"]').wait(300);
+    return MappingSteps.getTripleSubject(index).find('[appCypressData="cell-value"]');
   }
 
   static getTripleSubjectValuePreview(index: any) {
@@ -158,7 +167,7 @@ class MappingSteps {
 
   static getTriplePredicateValue(index: any) {
     // wait for a while to prevent element to be found in detached state
-    return MappingSteps.getTriplePredicate(index).find('[appCypressData="cell-value"]').wait(300);
+    return MappingSteps.getTriplePredicate(index).find('[appCypressData="cell-value"]');
   }
 
   static getTriplePredicateValuePreview(index: any) {
@@ -192,7 +201,7 @@ class MappingSteps {
 
   static getTripleObjectValue(index: any) {
     // wait for a while to prevent element to be found in detached state
-    return MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').wait(300);
+    return MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]');
   }
 
   static getTripleObjectValuePreview(index: any) {
@@ -325,7 +334,7 @@ class MappingSteps {
     return cy.get('[appCypressData="namespace-error"]');
   }
 
-  static getSuggestions(index: any) {
+  static getSuggestions() {
     return cy.get(`[appCypressData="cell-option"]`);
   }
 

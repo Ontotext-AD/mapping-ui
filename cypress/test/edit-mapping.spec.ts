@@ -752,8 +752,10 @@ describe('Edit mapping', () => {
 
       MappingSteps.completeTriple(0, 's', undefined, undefined);
       MappingSteps.type('rdf:t', () => MappingSteps.getTriplePredicateValue(0));
-      MappingSteps.getSuggestions(0).should('have.length', 1);
-      MappingSteps.getSuggestions(0).first().should('contain', 'rdf:type').click();
+      MappingSteps.getSuggestions().should('have.length', 1);
+      MappingSteps.getSuggestions().first().should('contain', 'rdf:type').then((option) => {
+        option[0].click();
+      });
 
       // THEN
       MappingSteps.getTriplePredicate(0).should('have.text', 'a<IRI>');
