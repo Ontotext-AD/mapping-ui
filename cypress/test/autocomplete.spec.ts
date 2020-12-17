@@ -20,8 +20,10 @@ describe('Autocomplete mapping', () => {
       MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.completeTriple(0, 's', 'p', undefined);
       MappingSteps.type('w', () => MappingSteps.getTripleObjectValue(0));
-      MappingSteps.getSuggestions(0).should('have.length', 5);
-      MappingSteps.getSuggestions(0).first().should('contain', 'wgs:').click();
+      MappingSteps.getSuggestions().should('have.length', 5);
+      MappingSteps.getSuggestions().first().should('contain', 'wgs:').then((option) => {
+        option[0].click();
+      });
       MappingSteps.type('test', () => MappingSteps.getTripleObjectValue(0));
       MappingSteps.getTripleObjectValue(0).blur();
       MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'wgs:');
@@ -32,15 +34,19 @@ describe('Autocomplete mapping', () => {
       MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.completeTriple(0, 's', 'p', undefined);
       MappingSteps.type('rdf:@', () => MappingSteps.getTripleObjectValue(0));
-      MappingSteps.getSuggestions(0).should('have.length', 28);
-      MappingSteps.getSuggestions(0).first().should('contain', 'color').click();
+      MappingSteps.getSuggestions().should('have.length', 28);
+      MappingSteps.getSuggestions().first().should('contain', 'color').then((option) => {
+        option[0].click();
+      });
       MappingSteps.getTripleObjectPropertyTransformation(0).should('have.text', 'rdf:');
       MappingSteps.getTripleObjectSource(0).should('have.text', ' @  color ');
       // When I type on the subject position an extended prefix plus column beginning
       MappingSteps.type('rdf:ext@du', () => MappingSteps.getTripleSubjectValue(1));
-      MappingSteps.getSuggestions(0).should('have.length', 1);
+      MappingSteps.getSuggestions().should('have.length', 1);
       // And I select the column from the suggestion
-      MappingSteps.getSuggestions(0).first().should('contain', 'duration').click();
+      MappingSteps.getSuggestions().first().should('contain', 'duration').then((option) => {
+        option[0].click();
+      });
       // Then I expect that the extended prefix is properly populated in the cell
       // And The column and type are properly set
       MappingSteps.getTripleSubjectPropertyTransformation(1).should('have.text', 'rdf:ext');
@@ -50,7 +56,9 @@ describe('Autocomplete mapping', () => {
       MappingSteps.type('p', () => MappingSteps.getTriplePredicateValue(1));
       MappingSteps.type('rdf:ext@co', () => MappingSteps.getTripleObjectValue(1));
       // And I select the columns from the suggestion
-      MappingSteps.getSuggestions(0).first().should('contain', 'color').click();
+      MappingSteps.getSuggestions().first().should('contain', 'color').then((option) => {
+        option[0].click();
+      });
       // Then I expect that the prefix, column and tpe are properly populated in the cell
       MappingSteps.getTripleObjectPropertyTransformation(1).should('have.text', 'rdf:ext');
       MappingSteps.getTripleObjectSource(1).should('have.text', ' @  color ');
@@ -64,7 +72,7 @@ describe('Autocomplete mapping', () => {
       // Call POST again to load tooltips
       cy.route('POST', '/repositories/Movies', 'fixture:autocomplete/autocomplete-iri-description-response.json').as('loadDescr');
       // When I hover an autocomplete
-      MappingSteps.getSuggestions(0).first().trigger('mouseover');
+      MappingSteps.getSuggestions().first().trigger('mouseover');
       // I expect tho see an IRI description
       MappingSteps.getTooltip().contains('IRI Description');
     });
