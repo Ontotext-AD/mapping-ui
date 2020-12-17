@@ -15,7 +15,8 @@
                                       [onDelete]="onDelete"
                                       [onValueSet]="onValueSet"
                                       [onEditClick]="onEditClick"
-                                      [onAddNewSibling]="onAddNewSibling">
+                                      [onAddNewSibling]="onAddNewSibling"
+                                      [baseIRI]="baseIRI">
   </app-configuration-and-preview-cell>
 
   <app-configuration-cell *ngIf="viewMode === ViewMode.Configuration"
@@ -53,6 +54,7 @@
                     [onDelete]="onDelete"
                     [onValueSet]="onValueSet"
                     [onEditClick]="onEditClick"
-                    [onAddNewSibling]="onAddNewSibling">
+                    [onAddNewSibling]="onAddNewSibling"
+                    [baseIRI]="baseIRI">
   </app-preview-cell>
 </div>

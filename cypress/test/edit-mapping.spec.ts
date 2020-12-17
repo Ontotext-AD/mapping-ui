@@ -508,6 +508,66 @@ describe('Edit mapping', () => {
     });
   });
 
+  it('Should have links for IRIs in preview', () => {
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/preview-mapping-model.json');
+    cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:edit-mapping/preview-response.json');
+    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+    // cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:create-mapping/preview-response.json');
+
+    // When I load a mapping containing all type mappings
+    cy.visit('?dataProviderID=ontorefine:123');
+
+    MappingSteps.getTriples().should('have.length', 4);
+    // I switch to preview
+    HeaderSteps.getPreviewButton().click();
+    // I see mapping preview
+    // A constant IRI
+    MappingSteps.getTripleSubjectPreview(0).contains('<constantIRI>');
+    // Should be a link and uri should be baseURI + constant
+    MappingSteps.getTripleSubjectPreview(0).find('a').should('have.attr', 'href')
+        .and('contain', 'resource?uri=http:%2F%2Fexample%2Fbase%2FconstantIRI');
+    MappingSteps.getTriplePredicatePreview(0).contains('<pred>');
+    MappingSteps.getTriplePredicatePreview(0).find('a').should('have.attr', 'href')
+        .and('contain', 'resource?uri=http:%2F%2Fexample%2Fbase%2Fpred');
+
+    // A literal
+    MappingSteps.getTripleObjectPreview(0).contains('"literalObj"');
+    // Should not be a link
+    MappingSteps.getTripleObjectPreview(0).find('a').should('not.be', 'visible');
+
+    // A raw IRI that is not a URI
+    MappingSteps.getTripleSubjectPreview(1).contains('<http://example/base/rawConstantIRI>');
+    // Should be a link and uri should be baseURI + constant
+    MappingSteps.getTripleSubjectPreview(1).find('a').should('have.attr', 'href')
+        .and('contain', 'resource?uri=http:%2F%2Fexample%2Fbase%2FrawConstantIRI');
+
+    // A type mapping ('a' or 'rdf:type')
+    MappingSteps.getTriplePredicatePreview(1).contains('a');
+    // Should not be a link
+    MappingSteps.getTriplePredicatePreview(1).find('a').should('not.be', 'visible');
+
+    MappingSteps.getTripleObjectPreview(1).contains('<constantIRI>');
+    MappingSteps.getTripleObjectPreview(1).find('a').should('have.attr', 'href')
+        .and('contain', 'resource?uri=http:%2F%2Fexample%2Fbase%2FconstantIRI');
+
+    // A raw IRI that is a URI
+    MappingSteps.getTripleSubjectPreview(2).contains('<http://constant>');
+    // Should be a link and URI should be it's own
+    MappingSteps.getTripleSubjectPreview(2).find('a').should('have.attr', 'href')
+        .and('contain', 'resource?uri=http:%2F%2Fconstant');
+
+    MappingSteps.getTriplePredicatePreview(2).contains('a');
+    MappingSteps.getTriplePredicatePreview(2).find('a').should('not.be', 'visible');
+
+    // A prefixed constant
+    MappingSteps.getTripleObjectPreview(2).contains('schema:Thing');
+    // Should be a link and URI should have the namespace URI + constant
+    MappingSteps.getTripleObjectPreview(2).find('a').should('have.attr', 'href')
+        .and('contain', 'resource?uri=http:%2F%2Fschema.org%2FThing');
+  });
+
+
   context('Edit and save', () => {
     it('Should save mapping and preserve preview', () => {
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');

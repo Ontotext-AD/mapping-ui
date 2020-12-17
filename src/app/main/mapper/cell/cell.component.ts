@@ -16,7 +16,7 @@ import {
   EMPTY_PREVIEW,
   GREL_CONSTANT,
   OBJECT_SELECTOR,
-  PREDICATE_SELECTOR,
+  PREDICATE_SELECTOR, RAW_CONSTANT,
   SUBJECT_SELECTOR,
 } from 'src/app/utils/constants';
 import {TranslateService} from '@ngx-translate/core';
@@ -27,8 +27,8 @@ import {TabService} from 'src/app/services/tab.service';
 import {Observable} from 'rxjs';
 import {Helper} from 'src/app/utils/helper';
 import {ViewMode} from 'src/app/services/view-mode.enum';
-import {Triple} from '../../../models/triple';
-import {Namespaces} from '../../../models/namespaces';
+import {Triple} from 'src/app/models/triple';
+import {Namespaces} from 'src/app/models/namespaces';
 
 export enum TransformationTarget {
   PROPERTYTRANSFORMATION = 'propertytransformation',
@@ -55,6 +55,7 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   @Input() sources: Array<Source>;
   @Input() tabPosition: number;
   @Input() viewMode: ViewMode;
+  @Input() baseIRI: string;
   @Output() onDrop = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<any>();
   @Output() onValueSet = new EventEmitter<any>();
@@ -268,5 +269,24 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
 
   public isIncomplete() {
     return !this.triple.isEmpty() && this.isEmpty();
+  }
+
+  getResourceUri(previewItem: string): any {
+    let uri;
+    if (previewItem.match(/^<|>$/g)) {
+      previewItem = previewItem.replace(/^<|>$/g, '');
+    }
+    if (this.getTransformation() && this.getTransformation().getLanguage() === RAW_CONSTANT) {
+      uri = previewItem;
+    } else {
+      const separatorIndex = previewItem.indexOf(':');
+      if (separatorIndex > -1) {
+        const namespace = previewItem.substring(0, separatorIndex);
+        uri = (this.namespaces[namespace] + previewItem.substring(separatorIndex + 1)).replace(/\\/g, '');
+      } else {
+        uri = this.baseIRI + previewItem;
+      }
+    }
+    return {uri};
   }
 }
