@@ -309,7 +309,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
 
   public getIriDescription(option) {
     const value: string = option.value;
-    if (!value.startsWith(COLUMN_SIGN) || !value.startsWith(INDEX_SIGN)) {
+    if (!(value.startsWith(COLUMN_SIGN) || value.startsWith(INDEX_SIGN))) {
       return this.repositoryService.getIriDescription(value)
           .pipe(untilComponentDestroyed(this), debounceTime(500))
           .subscribe((description) => {
