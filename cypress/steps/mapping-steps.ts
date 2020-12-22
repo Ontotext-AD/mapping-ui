@@ -11,7 +11,7 @@ class MappingSteps {
    * @param fieldAccessorCb a function which must return a field
    */
   static type(value: string, fieldAccessorCb: any) {
-    return fieldAccessorCb().type(value);
+    return fieldAccessorCb().type(value, {force: true});
   }
 
   static completeTriple(index: number, subject?: string, predicate?: string, object?: string) {

@@ -29,6 +29,7 @@ import {Helper} from 'src/app/utils/helper';
 import {ViewMode} from 'src/app/services/view-mode.enum';
 import {Triple} from 'src/app/models/triple';
 import {Namespaces} from 'src/app/models/namespaces';
+import {environment} from 'src/environments/environment';
 
 export enum TransformationTarget {
   PROPERTYTRANSFORMATION = 'propertytransformation',
@@ -171,14 +172,9 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   public canDrop() {
-    if (!!this.getSourceType() || this.isFirstChild && this.isTypeProperty) {
-      return function(drag: CdkDrag, drop: CdkDropList) { // eslint-disable-line @typescript-eslint/no-unused-vars
-        return false;
-      };
-    }
-
-    return function(drag: CdkDrag, drop: CdkDropList) { // eslint-disable-line @typescript-eslint/no-unused-vars
-      return true;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return (drag: CdkDrag, drop: CdkDropList) => {
+      return !(!!this.getSourceType() || this.isFirstChild && this.isTypeProperty);
     };
   }
 
@@ -226,9 +222,8 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   isEmpty(): boolean {
-    if ((this.cellType === this.SUBJECT || this.cellType === this.OBJECT) && !this.getValueSource()) {
-      return true;
-    } else if (this.cellType === this.PREDICATE && !this.isTypeProperty && !this.getValueSource()) {
+    if (!this.getValueSource() &&
+      (this.cellType === this.SUBJECT || this.cellType === this.OBJECT || (this.cellType === this.PREDICATE && !this.isTypeProperty))) {
       return true;
     }
     return false;
@@ -287,6 +282,10 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
         uri = this.baseIRI + previewItem;
       }
     }
-    return {uri};
+    return uri;
+  }
+
+  getGraphDbResourceUrl(previewItem): string {
+    return environment.graphDbUrl + '/resource?uri=' + this.getResourceUri(previewItem);
   }
 }

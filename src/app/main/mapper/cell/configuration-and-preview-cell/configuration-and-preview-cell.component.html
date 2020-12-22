@@ -75,7 +75,7 @@
               </div>
 
               <div fxFlex="grow" *ngIf="!isGRELTransformation(getSecondaryTransformation())">
-              <span class="ti-source">
+              <div class="ti-source">
                 <div *ngIf="getDatatypeSource()">
                   <span *ngIf="getDatatypeSourceType() === 'column'"
                         matTooltip="{{getDatatypeSource().getColumnName()}}">
@@ -126,7 +126,7 @@
                     {{getValueTypeLanguageSource().source}}
                   </span>
                 </div>
-              </span>
+              </div>
               </div>
 
               <div *ngIf="isGRELTransformation(getSecondaryTransformation())" class="ml-2" fxFlex="grow">
@@ -172,15 +172,10 @@
         </div>
 
         <ng-template #notTypeMapping>
-          <div *ngFor="let previewItem of getPreview();"
-               [ngClass]="['ti-preview', (isEmptyPreview() ? 'empty-preview' : '')]">
-            <a *ngIf="this.getType() === IRI; else notIRI"
-               routerLink="/resource"
-               [queryParams]="getResourceUri(previewItem)"
-               routerLinkActive="active"
-               target="_blank">
-              {{previewItem}}
-            </a>
+          <div *ngFor="let previewItem of getPreview();" [ngClass]="['ti-preview', (isEmptyPreview() ? 'empty-preview' : '')]">
+            <ng-container *ngIf="this.getType() === IRI; else notIRI">
+              <a [href]="getGraphDbResourceUrl(previewItem)" routerLinkActive="active" target="_blank">{{previewItem}}</a>
+            </ng-container>
             <ng-template #notIRI>
               {{previewItem}}
             </ng-template>
