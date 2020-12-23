@@ -1,25 +1,20 @@
 import MappingSteps from '../steps/mapping-steps';
 import HeaderSteps from '../steps/header-steps';
 import EditDialogSteps from '../steps/edit-dialog-steps';
+import PrepareSteps from '../steps/prepare-steps';
 
 describe('Edit mapping', () => {
 
   beforeEach(() => {
-    cy.setCookie('com.ontotext.graphdb.repository4200', 'Movies');
-    cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
-    cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
-    cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
-    cy.route('GET', '/rest/autocomplete/enabled', 'true');
+    PrepareSteps.prepareMoviesNamespacesAndColumns();
+    PrepareSteps.enableAutocompleteWithEmptyResponse();
   });
 
   context('Edit and close dialog with hotkeys', () => {
     it('Should open and close the edit dialog with a hotkey', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      PrepareSteps.stubEmptyMappingModel();
       // Given I have opened an empty mapping
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 1);
       // When I focus the first triple's subject and execute ctrl+enter key combination
       // Add some wait here to prevent finding the input in detached state
@@ -43,12 +38,9 @@ describe('Edit mapping', () => {
 
   context('Siblings', () => {
     it('Should add sibling on a type property object', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      PrepareSteps.stubEmptyMappingModel();
       // Given I have opened an empty mapping
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a type property mapping
       MappingSteps.completeTriple(0, 's', 'a', 'o');
@@ -67,13 +59,10 @@ describe('Edit mapping', () => {
 
   context('Edit IRI', () => {
     it('Should have a warning message in IRI edit dialog when object has children', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
       cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:edit-mapping/iri-with-children-model-preview-response.json');
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/iri-with-children-model.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/iri-with-children-model.json').as('loadProject');
       // Given I have opened a model with triple containing IRI object with some children
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 3);
       // When I open edit dialog of the parent IRI object
       MappingSteps.editTripleObjectWithData(0);
@@ -93,12 +82,11 @@ describe('Edit mapping', () => {
     });
 
     it('Should populate the prefix properly if it is autocompleted in the edit dialog', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/prefix-autocomplete-mapping-model.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/prefix-autocomplete-mapping-model.json').as('loadProject');
       cy.route('GET', '/repositories/Movies/namespaces', 'fixture:edit-mapping/namespaces-with-wine.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
       cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-with-prefix-response.json');
       // Given I have opened a mapping with an IRI object
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 2);
       // When I open the object for edit
       MappingSteps.editTripleObjectWithData(0);
@@ -123,12 +111,8 @@ describe('Edit mapping', () => {
   });
 
   it('Should validate subject edit form', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-    cy.visit('?dataProviderID=ontorefine:123');
-    cy.wait('@loadColumns');
+    PrepareSteps.stubEmptyMappingModel();
+    PrepareSteps.visitPageAndWaitToLoad();
     // Given I have created a mapping column-type-constant
     MappingSteps.getTriples().should('have.length', 1);
     MappingSteps.completeTriple(0, '@duration', 'a', '123');
@@ -149,16 +133,14 @@ describe('Edit mapping', () => {
   // TODO: I add these tests here for now, but later we should distribute them in respective specs with the related operations
   context('Handle errors', () => {
     it('Should show error notification when model could not be loaded', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
       cy.route({
         method: 'GET',
         url: '/orefine/command/core/get-models/?project=123',
         status: 500,
         response: 'fixture:edit-mapping/load-mapping-error.json'
-      });
+      }).as('loadProject');
 
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       // I expect empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I expect notification message
@@ -166,8 +148,7 @@ describe('Edit mapping', () => {
     });
 
     it('Should show error notification when namespaces could not be loaded', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+      PrepareSteps.stubEmptyMappingModel();
       cy.route({
         method: 'GET',
         url: '/repositories/Movies/namespaces',
@@ -175,7 +156,7 @@ describe('Edit mapping', () => {
         response: 'fixture:edit-mapping/load-namespaces-error'
       });
 
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       // I expect empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I expect notification message
@@ -183,16 +164,15 @@ describe('Edit mapping', () => {
     });
 
     it('Should show error notification when columns could not be loaded', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+      PrepareSteps.stubEmptyMappingModel();
       cy.route({
         method: 'GET',
         url: '/rest/rdf-mapper/columns/ontorefine:123',
         status: 404,
         response: 'fixture:edit-mapping/load-columns-error'
-      });
+      }).as('loadColumns');
 
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       // I expect empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I expect notification message
@@ -201,9 +181,7 @@ describe('Edit mapping', () => {
     });
 
     it('Should show error notification when RDF generation fails', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:mapping-model.json').as('loadProject');
       cy.route({
         method: 'POST',
         url: '/rest/rdf-mapper/rdf/ontorefine:123',
@@ -216,7 +194,7 @@ describe('Edit mapping', () => {
       });
 
       // When I load application
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       // Then I expect to see a mapping with 2 triples (+1 empty row)
       MappingSteps.getTriples().should('have.length', 3);
       // When I click generate RDF button
@@ -227,9 +205,7 @@ describe('Edit mapping', () => {
     });
 
     it('Should show error notification when SPARQL generation fails', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:mapping-model.json').as('loadProject');
       cy.route({
         method: 'POST',
         url: '/rest/rdf-mapper/sparql/ontorefine:123',
@@ -241,7 +217,7 @@ describe('Edit mapping', () => {
       });
 
       // When I load application
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       // Then I expect to see a mapping with 2 triples (+1 empty row)
       MappingSteps.getTriples().should('have.length', 3);
       // When I click generate RDF button
@@ -264,16 +240,14 @@ describe('Edit mapping', () => {
           'Content-Type': 'application/json'
         }
       }).as('loadGrelPreview');
+      PrepareSteps.stubEmptyMappingModel();
     }
 
     it('Should preview empty object', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
-
       mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
 
       // When I load application
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
       MappingSteps.editTripleObject(0);
       EditDialogSteps.selectIri();
@@ -283,12 +257,10 @@ describe('Edit mapping', () => {
     });
 
     it('Should preview datatype expression properly', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
       mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
 
       // When I load application
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.completeTriple(0, 'subject', 'predicate', '@director_name');
       MappingSteps.editTripleObjectWithData(0);
       EditDialogSteps.selectLiteral();
@@ -308,12 +280,10 @@ describe('Edit mapping', () => {
     });
 
     it('Should show GREL preview in a popover', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/grel-expression-edit-mapping-model.json');
       mockPreview('[null]');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/grel-expression-edit-mapping-model.json').as('loadProject');
       // Given I have created and loaded a mapping
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 2);
 
       // Verify source GREL transformation preview
@@ -442,12 +412,10 @@ describe('Edit mapping', () => {
 
   context('Incomplete mapping', () => {
     it('Should not allow operations with incomplete mapping', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/incomplete-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/incomplete-mapping-model.json').as('loadProject');
 
       // When I load application
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
 
       // WHEN:
       // I press Get JSON button
@@ -486,12 +454,9 @@ describe('Edit mapping', () => {
     });
 
     it('Should keep preview after deletion', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
-
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model.json').as('loadProject');;
       // When I load application
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       // I switch to preview mode
       HeaderSteps.getPreviewButton().click();
 
@@ -509,17 +474,16 @@ describe('Edit mapping', () => {
   });
 
   it('Should have links for IRIs in preview', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/preview-mapping-model.json');
-    cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:edit-mapping/preview-response.json');
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/preview-mapping-model.json').as('loadProject');
+    cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:edit-mapping/preview-response.json').as('loadPreview');
 
     // When I load a mapping containing all type mappings
-    cy.visit('?dataProviderID=ontorefine:123');
+    PrepareSteps.visitPageAndWaitToLoad();
 
     MappingSteps.getTriples().should('have.length', 4);
     // I switch to preview
     HeaderSteps.getPreviewButton().click();
+    cy.wait('@loadPreview');
     // I see mapping preview
     // A constant IRI
     MappingSteps.getTripleSubjectPreview(0).contains('<constantIRI>');
@@ -569,10 +533,7 @@ describe('Edit mapping', () => {
 
   context('Edit and save', () => {
     it('Should save mapping and preserve preview', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model-with-preview.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model-with-preview.json').as('loadProject');
       cy.route({
         method: 'POST',
         url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
@@ -580,8 +541,7 @@ describe('Edit mapping', () => {
         delay: 1000
       }).as('saveMapping');
       // Given I have opened the application
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
       // When The mapping is loaded
       MappingSteps.getTriples().should('have.length', 7);
       // Then I expect the save button to be disabled
@@ -612,14 +572,10 @@ describe('Edit mapping', () => {
     });
 
     it('Should mark empty mapping preview', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model-with-preview.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model-with-preview.json').as('loadProject');
 
       // Given I have opened the application
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
       // When The mapping is loaded
       MappingSteps.getTriples().should('have.length', 7);
 
@@ -643,10 +599,7 @@ describe('Edit mapping', () => {
     });
 
     it('Should change object type and save it properly', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      PrepareSteps.stubEmptyMappingModel();
       cy.route({
         method: 'POST',
         url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
@@ -655,8 +608,7 @@ describe('Edit mapping', () => {
         response: 'fixture:edit-mapping/save-mapping-success.json'
       }).as('saveMapping');
       // Given I have opened the application
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
       // I complete a tripple
       MappingSteps.completeTriple(0, 'sub', 'pred', 'obj');
       // I change to object to IRI
@@ -689,9 +641,7 @@ describe('Edit mapping', () => {
 
   context('Edit base IRI', () => {
     it('Should edit and save base IRI', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/base-iri-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/base-iri-mapping-model.json').as('loadProject');
       cy.route({
         method: 'POST',
         url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
@@ -700,8 +650,7 @@ describe('Edit mapping', () => {
         response: 'fixture:edit-mapping/save-mapping-success.json'
       }).as('saveMapping');
       // Given I have loaded a mapping
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 2);
       // Then I expect the base IRI to be populated
       MappingSteps.getBaseIRI().should('have.value', 'http://example/base/');
@@ -725,11 +674,8 @@ describe('Edit mapping', () => {
 
   context('Type mapping', () => {
     it('Should treat rdf:type as type mapping predicate when inline typing', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.stubEmptyMappingModel();
+      PrepareSteps.visitPageAndWaitToLoad();
 
       // WHEN I complete inline the triple with `rfd:type` predicate
       MappingSteps.completeTriple(0, 'sub', 'rdf:type', 'obj');
@@ -741,19 +687,15 @@ describe('Edit mapping', () => {
     });
 
     it('Should treat rdf:type as type mapping predicate when select it from autocomplete', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+      PrepareSteps.stubEmptyMappingModel();
       cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-rdf-type.json');
-      cy.route('GET', '/rest/autocomplete/enabled', 'true');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
 
       MappingSteps.completeTriple(0, 's', undefined, undefined);
       MappingSteps.type('rdf:t', () => MappingSteps.getTriplePredicateValue(0));
       MappingSteps.getSuggestions().should('have.length', 1);
       MappingSteps.getSuggestions().first().should('contain', 'rdf:type').then((option) => {
-        option[0].click();
+        cy.wrap(option).trigger('click');
       });
 
       // THEN
@@ -761,12 +703,8 @@ describe('Edit mapping', () => {
     });
 
     it('Should treat rdf:type as type mapping predicate in the edit mapping dialog', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
-
+      PrepareSteps.stubEmptyMappingModel();
+      PrepareSteps.visitPageAndWaitToLoad();
       // WHEN I complete the subject
       MappingSteps.completeTriple(0, 'sub', undefined, undefined);
       // And edit the predicate

@@ -14,7 +14,8 @@
                  (keydown.enter)="selectPrefixOrValue($event, true, trigger)"
                  (keydown.control.Enter)="onEdit()"
                  (blur)="saveInputValueOnBlur($event)">
-          <mat-autocomplete #autocInline="matAutocomplete" #tooltip="matTooltip"  [matTooltip]="optionTooltip" appCypressData="autocomplete-tooltip">
+          <mat-autocomplete #autocInline="matAutocomplete" #tooltip="matTooltip"  [matTooltip]="optionTooltip"
+                            class="autocomplete-check" appCypressData="autocomplete-tooltip">
             <mat-option appCypressData="cell-option" *ngFor="let option of suggestions | async | async" [value]="option.value"
                         (mouseover)="getIriDescription(option)" (mouseleave)="clearTooltip()"
                         (click)="selectPrefixOrValue($event, true, trigger)">

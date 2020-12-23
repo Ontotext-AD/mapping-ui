@@ -146,7 +146,7 @@ class EditDialogSteps {
   }
 
   static isRawIRI() {
-    return this.getSourceSection().find('[appCypressData=transformation-raw] button').should('have.attr', 'aria-pressed', 'true');;
+    return this.getSourceSection().find('[appCypressData=transformation-raw] button').should('have.attr', 'aria-pressed', 'true');
   }
 
   // transformation section
