@@ -1,15 +1,14 @@
 import HeaderSteps from '../../cypress/steps/header-steps';
 import MappingSteps from '../../cypress/steps/mapping-steps';
 import EditDialogSteps from '../../cypress/steps/edit-dialog-steps';
+import PrepareSteps from '../steps/prepare-steps';
 
 describe('Create Amsterdam restaurants mapping', () => {
 
   beforeEach(() => {
-    cy.setCookie('com.ontotext.graphdb.repository4200', 'Restaurants');
-    cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
-    cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:amsterdam/columns.json').as('loadColumns');
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:amsterdam/amsterdam-model.json');
+    PrepareSteps.prepareRestaurantsNamespacesAndColumns();
+    PrepareSteps.enableAutocompleteWithEmptyResponse();
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:amsterdam/amsterdam-model.json').as('loadProject');
   });
 
   function mockPreview(response: string) {
@@ -27,8 +26,7 @@ describe('Create Amsterdam restaurants mapping', () => {
   it('Should be able to create Amsterdam restaurants mapping', () => {
     mockPreview('[null]');
     // When I load application
-    cy.visit('?dataProviderID=ontorefine:123');
-    cy.wait('@loadColumns');
+    PrepareSteps.visitPageAndWaitToLoad();
 
     // I create subject with GREL transformation
     MappingSteps.editEmptyTripleSubject(0);
@@ -97,8 +95,8 @@ describe('Create Amsterdam restaurants mapping', () => {
       'cells["Latitude"].value.replace(",", ".") + ")"');
     EditDialogSteps.saveConfiguration();
 
-    MappingSteps.completePredicate(9,'valuenode');
-    //I add a value bnode with source column
+    MappingSteps.completePredicate(9, 'valuenode');
+    // I add a value bnode with source column
     MappingSteps.editTripleObject(9);
     EditDialogSteps.selectValueBnode();
     EditDialogSteps.selectColumn();
@@ -107,8 +105,8 @@ describe('Create Amsterdam restaurants mapping', () => {
 
     // I create nested triple
     MappingSteps.addNestedTriple(9);
-    MappingSteps.completePredicate(10,'longdescription');
-    //I add a value bnode with source column
+    MappingSteps.completePredicate(10, 'longdescription');
+    // I add a value bnode with source column
     MappingSteps.editTripleObject(10);
     EditDialogSteps.selectLiteral();
     EditDialogSteps.selectColumn();
@@ -117,8 +115,8 @@ describe('Create Amsterdam restaurants mapping', () => {
 
     // I create nested triple
     MappingSteps.addNestedTriple(9);
-    MappingSteps.completePredicate(11,'uniquenode');
-    //I add a value bnode with source column
+    MappingSteps.completePredicate(11, 'uniquenode');
+    // I add a value bnode with source column
     MappingSteps.editTripleObject(11);
     EditDialogSteps.selectUniqueBnode();
     EditDialogSteps.selectColumn();
@@ -126,8 +124,8 @@ describe('Create Amsterdam restaurants mapping', () => {
     EditDialogSteps.saveConfiguration();
 
     MappingSteps.addNestedTriple(11);
-    MappingSteps.completePredicate(12,'city');
-    //I add a value bnode with source column
+    MappingSteps.completePredicate(12, 'city');
+    // I add a value bnode with source column
     MappingSteps.editTripleObject(12);
     EditDialogSteps.selectLiteral();
     EditDialogSteps.selectColumn();

@@ -1,27 +1,23 @@
 import MappingSteps from '../steps/mapping-steps';
 import HeaderSteps from '../steps/header-steps';
 import EditDialogSteps from '../steps/edit-dialog-steps';
+import PrepareSteps from '../steps/prepare-steps';
 
 describe('Delete', () => {
 
   beforeEach(() => {
-    cy.setCookie('com.ontotext.graphdb.repository4200', 'Movies');
-    cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json').as('loadNamespaces');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-    cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
+    PrepareSteps.prepareMoviesNamespacesAndColumns();
+    PrepareSteps.enableAutocompleteWithEmptyResponse();
   });
 
   context('parent', () => {
-    function stubServices() {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+    function stubServicesAndVisit() {
+      PrepareSteps.stubEmptyMappingModel();
+      PrepareSteps.visitPageAndWaitToLoad();
     }
 
     it('Should be able to delete a subject with a predicate and have a warning', () => {
-      stubServices();
+      stubServicesAndVisit();
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a subject and a predicate
@@ -37,7 +33,7 @@ describe('Delete', () => {
     });
 
     it('Should be able to delete a predicate with an object and have a warning', () => {
-      stubServices();
+      stubServicesAndVisit();
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a subject, predicate and an object
@@ -53,7 +49,7 @@ describe('Delete', () => {
     });
 
     it('Should be able to delete an object with nested triples and have a warning', () => {
-      stubServices();
+      stubServicesAndVisit();
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a triple
@@ -82,9 +78,8 @@ describe('Delete', () => {
     });
 
     it('Should be able to delete a triple with children and have a warning', () => {
-      cy.route('POST', '/repositories/Movies', 'fixture:delete/autocomplete-response.json');
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/triple-with-children-mapping-model.json');
-      cy.visit('?dataProviderID=ontorefine:123');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/triple-with-children-mapping-model.json').as('loadProject');
+      PrepareSteps.visitPageAndWaitToLoad();
       // Given I have opened a mapping which contains triple with children
       MappingSteps.getTriples().should('have.length', 4);
       // When I try to delete a nested triple which doesn't have children
@@ -108,10 +103,10 @@ describe('Delete', () => {
   context('triple', () => {
     it('Should be able to delete nested triple', () => {
       // stub model
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
 
-      // Given I have opened the mapping UI
-      cy.visit('?dataProviderID=ontorefine:123');
+      // Given I have opened the mapping UI and waited to load the data
+      PrepareSteps.visitPageAndWaitToLoad();
       // And I see two triples + one empty template
       MappingSteps.getTriples().should('have.length', 3);
 
@@ -169,10 +164,9 @@ describe('Delete', () => {
     });
 
     it('Should be able to delete all triples on New mapping button click', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
-
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
       // Given I have opened the mapping UI
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       // And I see two triples + one empty template
       MappingSteps.getTriples().should('have.length', 3);
       // I click and confirm new mapping
@@ -185,10 +179,10 @@ describe('Delete', () => {
 
   context('subject', () => {
     it('Should be able to delete first triple\'s subject with enabled preview', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      PrepareSteps.stubEmptyMappingModel();
       cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:delete/preview-response.json').as('loadPreview');
       // Given I have opened the mapping UI
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       // And I see empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // I switch to preview and configuration view
@@ -214,11 +208,8 @@ describe('Delete', () => {
 
   context('object', () => {
     it('Should be able to delete object', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:delete/autocomplete-response.json');
-
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.stubEmptyMappingModel();
+      PrepareSteps.visitPageAndWaitToLoad();
       // Given I have created a mapping column-constant-column
       MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.completeTriple(0, '@duration', 'as', '@color');
@@ -236,10 +227,10 @@ describe('Delete', () => {
     });
 
     it('Should be able to delete the object in a nested triple', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/object-in-nested-triple-mapping-model.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/object-in-nested-triple-mapping-model.json').as('loadProject');
 
       // Given I have loaded a mapping with a nested triple
-      cy.visit('?dataProviderID=ontorefine:123');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 3);
 
       // Delete nested object literal
@@ -252,11 +243,8 @@ describe('Delete', () => {
     });
 
     it('Should be able to insert subject at same place as the deleted object when type predicate', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:delete/autocomplete-response.json');
-
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.stubEmptyMappingModel();
+      PrepareSteps.visitPageAndWaitToLoad();
       // Given I have created a mapping column-constant-column
       MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.completeTriple(0, 'sub', 'a', '111');
@@ -280,11 +268,8 @@ describe('Delete', () => {
     });
 
     it('Should be able to insert subject at same place as the deleted object when property predicate', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:delete/autocomplete-response.json');
-
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.stubEmptyMappingModel();
+      PrepareSteps.visitPageAndWaitToLoad();
       // Given I have created a mapping column-constant-column
       MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.completeTriple(0, 'sub', 'pre', '111');

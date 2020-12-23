@@ -1,23 +1,18 @@
 import MappingSteps from '../steps/mapping-steps';
 import EditDialogSteps from '../steps/edit-dialog-steps';
+import PrepareSteps from '../steps/prepare-steps';
 
 describe('Apply prefixes', () => {
 
   beforeEach(() => {
-    cy.setCookie('com.ontotext.graphdb.repository4200', 'Movies');
-    cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
-    cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
-    cy.route('POST', '/repositories/Movies', 'fixture:apply-prefixes/autocomplete-response.json');
-    cy.route('GET', '/rest/autocomplete/enabled', 'true');
+    PrepareSteps.prepareMoviesNamespacesAndColumns();
+    PrepareSteps.enableAutocompleteWithEmptyResponse();
   });
 
   context('add and remove prefix', () => {
     it('Should add and remove datatype prefix during edit', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/datatype-literal-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/datatype-literal-mapping-model.json').as('loadProject');
+      PrepareSteps.visitPageAndWaitToLoad();
 
       // - Try with some non-empty prefix
       // Given I have loaded a mapping with datatype literal object
@@ -58,11 +53,8 @@ describe('Apply prefixes', () => {
     });
 
     it('Should set a prefix on object when type property', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json').as('loadProject');
+      PrepareSteps.visitPageAndWaitToLoad();
 
       // Try when the property is type property
       MappingSteps.completeTriple(1, 'subject', 'a', 'object');
@@ -74,11 +66,8 @@ describe('Apply prefixes', () => {
     });
 
     it('Should add and remove property prefix during edit', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json').as('loadProject');
+      PrepareSteps.visitPageAndWaitToLoad();
 
       // - Try with some non-empty prefix
       // Given I have loaded a mapping with IRI object
@@ -121,11 +110,8 @@ describe('Apply prefixes', () => {
 
   context('edit inline prefix', () => {
     beforeEach(() => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.stubEmptyMappingModel();
+      PrepareSteps.visitPageAndWaitToLoad();
     });
 
     it('Should set prefix expression', () => {
@@ -173,11 +159,8 @@ describe('Apply prefixes', () => {
 
   context('edit inline empty prefix', () => {
     beforeEach(() => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json').as('loadProject');
+      PrepareSteps.visitPageAndWaitToLoad();
     });
 
     it('Should add empty prefix inline', () => {

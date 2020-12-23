@@ -1,33 +1,24 @@
 import {MapperComponentSelectors} from '../utils/selectors/mapper-component.selectors';
-import MappingSteps from "../steps/mapping-steps";
-import EditDialogSteps from "../steps/edit-dialog-steps";
+import MappingSteps from '../steps/mapping-steps';
+import EditDialogSteps from '../steps/edit-dialog-steps';
+import PrepareSteps from '../steps/prepare-steps';
 
 describe('MapperDialog', () => {
   beforeEach(() => {
-    // stub labels
-    cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
-    // stub namespaces
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    // stub columns
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
-    // stub socksjs
-    cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
+    PrepareSteps.prepareMoviesNamespacesAndColumns();
   });
 
   xit('should render mapping dialog when drag and drop source', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
-    cy.visit('?dataProviderID=ontorefine:123');
-    // GIVEN:
-    // I visit home page
-    cy.visit('?dataProviderID=ontorefine:123');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
+    PrepareSteps.visitPageAndWaitToLoad();
 
     // WHEN:
     // I drag and drop the first source in the subject holder
-    cy.cypressData(MapperComponentSelectors.FIRST_SOURCE_SELECTOR).trigger("mousedown", {button: 0});
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-2")
-      .trigger("mousemove")
+    cy.cypressData(MapperComponentSelectors.FIRST_SOURCE_SELECTOR).trigger('mousedown', {button: 0});
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-2')
+      .trigger('mousemove')
       .click()
-      .trigger(("mouseup"));
+      .trigger(('mouseup'));
 
     // THEN:
     // I see popup dialog
@@ -35,12 +26,12 @@ describe('MapperDialog', () => {
   });
 
   xit('should render mapping dialog on subject edit button click', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
-    cy.visit('?dataProviderID=ontorefine:123');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
+    PrepareSteps.visitPageAndWaitToLoad();
 
     // WHEN:
     // I click on edit button of the empty triple's subject
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-2").cypressFind(MapperComponentSelectors.BUTTON_EDIT_EMPTY_CELL).click();
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-2').cypressFind(MapperComponentSelectors.BUTTON_EDIT_EMPTY_CELL).click();
 
     // THEN:
     // I see popup dialog
@@ -62,12 +53,12 @@ describe('MapperDialog', () => {
 
   it('should render mapping dialog and create triple', () => {
     // stub model
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json');
-    cy.visit('?dataProviderID=ontorefine:123');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
+    PrepareSteps.visitPageAndWaitToLoad();
 
     // WHEN:
     // I click on edit button of the empty triple's subject
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-2").cypressFind(MapperComponentSelectors.BUTTON_EDIT_EMPTY_CELL).click();
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-2').cypressFind(MapperComponentSelectors.BUTTON_EDIT_EMPTY_CELL).click();
 
     // THEN:
     // I see popup dialog
@@ -84,12 +75,12 @@ describe('MapperDialog', () => {
     // THEN:
     // I see subject created
     cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-2").contains('director_name');
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-3").should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-2').contains('director_name');
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-3').should('not.be.visible');
 
     // WHEN:
     // I click on edit button of the empty triple's predicate
-    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + "-2").cypressFind(MapperComponentSelectors.BUTTON_EDIT_EMPTY_CELL).should('be.visible').click();
+    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-2').cypressFind(MapperComponentSelectors.BUTTON_EDIT_EMPTY_CELL).should('be.visible').click();
 
     // THEN:
     // I see popup dialog
@@ -109,12 +100,12 @@ describe('MapperDialog', () => {
     // THEN:
     // I see predicate created
     cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + "-2").contains('constant123');
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-3").should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-2').contains('constant123');
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-3').should('not.be.visible');
 
     // WHEN:
     // I click on edit button of the empty triple's object
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-2").cypressFind(MapperComponentSelectors.BUTTON_EDIT_EMPTY_CELL).should('be.visible').click();
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-2').cypressFind(MapperComponentSelectors.BUTTON_EDIT_EMPTY_CELL).should('be.visible').click();
 
     // THEN:
     // I see popup dialog
@@ -199,22 +190,18 @@ describe('MapperDialog', () => {
     // THEN:
     // I see object created
     cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-2").should('be.visible');
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-2").contains('record_id');
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-2').should('be.visible');
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-2').contains('record_id');
 
     // I see empty triple
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + "-3").should('be.visible');
-    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + "-3").should('be.visible');
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + "-3").should('be.visible');
-
-  })
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-3').should('be.visible');
+    cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-3').should('be.visible');
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-3').should('be.visible');
+  });
 
   it('should set Raw IRI properly', () => {
-    // stub empty model
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-    cy.visit('?dataProviderID=ontorefine:123');
-    cy.wait('@loadColumns');
+    PrepareSteps.stubEmptyMappingModel();
+    PrepareSteps.visitPageAndWaitToLoad();
 
     // When I complete a new triple with an IRI object
     MappingSteps.completeTriple(0, 's', 'p', 'http://some/iri');
@@ -235,5 +222,4 @@ describe('MapperDialog', () => {
     EditDialogSteps.isRawIRI();
     EditDialogSteps.getTransformationExpressionField().should('have.attr', 'readonly');
   });
-
 });

@@ -1,20 +1,16 @@
 import HeaderSteps from '../steps/header-steps';
 import MappingSteps from '../steps/mapping-steps';
 import EditDialogSteps from '../../cypress/steps/edit-dialog-steps';
+import PrepareSteps from '../steps/prepare-steps';
 
 context('Namespaces', () => {
   beforeEach(() => {
-    cy.setCookie('com.ontotext.graphdb.repository4200', 'Movies');
-    cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
-    cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
-    cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-response.json');
-    cy.route('GET', '/rest/autocomplete/enabled', 'true');
+    PrepareSteps.prepareMoviesNamespacesAndColumns();
+    PrepareSteps.enableAutocompleteWithEmptyResponse();
   });
 
   it('Should make the mapping dirty when namespaces are added', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/base-iri-mapping-model.json');
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/base-iri-mapping-model.json').as('loadProject');
     cy.route({
       method: 'POST',
       url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
@@ -24,8 +20,7 @@ context('Namespaces', () => {
     }).as('saveMapping');
 
     // Given I have loaded a mapping
-    cy.visit('?dataProviderID=ontorefine:123');
-    cy.wait('@loadColumns');
+    PrepareSteps.visitPageAndWaitToLoad();
     MappingSteps.getTriples().should('have.length', 2);
     HeaderSteps.getSaveMappingButton().should('be.disabled');
     // I expect to see some default namespaces
@@ -53,9 +48,7 @@ context('Namespaces', () => {
   });
 
   it('Should make the mapping dirty when namespaces are removed', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/custom-namespace-mapping-model.json');
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/custom-namespace-mapping-model.json').as('loadProject');
     cy.route({
       method: 'POST',
       url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
@@ -65,8 +58,7 @@ context('Namespaces', () => {
     }).as('saveMapping');
 
     // Given I have loaded a mapping
-    cy.visit('?dataProviderID=ontorefine:123');
-    cy.wait('@loadColumns');
+    PrepareSteps.visitPageAndWaitToLoad();
     MappingSteps.getTriples().should('have.length', 2);
     HeaderSteps.getSaveMappingButton().should('be.disabled');
     // I expect to see some default namespaces
@@ -95,9 +87,7 @@ context('Namespaces', () => {
   });
 
   it('Should edit namespace', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/custom-namespace-mapping-model.json');
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/custom-namespace-mapping-model.json').as('loadProject');
     cy.route({
       method: 'POST',
       url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
@@ -107,8 +97,7 @@ context('Namespaces', () => {
     }).as('saveMapping');
 
     // Given I have loaded a mapping
-    cy.visit('?dataProviderID=ontorefine:123');
-    cy.wait('@loadColumns');
+    PrepareSteps.visitPageAndWaitToLoad();
     MappingSteps.getTriples().should('have.length', 2);
     // When I click over a namespace
     MappingSteps.getNamespace('ga').click();
@@ -137,13 +126,10 @@ context('Namespaces', () => {
   });
 
   it('Should validate namespaces when added', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/base-iri-mapping-model.json');
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/base-iri-mapping-model.json').as('loadProject');
 
     // Given I have loaded a mapping
-    cy.visit('?dataProviderID=ontorefine:123');
-    cy.wait('@loadColumns');
+    PrepareSteps.visitPageAndWaitToLoad();
     // When I add a new namespace without value
     MappingSteps.addNamespace('PREFIX ga:');
     // THEN I expect to see error
@@ -184,11 +170,8 @@ context('Namespaces', () => {
 
   context('Namespace as constant mapping', () => {
     it('Should treat namespace as constant when inline typing', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.stubEmptyMappingModel();
+      PrepareSteps.visitPageAndWaitToLoad();
 
       // WHEN I type namespace inline
       MappingSteps.completeTriple(0, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', undefined, undefined);
@@ -198,11 +181,8 @@ context('Namespaces', () => {
     });
 
     it('Should treat namespace as constant in IRI', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.stubEmptyMappingModel();
+      PrepareSteps.visitPageAndWaitToLoad();
 
       // WHEN I complete the subject and predicate
       MappingSteps.completeTriple(0, 'sub', 'pred', undefined);
@@ -218,11 +198,8 @@ context('Namespaces', () => {
     });
 
     it('Should treat namespace as constant in datatype', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.stubEmptyMappingModel();
+      PrepareSteps.visitPageAndWaitToLoad();
 
       // WHEN I complete the subject ans predicate
       MappingSteps.completeTriple(0, 'sub', 'pred', undefined);

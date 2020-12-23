@@ -1,21 +1,18 @@
 import MappingSteps from '../steps/mapping-steps';
 import HeaderSteps from '../steps/header-steps';
 import EditDialogSteps from '../steps/edit-dialog-steps';
+import PrepareSteps from '../steps/prepare-steps';
 
 describe('Create mapping', () => {
 
   beforeEach(() => {
-    cy.setCookie('com.ontotext.graphdb.repository4200', 'Movies');
-    cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
-    cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
+    PrepareSteps.prepareMoviesNamespacesAndColumns();
   });
 
   it('Should create, save mapping and load RDF', () => {
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
+    PrepareSteps.enableAutocompleteWithEmptyResponse();
+    PrepareSteps.stubEmptyMappingModel();
     cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:create-mapping/preview-response.json');
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
     cy.route({
       method: 'POST',
       url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
@@ -42,8 +39,7 @@ describe('Create mapping', () => {
     }).as('loadSparql');
 
     // Given I have opened the application
-    cy.visit('?dataProviderID=ontorefine:123');
-    cy.wait('@loadColumns');
+    PrepareSteps.visitPageAndWaitToLoad();
     // When The mapping is empty
     MappingSteps.getTriples().should('have.length', 1);
     // Then I expect the save button to be disabled
@@ -98,13 +94,9 @@ describe('Create mapping', () => {
   });
 
   it('Should show error notification when mapping save operation fails', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-    // cy.route('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', 'fixture:edit-mapping/save-mapping-success.json');
+    PrepareSteps.stubEmptyMappingModel();
     // When I load application
-    cy.visit('?dataProviderID=ontorefine:123');
-    cy.wait('@loadColumns');
+    PrepareSteps.visitPageAndWaitToLoad();
     // TODO mock REST preview endpoint
     // I switch to configuration view
     HeaderSteps.getConfigurationButton().click();
@@ -121,11 +113,9 @@ describe('Create mapping', () => {
   });
 
   it('Should render type in a badge inside the cell', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:create-mapping/all-types-mapping-model.json');
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:create-mapping/all-types-mapping-model.json').as('loadProject');
     // When I load a mapping containing all type mappings
-    cy.visit('?dataProviderID=ontorefine:123');
+    PrepareSteps.visitPageAndWaitToLoad();
     // Then I expect to see the types displayed in badge inside the cell
     MappingSteps.getTriples().should('have.length', 7);
     MappingSteps.getTripleSubjectType(0).should('contain', 'IRI');
@@ -140,14 +130,12 @@ describe('Create mapping', () => {
 
   context('Transformation type', () => {
     it('Should render transformation type in a badge in the cell', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
+      PrepareSteps.enableAutocompleteWithEmptyResponse();
       cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:create-mapping/preview-response.json');
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:create-mapping/transformation-types-mapping-model.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:create-mapping/transformation-types-mapping-model.json').as('loadProject');
 
       // Given I have opened the application with an a mapping containing transformation types
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 3);
       // First triple
       // Then I expect subject to have a property prefix badge
@@ -170,14 +158,12 @@ describe('Create mapping', () => {
     });
 
     it('Should not be able to set prefix transformation when type is not IRI', () => {
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json').as('loadNamespaces');
-      cy.route('POST', '/repositories/Movies', 'fixture:create-mapping/autocomplete-response.json');
+      PrepareSteps.stubEmptyMappingModel();
+      PrepareSteps.enableAutocompleteWithEmptyResponse();
       cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:create-mapping/preview-response.json');
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
 
       // Given I have opened the application with an empty mapping
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
       // And I have created a triple with a literal as type
       MappingSteps.completeTriple(0, '@duration', 'is', '123');
       MappingSteps.getTriples().should('have.length', 2);

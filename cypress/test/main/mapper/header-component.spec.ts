@@ -1,20 +1,17 @@
-import {HeaderComponentSelectors} from '../../../../cypress/utils/selectors/header-component.selectors';
-import {MapperComponentSelectors} from '../../../../cypress/utils/selectors/mapper-component.selectors';
+import {HeaderComponentSelectors} from '../../../utils/selectors/header-component.selectors';
+import {MapperComponentSelectors} from '../../../utils/selectors/mapper-component.selectors';
 import MappingSteps from '../../../../cypress/steps/mapping-steps';
 import HeaderSteps from '../../../../cypress/steps/header-steps';
+import PrepareSteps from '../../../steps/prepare-steps';
 
 describe('HeaderComponent', () => {
   beforeEach(() => {
-    cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
-    cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
-    cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
+    PrepareSteps.prepareMoviesNamespacesAndColumns();
   });
 
   it('Should render header', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json');
-    cy.visit('?dataProviderID=ontorefine:123');
-    cy.wait('@loadColumns');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
+    PrepareSteps.visitPageAndWaitToLoad();
     // THEN:
     // I see header content
     cy.cypressData(HeaderComponentSelectors.HEADER_SELECTOR).should('be.visible');
@@ -22,10 +19,9 @@ describe('HeaderComponent', () => {
 
   context('Generate RDF', () => {
     it('Should be disabled initially when the mapping is empty', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json');
+      PrepareSteps.stubEmptyMappingModel();
       // When I load an empty mapping model
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 1);
       // Then I expect the generate rdf button to be disabled
       HeaderSteps.getGenerateRdfButton().should('be.disabled');
@@ -37,10 +33,9 @@ describe('HeaderComponent', () => {
     });
 
     it('Should be enabled initially when the mapping is not empty', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
       // When I load a mapping model
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 3);
       // Then I expect the generate rdf button to be disabled
       HeaderSteps.getGenerateRdfButton().should('be.enabled');
@@ -59,10 +54,9 @@ describe('HeaderComponent', () => {
     });
 
     it('Should be disabled when mapping is cleared', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
       // When I load a mapping model
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 3);
       // When I clear the mapping
       HeaderSteps.newMapping();
@@ -75,9 +69,8 @@ describe('HeaderComponent', () => {
 
   context('Upload mapping as JSON', () => {
     it('Should upload JSON mapping', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
+      PrepareSteps.visitPageAndWaitToLoad();
       cy.route({
         method: 'POST',
         url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
@@ -116,9 +109,8 @@ describe('HeaderComponent', () => {
     });
 
     it('Should not insert uploaded JSON mapping if not confirmed', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
+      PrepareSteps.visitPageAndWaitToLoad();
       // WHEN:
       // I upload valid JSON file
       cy.get('[appCypressData=json-file-input]').attachFile('upload/json.txt');
@@ -134,9 +126,8 @@ describe('HeaderComponent', () => {
     });
 
     it('Should display error message if file is wrong or JSON is corrupted', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json');
-      cy.visit('?dataProviderID=ontorefine:123');
-      cy.wait('@loadColumns');
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
+      PrepareSteps.visitPageAndWaitToLoad();
       // WHEN:
       // I upload valid JSON file
       cy.get('[appCypressData=json-file-input]').attachFile('upload/img.jpg');

@@ -11,7 +11,7 @@ class MappingSteps {
    * @param fieldAccessorCb a function which must return a field
    */
   static type(value: string, fieldAccessorCb: any) {
-    return fieldAccessorCb().type(value, {force: true});
+    return fieldAccessorCb().focus().type(value, {force: true});
   }
 
   static completeTriple(index: number, subject?: string, predicate?: string, object?: string) {
@@ -27,25 +27,28 @@ class MappingSteps {
   }
 
   static completeSubject(index: number, value: string) {
-    this.type(value, () => MappingSteps.getTripleSubjectValue(index)).then((component) => {
+    this.type(value, () => MappingSteps.getTripleSubjectValue(index));
+    MappingSteps.getTripleSubjectValue(index).then((component) => {
       if (component) {
-        component.blur();
+        cy.wrap(component).blur();
       }
     });
   }
 
   static completePredicate(index: number, value: string) {
-    this.type(value, () => MappingSteps.getTriplePredicateValue(index)).then((component) => {
+    this.type(value, () => MappingSteps.getTriplePredicateValue(index));
+    MappingSteps.getTriplePredicateValue(index).then((component) => {
       if (component) {
-        component.blur();
+        cy.wrap(component).blur();
       }
     });
   }
 
   static completeObject(index: number, value: string) {
-    this.type(value, () => MappingSteps.getTripleObjectValue(index)).then((component) => {
+    MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').focus().type(value, {parseSpecialCharSequences: false});
+    MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').then((component) => {
       if (component) {
-        component.blur();
+        cy.wrap(component).blur();
       }
     });
   }
@@ -287,7 +290,7 @@ class MappingSteps {
 
   // Notifications
   static getNotification() {
-    return cy.get('.mat-simple-snackbar');
+    return cy.get('.mat-simple-snackbar', {timeout: 10000});
   }
 
   static getViewJSONDialog() {
@@ -335,7 +338,7 @@ class MappingSteps {
   }
 
   static getSuggestions() {
-    return cy.get(`[appCypressData="cell-option"]`);
+    return cy.get('.autocomplete-check').should('be.visible').find(`[appCypressData="cell-option"]`);
   }
 
   static getTooltip() {

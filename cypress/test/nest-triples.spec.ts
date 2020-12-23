@@ -8,10 +8,10 @@ describe('Nest triples', () => {
   });
 
   it('Should nest triples properly', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:nest-triples/mapping-model.json');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:nest-triples/mapping-model.json').as('loadProject');
     // Given I have created a mapping with multiple nested triples
     // When I load the mapping
-    cy.visit('?dataProviderID=ontorefine:123');
+    PrepareSteps.visitPageAndWaitToLoad();
     // Then I expect to see 9 triples (+1 empty template)
     MappingSteps.getTriples().should('have.length', 10);
     // And I expect to have 2 root level triples and 3 levels of nesting under the first one
@@ -33,10 +33,10 @@ describe('Nest triples', () => {
   });
 
   it('Should nest new triple properly', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:nest-triples/mapping-model.json');
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:nest-triples/mapping-model.json').as('loadProject');
     // Given I have created a mapping with multiple nested triples
     // When I load the mapping
-    cy.visit('?dataProviderID=ontorefine:123');
+    PrepareSteps.visitPageAndWaitToLoad();
     // Then I expect to see 9 triples (+1 empty template)
     MappingSteps.getTriples().should('have.length', 10);
     MappingSteps.addNestedTriple(0);
