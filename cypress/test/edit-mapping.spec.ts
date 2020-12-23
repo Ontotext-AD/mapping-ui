@@ -513,7 +513,6 @@ describe('Edit mapping', () => {
     cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:edit-mapping/preview-response.json');
     cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
     cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json');
-    // cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:create-mapping/preview-response.json');
 
     // When I load a mapping containing all type mappings
     cy.visit('?dataProviderID=ontorefine:123');
@@ -526,10 +525,10 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleSubjectPreview(0).contains('<constantIRI>');
     // Should be a link and uri should be baseURI + constant
     MappingSteps.getTripleSubjectPreview(0).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http:%2F%2Fexample%2Fbase%2FconstantIRI');
+        .and('contain', 'resource?uri=http://example/base/constantIRI');
     MappingSteps.getTriplePredicatePreview(0).contains('<pred>');
     MappingSteps.getTriplePredicatePreview(0).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http:%2F%2Fexample%2Fbase%2Fpred');
+        .and('contain', 'resource?uri=http://example/base/pred');
 
     // A literal
     MappingSteps.getTripleObjectPreview(0).contains('"literalObj"');
@@ -540,7 +539,7 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleSubjectPreview(1).contains('<http://example/base/rawConstantIRI>');
     // Should be a link and uri should be baseURI + constant
     MappingSteps.getTripleSubjectPreview(1).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http:%2F%2Fexample%2Fbase%2FrawConstantIRI');
+        .and('contain', 'resource?uri=http://example/base/rawConstantIRI');
 
     // A type mapping ('a' or 'rdf:type')
     MappingSteps.getTriplePredicatePreview(1).contains('a');
@@ -549,13 +548,13 @@ describe('Edit mapping', () => {
 
     MappingSteps.getTripleObjectPreview(1).contains('<constantIRI>');
     MappingSteps.getTripleObjectPreview(1).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http:%2F%2Fexample%2Fbase%2FconstantIRI');
+        .and('contain', 'resource?uri=http://example/base/constantIRI');
 
     // A raw IRI that is a URI
     MappingSteps.getTripleSubjectPreview(2).contains('<http://constant>');
     // Should be a link and URI should be it's own
     MappingSteps.getTripleSubjectPreview(2).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http:%2F%2Fconstant');
+        .and('contain', 'resource?uri=http://constant');
 
     MappingSteps.getTriplePredicatePreview(2).contains('a');
     MappingSteps.getTriplePredicatePreview(2).find('a').should('not.be', 'visible');
@@ -564,7 +563,7 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleObjectPreview(2).contains('schema:Thing');
     // Should be a link and URI should have the namespace URI + constant
     MappingSteps.getTripleObjectPreview(2).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http:%2F%2Fschema.org%2FThing');
+        .and('contain', 'resource?uri=http://schema.org/Thing');
   });
 
 

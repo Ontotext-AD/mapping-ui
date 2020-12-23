@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  graphDbUrl: '',
   restApiUrl: '/rest/rdf-mapper',
   mappingApiUrl: '/orefine/command',
   repositoryApiUrl: '/repositories',

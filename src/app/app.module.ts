@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -24,6 +24,18 @@ import {SatPopoverModule} from '@ncstate/sat-popover';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, environment.httpLoaderPrefix, environment.httpLoaderSuffix);
+}
+
+export function initializeGraphDbUrl() {
+  return (): Promise<any> => {
+    return new Promise<void>((resolve) => {
+      const endOfGraphDbUrlIndex = window.location.href.indexOf('/ontorefine');
+      if (endOfGraphDbUrlIndex > -1) {
+        environment.graphDbUrl = window.location.href.substr(0, window.location.href.indexOf('/ontorefine'));
+      }
+      resolve();
+    });
+  };
 }
 
 @NgModule({
@@ -59,8 +71,13 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptor,
     multi: true,
+  }, {
+    provide: APP_INITIALIZER,
+    useFactory: initializeGraphDbUrl,
+    multi: true,
   }],
   bootstrap: [AppComponent],
   exports: [TranslateModule],
 })
-export class AppModule { }
+export class AppModule {
+}

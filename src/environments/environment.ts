@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  graphDbUrl: 'http://localhost:7200',
   restApiUrl: 'http://localhost:7200/rest/rdf-mapper',
   mappingApiUrl: 'http://localhost:7200/orefine/command',
   repositoryApiUrl: 'http://localhost:7200/repositories',

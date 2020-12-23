@@ -27,7 +27,7 @@
             <div fxFill [ngClass]="['ti-preview', (isEmptyPreview() ? 'empty-preview' : '')]"
                  *ngFor="let previewItem of getPreview();">
               <ng-container *ngIf="this.getType() === IRI; else notIRI">
-                <a routerLink="/resource" [queryParams]="getResourceUri(previewItem)" routerLinkActive="active" target="_blank">{{previewItem}}</a>
+                <a [href]="getGraphDbResourceUrl(previewItem)" routerLinkActive="active" target="_blank">{{previewItem}}</a>
               </ng-container>
               <ng-template #notIRI>
                 {{previewItem}}
@@ -109,7 +109,7 @@
             </div>
 
             <div class="ml-8" fxFlex="grow">
-              <span class="ti-source">
+              <div class="ti-source">
                 <div *ngIf="getDatatypeSource()">
                   <span *ngIf="getDatatypeSourceType() === 'column'"
                         matTooltip="{{getDatatypeSource().getColumnName()}}">
@@ -160,7 +160,7 @@
                     {{getValueTypeLanguageSource().source}}
                   </span>
                 </div>
-              </span>
+              </div>
             </div>
 
             <div dir="rtl">
