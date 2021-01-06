@@ -252,7 +252,7 @@ class MappingSteps {
   }
 
   // This is for the empty cell edit!!!
-  static editTripleObject(index: number) {
+  static editEmptyTripleObject(index: number) {
     return MappingSteps.getTripleObject(index).find('[appCypressData="button-edit-empty-cell"]').click();
   }
 

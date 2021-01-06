@@ -56,36 +56,43 @@
             <div fxFlex="20">
               <span>{{'LABELS.CONSTANT' | translate}}</span>
             </div>
-            <div fxFlex="none" *ngIf="isIri()">
-              <mat-button-toggle-group formControlName="language" multiple (change)="toggleValueChange($event, 'language')">
-                <mat-button-toggle *ngFor="let lang of valueTransformationLangs" [value]="lang"
-                                   [attr.appCypressData]="'transformation-'+ lang">
-                  {{getType(lang)}}
-                </mat-button-toggle>
-              </mat-button-toggle-group>
-            </div>
-            <div fxFlex="none" *ngIf="isIri()" class="transformation-section" appCypressData="transformation-section">
-              <mat-form-field class="ml-16">
-                <mat-label>{{'TYPE.PREFIX' | translate}}</mat-label>
-                <input matInput formControlName="expression" name="expression"
-                          [matAutocomplete]="prefixAuto"
-                          appCypressData="transformation-expression" [readonly]="isRawIri">
-                <mat-autocomplete #prefixAuto="matAutocomplete">
-                  <div>
-                    <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
-                      {{namespace.prefix}}: <{{namespace.pValue}}>
-                    </mat-option>
-                  </div>
-                </mat-autocomplete>
-              </mat-form-field>
-            </div>
-            <div *ngIf="isIri()" class="mr-8 ml-8" fxFlex="none">{{"LABELS.COLON_DIVIDER" | translate}}</div>
+            <ng-container *ngIf="isIri()">
+              <div fxFlex="none">
+                <mat-button-toggle-group formControlName="language" multiple
+                                         (change)="toggleValueChange($event, 'language')">
+                  <mat-button-toggle *ngFor="let lang of valueTransformationLangs" [value]="lang"
+                                     [attr.appCypressData]="'transformation-'+ lang">
+                    {{getType(lang)}}
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+              <div fxFlex="none" class="transformation-section" appCypressData="transformation-section">
+                <mat-form-field class="ml-16">
+                  <mat-label>{{'TYPE.PREFIX' | translate}}</mat-label>
+                  <input matInput formControlName="expression" name="expression"
+                         [matAutocomplete]="prefixAuto"
+                         appCypressData="transformation-expression" [readonly]="isRawIri">
+                  <mat-autocomplete #prefixAuto="matAutocomplete">
+                    <div>
+                      <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'"
+                                  appCypressData="prefix-suggestion">
+                        {{namespace.prefix}}: <{{namespace.pValue}}>
+                      </mat-option>
+                    </div>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+              <div class="mr-8 ml-8" fxFlex="none">{{"LABELS.COLON_DIVIDER" | translate}}</div>
+            </ng-container>
             <mat-form-field fxFlex="80">
               <textarea matInput formControlName="constant" name="constant" cdkTextareaAutosize
-                              cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                              [placeholder]="('LABELS.CONSTANT' | translate)"
-                              [matAutocomplete]="autoType"
-                              appCypressData="constant-input"></textarea>
+                        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+                        [placeholder]="('LABELS.CONSTANT' | translate)"
+                        [matAutocomplete]="autoType"
+                        appCypressData="constant-input"
+                        #trigger="matAutocompleteTrigger"
+                        (keydown.enter)="onKeydownEnter($event)"
+                        (keyup.enter)="makeSelection($event, trigger)"></textarea>
               <mat-error *ngIf="mapperForm.get('constant').hasError('required')" appCypressData="constant-error">
                 {{ 'ERROR.REQUIRED' | translate }}
               </mat-error>
@@ -102,42 +109,47 @@
             <div fxFlex="20">
               <span>{{'LABELS.COLUMN_NAME' | translate}}</span>
             </div>
-            <div fxFlex="none" *ngIf="isIri()">
-              <mat-button-toggle-group formControlName="language" multiple (change)="toggleValueChange($event, 'language')">
-                <mat-button-toggle *ngFor="let lang of valueTransformationLangs" [value]="lang"
-                                   [attr.appCypressData]="'transformation-'+ lang">
-                  {{getType(lang)}}
-                </mat-button-toggle>
-              </mat-button-toggle-group>
-            </div>
-            <div fxFlex="none" *ngIf="isIri()" class="transformation-section" appCypressData="transformation-section">
-              <mat-form-field class="ml-16">
-                <mat-label>{{'TYPE.PREFIX' | translate}}</mat-label>
-                <input matInput formControlName="expression" name="expression"
-                          [matAutocomplete]="prefixAuto"
-                          appCypressData="transformation-expression" [readonly]="isRawIri">
-                <mat-autocomplete #prefixAuto="matAutocomplete">
-                  <div>
-                    <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
-                      {{namespace.prefix}}: <{{namespace.pValue}}>
-                    </mat-option>
-                  </div>
-                </mat-autocomplete>
-              </mat-form-field>
-            </div>
-            <div *ngIf="isIri()" class="mr-8 ml-8" fxFlex="none">{{"LABELS.COLON_DIVIDER" | translate}}</div>
+            <ng-container *ngIf="isIri()">
+              <div fxFlex="none">
+                <mat-button-toggle-group formControlName="language" multiple (change)="toggleValueChange($event, 'language')">
+                  <mat-button-toggle *ngFor="let lang of valueTransformationLangs" [value]="lang"
+                                     [attr.appCypressData]="'transformation-'+ lang">
+                    {{getType(lang)}}
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+              <div fxFlex="none" class="transformation-section" appCypressData="transformation-section">
+                <mat-form-field class="ml-16">
+                  <mat-label>{{'TYPE.PREFIX' | translate}}</mat-label>
+                  <input matInput formControlName="expression" name="expression"
+                         [matAutocomplete]="prefixAuto"
+                         appCypressData="transformation-expression" [readonly]="isRawIri">
+                  <mat-autocomplete #prefixAuto="matAutocomplete">
+                    <div>
+                      <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
+                        {{namespace.prefix}}: <{{namespace.pValue}}>
+                      </mat-option>
+                    </div>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+              <div class="mr-8 ml-8" fxFlex="none">{{"LABELS.COLON_DIVIDER" | translate}}</div>
+            </ng-container>
             <mat-form-field fxFlex="80">
-                    <textarea matInput formControlName="columnName" name="columnName"
-                              cdkTextareaAutosize
-                              cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                              [placeholder]="('LABELS.COLUMN_NAME' | translate)"
-                              [matAutocomplete]="autoc"
-                              appCypressData="column-input"></textarea>
+              <textarea matInput formControlName="columnName" name="columnName"
+                        cdkTextareaAutosize
+                        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+                        [placeholder]="('LABELS.COLUMN_NAME' | translate)"
+                        [matAutocomplete]="autoc"
+                        appCypressData="column-input"
+                        #trigger="matAutocompleteTrigger"
+                        (keydown.enter)="onKeydownEnter($event)"
+                        (keyup.enter)="makeSelection($event, trigger)"></textarea>
               <mat-error *ngIf="mapperForm.get('columnName').hasError('required')" appCypressData="column-error">
-                {{ 'ERROR.REQUIRED' | translate }}
+              {{ 'ERROR.REQUIRED' | translate }}
               </mat-error>
               <mat-autocomplete #autoc="matAutocomplete">
-                <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title">
+                <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title" appCypressData="column-suggestion">
                   {{option.title}}
                 </mat-option>
               </mat-autocomplete>
@@ -149,12 +161,14 @@
               <span>{{'LABELS.GREL' | translate}}</span>
             </div>
             <mat-form-field fxFlex="80">
-                     <textarea matInput formControlName="grelExpression" name="grelExpression"
-                               cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                               [placeholder]="('LABELS.GREL_PLACEHOLDER' | translate)"
-                               appCypressData="transformation-expression"
-                               [satPopoverAnchor]='expressionGrelPreview'
-                               (focus)="expressionGrelPreview.open()" (blur)="expressionGrelPreview.close()"></textarea>
+               <textarea matInput formControlName="grelExpression" name="grelExpression"
+                         cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+                         [placeholder]="('LABELS.GREL_PLACEHOLDER' | translate)"
+                         appCypressData="transformation-expression"
+                         [satPopoverAnchor]='expressionGrelPreview'
+                         (focus)="expressionGrelPreview.open()"
+                         (blur)="expressionGrelPreview.close()"
+                         (keydown.enter)="onKeydownEnter($event)"></textarea>
               <mat-icon matSuffix>
                 <a class="icon-info"  target="_blank" href={{environment.openRefineVariables}}
                    matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
@@ -247,7 +261,10 @@
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                               [placeholder]="('LABELS.CONSTANT' | translate)"
                               [matAutocomplete]="autoDataTypeC"
-                              appCypressData="datatype-constant-input"></textarea>
+                              appCypressData="datatype-constant-input"
+                              #trigger="matAutocompleteTrigger"
+                              (keydown.enter)="onKeydownEnter($event)"
+                              (keyup.enter)="makeSelection($event, trigger)"></textarea>
                   <mat-error *ngIf="mapperForm.get('dataTypeConstant').hasError('required')"
                              appCypressData="datatype-constant-error">
                     {{ 'ERROR.REQUIRED' | translate }}
@@ -295,13 +312,16 @@
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                               [placeholder]="('LABELS.COLUMN_NAME' | translate)"
                               [matAutocomplete]="autoc"
-                              appCypressData="datatype-column-input"></textarea>
+                              appCypressData="datatype-column-input"
+                              #trigger="matAutocompleteTrigger"
+                              (keydown.enter)="onKeydownEnter($event)"
+                              (keyup.enter)="makeSelection($event, trigger)"></textarea>
                   <mat-error *ngIf="mapperForm.get('dataTypeColumnName').hasError('required')"
                              appCypressData="datatype-column-error">
                     {{ 'ERROR.REQUIRED' | translate }}
                   </mat-error>
                   <mat-autocomplete #autoc="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title">
+                    <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title" appCypressData="column-suggestion">
                       {{option.title}}
                     </mat-option>
                   </mat-autocomplete>
@@ -318,7 +338,8 @@
                                [placeholder]="('LABELS.GREL_PLACEHOLDER' | translate)"
                                appCypressData="datatype-transformation-expression"
                                [satPopoverAnchor]='datatypeGrelPreview'
-                               (focus)="datatypeGrelPreview.open()" (blur)="datatypeGrelPreview.close()"></textarea>
+                               (focus)="datatypeGrelPreview.open()" (blur)="datatypeGrelPreview.close()"
+                               (keydown.enter)="onKeydownEnter($event)"></textarea>
                   <mat-icon matSuffix>
                     <a class="icon-info"  target="_blank" href={{environment.openRefineVariables}}
                        matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>
@@ -366,7 +387,8 @@
                     <textarea matInput formControlName="languageConstant" name="languageConstant" cdkTextareaAutosize
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                               [placeholder]="('LABELS.CONSTANT' | translate)"
-                              appCypressData="language-constant-input"></textarea>
+                              appCypressData="language-constant-input"
+                              (keydown.enter)="onKeydownEnter($event)"></textarea>
                   <mat-error *ngIf="mapperForm.get('languageConstant').hasError('required')"
                              appCypressData="language-constant-error">
                     {{ 'ERROR.REQUIRED' | translate }}
@@ -384,13 +406,16 @@
                               cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
                               [placeholder]="('LABELS.COLUMN_NAME' | translate)"
                               [matAutocomplete]="autoc"
-                              appCypressData="language-column-input"></textarea>
+                              appCypressData="language-column-input"
+                              #trigger="matAutocompleteTrigger"
+                              (keydown.enter)="onKeydownEnter($event)"
+                              (keyup.enter)="makeSelection($event, trigger)"></textarea>
                   <mat-error *ngIf="mapperForm.get('languageColumnName').hasError('required')"
                              appCypressData="language-column-error">
                     {{ 'ERROR.REQUIRED' | translate }}
                   </mat-error>
                   <mat-autocomplete #autoc="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title">
+                    <mat-option *ngFor="let option of filteredColumnNames | async" [value]="option.title" appCypressData="column-suggestion">
                       {{option.title}}
                     </mat-option>
                   </mat-autocomplete>
@@ -407,7 +432,8 @@
                               [placeholder]="('LABELS.GREL_PLACEHOLDER' | translate)"
                               appCypressData="language-transformation-expression"
                               [satPopoverAnchor]='languageGrelPreview'
-                              (focus)="languageGrelPreview.open()" (blur)="languageGrelPreview.close()"></textarea>
+                              (focus)="languageGrelPreview.open()" (blur)="languageGrelPreview.close()"
+                              (keydown.enter)="onKeydownEnter($event)"></textarea>
                   <mat-icon matSuffix>
                     <a class="icon-info"  target="_blank" href={{environment.openRefineVariables}}
                        matTooltip="{{'TOOLTIPS.GREL_VALUE_HELP' | translate}}"></a>

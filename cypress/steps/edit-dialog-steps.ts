@@ -1,10 +1,10 @@
 import {MapperComponentSelectors} from '../utils/selectors/mapper-component.selectors';
+import MappingSteps from '../steps/mapping-steps';
 
 /**
  * Common edit mapping dialog steps.
  */
 class EditDialogSteps {
-
   static getDialog() {
     return cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_SELECTOR);
   }
@@ -18,7 +18,7 @@ class EditDialogSteps {
   }
 
   static saveConfiguration() {
-    cy.wait(500)
+    cy.wait(500);
     this.getOkButton().click();
     this.getDialog().should('not.be.visible');
   }
@@ -35,7 +35,7 @@ class EditDialogSteps {
   static clearColumnValue() {
     // in order to close the autocomplete dialog, simulate [esc] key click
     return EditDialogSteps.getColumnField().clear().type('{esc}', {
-      parseSpecialCharSequences: true
+      parseSpecialCharSequences: true,
     });
   }
 
@@ -86,20 +86,23 @@ class EditDialogSteps {
     return this.getLiteralTypeSection().find('[appCypressData=language-constant]').click();
   }
 
+  static selectLanguageColumn() {
+    return this.getLiteralTypeSection().find('[appCypressData=language-column]').click();
+  }
+
   static completeLanguageConstant(value: string) {
     return this.getLiteralTypeSection().find('[appCypressData=language-constant-input]').should('be.visible').type(value).blur();
   }
 
-
-  static selectSourceTypeColumn() {
-    return this.getTypeSection().find('[appCypressData=datatype-column]').click();
+  static selectDataTypeColumn() {
+    return this.getLiteralTypeSection().find('[appCypressData=datatype-column]').click();
   }
 
   static completeSourceTypeColumn(value: string) {
-    return this.getTypeSection().find('[appCypressData=datatype-column-input]').should('be.visible')
-      .type(value + '{esc}', {
-        parseSpecialCharSequences: true
-      }).blur();
+    return this.getLiteralTypeSection().find('[appCypressData=datatype-column-input]').should('be.visible')
+        .type(value + '{esc}', {
+          parseSpecialCharSequences: true,
+        }).blur();
   }
 
   // source section
@@ -113,7 +116,6 @@ class EditDialogSteps {
 
   static getConstantField() {
     return this.getSourceSection().find('[appCypressData=constant-input]');
-
   }
   static completeConstant(value: string) {
     return this.getConstantField().should('be.visible').type(value).blur();
@@ -121,7 +123,7 @@ class EditDialogSteps {
 
   static clearConstantValue() {
     return EditDialogSteps.getConstantField().clear().type('{esc}', {
-      parseSpecialCharSequences: true
+      parseSpecialCharSequences: true,
     });
   }
 
@@ -204,7 +206,7 @@ class EditDialogSteps {
 
   static clearDataTypeExpression() {
     return this.getDataTypeExpressionField().should('be.visible').clear().type('{esc}', {
-      parseSpecialCharSequences: true
+      parseSpecialCharSequences: true,
     });
   }
 
@@ -247,20 +249,28 @@ class EditDialogSteps {
   static completePrefix(prefix: string) {
     // emulate [esc] button hit in order to close the autocomplete
     return this.getTransformationExpressionField().should('be.visible').type(`${prefix}{esc}`, {
-      parseSpecialCharSequences: true
+      parseSpecialCharSequences: true,
     });
   }
 
   static clearPrefix() {
     return this.getTransformationExpressionField().should('be.visible').clear().type('{esc}', {
-      parseSpecialCharSequences: true
+      parseSpecialCharSequences: true,
     });
   }
 
   static getPrefixSuggestions() {
-    return cy.get('.mat-autocomplete-panel').find(`[appCypressData="prefix-suggestion"]`)
+    return cy.get('.mat-autocomplete-panel').find(`[appCypressData="prefix-suggestion"]`);
   }
 
+  static getColumnSuggestions() {
+    return cy.get('.mat-autocomplete-panel').find(`[appCypressData="column-suggestion"]`);
+  }
+
+  static assertNewLineNotAddedToField(fieldAccessorCb: any) {
+    MappingSteps.type('{enter}', () => fieldAccessorCb);
+    fieldAccessorCb.should('have.value', '');
+  }
 }
 
 export default EditDialogSteps;

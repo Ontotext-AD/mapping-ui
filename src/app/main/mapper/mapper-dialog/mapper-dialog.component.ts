@@ -30,6 +30,7 @@ import {MappingDefinitionSource} from 'src/app/models/mapping-definition-source'
 import {MatButtonToggleChange} from '@angular/material/button-toggle';
 import {MappingDefinitionLiteralType} from 'src/app/models/mapping-definition-literal-type';
 import {MappingDefinitionLiteralSource} from 'src/app/models/mapping-definition-literal-source';
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 export interface SubjectMapperData {
   mappingData: Triple;
@@ -864,5 +865,14 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
   isIri(): boolean {
     return this.isOfType(Type.IRI) || this.checkIsTypePropertyObject() || this.isSubject() || this.isPredicate();
+  }
+
+  public makeSelection(event: KeyboardEvent, trigger: MatAutocompleteTrigger) {
+    event.preventDefault();
+    trigger.closePanel();
+  }
+
+  public onKeydownEnter(event: KeyboardEvent) {
+    event.preventDefault();
   }
 }

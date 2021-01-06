@@ -1,6 +1,7 @@
 import MappingSteps from '../steps/mapping-steps';
 import EditDialogSteps from '../steps/edit-dialog-steps';
 import PrepareSteps from '../steps/prepare-steps';
+import {MapperComponentSelectors} from '../utils/selectors/mapper-component.selectors';
 
 describe('Autocomplete mapping', () => {
 
@@ -78,6 +79,46 @@ describe('Autocomplete mapping', () => {
       EditDialogSteps.selectConstant();
       EditDialogSteps.getTransformationExpressionField().click();
       EditDialogSteps.getPrefixSuggestions().first().contains('rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>');
+    });
+
+    it('Should not allow entering a new line in text areas', () => {
+      MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
+
+      MappingSteps.editEmptyTripleObject(0);
+      EditDialogSteps.selectColumn();
+      EditDialogSteps.getColumnField().click();
+      // When I try to press {enter} in text area, new line should not be added
+      EditDialogSteps.assertNewLineNotAddedToField(EditDialogSteps.getColumnField());
+      // When 'col' is typed in textarea
+      MappingSteps.type('col', () => EditDialogSteps.getColumnField());
+      // There should be suggestion dropdown
+      // And should contain 'color' as first option
+      EditDialogSteps.getColumnSuggestions().first().contains('color');
+      // When no option is selected and {enter} is pressed
+      MappingSteps.type('{enter}', () => EditDialogSteps.getColumnField());
+      // Text in textarea should not be autocompleted
+      EditDialogSteps.getColumnField().should('have.value', 'col');
+
+      EditDialogSteps.selectConstant();
+      EditDialogSteps.assertNewLineNotAddedToField(EditDialogSteps.getConstantField());
+      EditDialogSteps.selectGREL();
+      EditDialogSteps.assertNewLineNotAddedToField(EditDialogSteps.getTransformationExpressionField());
+
+      EditDialogSteps.selectTypeDataTypeLiteral();
+      EditDialogSteps.selectDataTypeColumn();
+      EditDialogSteps.assertNewLineNotAddedToField(cy.cypressData(MapperComponentSelectors.DATATYPE_COLUMN_INPUT));
+      EditDialogSteps.selectDataTypeConstant();
+      EditDialogSteps.assertNewLineNotAddedToField(cy.cypressData(MapperComponentSelectors.DATATYPE_CONSTANT_INPUT));
+      EditDialogSteps.selectDataTypeGREL();
+      EditDialogSteps.assertNewLineNotAddedToField(cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_EXPRESSION));
+
+      EditDialogSteps.selectTypeLanguageLiteral();
+      EditDialogSteps.selectLanguageColumn();
+      EditDialogSteps.assertNewLineNotAddedToField(cy.cypressData(MapperComponentSelectors.LANGUAGE_COLUMN_INPUT));
+      EditDialogSteps.selectLanguageConstant();
+      EditDialogSteps.assertNewLineNotAddedToField(cy.cypressData(MapperComponentSelectors.LANGUAGE_CONSTANT_INPUT));
+      EditDialogSteps.selectLanguageGREL();
+      EditDialogSteps.assertNewLineNotAddedToField(cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_EXPRESSION));
     });
   });
 });

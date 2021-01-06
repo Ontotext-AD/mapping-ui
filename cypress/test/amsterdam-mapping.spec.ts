@@ -44,7 +44,7 @@ describe('Create Amsterdam restaurants mapping', () => {
     // I create predicate with constant
     MappingSteps.completePredicate(2, 'name');
     // I create language literal object
-    MappingSteps.editTripleObject(2);
+    MappingSteps.editEmptyTripleObject(2);
     EditDialogSteps.selectTypeLanguageLiteral();
     EditDialogSteps.selectLanguageConstant();
     EditDialogSteps.completeLanguageConstant('nl');
@@ -56,7 +56,7 @@ describe('Create Amsterdam restaurants mapping', () => {
     // I create predicate with constant
     MappingSteps.completePredicate(4, 'description');
     // I create language literal object
-    MappingSteps.editTripleObject(4);
+    MappingSteps.editEmptyTripleObject(4);
     EditDialogSteps.selectTypeLanguageLiteral();
     EditDialogSteps.selectLanguageConstant();
     EditDialogSteps.completeLanguageConstant('nl');
@@ -68,7 +68,7 @@ describe('Create Amsterdam restaurants mapping', () => {
     // I create predicate with constant with prefix
     MappingSteps.completePredicate(6, 'geo:hasGeometry');
     // I create object with column source and GREL transformation
-    MappingSteps.editTripleObject(6);
+    MappingSteps.editEmptyTripleObject(6);
     EditDialogSteps.selectIri();
     EditDialogSteps.selectGREL();
     EditDialogSteps.completeGREL('"https://data.amsterdam.nl/resource/geometry/" + value');
@@ -83,7 +83,7 @@ describe('Create Amsterdam restaurants mapping', () => {
     MappingSteps.addTriplePredicateSibling(7);
     MappingSteps.completePredicate(8, 'geo:asWKT');
     // I create datatype object with constant with prefix and row index source with GREL transformation
-    MappingSteps.editTripleObject(8);
+    MappingSteps.editEmptyTripleObject(8);
     EditDialogSteps.selectTypeDataTypeLiteral();
     EditDialogSteps.selectDataTypeConstant();
     EditDialogSteps.completeDataTypeConstant('wktLiteral');
@@ -97,7 +97,7 @@ describe('Create Amsterdam restaurants mapping', () => {
 
     MappingSteps.completePredicate(9, 'valuenode');
     // I add a value bnode with source column
-    MappingSteps.editTripleObject(9);
+    MappingSteps.editEmptyTripleObject(9);
     EditDialogSteps.selectValueBnode();
     EditDialogSteps.selectColumn();
     EditDialogSteps.completeColumn('Trcid');
@@ -107,7 +107,7 @@ describe('Create Amsterdam restaurants mapping', () => {
     MappingSteps.addNestedTriple(9);
     MappingSteps.completePredicate(10, 'longdescription');
     // I add a value bnode with source column
-    MappingSteps.editTripleObject(10);
+    MappingSteps.editEmptyTripleObject(10);
     EditDialogSteps.selectLiteral();
     EditDialogSteps.selectColumn();
     EditDialogSteps.completeColumn('Longdescription');
@@ -117,7 +117,7 @@ describe('Create Amsterdam restaurants mapping', () => {
     MappingSteps.addNestedTriple(9);
     MappingSteps.completePredicate(11, 'uniquenode');
     // I add a value bnode with source column
-    MappingSteps.editTripleObject(11);
+    MappingSteps.editEmptyTripleObject(11);
     EditDialogSteps.selectUniqueBnode();
     EditDialogSteps.selectColumn();
     EditDialogSteps.completeColumn('Media');
@@ -126,7 +126,7 @@ describe('Create Amsterdam restaurants mapping', () => {
     MappingSteps.addNestedTriple(11);
     MappingSteps.completePredicate(12, 'city');
     // I add a value bnode with source column
-    MappingSteps.editTripleObject(12);
+    MappingSteps.editEmptyTripleObject(12);
     EditDialogSteps.selectLiteral();
     EditDialogSteps.selectColumn();
     EditDialogSteps.completeColumn('City');

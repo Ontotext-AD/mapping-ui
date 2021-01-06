@@ -249,7 +249,7 @@ describe('Edit mapping', () => {
       // When I load application
       PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
-      MappingSteps.editTripleObject(0);
+      MappingSteps.editEmptyTripleObject(0);
       EditDialogSteps.selectIri();
       EditDialogSteps.selectGREL();
       EditDialogSteps.completeGREL('cells["director_name"].value');

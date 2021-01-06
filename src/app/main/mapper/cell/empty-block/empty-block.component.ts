@@ -223,6 +223,9 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
   }
 
   public saveInputValue(emitTab: boolean) {
+    if (!this.autoInput.value) {
+      return;
+    }
     let value = this.autoInput.value.trim();
     if (this.manualInput && !this.autoInput.value.startsWith(this.manualInput)) {
       value = this.manualInput + this.autoInput.value;
