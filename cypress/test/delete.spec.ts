@@ -54,7 +54,7 @@ describe('Delete', () => {
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a triple
       MappingSteps.completeTriple(0, 'sub', 'pre', undefined);
-      MappingSteps.editTripleObject(0);
+      MappingSteps.editEmptyTripleObject(0);
       EditDialogSteps.getDialog().should('be.visible');
       EditDialogSteps.selectIri();
       EditDialogSteps.selectConstant();

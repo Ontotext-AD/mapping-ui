@@ -187,7 +187,7 @@ context('Namespaces', () => {
       // WHEN I complete the subject and predicate
       MappingSteps.completeTriple(0, 'sub', 'pred', undefined);
       // And edit the object
-      MappingSteps.editTripleObject(0);
+      MappingSteps.editEmptyTripleObject(0);
       EditDialogSteps.selectIri();
       EditDialogSteps.selectConstant();
       EditDialogSteps.completeConstant('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
@@ -204,7 +204,7 @@ context('Namespaces', () => {
       // WHEN I complete the subject ans predicate
       MappingSteps.completeTriple(0, 'sub', 'pred', undefined);
       // And edit the object
-      MappingSteps.editTripleObject(0);
+      MappingSteps.editEmptyTripleObject(0);
       EditDialogSteps.selectLiteral();
       EditDialogSteps.selectConstant();
       EditDialogSteps.completeConstant('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
