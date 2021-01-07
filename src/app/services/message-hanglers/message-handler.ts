@@ -1,5 +1,3 @@
-import {MessageType} from 'src/app/utils/message-type';
-
 /**
  * An interface to set the contract for all window message handlers
  */

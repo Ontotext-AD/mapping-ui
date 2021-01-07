@@ -16,10 +16,13 @@ export class WindowMessageHandlingService {
     this.messageTypeToHandlersMap.set(languageMessageHandler.getType(), languageMessageHandler);
   }
 
+  messageHandlerFn = (e) => {
+    // eslint-disable-next-line no-invalid-this
+    this.handleMessage(e.data);
+  }
+
   subscribeToWindowParentMessageEvent() {
-    window.parent.addEventListener('message', (e) => {
-      this.handleMessage(e.data);
-    });
+    window.parent.addEventListener('message', this.messageHandlerFn);
   }
 
   handleMessage(message: any): void {
