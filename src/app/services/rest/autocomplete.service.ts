@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ErrorReporterService} from '../error-reporter.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {EMPTY, Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
 import {LocalStorageService} from 'src/app/services/local-storage.service';
@@ -30,15 +30,18 @@ export class AutocompleteService {
   }
 
   autocompleteStatus(): Observable<boolean> {
-    const httpHeaders = new HttpHeaders({
-      'X-GraphDB-Repository': this.localStorageService.getCurrentRepository(),
-    });
-    const httpOptions = {headers: httpHeaders};
-
-    return this.httpClient.get<boolean>(`${this.apiUrl}/enabled`, httpOptions).pipe(map(
-        (status) => this.setAutocompleteStatus(status),
-        catchError((error) => this.errorReporterService.handleError('Autocomplete status check failed.', error)),
-    ));
+    const selectedRepo = this.localStorageService.getCurrentRepository();
+    if (selectedRepo) {
+      const httpHeaders = new HttpHeaders({
+        'X-GraphDB-Repository': selectedRepo,
+      });
+      const httpOptions = {headers: httpHeaders};
+      return this.httpClient.get<boolean>(`${this.apiUrl}/enabled`, httpOptions).pipe(map(
+          (status) => this.setAutocompleteStatus(status),
+          catchError((error) => this.errorReporterService.handleError('Autocomplete status check failed.', error)),
+      ));
+    }
+    return EMPTY;
   }
 
   isAustocompleteEnabled(): boolean {
