@@ -5,7 +5,7 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ErrorReporterService} from '../error-reporter.service';
 import {AutocompleteService} from './autocomplete.service';
-import {CookiesService} from '../cookies.service';
+import {LocalStorageService} from 'src/app/services/local-storage.service';
 import {SPARQL_AUTOCOMPLETE, SPARQL_IRI_DESCRIPTION, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/constants';
 import {Namespaces} from '../../models/namespaces';
 
@@ -16,13 +16,13 @@ export class RepositoryService {
   apiUrl = environment.repositoryApiUrl;
 
   constructor(protected httpClient: HttpClient,
-              protected cookiesService: CookiesService,
+              protected localStorageService: LocalStorageService,
               private autocompleteService: AutocompleteService,
               private errorReporterService: ErrorReporterService) {
   }
 
   getAPIURL(apiName: string): Observable<string> {
-    const repo = this.cookiesService.getRepositoryCookie();
+    const repo = this.localStorageService.getCurrentRepository();
     return (repo) ? of(`${this.apiUrl}/${repo}${apiName}`) : EMPTY;
   }
 

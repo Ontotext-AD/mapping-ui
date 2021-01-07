@@ -4,7 +4,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
-import {CookiesService} from '../cookies.service';
+import {LocalStorageService} from 'src/app/services/local-storage.service';
 import {map} from 'rxjs/internal/operators';
 import {NotificationService} from '../notification.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -23,7 +23,7 @@ export class AutocompleteService {
   private autocompleteWarningDisplayed = false;
 
   constructor(private httpClient: HttpClient,
-              private cookiesService: CookiesService,
+              private localStorageService: LocalStorageService,
               private translateService: TranslateService,
               private notificationService: NotificationService,
               private errorReporterService: ErrorReporterService) {
@@ -31,7 +31,7 @@ export class AutocompleteService {
 
   autocompleteStatus(): Observable<boolean> {
     const httpHeaders = new HttpHeaders({
-      'X-GraphDB-Repository': this.cookiesService.getRepositoryCookie(),
+      'X-GraphDB-Repository': this.localStorageService.getCurrentRepository(),
     });
     const httpOptions = {headers: httpHeaders};
 
