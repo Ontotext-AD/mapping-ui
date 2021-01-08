@@ -6,4 +6,4 @@ WORKDIR /mapping-ui/
 
 RUN npm install && npm install --save-dev cypress
 
-CMD ["npm", "cy:ci"]
+CMD ["npm", "run", "cy:ci"]
