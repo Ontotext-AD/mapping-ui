@@ -9,6 +9,19 @@ context('Namespaces', () => {
     PrepareSteps.enableAutocompleteWithEmptyResponse();
   });
 
+  it('Should show base iri and no default prefixes on empty mapping', () => {
+    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/empty-mapping-model.json').as('loadProject');
+
+    // Given I have loaded a mapping
+    PrepareSteps.visitPageAndWaitToLoad();
+    MappingSteps.getTriples().should('have.length', 1);
+    HeaderSteps.getSaveMappingButton().should('be.disabled');
+    // I expect to no default namespaces
+    MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 0);
+    // I expect see default base IRI
+    MappingSteps.getBaseIRI().should('have.value', 'http://example.com/base/');
+  });
+
   it('Should make the mapping dirty when namespaces are added', () => {
     cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/base-iri-mapping-model.json').as('loadProject');
     cy.route({

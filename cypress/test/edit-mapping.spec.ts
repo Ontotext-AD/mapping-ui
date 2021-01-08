@@ -156,11 +156,12 @@ describe('Edit mapping', () => {
         response: 'fixture:edit-mapping/load-namespaces-error'
       });
 
-      PrepareSteps.visitPageAndWaitToLoad();
-      // I expect empty mapping
-      MappingSteps.getTriples().should('have.length', 1);
-      // And I expect notification message
-      MappingSteps.getNotification().should('be.visible').and('contain', 'Unknown repository: Movies');
+      cy.visit('?dataProviderID=ontorefine:123').then(() => {
+        // I expect empty mapping
+        MappingSteps.getTriples().should('have.length', 1);
+        // And I expect notification message
+        MappingSteps.getNotification().should('be.visible').and('contain', 'Unknown repository: Movies');
+      });
     });
 
     it('Should show error notification when columns could not be loaded', () => {
@@ -489,10 +490,10 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleSubjectPreview(0).contains('<constantIRI>');
     // Should be a link and uri should be baseURI + constant
     MappingSteps.getTripleSubjectPreview(0).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http://example/base/constantIRI');
+        .and('contain', 'resource?uri=http://example.com/base/constantIRI');
     MappingSteps.getTriplePredicatePreview(0).contains('<pred>');
     MappingSteps.getTriplePredicatePreview(0).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http://example/base/pred');
+        .and('contain', 'resource?uri=http://example.com/base/pred');
 
     // A literal
     MappingSteps.getTripleObjectPreview(0).contains('"literalObj"');
@@ -500,10 +501,10 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleObjectPreview(0).find('a').should('not.be', 'visible');
 
     // A raw IRI that is not a URI
-    MappingSteps.getTripleSubjectPreview(1).contains('<http://example/base/rawConstantIRI>');
+    MappingSteps.getTripleSubjectPreview(1).contains('<http://example.com/base/rawConstantIRI>');
     // Should be a link and uri should be baseURI + constant
     MappingSteps.getTripleSubjectPreview(1).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http://example/base/rawConstantIRI');
+        .and('contain', 'resource?uri=http://example.com/base/rawConstantIRI');
 
     // A type mapping ('a' or 'rdf:type')
     MappingSteps.getTriplePredicatePreview(1).contains('a');
@@ -512,7 +513,7 @@ describe('Edit mapping', () => {
 
     MappingSteps.getTripleObjectPreview(1).contains('<constantIRI>');
     MappingSteps.getTripleObjectPreview(1).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http://example/base/constantIRI');
+        .and('contain', 'resource?uri=http://example.com/base/constantIRI');
 
     // A raw IRI that is a URI
     MappingSteps.getTripleSubjectPreview(2).contains('<http://constant>');
@@ -653,10 +654,10 @@ describe('Edit mapping', () => {
       PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 2);
       // Then I expect the base IRI to be populated
-      MappingSteps.getBaseIRI().should('have.value', 'http://example/base/');
+      MappingSteps.getBaseIRI().should('have.value', 'http://example.com/base/');
       // When I edit the base IRI
       MappingSteps.getBaseIRI().type('123');
-      MappingSteps.getBaseIRI().should('have.value', 'http://example/base/123');
+      MappingSteps.getBaseIRI().should('have.value', 'http://example.com/base/123');
       // And I save the mapping
       HeaderSteps.saveMapping();
       cy.fixture('edit-mapping/save-mapping-with-updated-iri-request-body').then((saveRequest: string) => {
@@ -668,7 +669,7 @@ describe('Edit mapping', () => {
         });
       });
       // Then I expect the base IRI to be set in the model properly and sent for save
-      MappingSteps.getBaseIRI().should('have.value', 'http://example/base/123');
+      MappingSteps.getBaseIRI().should('have.value', 'http://example.com/base/123');
     });
   });
 

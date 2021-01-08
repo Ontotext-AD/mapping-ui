@@ -8,6 +8,7 @@ export const environment = {
   restApiUrl: 'http://localhost:7200/rest/rdf-mapper',
   mappingApiUrl: 'http://localhost:7200/orefine/command',
   repositoryApiUrl: 'http://localhost:7200/repositories',
+  repositoryGDBApiUrl: 'http://localhost:7200/rest/repositories',
   autocompleteApiUrl: 'http://localhost:7200/rest/autocomplete',
   httpLoaderPrefix: './assets/i18n/',
   httpLoaderSuffix: '.json',
