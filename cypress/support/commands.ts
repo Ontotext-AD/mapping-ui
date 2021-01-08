@@ -20,8 +20,8 @@ Cypress.Commands.add('cypressData', (dataTestValue: string) => {
   return cy.get('[appCypressData=' + dataTestValue + ']');
 });
 
-Cypress.Commands.add('cypressFind',  {
-  prevSubject: true
+Cypress.Commands.add('cypressFind', {
+  prevSubject: true,
 }, (subject: any, dataTestValue: string) => {
   return subject.find('[appCypressData=' + dataTestValue + ']');
 });

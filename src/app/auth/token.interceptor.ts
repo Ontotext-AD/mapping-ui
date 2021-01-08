@@ -5,14 +5,15 @@ import {
   HttpEvent,
   HttpInterceptor,
 } from '@angular/common/http';
-import {CookieService} from 'ngx-cookie-service';
 import {Observable} from 'rxjs';
+import {LocalStorageService} from 'src/app/services/local-storage.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(protected cookies: CookieService) {}
+  constructor(protected localStorageService: LocalStorageService) {}
+
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const auth = localStorage.getItem('com.ontotext.graphdb.auth');
+    const auth = this.localStorageService.getAuthToken();
     if (auth) {
       request = request.clone({
         setHeaders: {
