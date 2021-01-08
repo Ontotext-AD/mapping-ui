@@ -28,6 +28,17 @@ pipeline {
         sh "npm run test"
       }
     }
+
+    stage('Acceptance Test') {
+      agent {
+        dockerfile true
+      }
+//       steps {
+//         sh "sh docker build -t test/mapping-test ."
+//         sh "sh docker run test/mapping-test"
+//       }
+    }
+
   }
 }
 
