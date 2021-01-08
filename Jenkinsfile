@@ -31,11 +31,10 @@ pipeline {
 
     stage('Acceptance Test') {
       steps {
-        sh "sh docker build -t test/mapping-test ."
-        sh "sh docker run test/mapping-test"
+          sh "docker-compose build --force-rm --no-cache --parallel"
+          sh "docker-compose up --abort-on-container-exit --exit-code-from cypress-tests"
       }
     }
-
   }
 }
 
