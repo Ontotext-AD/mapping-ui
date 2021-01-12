@@ -29,6 +29,14 @@ pipeline {
       }
     }
 
+    stage('Sonar') {
+      steps {
+        withSonarQubeEnv('SonarCloud') {
+          sh "node sonar-project.js --branch='${env.ghprbSourceBranch}' --target-branch='${env.ghprbTargetBranch}' --pull-request-id='${env.ghprbPullId}'"
+        }
+      }
+    }
+
     stage('Acceptance Test') {
       steps {
           sh "docker build -t ontotext-ad/mapping-ui:latest ."
