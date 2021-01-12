@@ -1,4 +1,4 @@
-# rdf-mapping-editor
+# rdf-mapping-editor test
 
 RDF Mapping is a UI extension of OpenRefine, which helps creating a declarative tabular to RDF mappings using GREL.
 
