@@ -31,8 +31,3 @@ Run `npm run cy:open` to open the cypress dashboard and run the tests manually.
 
 This application is regularly published as a package in the NPM registry.
    
-When a newer version needs to be published:
-   
-* Increase the version in the `package.json` by following the semantic versioning approach.
-* Create a new MR and a tag through Github. Beware the version to follow the pattern /v[0-9]+\.[0-9]+\.[0-9]+(-.*)?$/ as defined in .travis.yml. Any discrepancies will result in version being rejected as appropriate for publish in the NPM.
-* If the build is successful which can be seen in https://travis-ci.com/github/Ontotext-AD/mapping-ui the application package is published in NPM which can be also verified on the site https://www.npmjs.com/package/rdf-mapping-editor.
