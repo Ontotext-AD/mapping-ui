@@ -78,7 +78,7 @@ describe('Autocomplete mapping', () => {
       MappingSteps.editEmptyTripleSubject(0);
       EditDialogSteps.selectConstant();
       EditDialogSteps.getTransformationExpressionField().click();
-      EditDialogSteps.getPrefixSuggestions().first().contains('rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>');
+      EditDialogSteps.getPrefixSuggestions().contains('rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>');
     });
 
     it('Should not allow entering a new line in text areas', () => {

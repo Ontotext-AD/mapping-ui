@@ -65,7 +65,7 @@
     "PREDICATE": "Predicate RDF Value Mapping",
     "OBJECT": "Object RDF Value Mapping",
     "BASE_IRI": "Base IRI",
-    "PREFIX_PLACEHOLDER": "Add more prefixes by using the Turtle or SPARQL syntax, i.e PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+    "PREFIX_PLACEHOLDER": "Use the current repository prefixes or add new using the Turtle or SPARQL syntax, i.e PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
     "COLON_DIVIDER": " : "
   },
   "CONSTANTS": {
