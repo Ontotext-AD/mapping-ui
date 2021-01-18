@@ -6,7 +6,6 @@ class PrepareSteps {
     cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
     cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
     PrepareSteps.setCommonRequests();
-    PrepareSteps.stubMappingBaseURL();
   }
 
   static prepareRestaurantsNamespacesAndColumns() {
@@ -25,10 +24,6 @@ class PrepareSteps {
     cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:empty-mapping-model.json').as('loadProject');
   }
 
-  static stubMappingBaseURL() {
-    cy.route('GET', '/rest/repositories/Movies', 'fixture:repository-configuration.json').as('loadRepo');
-  }
-
   static enableAutocompleteWithEmptyResponse() {
     cy.route('POST', '/repositories/Movies', 'fixture:empty-autocomplete-response.json');
     cy.route('GET', '/rest/autocomplete/enabled', 'true');
@@ -37,7 +32,6 @@ class PrepareSteps {
   static visitPageAndWaitToLoad() {
     cy.visit('?dataProviderID=ontorefine:123');
     cy.wait('@loadColumns');
-    cy.wait('@loadRepo');
     cy.wait('@loadProject');
   }
 }

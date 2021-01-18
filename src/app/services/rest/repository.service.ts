@@ -14,7 +14,6 @@ import {Namespaces} from '../../models/namespaces';
 })
 export class RepositoryService {
   apiUrl = environment.repositoryApiUrl;
-  gdbApiUrl = environment.repositoryGDBApiUrl;
 
   constructor(protected httpClient: HttpClient,
               protected localStorageService: LocalStorageService,
@@ -27,11 +26,6 @@ export class RepositoryService {
     return (repo) ? of(`${this.apiUrl}/${repo}${apiName}`) : EMPTY;
   }
 
-  getGdbApiURL(apiName: string): Observable<string> {
-    const repo = this.localStorageService.getCurrentRepository();
-    return (repo) ? of(`${this.gdbApiUrl}/${repo}${apiName}`) : EMPTY;
-  }
-
   getNamespaces(): Observable<Namespaces> {
     return this.getAPIURL('/namespaces').pipe(switchMap((fullUrl) => {
       return this.httpClient.get<any>(fullUrl, {}).pipe(map((res) => {
@@ -41,14 +35,6 @@ export class RepositoryService {
         });
         return obj;
       }), catchError((error) => this.errorReporterService.handleError('Loading namespaces failed.', error)));
-    }));
-  }
-
-  getBaseURL(): Observable<Namespaces> {
-    return this.getGdbApiURL('').pipe(switchMap((fullUrl) => {
-      return this.httpClient.get<any>(fullUrl, {}).pipe(map((res) => {
-        return res.params.baseURL.value;
-      }), catchError((error) => this.errorReporterService.handleError('Loading base URL failed.', error)));
     }));
   }
 
