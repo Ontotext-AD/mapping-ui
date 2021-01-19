@@ -17,9 +17,6 @@ RDF Mapping is a UI extension of OpenRefine, which helps creating a declarative 
 * In the application root directory execute `npm run start` command which builds and deploys the source code on a development server.
 * Navigate to `http://localhost:4200/?dataProviderID=ontorefine:THE_PROJECT_ID`. The app will automatically reload if you change any of the source files.
 
-### Running unit tests
-
-Run `npm run test` to execute the unit tests via [Jest](https://jestjs.io/).
 
 ### Running integration tests
 
