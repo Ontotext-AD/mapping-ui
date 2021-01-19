@@ -23,12 +23,6 @@ pipeline {
       }
     }
 
-    stage('Test') {
-      steps {
-        sh "npm run test"
-      }
-    }
-
     stage('Sonar') {
       steps {
         withSonarQubeEnv('SonarCloud') {
