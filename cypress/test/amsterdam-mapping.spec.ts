@@ -9,7 +9,6 @@ describe('Create Amsterdam restaurants mapping', () => {
     PrepareSteps.prepareRestaurantsNamespacesAndColumns();
     PrepareSteps.enableAutocompleteWithEmptyResponse();
     cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:amsterdam/amsterdam-model.json').as('loadProject');
-    cy.route('GET', '/rest/repositories/Restaurants', 'fixture:amsterdam/repository-configuration.json').as('loadRepo');
   });
 
   function mockPreview(response: string) {
