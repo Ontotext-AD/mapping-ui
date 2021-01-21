@@ -195,6 +195,7 @@
   color: #0B979C;
   background-color: inherit;
   font-size: 1rem;
+  padding-left: 0;
 }
 
 .ti-transform.type-grel {

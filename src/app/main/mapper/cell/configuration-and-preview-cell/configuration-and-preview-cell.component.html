@@ -30,116 +30,109 @@
 
           <div *ngIf="isFirstChild && !isTypeProperty && nestLevel === 0; else emptyBlock" fxFill>
             <div fxLayout="row" fxLayoutAlign="space-between baseline">
-              <div class="badge-wrapper" fxFlex="auto">
-                <app-transformation-type-badge [cellMapping]="cellMapping"
-                                               [target]="propertytransformation"></app-transformation-type-badge>
-              </div>
-              <div *ngIf="!isGRELTransformation(getTransformation())" fxFlex="grow">
-             <span class="ti-source">
-                <span *ngIf="getSourceType() === 'column'" matTooltip="{{getValueSource().getColumnName()}}">
-                  <span class="ti-source-type type-col" title="column">
-                    {{'CONSTANTS.COLUMN' | translate}}
+              <div fxLayout="row wrap" fxFlex="1 1">
+                  <app-transformation-type-badge [cellMapping]="cellMapping"
+                                                 [target]="propertytransformation"></app-transformation-type-badge>
+                <div *ngIf="!isGRELTransformation(getTransformation())">
+                  <span class="ti-source">
+                    <span *ngIf="getSourceType() === 'column'" matTooltip="{{getValueSource().getColumnName()}}">
+                      <span class="ti-source-type type-col" title="column">
+                        {{'CONSTANTS.COLUMN' | translate}}
+                      </span>
+                      {{getReasonableLongWord(getValueSource().getColumnName())}}
+                    </span>
+
+                    <span *ngIf="getSourceType() === 'constant'" matTooltip="{{getValueSource().getConstant()}}">
+                      <span class="ti-source-type type-const" title="Const">
+                        {{'CONSTANTS.CONSTANT' | translate}}
+                      </span>
+                      {{getReasonableLongWord(getValueSource().getConstant())}}
+                    </span>
+
+                    <span *ngIf="getSourceType() === 'row_index' || getSourceType() === 'record_id'">
+                      <span class="ti-source-type index" title="Const">
+                       {{'CONSTANTS.INDEX' | translate}}
+                      </span>
+                      {{getValueSource().source}}
+                    </span>
                   </span>
-                  {{getReasonableLongWord(getValueSource().getColumnName())}}
-                </span>
+                </div>
 
-                <span *ngIf="getSourceType() === 'constant'" matTooltip="{{getValueSource().getConstant()}}">
-                  <span class="ti-source-type type-const" title="Const">
-                    {{'CONSTANTS.CONSTANT' | translate}}
+                <div *ngIf="isGRELTransformation(getTransformation())" class="ml-2">
+                  <span class="ti-source" matTooltip="{{getTransformation().getExpression()}}">
+                    {{getReasonableLongWord(getTransformation().getExpression())}}
                   </span>
-                  {{getReasonableLongWord(getValueSource().getConstant())}}
-                </span>
-
-                <span *ngIf="getSourceType() === 'row_index' || getSourceType() === 'record_id'">
-                  <span class="ti-source-type index" title="Const">
-                   {{'CONSTANTS.INDEX' | translate}}
-                  </span>
-                  {{getValueSource().source}}
-                </span>
-              </span>
+                </div>
               </div>
-
-              <div *ngIf="isGRELTransformation(getTransformation())" class="ml-2" fxFlex="grow">
-             <span class="ti-source" matTooltip="{{getTransformation().getExpression()}}">
-               {{getReasonableLongWord(getTransformation().getExpression())}}
-              </span>
-              </div>
-
               <app-type-badge [type]="getType()"></app-type-badge>
             </div>
 
             <div class="mt-12">
-              <div fxFlex="auto">
+              <div fxLayout="row wrap" fxFlex="1 1">
                 <app-transformation-type-badge [cellMapping]="cellMapping"
-                                               [target]="valuetransformation"></app-transformation-type-badge>
-              </div>
-
-              <div fxFlex="grow" *ngIf="!isGRELTransformation(getSecondaryTransformation())">
-              <div class="ti-source">
-                <div *ngIf="getDatatypeSource()">
-                  <span *ngIf="getDatatypeSourceType() === 'column'"
-                        matTooltip="{{getDatatypeSource().getColumnName()}}">
-                    <span class="ti-source-type type-col" title="column">
-                      {{'CONSTANTS.COLUMN' | translate}}
+                                                 [target]="valuetransformation"></app-transformation-type-badge>
+                <div *ngIf="!isGRELTransformation(getSecondaryTransformation())" class="ti-source">
+                  <div *ngIf="getDatatypeSource()">
+                    <span *ngIf="getDatatypeSourceType() === 'column'"
+                          matTooltip="{{getDatatypeSource().getColumnName()}}">
+                      <span class="ti-source-type type-col" title="column">
+                        {{'CONSTANTS.COLUMN' | translate}}
+                      </span>
+                      {{getReasonableLongWord(getDatatypeSource().getColumnName())}}
                     </span>
-                    {{getReasonableLongWord(getDatatypeSource().getColumnName())}}
-                  </span>
 
-                  <span *ngIf="getDatatypeSourceType() === 'constant'"
-                        matTooltip=" {{getDatatypeSource().getConstant()}}">
-                    <span class="ti-source-type type-const" title="Const">
-                      {{'CONSTANTS.CONSTANT' | translate}}
+                    <span *ngIf="getDatatypeSourceType() === 'constant'"
+                          matTooltip=" {{getDatatypeSource().getConstant()}}">
+                      <span class="ti-source-type type-const" title="Const">
+                        {{'CONSTANTS.CONSTANT' | translate}}
+                      </span>
+                      {{getReasonableLongWord(getDatatypeSource().getConstant())}}
                     </span>
-                    {{getReasonableLongWord(getDatatypeSource().getConstant())}}
-                  </span>
 
-                  <span *ngIf="getDatatypeSourceType() === 'row_index' || getDatatypeSourceType() === 'record_id'">
-                    <span class="ti-source-type index" title="Const">
-                      {{'CONSTANTS.INDEX' | translate}}
+                    <span *ngIf="getDatatypeSourceType() === 'row_index' || getDatatypeSourceType() === 'record_id'">
+                      <span class="ti-source-type index" title="Const">
+                        {{'CONSTANTS.INDEX' | translate}}
+                      </span>
+                      {{getDatatypeSource().source}}
                     </span>
-                    {{getDatatypeSource().source}}
-                  </span>
+                  </div>
+
+                  <div *ngIf="getValueTypeLanguageSource()">
+                    <span *ngIf="getValueTypeLanguageSourceType() === 'column'"
+                          matTooltip="{{getValueTypeLanguageSource().getColumnName()}}">
+                      <span class="ti-source-type type-col" title="column">
+                        {{'CONSTANTS.COLUMN' | translate}}
+                      </span>
+                      {{getReasonableLongWord(getValueTypeLanguageSource().getColumnName())}}
+                    </span>
+
+                    <span *ngIf="getValueTypeLanguageSourceType() === 'constant'"
+                          matTooltip="{{getValueTypeLanguageSource().getConstant()}}">
+                      <span class="ti-source-type type-const" title="Const">
+                        {{'CONSTANTS.CONSTANT' | translate}}
+                      </span>
+                      {{getReasonableLongWord(getValueTypeLanguageSource().getConstant())}}
+                    </span>
+
+                    <span
+                      *ngIf="getValueTypeLanguageSourceType() === 'row_index' || getValueTypeLanguageSourceType() === 'record_id'">
+                      <span class="ti-source-type index" title="Const">
+                        {{'CONSTANTS.INDEX' | translate}}
+                      </span>
+                      {{getValueTypeLanguageSource().source}}
+                    </span>
+                  </div>
                 </div>
 
-                <div *ngIf="getValueTypeLanguageSource()">
-                  <span *ngIf="getValueTypeLanguageSourceType() === 'column'"
-                        matTooltip="{{getValueTypeLanguageSource().getColumnName()}}">
-                    <span class="ti-source-type type-col" title="column">
-                      {{'CONSTANTS.COLUMN' | translate}}
-                    </span>
-                    {{getReasonableLongWord(getValueTypeLanguageSource().getColumnName())}}
-                  </span>
-
-                  <span *ngIf="getValueTypeLanguageSourceType() === 'constant'"
-                        matTooltip="{{getValueTypeLanguageSource().getConstant()}}">
-                    <span class="ti-source-type type-const" title="Const">
-                      {{'CONSTANTS.CONSTANT' | translate}}
-                    </span>
-                    {{getReasonableLongWord(getValueTypeLanguageSource().getConstant())}}
-                  </span>
-
-                  <span
-                    *ngIf="getValueTypeLanguageSourceType() === 'row_index' || getValueTypeLanguageSourceType() === 'record_id'">
-                    <span class="ti-source-type index" title="Const">
-                      {{'CONSTANTS.INDEX' | translate}}
-                    </span>
-                    {{getValueTypeLanguageSource().source}}
+                <div *ngIf="isGRELTransformation(getSecondaryTransformation())" class="ml-2">
+                  <span class="ti-source" matTooltip="{{getSecondaryTransformation().getExpression()}}">
+                    {{getReasonableLongWord(getSecondaryTransformation().getExpression())}}
                   </span>
                 </div>
               </div>
-              </div>
-
-              <div *ngIf="isGRELTransformation(getSecondaryTransformation())" class="ml-2" fxFlex="grow">
-             <span class="ti-source" matTooltip="{{getSecondaryTransformation().getExpression()}}">
-               {{getReasonableLongWord(getSecondaryTransformation().getExpression())}}
-              </span>
-              </div>
-
               <div>
-                <div [fxFlex]="20">
-                  <app-transformation-type-badge [cellMapping]="cellMapping"
+                <app-transformation-type-badge [cellMapping]="cellMapping"
                                                  [target]="datatypetransformation"></app-transformation-type-badge>
-                </div>
               </div>
             </div>
           </div>
