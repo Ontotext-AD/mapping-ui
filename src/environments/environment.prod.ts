@@ -4,6 +4,7 @@ export const environment = {
   restApiUrl: '/rest/rdf-mapper',
   mappingApiUrl: '/orefine/command',
   repositoryApiUrl: '/repositories',
+  repositoryGDBApiUrl: '/rest/repositories',
   autocompleteApiUrl: '/rest/autocomplete',
   httpLoaderPrefix: './assets/i18n/',
   httpLoaderSuffix: '.js',
