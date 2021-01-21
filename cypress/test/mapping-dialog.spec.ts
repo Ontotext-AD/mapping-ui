@@ -222,4 +222,28 @@ describe('MapperDialog', () => {
     EditDialogSteps.isRawIRI();
     EditDialogSteps.getTransformationExpressionField().should('have.attr', 'readonly');
   });
+
+  it('should resolve namespaces to prefixes in prefix field', () => {
+    PrepareSteps.stubEmptyMappingModel();
+    PrepareSteps.visitPageAndWaitToLoad();
+
+    // When I open the edit subject window
+    MappingSteps.editEmptyTripleSubject(0);
+    // I see popup dialog
+    EditDialogSteps.getDialog().should('be.visible');
+
+    // When I select constant
+    EditDialogSteps.selectConstant();
+    // And type in the prefix field 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+    EditDialogSteps.getTransformationExpressionField().type('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+    // Then prefix field should get converted to 'rdf'
+    EditDialogSteps.getTransformationExpressionField().should('have.value', 'rdf');
+
+    // When I clear the field and paste 'https://swapi.co/vocabulary/' in the prefix field
+    EditDialogSteps.getTransformationExpressionField().clear()
+        .invoke('val', 'https://swapi.co/vocabulary/');
+    EditDialogSteps.getTransformationExpressionField().trigger('input');
+    // Then prefix field should get converted to 'rdfs'
+    EditDialogSteps.getTransformationExpressionField().should('have.value', 'voc');
+  });
 });

@@ -570,7 +570,16 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.filteredNamespaces = merge(this.mapperForm.get('expression').valueChanges, this.mapperForm.get('datatypeTransformation').valueChanges)
         .pipe(untilComponentDestroyed(this),
             startWith(''),
-            map((value) => this.repositoryService.filterNamespace(this.getCombinedNamespaces(), value)));
+            map((value) => {
+              const prefixTransformation = this.modelConstructService.getPrefixTransformation(value, this.getCombinedNamespaces());
+
+              if (prefixTransformation.prefix) {
+                this.mapperForm.get('expression').setValue(prefixTransformation.prefix);
+                this.mapperForm.get('expression').updateValueAndValidity();
+              } else {
+                return this.repositoryService.filterNamespace(this.getCombinedNamespaces(), value);
+              }
+            }));
   }
 
   private autocompleteForPrefixIfPresent(prefixField, value) {
