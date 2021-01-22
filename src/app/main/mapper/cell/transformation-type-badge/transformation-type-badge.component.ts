@@ -140,7 +140,7 @@ export class TransformationTypeBadgeComponent extends OnDestroyMixin {
     } else {
       transformationType = this.getTransformationType();
     }
-    let cssClass = 'ti-transform type-';
+    let cssClass = 'ti-transform break-word type-';
     if (transformationType === this.GREL) {
       cssClass += this.GREL;
     } else if (transformationType === this.PREFIX) {
