@@ -666,7 +666,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
           if (event.key === 'Escape' || event.key === 'Esc') {
             this.checkDirty();
           }
-          if (event.ctrlKey && event.keyCode === 13 && !this.isMappingInvalid()) {
+          if (event.ctrlKey && event.key === 'Enter' && !this.isMappingInvalid()) {
             this.dialogRef.close();
             this.save();
           }
@@ -762,7 +762,8 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
           }
 
           if (this.selected) {
-            if (!this.isOfType(Type.IRI) || this.isOfType(Type.IRI) && (this.selected.getPropertyMappings().length === 0 && this.selected.getTypeMappings().length === 0)) {
+            if (!this.isOfType(Type.IRI) || this.isOfType(Type.IRI) &&
+              (this.selected.getPropertyMappings().length === 0 && this.selected.getTypeMappings().length === 0)) {
               this.modelConstructService.clearMapping(this.selected);
             } else {
               this.selected.setValueTransformation(undefined);
@@ -878,10 +879,18 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
   public makeSelection(event: KeyboardEvent, trigger: MatAutocompleteTrigger) {
     event.preventDefault();
-    trigger.closePanel();
+    const htmlElement = event.target as HTMLTextAreaElement | HTMLInputElement;
+    if (htmlElement.value) {
+      htmlElement.blur();
+      trigger.closePanel();
+    }
   }
 
   public onKeydownEnter(event: KeyboardEvent) {
+    const htmlElement = event.target as HTMLTextAreaElement;
+    if (htmlElement.value) {
+      htmlElement.blur();
+    }
     event.preventDefault();
   }
 }
