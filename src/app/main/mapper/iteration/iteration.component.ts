@@ -414,7 +414,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
     let messageKey = 'MESSAGES.CONFIRM_MAPPING_DELETION';
     const object = triple.getObject();
 
-    if (!(object && (this.hasTypeMappings(object) || this.hasPropertyMappings(object)))) {
+    if (!!(object && (this.hasTypeMappings(object) || this.hasPropertyMappings(object)))) {
       messageKey = 'MESSAGES.CONFIRM_MAPPING_WITH_CHILDREN_DELETION';
     }
     return messageKey;
