@@ -411,10 +411,13 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   private getOnDeleteWarningMessage(triple: Triple): string {
+    let hasChildren = false;
     let messageKey = 'MESSAGES.CONFIRM_MAPPING_DELETION';
     const object = triple.getObject();
-
-    if (!!(object && (this.hasTypeMappings(object) || this.hasPropertyMappings(object)))) {
+    if (object) {
+      hasChildren = !!(this.hasTypeMappings(object) || this.hasPropertyMappings(object));
+    }
+    if (hasChildren) {
       messageKey = 'MESSAGES.CONFIRM_MAPPING_WITH_CHILDREN_DELETION';
     }
     return messageKey;
