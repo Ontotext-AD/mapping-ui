@@ -249,7 +249,7 @@ describe('Edit mapping', () => {
 
       // When I load application
       PrepareSteps.visitPageAndWaitToLoad();
-      MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
+      MappingSteps.completeTriple(0, 'subject', 'predicate');
       MappingSteps.editEmptyTripleObject(0);
       EditDialogSteps.selectIri();
       EditDialogSteps.selectGREL();
@@ -455,7 +455,7 @@ describe('Edit mapping', () => {
     });
 
     it('Should keep preview after deletion', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model.json').as('loadProject');;
+      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model.json').as('loadProject');
       // When I load application
       PrepareSteps.visitPageAndWaitToLoad();
       // I switch to preview mode
@@ -692,7 +692,7 @@ describe('Edit mapping', () => {
       cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-rdf-type.json');
       PrepareSteps.visitPageAndWaitToLoad();
 
-      MappingSteps.completeTriple(0, 's', undefined, undefined);
+      MappingSteps.completeTriple(0, 's', undefined);
       MappingSteps.type('rdf:t', () => MappingSteps.getTriplePredicateValue(0));
       MappingSteps.getSuggestions().should('have.length', 1);
       MappingSteps.getSuggestions().first().should('contain', 'rdf:type').then((option) => {
@@ -707,7 +707,7 @@ describe('Edit mapping', () => {
       PrepareSteps.stubEmptyMappingModel();
       PrepareSteps.visitPageAndWaitToLoad();
       // WHEN I complete the subject
-      MappingSteps.completeTriple(0, 'sub', undefined, undefined);
+      MappingSteps.completeTriple(0, 'sub', undefined);
       // And edit the predicate
       MappingSteps.editEmptyTriplePredicate(0);
       EditDialogSteps.selectConstant();

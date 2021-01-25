@@ -51,10 +51,11 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe((event) => {
           this.isMappingDirty = event.getMessage();
+          // TODO Replace the wildcard with the domain on which WB is running. See https://ontotext.atlassian.net/browse/GDB-5406
           if (this.isMappingDirty) {
-            window.parent.postMessage(DIRTY_MAPPING, '*');
+            window.parent.postMessage(DIRTY_MAPPING, '*'); // nosonar
           } else {
-            window.parent.postMessage(PRISTINE_MAPPING, '*');
+            window.parent.postMessage(PRISTINE_MAPPING, '*'); // nosonar
           }
         });
 
@@ -138,8 +139,8 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
           this.dialogService.confirm({
             content: this.translateService.instant('MESSAGES.CONFIRM_MAPPING_UPLOAD'),
           }).pipe(untilComponentDestroyed(this))
-              .subscribe((result) => {
-                if (result) {
+              .subscribe((res) => {
+                if (res) {
                   this.onJsonUpload.emit(mapping);
                 }
               });

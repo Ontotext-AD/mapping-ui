@@ -17,7 +17,7 @@ export class SimpleIRIValueMappingImpl implements SimpleIRIValueMapping, Mapping
   // Used to sanitize the preview array when requesting new one
   @Expose() @Transform((value, obj, type) => {
     if (type === 2) {
-      return value = [];
+      value = [];
     }
     return value;
   })

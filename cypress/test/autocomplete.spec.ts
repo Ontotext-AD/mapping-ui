@@ -15,7 +15,7 @@ describe('Autocomplete mapping', () => {
   context('Autocomplete prefix IRI', () => {
     it('Should autocomplete prefix in the table', () => {
       MappingSteps.getTriples().should('have.length', 1);
-      MappingSteps.completeTriple(0, 's', 'p', undefined);
+      MappingSteps.completeTriple(0, 's', 'p');
       MappingSteps.type('w', () => MappingSteps.getTripleObjectValue(0));
       MappingSteps.getSuggestions().should('have.length', 5);
       MappingSteps.getSuggestions().first().should('contain', 'wgs:').then((option) => {
@@ -29,7 +29,7 @@ describe('Autocomplete mapping', () => {
 
     it('Should autocomplete column after prefix in the table', () => {
       MappingSteps.getTriples().should('have.length', 1);
-      MappingSteps.completeTriple(0, 's', 'p', undefined);
+      MappingSteps.completeTriple(0, 's', 'p');
       MappingSteps.type('rdf:@', () => MappingSteps.getTripleObjectValue(0));
       MappingSteps.getSuggestions().should('have.length', 28);
       MappingSteps.getSuggestions().first().should('contain', 'color').then((option) => {
@@ -82,7 +82,7 @@ describe('Autocomplete mapping', () => {
     });
 
     it('Should not allow entering a new line in text areas', () => {
-      MappingSteps.completeTriple(0, 'subject', 'predicate', undefined);
+      MappingSteps.completeTriple(0, 'subject', 'predicate');
 
       MappingSteps.editEmptyTripleObject(0);
       EditDialogSteps.selectColumn();

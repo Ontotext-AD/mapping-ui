@@ -153,9 +153,7 @@ export class TriplesModelService {
   static isLastInGroup(triples: Triple[], triple: Triple, index: number) {
     const level = triple.getLevel();
     let isLast = false;
-    if (level === 0) {
-      isLast = false;
-    } else {
+    if (level !== 0) {
       const rowsCount = triples.length;
       if (index === rowsCount - 1) {
         isLast = true;

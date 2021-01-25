@@ -65,7 +65,7 @@
 
 [class^="icon-"], [class*=" icon-"], icon-any {
     /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'icomoon' !important;
+    font-family: 'icomoon', sans-serif !important;
     speak: none;
     font-style: normal;
     font-weight: normal;
@@ -465,7 +465,7 @@ ul[class*="style-"] {
 	}
 	ul[class*="style-"] li:before {
 		content: "\e91b";
-		font-family: 'icomoon' !important;
+    font-family: 'icomoon', sans-serif !important;
 		position: absolute;
 		left: 0;
 		top: -0.07em;
@@ -842,7 +842,7 @@ ul.style-arrow li:before {
 }
 
 .dropdown-toggle::after {
-    font-family: 'icomoon' !important;
+    font-family: 'icomoon', sans-serif !important;
     content: "\e921";
     display: inline-block;
     color: rgba(0, 0, 0, .35);
@@ -1009,7 +1009,7 @@ ul.style-arrow li:before {
 .alert-danger:before,
 .alert-success:before,
 .alert-warning:before {
-    font-family: 'icomoon' !important;
+    font-family: 'icomoon', sans-serif !important;
     font-size: 1.6em;
     vertical-align: middle;
     line-height: 1;
@@ -1303,7 +1303,7 @@ tab-heading.nav-item {
 }
 
 .close::before {
-    font-family: 'icomoon' !important;
+    font-family: 'icomoon', sans-serif !important;
     content: "\e922";
     -moz-transition: all 0.18s ease-out; /* FF4+ */
     -o-transition: all 0.18s ease-out; /* Opera 10.5+ */
@@ -1387,7 +1387,6 @@ tab-heading.nav-item {
 
 .tag {
     font-weight: 500;
-    font-weight: 500;
     border-radius: 0;
     vertical-align: 0.1em;
 }
@@ -1421,9 +1420,6 @@ tab-heading.nav-item {
     padding-top: 0;
     margin-top: -0.1em;
     padding-bottom: 0.3em;
-}
-
-.actions-bar .btn:hover {
 }
 
 .hovered-parent .hovered-item {
@@ -1903,7 +1899,6 @@ input.ng-invalid.ng-touched, .ng-submitted input.ng-invalid {
 input[type=range] {
 	-webkit-appearance:none;
 	outline: none;
-	border: 1px solid white;
 	vertical-align: middle;
 
 	/* fix for FF unable to apply focus style bug  */
@@ -1919,14 +1914,13 @@ input[type=range]::-webkit-slider-runnable-track {
 
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    border: none;
     height: 26px;
     width: 26px;
     border-radius: 50%;
     background: #04355E;
     margin-top: -10px;
-	border: 3px solid #fff;
-	cursor: pointer;
+    border: 3px solid #fff;
+    cursor: pointer;
 }
 
 /* For firefox */
@@ -1938,12 +1932,11 @@ input[type=range]::-moz-range-track {
 }
 
 input[type=range]::-moz-range-thumb {
-    border: none;
     height: 22px;
     width: 22px;
     border-radius: 50%;
-	border: 3px solid #fff;
-	cursor: pointer;
+    border: 3px solid #fff;
+    cursor: pointer;
     background: #04355E;
 }
 
@@ -2086,9 +2079,6 @@ input.switch:checked ~ label:after {
 .inverted input.switch:checked ~ label:before {
     background-color: #33B9AA;
 }
-.inverted input.switch:checked ~ label:after {
-
-}
 
 /*-------------------------------------------------------------
 	Angular Toaster messages
@@ -2105,7 +2095,7 @@ input.switch:checked ~ label:after {
 
 #toast-container > div:before {
     display: block;
-    font-family: 'icomoon' !important;
+    font-family: 'icomoon', sans-serif !important;
     font-size: 2em;
     position: absolute;
     left: 0.3em;

@@ -187,7 +187,7 @@ context('Namespaces', () => {
       PrepareSteps.visitPageAndWaitToLoad();
 
       // WHEN I type namespace inline
-      MappingSteps.completeTriple(0, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', undefined, undefined);
+      MappingSteps.completeTriple(0, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', undefined);
 
       // THEN I expect to have it as constant
       MappingSteps.getTripleSubject(0).should('have.text', ' C  http:// ... tax-ns# <IRI>');
@@ -198,7 +198,7 @@ context('Namespaces', () => {
       PrepareSteps.visitPageAndWaitToLoad();
 
       // WHEN I complete the subject and predicate
-      MappingSteps.completeTriple(0, 'sub', 'pred', undefined);
+      MappingSteps.completeTriple(0, 'sub', 'pred');
       // And edit the object
       MappingSteps.editEmptyTripleObject(0);
       EditDialogSteps.selectIri();
@@ -215,7 +215,7 @@ context('Namespaces', () => {
       PrepareSteps.visitPageAndWaitToLoad();
 
       // WHEN I complete the subject ans predicate
-      MappingSteps.completeTriple(0, 'sub', 'pred', undefined);
+      MappingSteps.completeTriple(0, 'sub', 'pred');
       // And edit the object
       MappingSteps.editEmptyTripleObject(0);
       EditDialogSteps.selectLiteral();

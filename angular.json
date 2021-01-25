@@ -97,5 +97,8 @@
       }
     }
   },
-  "defaultProject": "rdf-mapping-editor"
+  "defaultProject": "rdf-mapping-editor",
+  "cli": {
+    "analytics": "9944a928-88ff-4fe9-9c3d-efacf830d807"
+  }
 }
