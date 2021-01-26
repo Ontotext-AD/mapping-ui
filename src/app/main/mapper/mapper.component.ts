@@ -41,6 +41,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   addOnBlur = true;
   namespaceErrorMessages: {code: string, msg: string}[];
   namespacesRegex = XRegExp(`(?:\\s*@?prefix +)?(.+?\\s*)(<.*?>)(?:\\s*\\.*\\n*)`, 'gi');
+  isDirty = false;
 
   constructor(private modelManagementService: ModelManagementService,
               private mapperService: MapperService,
@@ -109,6 +110,12 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .subscribe(() => {
           this.processCommand(() => this.onGetJSON());
         });
+
+    this.messageService.read(ChannelName.DirtyMapping)
+      .pipe(untilComponentDestroyed(this))
+      .subscribe((event) => {
+        this.isDirty = event.getMessage();
+      });
   }
 
   private storeModelMapping() {
@@ -177,7 +184,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
       namespaces.forEach((ns) => {
         NamespaceService.addNamespace(this.mapping.namespaces, ns);
       });
-      this.messageService.publish(ChannelName.DirtyMapping, true);
+      this.messageService.publish(ChannelName.DirtyMapping, value.length > 0 || this.isDirty);
       if (input) {
         input.value = '';
       }
