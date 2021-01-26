@@ -112,9 +112,9 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         });
 
     this.messageService.read(ChannelName.DirtyMapping)
-      .pipe(untilComponentDestroyed(this))
-      .subscribe((event) => {
-        this.isDirty = event.getMessage();
+        .pipe(untilComponentDestroyed(this))
+        .subscribe((event) => {
+          this.isDirty = event.getMessage();
       });
   }
 
