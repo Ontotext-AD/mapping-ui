@@ -115,7 +115,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe((event) => {
           this.isDirty = event.getMessage();
-      });
+        });
   }
 
   private storeModelMapping() {
