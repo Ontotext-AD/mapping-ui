@@ -27,3 +27,8 @@ mat-button-toggle {
 .icon-info {
   color: #ED4F2F;
 }
+
+.btn-primary.disabled, .btn-primary:disabled {
+  background-color: #d54a33;
+  border-color: #d54a33;
+}
