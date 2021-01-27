@@ -32,3 +32,11 @@ mat-button-toggle {
   background-color: #d54a33;
   border-color: #d54a33;
 }
+
+.mat-option {
+  &:hover:not(.mat-option-disabled),
+  &:focus:not(.mat-option-disabled) {
+    background: #3385ff;
+    color: white
+  }
+}

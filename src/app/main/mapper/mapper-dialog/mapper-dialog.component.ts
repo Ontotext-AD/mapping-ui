@@ -96,6 +96,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   title: string;
   hasChildren: boolean;
   optionTooltip: string;
+  toHighlight = '';
 
   constructor(public dialogRef: MatDialogRef<MapperDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: SubjectMapperData,
@@ -571,6 +572,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this),
             startWith(''),
             map((value) => {
+              this.toHighlight = value;
               const prefixTransformation = this.modelConstructService.getPrefixTransformation(value, this.getCombinedNamespaces());
 
               if (prefixTransformation.prefix) {
