@@ -27,6 +27,7 @@ import {CellModule} from 'src/app/main/mapper/cell/cell.module';
 import {ModelManagementService} from 'src/app/services/model-management.service';
 import {SatPopoverModule} from '@ncstate/sat-popover';
 import {MatCardModule} from '@angular/material/card';
+import {PipesModule} from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import {MatCardModule} from '@angular/material/card';
     MatDividerModule,
     SatPopoverModule,
     MatCardModule,
+    PipesModule,
   ],
   providers: [ModelManagementService],
 })

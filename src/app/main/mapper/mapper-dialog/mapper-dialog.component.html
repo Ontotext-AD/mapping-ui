@@ -77,7 +77,8 @@
                     <div>
                       <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'"
                                   appCypressData="prefix-suggestion">
-                        {{namespace.prefix}}: <{{namespace.pValue}}>
+                        <span [innerHTML]="namespace.prefix | highlightNamespace: toHighlight"></span>
+                        <span>: <{{namespace.pValue}}></span>
                       </mat-option>
                     </div>
                   </mat-autocomplete>
@@ -129,7 +130,8 @@
                   <mat-autocomplete #prefixAuto="matAutocomplete">
                     <div>
                       <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'" appCypressData="prefix-suggestion">
-                        {{namespace.prefix}}: <{{namespace.pValue}}>
+                        <span [innerHTML]="namespace.prefix | highlightNamespace: toHighlight"></span>
+                        <span>: <{{namespace.pValue}}></span>
                       </mat-option>
                     </div>
                   </mat-autocomplete>
@@ -252,7 +254,8 @@
                     <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
                       <div>
                         <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'">
-                          {{namespace.prefix}}: <{{namespace.pValue}}>
+                          <span [innerHTML]="namespace.prefix | highlightNamespace: toHighlight"></span>
+                          <span>: <{{namespace.pValue}}></span>
                         </mat-option>
                       </div>
                     </mat-autocomplete>
@@ -303,7 +306,8 @@
                     <mat-autocomplete #datatypePrefixAuto="matAutocomplete">
                       <div>
                         <mat-option *ngFor="let namespace of filteredNamespaces | async" [value]="namespace.prefix || ':'">
-                          {{namespace.prefix}}: <{{namespace.pValue}}>
+                          <span [innerHTML]="namespace.prefix | highlightNamespace: toHighlight"></span>
+                          <span>: <{{namespace.pValue}}></span>
                         </mat-option>
                       </div>
                     </mat-autocomplete>

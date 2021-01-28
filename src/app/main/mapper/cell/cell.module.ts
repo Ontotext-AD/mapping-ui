@@ -20,6 +20,7 @@ import {EmptyBlockComponent} from './empty-block/empty-block.component';
 import {TypeBadgeComponent} from './type-badge/type-badge.component';
 import {TransformationTypeBadgeComponent} from './transformation-type-badge/transformation-type-badge.component';
 import {RouterModule} from '@angular/router';
+import {PipesModule} from '../../../pipes/pipes.module';
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import {RouterModule} from '@angular/router';
     MatTooltipModule,
     MatDividerModule,
     RouterModule,
+    PipesModule,
   ],
   providers: [ModelManagementService],
 })

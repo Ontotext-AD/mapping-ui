@@ -78,6 +78,8 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
                    (?<source> \\@?\\$?) -?
                    (?<value> .*$)`, 'x');
 
+  toHighlight: string = '';
+
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,
               private repositoryService: RepositoryService,
@@ -178,6 +180,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
     this.suggestions = merge(this.autoInput.valueChanges)
         .pipe(untilComponentDestroyed(this),
             map((value: string) => {
+              this.toHighlight = value;
               if (value.indexOf(SOURCE_SIGN.Column) >= 0) {
                 return of(this.filterColumnsUsingValue(value));
               }

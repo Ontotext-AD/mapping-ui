@@ -1,0 +1,7 @@
+.mat-option {
+  &:hover:not(.mat-option-disabled),
+  &:focus:not(.mat-option-disabled) {
+    background-color: #3385ff;
+    color: white
+  }
+}
