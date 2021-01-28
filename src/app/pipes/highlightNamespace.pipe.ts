@@ -13,9 +13,12 @@ import * as XRegExp from 'xregexp';
  * - are short namespaces
  */
 @Pipe({
-  name: 'highlight',
+  name: 'highlightNamespace',
 })
-export class HighlightPipe implements PipeTransform {
+export class HighlightNamespacePipe implements PipeTransform {
+  // Matches
+  // - everything after latest hash or latest slash or latest semicolon
+  // - everything before semicolon if is last character
   regex = XRegExp(`(?<value> (?:.(?!\\#|\\/|:.))+$)-?`, 'x')
 
   constructor(private sanitized: DomSanitizer) {}
@@ -24,8 +27,10 @@ export class HighlightPipe implements PipeTransform {
     const toHighlight = XRegExp.exec(text, this.regex);
 
     const semicolonPosition = search.indexOf(':');
-
     let searchFor = search;
+    // check if the search term contains semicolon
+    // if so, the highlighted search term is after the semicolon
+    // example: rdf:<search term>
     if (semicolonPosition > -1) {
       searchFor = search.substr(semicolonPosition + 1);
     }

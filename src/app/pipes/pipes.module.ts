@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {HighlightPipe} from './highlight.pipe';
+import {HighlightNamespacePipe} from './highlightNamespace.pipe';
 
 @NgModule({
-  declarations: [HighlightPipe],
+  declarations: [HighlightNamespacePipe],
   imports: [CommonModule],
-  exports: [HighlightPipe],
+  exports: [HighlightNamespacePipe],
 })
 export class PipesModule { }
