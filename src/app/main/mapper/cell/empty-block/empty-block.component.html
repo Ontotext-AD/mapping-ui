@@ -19,7 +19,7 @@
             <mat-option appCypressData="cell-option" *ngFor="let option of suggestions | async | async" [value]="option.value"
                         (mouseover)="getIriDescription(option)" (mouseleave)="clearTooltip()"
                         (click)="selectPrefixOrValue($event, true, trigger)">
-              <span >{{option.label}}</span>
+              <span [innerHTML]="option.label | highlightNamespace: toHighlight"></span>
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
