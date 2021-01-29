@@ -42,6 +42,7 @@ import {Namespace, Namespaces} from '../../../../models/namespaces';
 @Component({
   selector: 'app-empty-block',
   templateUrl: './empty-block.component.html',
+  styleUrls: ['./empty-block.component.scss'],
 })
 export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, AfterViewInit {
   @Output() onDrop = new EventEmitter<any>();
