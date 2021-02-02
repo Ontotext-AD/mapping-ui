@@ -117,58 +117,58 @@ function jsToJSONProps(typ: any): any {
 }
 
 function transform(val: any, typ: any, getProps: any): any {
-  function transformPrimitive(type: string, value: any): any {
-      if (typeof type === typeof value) return value;
-      return invalidValue(type, value);
+  function transformPrimitive(typ: string, val: any): any {
+      if (typeof typ === typeof val) return val;
+      return invalidValue(typ, val);
   }
 
-  function transformUnion(typs: any[], value: any): any {
+  function transformUnion(typs: any[], val: any): any {
       // val must validate against one typ in typs
       const l = typs.length;
       for (let i = 0; i < l; i++) {
-          const type = typs[i];
+          const typ = typs[i];
           try {
-              return transform(value, type, getProps);
+              return transform(val, typ, getProps);
           } catch (_) {}
       }
-      return invalidValue(typs, value);
+      return invalidValue(typs, val);
   }
 
-  function transformEnum(cases: string[], value: any): any {
-      if (cases.indexOf(value) !== -1) return value;
-      return invalidValue(cases, value);
+  function transformEnum(cases: string[], val: any): any {
+      if (cases.indexOf(val) !== -1) return val;
+      return invalidValue(cases, val);
   }
 
-  function transformArray(type: any, value: any): any {
+  function transformArray(typ: any, val: any): any {
       // val must be an array with no invalid elements
-      if (!Array.isArray(value)) return invalidValue("array", value);
-      return value.map(el => transform(el, type, getProps));
+      if (!Array.isArray(val)) return invalidValue("array", val);
+      return val.map(el => transform(el, typ, getProps));
   }
 
-  function transformDate(value: any): any {
-      if (value === null) {
+  function transformDate(val: any): any {
+      if (val === null) {
           return null;
       }
-      const d = new Date(value);
+      const d = new Date(val);
       if (isNaN(d.valueOf())) {
-          return invalidValue("Date", value);
+          return invalidValue("Date", val);
       }
       return d;
   }
 
-  function transformObject(props: { [k: string]: any }, additional: any, value: any): any {
-      if (value === null || typeof value !== "object" || Array.isArray(value)) {
-          return invalidValue("object", value);
+  function transformObject(props: { [k: string]: any }, additional: any, val: any): any {
+      if (val === null || typeof val !== "object" || Array.isArray(val)) {
+          return invalidValue("object", val);
       }
       const result: any = {};
       Object.getOwnPropertyNames(props).forEach(key => {
           const prop = props[key];
-          const v = Object.prototype.hasOwnProperty.call(value, key) ? value[key] : undefined;
+          const v = Object.prototype.hasOwnProperty.call(val, key) ? val[key] : undefined;
           result[prop.key] = transform(v, prop.typ, getProps);
       });
-      Object.getOwnPropertyNames(value).forEach(key => {
+      Object.getOwnPropertyNames(val).forEach(key => {
           if (!Object.prototype.hasOwnProperty.call(props, key)) {
-              result[key] = transform(value[key], additional, getProps);
+              result[key] = transform(val[key], additional, getProps);
           }
       });
       return result;
