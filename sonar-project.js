@@ -10,7 +10,7 @@ const sonarOptions = {
   "sonar.projectKey": "Ontotext-AD_mapping-ui",
   "sonar.projectName": "mapping-ui",
   "sonar.sources": "./src",
-  "sonar.exclusions": "src/assets/**/*,src/styles/**/*",
+  "sonar.exclusions": "src/assets/**/*,src/styles/**/*,src/app/models/mapping-definition.ts",
   "sonar.tests": "cypress",
   "sonar.language": "js",
   "sonar.javascript.lcov.reportPaths": "coverage/lcov.info",

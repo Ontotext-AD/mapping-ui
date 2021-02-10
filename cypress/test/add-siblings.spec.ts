@@ -99,7 +99,7 @@ describe('Add siblings', () => {
 
   it('Should not add siblings when mapping is not valid', () => {
     // Insert a new incomplete triple after all existing ones
-    MappingSteps.completeTriple(6, 'subject', 'a', undefined);
+    MappingSteps.completeTriple(6, 'subject', 'a');
     MappingSteps.getTriples().should('have.length', 7);
 
     // Add subject sibling

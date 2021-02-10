@@ -21,7 +21,7 @@ describe('Delete', () => {
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a subject and a predicate
-      MappingSteps.completeTriple(0, 'sub', 'pre', undefined);
+      MappingSteps.completeTriple(0, 'sub', 'pre');
       MappingSteps.verifyTriple(0, 'sub', 'pre', '');
       // When I try to delete the subject
       MappingSteps.deleteTripleSubject(0);
@@ -53,7 +53,7 @@ describe('Delete', () => {
       // Given I have opened an empty mapping
       MappingSteps.getTriples().should('have.length', 1);
       // And I have created a triple
-      MappingSteps.completeTriple(0, 'sub', 'pre', undefined);
+      MappingSteps.completeTriple(0, 'sub', 'pre');
       MappingSteps.editEmptyTripleObject(0);
       EditDialogSteps.getDialog().should('be.visible');
       EditDialogSteps.selectIri();
@@ -144,7 +144,7 @@ describe('Delete', () => {
       // When I add new nested triple
       MappingSteps.addNestedTriple(0);
       MappingSteps.getTriples().should('have.length', 3);
-      MappingSteps.completeTriple(1, undefined, 'a', undefined);
+      MappingSteps.completeTriple(1, undefined, 'a');
       // And I delete the new nested triple
       MappingSteps.deleteTriple(1);
       MappingSteps.confirm();
@@ -155,7 +155,7 @@ describe('Delete', () => {
       // When I add new nested triple
       MappingSteps.addNestedTriple(0);
       MappingSteps.getTriples().should('have.length', 3);
-      MappingSteps.completeTriple(1, undefined, 'predicate', undefined);
+      MappingSteps.completeTriple(1, undefined, 'predicate');
       // And I delete the new nested triple
       MappingSteps.deleteTriple(1);
       MappingSteps.confirm();

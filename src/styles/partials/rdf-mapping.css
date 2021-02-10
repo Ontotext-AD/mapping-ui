@@ -270,9 +270,7 @@
 .first-in-group.triples-blocks-subrow.right-arrow::before {
   right: 16.66666666666%;
 }
-.first-in-group.triples-blocks-subrow.center-arrow::before {
-  right: 50%;
-}
+
 .first-in-group.triples-blocks-subrow.center-arrow::before {
   right: auto;
   left: 16.66666666666%;

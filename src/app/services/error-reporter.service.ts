@@ -50,7 +50,7 @@ export class ErrorReporterService {
   backendError(error: any, message: string, notify: boolean) {
     // The backend returned an unsuccessful response code.
     // The response body may contain clues as to what went wrong
-    let errorMessage = message;
+    let errorMessage: string;
     if (error.status !== 0) {
       // There is a case when response is returned as a Blob and the error should
       // be resolved by reading the Blob which is async operation
