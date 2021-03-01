@@ -79,6 +79,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
                    (?<value> .*$)`, 'x');
 
   toHighlight: string = '';
+  showHint: boolean;
 
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,
@@ -209,6 +210,9 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
                 const prefixValue = ns.prefix + COLON;
                 return {label: prefixValue, value: prefixValue};
               });
+              if (this.repositoryService.isAutocompleteEnabled()) {
+                this.showHint = true;
+              }
               return autoCompleteObservable.pipe(map(
                   (types) => suggestedNamespaces.concat(this.modelConstructService.replaceIRIPrefixes(types, this.namespaces)),
               ));
@@ -226,6 +230,7 @@ export class EmptyBlockComponent extends OnDestroyMixin implements OnInit, After
   }
 
   public saveInputValue(emitTab: boolean) {
+    this.showHint = false;
     if (!this.autoInput.value) {
       return;
     }
