@@ -1,38 +1,48 @@
 <div fxLayout="row" fxLayoutAlign="end end" appCypressData="header" class="header-component py-2">
   <mat-button-toggle-group class="mr-auto" value="{{ViewMode.Configuration}}" (change)="togglePreview($event)">
-    <mat-button-toggle value="{{ViewMode.Configuration}}" appCypressData="view-configuration-button" matTooltip="{{'TOOLTIPS.VIEW_MODE_CONFIGURATION' | translate}}">{{"BUTTONS.CONFIGURATION" | translate}}</mat-button-toggle>
-    <mat-button-toggle value="{{ViewMode.Preview}}" appCypressData="view-preview-button" matTooltip="{{'TOOLTIPS.VIEW_MODE_PREVIEW' | translate}}">{{"BUTTONS.PREVIEW" | translate}}</mat-button-toggle>
-    <mat-button-toggle value="{{ViewMode.PreviewAndConfiguration}}" appCypressData="view-both-button" matTooltip="{{'TOOLTIPS.VIEW_MODE_BOTH' | translate}}">{{"BUTTONS.PREVIEW_AND_CONFIGURATION" | translate}}</mat-button-toggle>
+    <mat-button-toggle value="{{ViewMode.Configuration}}" appCypressData="view-configuration-button"
+                       matTooltip="{{'TOOLTIPS.VIEW_MODE_CONFIGURATION' | translate}}">{{"BUTTONS.CONFIGURATION" | translate}}</mat-button-toggle>
+    <mat-button-toggle value="{{ViewMode.Preview}}" appCypressData="view-preview-button"
+                       matTooltip="{{'TOOLTIPS.VIEW_MODE_PREVIEW' | translate}}">{{"BUTTONS.PREVIEW" | translate}}</mat-button-toggle>
+    <mat-button-toggle value="{{ViewMode.PreviewAndConfiguration}}" appCypressData="view-both-button"
+                       matTooltip="{{'TOOLTIPS.VIEW_MODE_BOTH' | translate}}">{{"BUTTONS.PREVIEW_AND_CONFIGURATION" | translate}}</mat-button-toggle>
   </mat-button-toggle-group>
 
   <span class="mr-12 unsaved-changes-msg" appCypressData="unsaved-changes-msg">
-    {{isMappingDirty ? ('MESSAGES.MAPPING_IS_DIRTY' | translate) : ('MESSAGES.MAPPING_IS_SAVED' | translate)}}
-  </span>
-  <span matTooltip="{{'TOOLTIPS.SAVE_MAPPING' | translate}}">
-    <button (click)="saveMapping()" [disabled]="!isMappingDirty" appCypressData="save-action" class="mr-12 btn btn-sm btn-primary cursor-pointer">
-      {{"BUTTONS.SAVE" | translate}}
-      <mat-spinner *ngIf="isSavingInProgress" [diameter]="20"></mat-spinner>
+      {{isMappingDirty ? ('MESSAGES.MAPPING_IS_DIRTY' | translate) : ('MESSAGES.MAPPING_IS_SAVED' | translate)}}
+    </span>
+  <div>
+    <span matTooltip="{{'TOOLTIPS.SAVE_MAPPING' | translate}}">
+      <button (click)="saveMapping()" [disabled]="!isMappingDirty" appCypressData="save-action"
+              class="mr-12 btn btn-sm btn-primary cursor-pointer">
+        {{"BUTTONS.SAVE" | translate}}
+        <mat-spinner *ngIf="isSavingInProgress" [diameter]="20"></mat-spinner>
+      </button>
+    </span>
+    <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getJsonMapping()"
+            appCypressData="get-json-action"
+            matTooltip="{{'TOOLTIPS.DOWNLOAD_JSON' | translate}}">{{"BUTTONS.DOWNLOAD_JSON" | translate}}
     </button>
-  </span>
-  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getJsonMapping()" appCypressData="get-json-action"
-          matTooltip="{{'TOOLTIPS.DOWNLOAD_JSON' | translate}}">{{"BUTTONS.DOWNLOAD_JSON" | translate}}
-  </button>
-  <input class="hidden" type="file" (change)="onFileChanged($event)" #fileInput  appCypressData="json-file-input">
-  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="fileInput.click()" appCypressData="upload-json-action"
-          matTooltip="{{'TOOLTIPS.UPLOAD_JSON' | translate}}">{{"BUTTONS.UPLOAD_JSON" | translate}}
-  </button>
-  <span matTooltip="{{'TOOLTIPS.CONVERT_TO_RDF' | translate}}">
-    <button class="mr-12 btn btn-sm btn-primary cursor-pointer" [disabled]="!isRdfGenerationAllowed" (click)="getRDF()" appCypressData="generate-rdf-action">
-      {{"BUTTONS.RDF" | translate}}
-      <mat-spinner *ngIf="isRdfGenerationInProgress" [diameter]="20"></mat-spinner>
+    <input class="hidden" type="file" (change)="onFileChanged($event)" #fileInput appCypressData="json-file-input">
+    <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="fileInput.click()"
+            appCypressData="upload-json-action"
+            matTooltip="{{'TOOLTIPS.UPLOAD_JSON' | translate}}">{{"BUTTONS.UPLOAD_JSON" | translate}}
     </button>
-  </span>
-  <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getSPARQL()" appCypressData="generate-sparql-action"
-          matTooltip="{{'TOOLTIPS.CONVERT_TO_SPARQL' | translate}}">
-    {{"BUTTONS.SPARQL" | translate}}
-    <mat-spinner *ngIf="isSparqlGenerationInProgress" [diameter]="20"></mat-spinner>
-  </button>
-  <button class="btn btn-sm btn-primary cursor-pointer" (click)="newMapping()" appCypressData="new-mapping-action"
-          matTooltip="{{'TOOLTIPS.NEW_MAPPING' | translate}}">{{"BUTTONS.NEW" | translate}}
-  </button>
+    <span matTooltip="{{'TOOLTIPS.CONVERT_TO_RDF' | translate}}">
+      <button class="mr-12 btn btn-sm btn-primary cursor-pointer" [disabled]="!isRdfGenerationAllowed"
+              (click)="getRDF()" appCypressData="generate-rdf-action">
+        {{"BUTTONS.RDF" | translate}}
+        <mat-spinner *ngIf="isRdfGenerationInProgress" [diameter]="20"></mat-spinner>
+      </button>
+    </span>
+    <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getSPARQL()"
+            appCypressData="generate-sparql-action"
+            matTooltip="{{'TOOLTIPS.CONVERT_TO_SPARQL' | translate}}">
+      {{"BUTTONS.SPARQL" | translate}}
+      <mat-spinner *ngIf="isSparqlGenerationInProgress" [diameter]="20"></mat-spinner>
+    </button>
+    <button class="btn btn-sm btn-primary cursor-pointer" (click)="newMapping()" appCypressData="new-mapping-action"
+            matTooltip="{{'TOOLTIPS.NEW_MAPPING' | translate}}">{{"BUTTONS.NEW" | translate}}
+    </button>
+  </div>
 </div>
