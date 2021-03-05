@@ -344,6 +344,10 @@ class MappingSteps {
   static getTooltip() {
     return cy.get(`.mat-tooltip`);
   }
+
+  static getAutocompleteHint() {
+    return cy.get('.autocomplete-hint');
+  }
 }
 
 export default MappingSteps;
