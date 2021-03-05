@@ -66,7 +66,8 @@
     "OBJECT": "Object RDF Value Mapping",
     "BASE_IRI": "Base IRI",
     "PREFIX_PLACEHOLDER": "Use the current repository prefixes or add new using the Turtle or SPARQL syntax, i.e PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
-    "COLON_DIVIDER": " : "
+    "COLON_DIVIDER": " : ",
+    "AUTOCOMPLETE_HINT": "Hint: \"ab c\" matches \"abC*\", \"ab c*\" and \"ab-c*\""
   },
   "CONSTANTS": {
     "COLUMN": "@",
