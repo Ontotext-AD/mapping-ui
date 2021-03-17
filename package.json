@@ -6,7 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:prod": "ng build --prod --base-href=/orefine/extension/mapping-editor/ && mv dist/rdf-mapping-editor/assets/i18n/en.json dist/rdf-mapping-editor/assets/i18n/en.js",
+    "build:prod": "ng build --prod && mv dist/rdf-mapping-editor/assets/i18n/en.json dist/rdf-mapping-editor/assets/i18n/en.js",
     "lint": "eslint 'src/**'",
     "lint:fix": "eslint --fix 'src/**'",
     "start:ci": "http-server ./dist/rdf-mapping-editor -a localhost -p 4200 -c-1",
