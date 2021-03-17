@@ -25,7 +25,7 @@ import {NamespaceService} from '../../services/namespace.service';
 import {Namespaces, Namespace} from '../../models/namespaces';
 import {NamespaceValidator} from '../../validators/namespace.validator';
 import * as XRegExp from 'xregexp';
-import {environment} from "src/environments/environment";
+import {environment} from 'src/environments/environment';
 
 
 @Component({
