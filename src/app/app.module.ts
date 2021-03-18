@@ -31,8 +31,10 @@ export function initializeGraphDbUrl() {
     return new Promise<void>((resolve) => {
       // In href "ontorefine" is overridden to "orefine". Afterwards graphDbUrl variable
       // will be used in redirect or during preview of resource.
+      // The Cypress tests make direct call to GDB to load project, which run on fixed
+      // 'http://localhost:7200' URL, so don't override latter in non production mode
       const endOfGraphDbUrlIndex = window.location.href.indexOf('/orefine');
-      if (endOfGraphDbUrlIndex > -1) {
+      if (!environment.production && endOfGraphDbUrlIndex > -1) {
         environment.graphDbUrl = window.location.href.substr(0, endOfGraphDbUrlIndex);
       }
       resolve();
