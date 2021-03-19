@@ -157,6 +157,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe((data) => {
           this.messageService.publish(ChannelName.SparqlGenerated);
+          // Have in mind that the redirect does not work in dev mode
           window.parent.open(environment.graphDbUrl + '/sparql?query=' + encodeURIComponent(data));
         });
   }
