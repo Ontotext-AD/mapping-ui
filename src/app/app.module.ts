@@ -29,9 +29,11 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 export function initializeGraphDbUrl() {
   return (): Promise<any> => {
     return new Promise<void>((resolve) => {
-      const endOfGraphDbUrlIndex = window.location.href.indexOf('/ontorefine');
+      // In href "ontorefine" is overridden to "orefine". Afterwards graphDbUrl variable
+      // will be used in redirect or during preview of resource.
+      const endOfGraphDbUrlIndex = window.location.href.indexOf('/orefine');
       if (endOfGraphDbUrlIndex > -1) {
-        environment.graphDbUrl = window.location.href.substr(0, window.location.href.indexOf('/ontorefine'));
+        environment.graphDbUrl = window.location.href.substr(0, endOfGraphDbUrlIndex);
       }
       resolve();
     });

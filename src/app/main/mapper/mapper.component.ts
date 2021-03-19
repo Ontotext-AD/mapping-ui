@@ -25,6 +25,7 @@ import {NamespaceService} from '../../services/namespace.service';
 import {Namespaces, Namespace} from '../../models/namespaces';
 import {NamespaceValidator} from '../../validators/namespace.validator';
 import * as XRegExp from 'xregexp';
+import {environment} from 'src/environments/environment';
 
 
 @Component({
@@ -156,7 +157,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe((data) => {
           this.messageService.publish(ChannelName.SparqlGenerated);
-          window.parent.open(window.parent.location.origin + '/sparql?query=' + encodeURIComponent(data));
+          window.parent.open(environment.graphDbUrl + '/sparql?query=' + encodeURIComponent(data));
         });
   }
 
