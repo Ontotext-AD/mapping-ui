@@ -29,7 +29,7 @@ import {Helper} from 'src/app/utils/helper';
 import {ViewMode} from 'src/app/services/view-mode.enum';
 import {Triple} from 'src/app/models/triple';
 import {Namespaces} from 'src/app/models/namespaces';
-import {environment} from 'src/environments/environment';
+import {LocalStorageService} from '../../../services/local-storage.service';
 
 export enum TransformationTarget {
   PROPERTYTRANSFORMATION = 'propertytransformation',
@@ -81,7 +81,8 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,
               private tabService: TabService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private localStorageSrevice: LocalStorageService) {
     super();
   }
 
@@ -286,6 +287,11 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   getGraphDbResourceUrl(previewItem): string {
-    return environment.graphDbUrl + '/resource?uri=' + this.getResourceUri(previewItem);
+    const graphDB = this.localStorageSrevice.getGraphDB();
+    if (graphDB) {
+      return graphDB + '/resource?uri=' + this.getResourceUri(previewItem);
+    } else {
+      return '';
+    }
   }
 }

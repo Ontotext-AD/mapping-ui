@@ -65,11 +65,10 @@ export class MapperService extends RestService {
   }
 
   getSPARQL(mappingDefinition: MappingDefinitionImpl): Observable<string> {
-    const httpOptions = this.httpOptions;
-    httpOptions['reponseType'] = 'text';
     return this.getAPIURL('/sparql/').pipe(switchMap((fullUrl) => {
-      return this.httpClient.post<string>(fullUrl, mappingDefinition, httpOptions).pipe(
-          catchError((error) => this.errorReporterService.handleError('Loading sparql failed.', error)));
+      return this.httpClient.post(fullUrl, mappingDefinition,
+          {headers: this.httpOptions.headers, responseType: 'text'})
+          .pipe(catchError((error) => this.errorReporterService.handleError('Loading sparql failed.', error)));
     }));
   }
 }

@@ -6,11 +6,27 @@
     </div>
 
     <div class="content">
-      <div class="mr-12">
-        <mat-form-field appearance="fill">
-          <mat-label>{{'LABELS.BASE_IRI' | translate}}</mat-label>
-          <input matInput [ngModel]="getBaseIRI()" (ngModelChange)="setBaseIRI($event)" appCypressData="base-iri">
-        </mat-form-field>
+      <div class="row mr-12">
+        <div class="col-lg-4">
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.BASE_IRI' | translate}}</mat-label>
+            <input matInput [ngModel]="getBaseIRI()" (ngModelChange)="setBaseIRI($event)" appCypressData="base-iri">
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-4">
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.GRAPHDB' | translate}}</mat-label>
+            <input matInput [ngModel]="getGraphDB()" (ngModelChange)="setGraphDB($event)" appCypressData="base-iri">
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-4">
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.REPOSITORY' | translate}}</mat-label>
+            <input matInput [ngModel]="getRepository()" (ngModelChange)="setRepository($event)" appCypressData="base-iri">
+          </mat-form-field>
+        </div>
       </div>
 
       <div class="mr-12">

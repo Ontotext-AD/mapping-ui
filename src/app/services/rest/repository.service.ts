@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {EMPTY, Observable, of} from 'rxjs';
-import {environment} from 'src/environments/environment';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ErrorReporterService} from '../error-reporter.service';
@@ -13,21 +12,24 @@ import {Namespaces} from '../../models/namespaces';
   providedIn: 'root',
 })
 export class RepositoryService {
-  apiUrl = environment.repositoryApiUrl;
-
   constructor(protected httpClient: HttpClient,
               protected localStorageService: LocalStorageService,
               private autocompleteService: AutocompleteService,
               private errorReporterService: ErrorReporterService) {
   }
 
-  getAPIURL(apiName: string): Observable<string> {
+  getGraphDBUrl(apiName: string): Observable<string> {
+    const graphDB = this.localStorageService.getGraphDB();
     const repo = this.localStorageService.getCurrentRepository();
-    return (repo) ? of(`${this.apiUrl}/${repo}${apiName}`) : EMPTY;
+    if (graphDB && repo) {
+      return of(`${graphDB}/repositories/${repo}${apiName}`);
+    } else {
+      return EMPTY;
+    }
   }
 
   getNamespaces(): Observable<Namespaces> {
-    return this.getAPIURL('/namespaces').pipe(switchMap((fullUrl) => {
+    return this.getGraphDBUrl('/namespaces').pipe(switchMap((fullUrl) => {
       return this.httpClient.get<any>(fullUrl, {}).pipe(map((res) => {
         const obj = {};
         res.results.bindings.forEach((e) => {
@@ -59,7 +61,7 @@ export class RepositoryService {
       return EMPTY;
     }
     const payload = new HttpParams().set('query', query.replace('{{iri}}', iri));
-    return this.getAPIURL('').pipe(switchMap((fullUrl) => {
+    return this.getGraphDBUrl('').pipe(switchMap((fullUrl) => {
       return this.httpClient.post<any>(fullUrl, payload).pipe(map((res) => {
         return res.results.bindings.map((bindingArray) => {
           return bindingArray[binding].value;

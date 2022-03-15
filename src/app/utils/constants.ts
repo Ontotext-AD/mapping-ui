@@ -107,5 +107,6 @@ export const EMPTY_NAMESPACE_KEY = 'ERROR.EMPTY_NAMESPACE';
 export const COLON_NOT_ALLOWED_KEY = 'ERROR.COLON_NOT_ALLOWED';
 export const MALFORMED_NAMESPACE_KEY = 'ERROR.MALFORMED_NAMESPACE';
 
-export const LOCAL_STORAGE_CURRENT_REPO_KEY = 'com.ontotext.graphdb.repository';
-export const LOCAL_STORAGE_AUTH_TOKEN_KEY = 'com.ontotext.graphdb.auth';
+export const LOCAL_STORAGE_CURRENT_REPO_KEY = 'com.ontotext.ontorefine.repository';
+export const LOCAL_STORAGE_GRAPHDB_KEY = 'com.ontotext.ontorefine.graphdb';
+export const LOCAL_STORAGE_AUTH_TOKEN_KEY = 'com.ontotext.ontorefine.auth';

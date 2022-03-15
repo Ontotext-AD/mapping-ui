@@ -4,13 +4,12 @@
 
 export const environment = {
   production: false,
-  graphDbUrl: '',
   restApiUrl: 'http://localhost:4200/rest/rdf-mapper',
   mappingApiUrl: 'http://localhost:4200/orefine/command',
-  repositoryApiUrl: 'http://localhost:4200/repositories',
-  repositoryGDBApiUrl: 'http://localhost:4200/rest/repositories',
-  autocompleteApiUrl: 'http://localhost:4200/rest/autocomplete',
   httpLoaderPrefix: './assets/i18n/',
   httpLoaderSuffix: '.json',
   openRefineVariables: 'https://github.com/OpenRefine/OpenRefine/wiki/Variables',
+
+  // Default GraphDB url, user can set a  different one via the UI
+  graphDB: 'http://localhost:4200',
 };

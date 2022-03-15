@@ -25,7 +25,7 @@ import {NamespaceService} from '../../services/namespace.service';
 import {Namespaces, Namespace} from '../../models/namespaces';
 import {NamespaceValidator} from '../../validators/namespace.validator';
 import * as XRegExp from 'xregexp';
-import {environment} from 'src/environments/environment';
+import {LocalStorageService} from '../../services/local-storage.service';
 
 
 @Component({
@@ -50,7 +50,8 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
               private dialog: MatDialog,
               private notificationService: NotificationService,
               private translateService: TranslateService,
-              private namespaceValidator: NamespaceValidator) {
+              private namespaceValidator: NamespaceValidator,
+              private localStorageService: LocalStorageService) {
     super();
   }
 
@@ -153,12 +154,15 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   }
 
   onSPARQL() {
-    this.mapperService.getSPARQL(this.mapping)
-        .pipe(untilComponentDestroyed(this))
-        .subscribe((data) => {
-          this.messageService.publish(ChannelName.SparqlGenerated);
-          window.parent.open(environment.graphDbUrl + '/sparql?query=' + encodeURIComponent(data));
-        });
+    const graphDB = this.localStorageService.getGraphDB();
+    if (graphDB) {
+      this.mapperService.getSPARQL(this.mapping)
+          .pipe(untilComponentDestroyed(this))
+          .subscribe((data) => {
+            this.messageService.publish(ChannelName.SparqlGenerated);
+            window.parent.open(graphDB + '/sparql?query=' + encodeURIComponent(data));
+          });
+    }
   }
 
   addNamespace(event: MatChipInputEvent): void {
@@ -251,6 +255,22 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
       this.mapping.setBaseIRI(value);
       this.messageService.publish(ChannelName.DirtyMapping, true);
     }
+  }
+
+  public getGraphDB(): string {
+    return this.localStorageService.getGraphDB();
+  }
+
+  public setGraphDB(value) {
+    this.localStorageService.setGraphDB(value);
+  }
+
+  public getRepository(): string {
+    return this.localStorageService.getCurrentRepository();
+  }
+
+  public setRepository(value) {
+    this.localStorageService.setCurrentRepository(value);
   }
 
   public getNamespaces(): Namespaces {
