@@ -16,7 +16,6 @@ import {MatChipInputEvent} from '@angular/material/chips/chip-input';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {ChannelName} from 'src/app/services/channel-name.enum';
 import {MessageService} from 'src/app/services/message.service';
-import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject} from 'rxjs';
 import {NotificationService} from 'src/app/services/notification.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -46,7 +45,6 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   constructor(private modelManagementService: ModelManagementService,
               private mapperService: MapperService,
               private messageService: MessageService,
-              private dialog: MatDialog,
               private notificationService: NotificationService,
               private translateService: TranslateService,
               private namespaceValidator: NamespaceValidator) {
@@ -195,9 +193,8 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
     const result = this.namespaceValidator.validate(namespace);
     if (!result.valid) {
       return {code: result.error, msg: namespace.prefix};
-    } else {
-      return null;
     }
+    return null;
   }
 
   removeNamespace(key: string): void {

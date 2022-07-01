@@ -9,7 +9,8 @@ import {WindowMessageHandlingService} from 'src/app/services/window-message-hand
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  constructor(public translate: TranslateService, private autocompleteService: AutocompleteService,
+  constructor(public translate: TranslateService,
+              private autocompleteService: AutocompleteService,
               private windowMessageHandlingService: WindowMessageHandlingService) {
     this.initTranslation();
     this.autocompleteService.autocompleteStatus().subscribe();

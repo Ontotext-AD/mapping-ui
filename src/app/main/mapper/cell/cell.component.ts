@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
 } from '@angular/core';
 import {ModelManagementService} from 'src/app/services/model-management.service';
@@ -23,7 +22,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {Type} from 'src/app/models/mapping-definition';
 import {DialogService} from 'src/app/main/components/dialog/dialog.service';
 import {OnDestroyMixin, untilComponentDestroyed} from '@w11k/ngx-componentdestroyed';
-import {TabService} from 'src/app/services/tab.service';
 import {Observable} from 'rxjs';
 import {Helper} from 'src/app/utils/helper';
 import {ViewMode} from 'src/app/services/view-mode.enum';
@@ -42,7 +40,7 @@ export enum TransformationTarget {
   templateUrl: './cell.component.html',
   styleUrls: ['./cell.component.scss'],
 })
-export class CellComponent extends OnDestroyMixin implements OnInit {
+export class CellComponent extends OnDestroyMixin {
   @Input() triple: Triple;
   @Input() cellMapping: MappingBase;
   @Input() isFirstChild = true;
@@ -80,13 +78,8 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
 
   constructor(private modelManagementService: ModelManagementService,
               private translateService: TranslateService,
-              private tabService: TabService,
               private dialogService: DialogService) {
     super();
-  }
-
-
-  ngOnInit(): void {
   }
 
   /**
@@ -278,6 +271,8 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
       if (separatorIndex > -1) {
         const namespace = previewItem.substring(0, separatorIndex);
         uri = (this.namespaces[namespace] + previewItem.substring(separatorIndex + 1)).replace(/\\/g, '');
+      } else if (previewItem.startsWith('http')) {
+        uri = previewItem;
       } else {
         uri = this.baseIRI + previewItem;
       }
@@ -286,6 +281,6 @@ export class CellComponent extends OnDestroyMixin implements OnInit {
   }
 
   getGraphDbResourceUrl(previewItem): string {
-    return environment.graphDbUrl + '/resource?uri=' + this.getResourceUri(previewItem);
+    return environment.graphDbResource + '?resource=' + this.getResourceUri(previewItem);
   }
 }

@@ -2,15 +2,13 @@ import 'cypress-localstorage-commands';
 
 class PrepareSteps {
   static prepareMoviesNamespacesAndColumns() {
-    cy.setLocalStorage('com.ontotext.graphdb.repository', 'Movies');
-    cy.route('GET', '/repositories/Movies/namespaces', 'fixture:namespaces.json');
+    cy.route('GET', '/graphdb-proxy/repositories/repository_placeholder/namespaces', 'fixture:namespaces.json');
     cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:columns.json').as('loadColumns');
     PrepareSteps.setCommonRequests();
   }
 
   static prepareRestaurantsNamespacesAndColumns() {
-    cy.setLocalStorage('com.ontotext.graphdb.repository', 'Restaurants');
-    cy.route('GET', '/repositories/Restaurants/namespaces', 'fixture:namespaces.json');
+    cy.route('GET', '/graphdb-proxy/repositories/repository_placeholder/namespaces', 'fixture:namespaces.json');
     cy.route('GET', '/rest/rdf-mapper/columns/ontorefine:123', 'fixture:amsterdam/columns.json').as('loadColumns');
     PrepareSteps.setCommonRequests();
   }
@@ -18,6 +16,7 @@ class PrepareSteps {
   private static setCommonRequests() {
     cy.route('GET', '/sockjs-node/info?t=*', 'fixture:info.json');
     cy.route('GET', '/assets/i18n/en.json', 'fixture:en.json');
+    cy.route('GET', '/rest/rdf-mapper/graphdb-url', 'http://localhost:7200');
   }
 
   static stubEmptyMappingModel() {
@@ -25,8 +24,8 @@ class PrepareSteps {
   }
 
   static enableAutocompleteWithEmptyResponse() {
-    cy.route('POST', '/repositories/Movies', 'fixture:empty-autocomplete-response.json');
-    cy.route('GET', '/rest/autocomplete/enabled', 'true');
+    cy.route('POST', '/graphdb-proxy/repositories/repository_placeholder', 'fixture:empty-autocomplete-response.json');
+    cy.route('GET', '/graphdb-proxy/rest/autocomplete/enabled', 'true');
   }
 
   static visitPageAndWaitToLoad() {
