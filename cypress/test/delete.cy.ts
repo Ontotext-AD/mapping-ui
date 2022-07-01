@@ -32,6 +32,7 @@ describe('Delete', () => {
       MappingSteps.verifyTriple(0, '', '', '');
     });
 
+    // TODO This test is flaky, revisit it
     it('Should be able to delete a predicate with an object and have a warning', () => {
       stubServicesAndVisit();
       // Given I have opened an empty mapping
@@ -242,6 +243,7 @@ describe('Delete', () => {
       MappingSteps.getTripleObjectValue(1).should('be.empty');
     });
 
+    // TODO this test is flaky, revisit it, fails on .blur() in completeTriple
     it('Should be able to insert subject at same place as the deleted object when type predicate', () => {
       PrepareSteps.stubEmptyMappingModel();
       PrepareSteps.visitPageAndWaitToLoad();

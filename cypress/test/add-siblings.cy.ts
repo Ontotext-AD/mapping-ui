@@ -5,7 +5,7 @@ describe('Add siblings', () => {
 
   beforeEach(() => {
     PrepareSteps.prepareMoviesNamespacesAndColumns();
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:add-siblings/mapping-model.json').as('loadProject');
+    cy.intercept({method: 'GET', url: '/orefine/command/core/get-models/?project=123'}, {fixture: 'add-siblings/mapping-model.json'}).as('loadProject');
     // Given I have created a mapping with multiple nested triples
     // When I load the mapping
     PrepareSteps.visitPageAndWaitToLoad();
@@ -92,7 +92,7 @@ describe('Add siblings', () => {
     // Insert a new triple after all existing ones
     MappingSteps.completeTriple(6, 'subject', 'a', 'object');
     // Add subject sibling
-    MappingSteps.addTriplePredicateSibling(6)
+    MappingSteps.addTriplePredicateSibling(6);
     MappingSteps.getTriples().should('have.length', 9);
 
   });
@@ -103,15 +103,15 @@ describe('Add siblings', () => {
     MappingSteps.getTriples().should('have.length', 7);
 
     // Add subject sibling
-    MappingSteps.addTripleSubjectSibling(0)
+    MappingSteps.addTripleSubjectSibling(0);
     MappingSteps.getTriples().should('have.length', 7);
 
     // Add predicate sibling
-    MappingSteps.addTriplePredicateSibling(0)
+    MappingSteps.addTriplePredicateSibling(0);
     MappingSteps.getTriples().should('have.length', 7);
 
     // Add object sibling
-    MappingSteps.addTripleObjectSibling(0)
+    MappingSteps.addTripleObjectSibling(0);
     MappingSteps.getTriples().should('have.length', 7);
   });
 

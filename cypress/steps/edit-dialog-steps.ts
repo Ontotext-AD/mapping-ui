@@ -20,7 +20,7 @@ class EditDialogSteps {
   static saveConfiguration() {
     cy.wait(500);
     this.getOkButton().click();
-    this.getDialog().should('not.be.visible');
+    this.getDialog().should('not.exist');
   }
 
   static getWarningMessage() {

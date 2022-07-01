@@ -2,6 +2,7 @@ import MappingSteps from '../steps/mapping-steps';
 import HeaderSteps from '../steps/header-steps';
 import EditDialogSteps from '../steps/edit-dialog-steps';
 import PrepareSteps from '../steps/prepare-steps';
+import {MapperComponentSelectors} from "../utils/selectors/mapper-component.selectors";
 
 describe('Edit mapping', () => {
 
@@ -18,7 +19,7 @@ describe('Edit mapping', () => {
       MappingSteps.getTriples().should('have.length', 1);
       // When I focus the first triple's subject and execute ctrl+enter key combination
       // Add some wait here to prevent finding the input in detached state
-      MappingSteps.getTripleSubjectValue(0).wait(200).focus().type('{ctrl}{enter}', {
+      MappingSteps.getTripleSubjectValue(0).focus().type('{ctrl}{enter}', {
         parseSpecialCharSequences: true
       });
       // Then I expect the subject edit dialog to be opened
@@ -78,13 +79,13 @@ describe('Edit mapping', () => {
       // When I open the edit dialog again
       MappingSteps.editTripleObjectWithData(0);
       // I expect the warning to be missing
-      EditDialogSteps.getWarningMessage().should('not.be.visible');
+      EditDialogSteps.getWarningMessage().should('not.exist');
     });
 
     it('Should populate the prefix properly if it is autocompleted in the edit dialog', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/prefix-autocomplete-mapping-model.json').as('loadProject');
-      cy.route('GET', '/graphdb-proxy/repositories/repository_placeholder/namespaces', 'fixture:edit-mapping/namespaces-with-wine.json');
-      cy.route('POST', '/graphdb-proxy/repositories/repository_placeholder', 'fixture:edit-mapping/autocomplete-with-prefix-response.json');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'edit-mapping/prefix-autocomplete-mapping-model.json'}).as('loadProject');
+      cy.intercept('GET', '/graphdb-proxy/repositories/repository_placeholder/namespaces', {fixture: 'edit-mapping/namespaces-with-wine.json'});
+      cy.intercept('POST', '/graphdb-proxy/repositories/repository_placeholder', {fixture: 'edit-mapping/autocomplete-with-prefix-response.json'});
       // Given I have opened a mapping with an IRI object
       PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 2);
@@ -133,11 +134,9 @@ describe('Edit mapping', () => {
   // TODO: I add these tests here for now, but later we should distribute them in respective specs with the related operations
   context('Handle errors', () => {
     it('Should show error notification when model could not be loaded', () => {
-      cy.route({
-        method: 'GET',
-        url: '/orefine/command/core/get-models/?project=123',
-        status: 500,
-        response: 'fixture:edit-mapping/load-mapping-error.json'
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {
+        statusCode: 500,
+        fixture: 'edit-mapping/load-mapping-error.json'
       }).as('loadProject');
 
       PrepareSteps.visitPageAndWaitToLoad();
@@ -149,11 +148,9 @@ describe('Edit mapping', () => {
 
     it('Should show error notification when namespaces could not be loaded', () => {
       PrepareSteps.stubEmptyMappingModel();
-      cy.route({
-        method: 'GET',
-        url: '/graphdb-proxy/repositories/repository_placeholder/namespaces',
-        status: 404,
-        response: 'fixture:edit-mapping/load-namespaces-error'
+      cy.intercept('GET', '/graphdb-proxy/repositories/repository_placeholder/namespaces', {
+        statusCode: 404,
+        fixture: 'edit-mapping/load-namespaces-error'
       });
 
       cy.visit('?dataProviderID=ontorefine:123').then(() => {
@@ -166,11 +163,9 @@ describe('Edit mapping', () => {
 
     it('Should show error notification when columns could not be loaded', () => {
       PrepareSteps.stubEmptyMappingModel();
-      cy.route({
-        method: 'GET',
-        url: '/rest/rdf-mapper/columns/ontorefine:123',
-        status: 404,
-        response: 'fixture:edit-mapping/load-columns-error'
+      cy.intercept('GET', '/rest/rdf-mapper/columns/ontorefine:123', {
+        statusCode: 404,
+        fixture: 'edit-mapping/load-columns-error'
       }).as('loadColumns');
 
       PrepareSteps.visitPageAndWaitToLoad();
@@ -182,12 +177,10 @@ describe('Edit mapping', () => {
     });
 
     it('Should show error notification when RDF generation fails', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:mapping-model.json').as('loadProject');
-      cy.route({
-        method: 'POST',
-        url: '/rest/rdf-mapper/rdf/ontorefine:123',
-        status: 404,
-        response: 'fixture:edit-mapping/generate-rdf-error',
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'mapping-model.json'}).as('loadProject');
+      cy.intercept('POST', '/rest/rdf-mapper/rdf/ontorefine:123', {
+        statusCode: 404,
+        fixture: 'edit-mapping/generate-rdf-error',
         headers: {
           Accept: 'text/turtle',
           'Content-Type': 'application/json'
@@ -206,12 +199,10 @@ describe('Edit mapping', () => {
     });
 
     it('Should show error notification when SPARQL generation fails', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:mapping-model.json').as('loadProject');
-      cy.route({
-        method: 'POST',
-        url: '/rest/rdf-mapper/sparql/ontorefine:123',
-        status: 404,
-        response: 'fixture:edit-mapping/generate-sparql-error',
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'mapping-model.json'}).as('loadProject');
+      cy.intercept('POST', '/rest/rdf-mapper/sparql/ontorefine:123', {
+        statusCode: 404,
+        fixture: 'edit-mapping/generate-sparql-error',
         headers: {
           'Content-Type': 'application/json'
         }
@@ -227,16 +218,13 @@ describe('Edit mapping', () => {
       MappingSteps.getNotification().should('be.visible')
         .and('contain', 'Tabular data provider not found: ontorefine:123 (HTTP status 404)');
     });
-
   });
 
   context('Preview GREL', () => {
     function mockPreview(response: string) {
-      cy.route({
-        method: 'POST',
-        url: '/rest/rdf-mapper/grel/ontorefine:123?limit=10',
-        status: 200,
-        response,
+      cy.intercept('POST', '/rest/rdf-mapper/grel/ontorefine:123?limit=10', {
+        statusCode: 200,
+        body: response,
         headers: {
           'Content-Type': 'application/json'
         }
@@ -282,7 +270,7 @@ describe('Edit mapping', () => {
 
     it('Should show GREL preview in a popover', () => {
       mockPreview('[null]');
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/grel-expression-edit-mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'edit-mapping/grel-expression-edit-mapping-model.json'}).as('loadProject');
       // Given I have created and loaded a mapping
       PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 2);
@@ -413,7 +401,7 @@ describe('Edit mapping', () => {
 
   context('Incomplete mapping', () => {
     it('Should not allow operations with incomplete mapping', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/incomplete-mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'edit-mapping/incomplete-mapping-model.json'}).as('loadProject');
 
       // When I load application
       PrepareSteps.visitPageAndWaitToLoad();
@@ -454,13 +442,10 @@ describe('Edit mapping', () => {
       assertNotAllowedNotification();
     });
 
-    // TODO: random failing ('-.-)
     it('Should keep preview after deletion', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model.json').as('loadProject');
-
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'edit-mapping/mapping-model.json'}).as('loadProject');
       // When I load application
       PrepareSteps.visitPageAndWaitToLoad();
-      
       // I switch to preview mode
       HeaderSteps.getPreviewButton().click();
 
@@ -478,8 +463,8 @@ describe('Edit mapping', () => {
   });
 
   it('Should have links for IRIs in preview', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/preview-mapping-model.json').as('loadProject');
-    cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:edit-mapping/preview-response.json').as('loadPreview');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'edit-mapping/preview-mapping-model.json'}).as('loadProject');
+    cy.intercept('POST', '/rest/rdf-mapper/preview/ontorefine:123', {fixture: 'edit-mapping/preview-response.json'}).as('loadPreview');
 
     // When I load a mapping containing all type mappings
     PrepareSteps.visitPageAndWaitToLoad();
@@ -493,10 +478,10 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleSubjectPreview(0).contains('<constantIRI>');
     // Should be a link and uri should be baseURI + constant
     MappingSteps.getTripleSubjectPreview(0).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?resource=http://example.com/base/constantIRI');
+      .and('contain', 'resource?resource=http://example.com/base/constantIRI');
     MappingSteps.getTriplePredicatePreview(0).contains('<pred>');
     MappingSteps.getTriplePredicatePreview(0).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?resource=http://example.com/base/pred');
+      .and('contain', 'resource?resource=http://example.com/base/pred');
 
     // A literal
     MappingSteps.getTripleObjectPreview(0).contains('"literalObj"');
@@ -507,7 +492,7 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleSubjectPreview(1).contains('<http://example.com/base/rawConstantIRI>');
     // Should be a link and uri should be baseURI + constant
     MappingSteps.getTripleSubjectPreview(1).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?resource=http://example.com/base/rawConstantIRI');
+      .and('contain', 'resource?resource=http://example.com/base/rawConstantIRI');
 
     // A type mapping ('a' or 'rdf:type')
     MappingSteps.getTriplePredicatePreview(1).contains('a');
@@ -516,13 +501,13 @@ describe('Edit mapping', () => {
 
     MappingSteps.getTripleObjectPreview(1).contains('<constantIRI>');
     MappingSteps.getTripleObjectPreview(1).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?resource=http://example.com/base/constantIRI');
+      .and('contain', 'resource?resource=http://example.com/base/constantIRI');
 
     // A raw IRI that is a URI
     MappingSteps.getTripleSubjectPreview(2).contains('<http://constant>');
     // Should be a link and URI should be it's own
     MappingSteps.getTripleSubjectPreview(2).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?resource=http://constant');
+      .and('contain', 'resource?resource=http://constant');
 
     MappingSteps.getTriplePredicatePreview(2).contains('a');
     MappingSteps.getTriplePredicatePreview(2).find('a').should('not.be', 'visible');
@@ -531,17 +516,14 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleObjectPreview(2).contains('schema:Thing');
     // Should be a link and URI should have the namespace URI + constant
     MappingSteps.getTripleObjectPreview(2).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?resource=http://schema.org/Thing');
+      .and('contain', 'resource?resource=http://schema.org/Thing');
   });
-
 
   context('Edit and save', () => {
     it('Should save mapping and preserve preview', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model-with-preview.json').as('loadProject');
-      cy.route({
-        method: 'POST',
-        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
-        status: 200,
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'edit-mapping/mapping-model-with-preview.json'}).as('loadProject');
+      cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
+        statusCode: 200,
         delay: 1000
       }).as('saveMapping');
       // Given I have opened the application
@@ -576,7 +558,7 @@ describe('Edit mapping', () => {
     });
 
     it('Should mark empty mapping preview', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model-with-preview.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'edit-mapping/mapping-model-with-preview.json'}).as('loadProject');
 
       // Given I have opened the application
       PrepareSteps.visitPageAndWaitToLoad();
@@ -588,9 +570,9 @@ describe('Edit mapping', () => {
       MappingSteps.confirm();
 
       // I switch to both preview
-      HeaderSteps.getBothViewButton().click();
+      HeaderSteps.getBothViewButton().should('be.visible').click();
       // I see mapping preview with empty previews
-      MappingSteps.getTripleSubjectPreview(0).contains('<James%20Cameron>')
+      MappingSteps.getTripleSubjectPreview(0).contains('<James%20Cameron>');
       MappingSteps.getTriplePredicatePreview(0).contains('a');
       MappingSteps.getTripleObjectPreview(0).contains('<person>');
       MappingSteps.getTriplePredicatePreview(1).contains('testNoPreview');
@@ -599,17 +581,14 @@ describe('Edit mapping', () => {
       MappingSteps.getTripleObjectPreview(2).contains('empty');
       MappingSteps.getTriplePredicatePreview(3).contains('empty');
       MappingSteps.getTripleObjectPreview(3).contains('empty');
-
     });
 
     it('Should change object type and save it properly', () => {
       PrepareSteps.stubEmptyMappingModel();
-      cy.route({
-        method: 'POST',
-        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
-        status: 200,
+      cy.route('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
+        statusCode: 200,
         delay: 1000,
-        response: 'fixture:edit-mapping/save-mapping-success.json'
+        fixture: 'edit-mapping/save-mapping-success.json'
       }).as('saveMapping');
       // Given I have opened the application
       PrepareSteps.visitPageAndWaitToLoad();
@@ -622,7 +601,7 @@ describe('Edit mapping', () => {
       // Then I change the object to Datatype Literal
       MappingSteps.editTripleObjectWithData(0);
       EditDialogSteps.selectLiteral();
-      EditDialogSteps.selectTypeDataTypeLiteral()
+      EditDialogSteps.selectTypeDataTypeLiteral();
       EditDialogSteps.selectDataTypeConstant();
       EditDialogSteps.completeDataTypeConstant('con');
       EditDialogSteps.saveConfiguration();
@@ -638,20 +617,17 @@ describe('Edit mapping', () => {
           expect(xhr.request.body).to.equal(saveResponse);
         });
       });
-
     });
 
   });
 
   context('Edit base IRI', () => {
     it('Should edit and save base IRI', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/base-iri-mapping-model.json').as('loadProject');
-      cy.route({
-        method: 'POST',
-        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
-        status: 200,
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'edit-mapping/base-iri-mapping-model.json'}).as('loadProject');
+      cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
+        statusCode: 200,
         delay: 1000,
-        response: 'fixture:edit-mapping/save-mapping-success.json'
+        fixture: 'edit-mapping/save-mapping-success.json'
       }).as('saveMapping');
       // Given I have loaded a mapping
       PrepareSteps.visitPageAndWaitToLoad();
@@ -664,11 +640,10 @@ describe('Edit mapping', () => {
       // And I save the mapping
       HeaderSteps.saveMapping();
       cy.fixture('edit-mapping/save-mapping-with-updated-iri-request-body').then((saveRequest: string) => {
-        cy.wait('@saveMapping');
-        cy.get('@saveMapping').should((xhr: any) => {
-          expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
-          expect(xhr.method).to.equal('POST');
-          expect(xhr.request.body).to.equal(saveRequest);
+        cy.wait('@saveMapping').then((interceptor) => {
+          expect(interceptor.request.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
+          expect(interceptor.request.method).to.equal('POST');
+          expect(interceptor.request.body).to.equal(saveRequest);
         });
       });
       // Then I expect the base IRI to be set in the model properly and sent for save
@@ -680,7 +655,6 @@ describe('Edit mapping', () => {
     it('Should treat rdf:type as type mapping predicate when inline typing', () => {
       PrepareSteps.stubEmptyMappingModel();
       PrepareSteps.visitPageAndWaitToLoad();
-
       // WHEN I complete inline the triple with `rfd:type` predicate
       MappingSteps.completeTriple(0, 'sub', 'rdf:type', 'obj');
       // THEN
@@ -692,7 +666,7 @@ describe('Edit mapping', () => {
 
     it('Should treat rdf:type as type mapping predicate when select it from autocomplete', () => {
       PrepareSteps.stubEmptyMappingModel();
-      cy.route('POST', '/graphdb-proxy/repositories/repository_placeholder', 'fixture:edit-mapping/autocomplete-rdf-type.json');
+      cy.intercept('POST', '/graphdb-proxy/repositories/repository_placeholder', {fixture: 'edit-mapping/autocomplete-rdf-type.json'});
       PrepareSteps.visitPageAndWaitToLoad();
 
       MappingSteps.completeTriple(0, 's', undefined);
@@ -727,5 +701,5 @@ describe('Edit mapping', () => {
 
 function assertNotAllowedNotification() {
   MappingSteps.getNotification().should('contain', 'The operation is not allowed. You have an incomplete mapping.');
-  MappingSteps.getNotification().should('not.be.visible');
+  MappingSteps.getNotification().should('not.exist');
 }
