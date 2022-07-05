@@ -25,16 +25,15 @@ export class MapperService extends RestService {
     return this.dataProviderID.pipe(switchMap((dataProviderID) => {
       if (dataProviderID) {
         return of(`${this.apiUrl}${apiName}${dataProviderID}`);
-      } else {
-        return EMPTY;
       }
+      return EMPTY;
     }));
   }
 
   getColumns(): Observable<Array<Source>> {
     return this.getAPIURL('/columns/').pipe(switchMap((fullUrl) => {
       return this.httpClient.get<Array<Source>>(fullUrl, this.httpOptions).pipe(map((res) => res.map((c) => new Source(c))),
-          catchError((error) => this.errorReporterService.handleError('Loading columns failed.', error)));
+          catchError((error) => this.handleError('columns', error)));
     }));
   }
 
@@ -45,14 +44,14 @@ export class MapperService extends RestService {
     };
     return this.getAPIURL('/rdf/').pipe(switchMap((fullUrl) => {
       return this.httpClient.post(fullUrl, mappingDefinition, httpOptions).pipe(
-          catchError((error) => this.errorReporterService.handleError('Loading rdf failed.', error)));
+          catchError((error) => this.handleError('rdf', error)));
     }));
   }
 
   preview(mappingDefinition: MappingDefinitionImpl): Observable<any> {
     return this.getAPIURL('/preview/').pipe(switchMap((fullUrl) => {
       return this.httpClient.post(fullUrl, mappingDefinition).pipe(
-          catchError((error) => this.errorReporterService.handleError('Loading preview failed.', error)));
+          catchError((error) => this.handleError('preview', error)));
     }));
   }
 
@@ -60,14 +59,18 @@ export class MapperService extends RestService {
     const payload = {valueSource, grel: grelExpression};
     return this.getAPIURL('/grel/').pipe(switchMap((fullUrl) => {
       return this.httpClient.post<Array<any>>(fullUrl + '?limit=' + (limit || 10), payload).pipe(
-          catchError((error) => this.errorReporterService.handleError('Loading grel failed.', error)));
+          catchError((error) => this.handleError('grel', error)));
     }));
   }
 
   getSPARQL(mappingDefinition: MappingDefinitionImpl): Observable<string> {
     return this.getAPIURL('/sparql/').pipe(switchMap((fullUrl) => {
       return this.httpClient.post(fullUrl, mappingDefinition, {headers: this.httpOptions.headers, responseType: 'text'})
-          .pipe(catchError((error) => this.errorReporterService.handleError('Loading sparql failed.', error)));
+          .pipe(catchError((error) => this.handleError('sparql', error)));
     }));
+  }
+
+  private handleError(context: string, error: any) {
+    return this.errorReporterService.handleError(`Loading ${context} failed.`, error);
   }
 }

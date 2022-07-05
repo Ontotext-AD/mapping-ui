@@ -281,7 +281,7 @@ class MappingSteps {
 
   static confirm() {
     MappingSteps.getConfirmation().find('.confirm-btn').should('be.visible').click();
-    MappingSteps.getConfirmation().should('not.be.visible');
+    MappingSteps.getConfirmation().should('not.exist');
   }
 
   static reject() {

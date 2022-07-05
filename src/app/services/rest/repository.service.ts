@@ -5,7 +5,6 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ErrorReporterService} from '../error-reporter.service';
 import {AutocompleteService} from './autocomplete.service';
-import {LocalStorageService} from 'src/app/services/local-storage.service';
 import {SPARQL_AUTOCOMPLETE, SPARQL_IRI_DESCRIPTION, SPARQL_PREDICATES, SPARQL_TYPES} from '../../utils/constants';
 import {Namespaces} from '../../models/namespaces';
 
@@ -16,14 +15,12 @@ export class RepositoryService {
   apiUrl = environment.repositoryApiUrl;
 
   constructor(protected httpClient: HttpClient,
-              protected localStorageService: LocalStorageService,
               private autocompleteService: AutocompleteService,
               private errorReporterService: ErrorReporterService) {
   }
 
   getAPIURL(apiName: string): Observable<string> {
-    const repo = this.localStorageService.getCurrentRepository();
-    return (repo) ? of(`${this.apiUrl}/${repo}${apiName}`) : EMPTY;
+    return of(`${this.apiUrl}/repository_placeholder${apiName}`);
   }
 
   getNamespaces(): Observable<Namespaces> {
@@ -55,7 +52,7 @@ export class RepositoryService {
   }
 
   executeQueryForIRI(iri: string, query: string, binding: string): Observable<string[]> {
-    if (!this.autocompleteService.isAustocompleteEnabled()) {
+    if (!this.autocompleteService.isAutocompleteEnabled()) {
       return EMPTY;
     }
     const payload = new HttpParams().set('query', query.replace('{{iri}}', iri));
@@ -69,7 +66,7 @@ export class RepositoryService {
   }
 
   isAutocompleteEnabled() {
-    return this.autocompleteService.isAustocompleteEnabled();
+    return this.autocompleteService.isAutocompleteEnabled();
   }
 
   public filterNamespace(namespaces: Namespaces, value: string): object[] {

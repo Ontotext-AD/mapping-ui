@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {ErrorReporterService} from '../error-reporter.service';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {EMPTY, Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
-import {LocalStorageService} from 'src/app/services/local-storage.service';
 import {map} from 'rxjs/internal/operators';
 import {NotificationService} from '../notification.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -23,28 +22,19 @@ export class AutocompleteService {
   private autocompleteWarningDisplayed = false;
 
   constructor(private httpClient: HttpClient,
-              private localStorageService: LocalStorageService,
               private translateService: TranslateService,
               private notificationService: NotificationService,
               private errorReporterService: ErrorReporterService) {
   }
 
   autocompleteStatus(): Observable<boolean> {
-    const selectedRepo = this.localStorageService.getCurrentRepository();
-    if (selectedRepo) {
-      const httpHeaders = new HttpHeaders({
-        'X-GraphDB-Repository': selectedRepo,
-      });
-      const httpOptions = {headers: httpHeaders};
-      return this.httpClient.get<boolean>(`${this.apiUrl}/enabled`, httpOptions).pipe(map(
-          (status) => this.setAutocompleteStatus(status),
-          catchError((error) => this.errorReporterService.handleError('Autocomplete status check failed.', error)),
-      ));
-    }
-    return EMPTY;
+    return this.httpClient.get<boolean>(`${this.apiUrl}/enabled`).pipe(map(
+        (status) => this.setAutocompleteStatus(status),
+        catchError((error) => this.errorReporterService.handleError('Autocomplete status check failed.', error)),
+    ));
   }
 
-  isAustocompleteEnabled(): boolean {
+  isAutocompleteEnabled(): boolean {
     if (!this.autocompleteEnabled && !this.autocompleteWarningDisplayed) {
       const message = this.translateService.instant('MESSAGES.AUTOCOMPLETE_OFF_WARNING');
       this.notificationService.warning(message);

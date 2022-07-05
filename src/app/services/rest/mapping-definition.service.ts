@@ -29,9 +29,8 @@ export class MappingDefinitionService extends RestService {
     return this.dataProviderID.pipe(switchMap((dataProviderID) => {
       if (dataProviderID) {
         return of(`${this.apiUrl}${apiName}?project=${dataProviderID.substring('ontorefine:'.length)}`);
-      } else {
-        return EMPTY;
       }
+      return EMPTY;
     }));
   }
 

@@ -83,8 +83,8 @@ describe('Edit mapping', () => {
 
     it('Should populate the prefix properly if it is autocompleted in the edit dialog', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/prefix-autocomplete-mapping-model.json').as('loadProject');
-      cy.route('GET', '/repositories/Movies/namespaces', 'fixture:edit-mapping/namespaces-with-wine.json');
-      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-with-prefix-response.json');
+      cy.route('GET', '/graphdb-proxy/repositories/repository_placeholder/namespaces', 'fixture:edit-mapping/namespaces-with-wine.json');
+      cy.route('POST', '/graphdb-proxy/repositories/repository_placeholder', 'fixture:edit-mapping/autocomplete-with-prefix-response.json');
       // Given I have opened a mapping with an IRI object
       PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 2);
@@ -151,7 +151,7 @@ describe('Edit mapping', () => {
       PrepareSteps.stubEmptyMappingModel();
       cy.route({
         method: 'GET',
-        url: '/repositories/Movies/namespaces',
+        url: '/graphdb-proxy/repositories/repository_placeholder/namespaces',
         status: 404,
         response: 'fixture:edit-mapping/load-namespaces-error'
       });
@@ -454,10 +454,13 @@ describe('Edit mapping', () => {
       assertNotAllowedNotification();
     });
 
+    // TODO: random failing ('-.-)
     it('Should keep preview after deletion', () => {
       cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/mapping-model.json').as('loadProject');
+
       // When I load application
       PrepareSteps.visitPageAndWaitToLoad();
+      
       // I switch to preview mode
       HeaderSteps.getPreviewButton().click();
 
@@ -490,10 +493,10 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleSubjectPreview(0).contains('<constantIRI>');
     // Should be a link and uri should be baseURI + constant
     MappingSteps.getTripleSubjectPreview(0).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http://example.com/base/constantIRI');
+        .and('contain', 'resource?resource=http://example.com/base/constantIRI');
     MappingSteps.getTriplePredicatePreview(0).contains('<pred>');
     MappingSteps.getTriplePredicatePreview(0).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http://example.com/base/pred');
+        .and('contain', 'resource?resource=http://example.com/base/pred');
 
     // A literal
     MappingSteps.getTripleObjectPreview(0).contains('"literalObj"');
@@ -504,7 +507,7 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleSubjectPreview(1).contains('<http://example.com/base/rawConstantIRI>');
     // Should be a link and uri should be baseURI + constant
     MappingSteps.getTripleSubjectPreview(1).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http://example.com/base/rawConstantIRI');
+        .and('contain', 'resource?resource=http://example.com/base/rawConstantIRI');
 
     // A type mapping ('a' or 'rdf:type')
     MappingSteps.getTriplePredicatePreview(1).contains('a');
@@ -513,13 +516,13 @@ describe('Edit mapping', () => {
 
     MappingSteps.getTripleObjectPreview(1).contains('<constantIRI>');
     MappingSteps.getTripleObjectPreview(1).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http://example.com/base/constantIRI');
+        .and('contain', 'resource?resource=http://example.com/base/constantIRI');
 
     // A raw IRI that is a URI
     MappingSteps.getTripleSubjectPreview(2).contains('<http://constant>');
     // Should be a link and URI should be it's own
     MappingSteps.getTripleSubjectPreview(2).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http://constant');
+        .and('contain', 'resource?resource=http://constant');
 
     MappingSteps.getTriplePredicatePreview(2).contains('a');
     MappingSteps.getTriplePredicatePreview(2).find('a').should('not.be', 'visible');
@@ -528,7 +531,7 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleObjectPreview(2).contains('schema:Thing');
     // Should be a link and URI should have the namespace URI + constant
     MappingSteps.getTripleObjectPreview(2).find('a').should('have.attr', 'href')
-        .and('contain', 'resource?uri=http://schema.org/Thing');
+        .and('contain', 'resource?resource=http://schema.org/Thing');
   });
 
 
@@ -689,7 +692,7 @@ describe('Edit mapping', () => {
 
     it('Should treat rdf:type as type mapping predicate when select it from autocomplete', () => {
       PrepareSteps.stubEmptyMappingModel();
-      cy.route('POST', '/repositories/Movies', 'fixture:edit-mapping/autocomplete-rdf-type.json');
+      cy.route('POST', '/graphdb-proxy/repositories/repository_placeholder', 'fixture:edit-mapping/autocomplete-rdf-type.json');
       PrepareSteps.visitPageAndWaitToLoad();
 
       MappingSteps.completeTriple(0, 's', undefined);
