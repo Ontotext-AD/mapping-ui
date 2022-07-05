@@ -8,18 +8,16 @@ describe('Create Amsterdam restaurants mapping', () => {
   beforeEach(() => {
     PrepareSteps.prepareRestaurantsNamespacesAndColumns();
     PrepareSteps.enableAutocompleteWithEmptyResponse();
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:amsterdam/amsterdam-model.json').as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'amsterdam/amsterdam-model.json'}).as('loadProject');
   });
 
   function mockPreview(response: string) {
-    cy.route({
-      method: 'POST',
-      url: '/rest/rdf-mapper/grel/ontorefine:123?limit=10',
+    cy.intercept('POST', '/rest/rdf-mapper/grel/ontorefine:123?limit=10', {
       status: 200,
-      response,
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      response
     }).as('loadGrelPreview');
   }
 

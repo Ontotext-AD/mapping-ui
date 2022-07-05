@@ -10,7 +10,7 @@ describe('HeaderComponent', () => {
   });
 
   it('Should render header', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'header/mapping-model.json'}).as('loadProject');
     PrepareSteps.visitPageAndWaitToLoad();
     // THEN:
     // I see header content
@@ -33,7 +33,7 @@ describe('HeaderComponent', () => {
     });
 
     it('Should be enabled initially when the mapping is not empty', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'header/mapping-model.json'}).as('loadProject');
       // When I load a mapping model
       PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 3);
@@ -54,7 +54,7 @@ describe('HeaderComponent', () => {
     });
 
     it('Should be disabled when mapping is cleared', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'header/mapping-model.json'}).as('loadProject');
       // When I load a mapping model
       PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 3);
@@ -69,14 +69,12 @@ describe('HeaderComponent', () => {
 
   context('Upload mapping as JSON', () => {
     it('Should upload JSON mapping', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'header/mapping-model.json'}).as('loadProject');
       PrepareSteps.visitPageAndWaitToLoad();
-      cy.route({
-        method: 'POST',
-        url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
-        status: 200,
+      cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
+        statusCode: 200,
         delay: 1000,
-        response: 'fixture:save-mapping-success.json'
+        fixture: 'save-mapping-success.json'
       });
       // I see header content
       cy.cypressData(MapperComponentSelectors.MAPPER_SELECTOR).should('be.visible');
@@ -109,7 +107,7 @@ describe('HeaderComponent', () => {
     });
 
     it('Should not insert uploaded JSON mapping if not confirmed', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'header/mapping-model.json'}).as('loadProject');
       PrepareSteps.visitPageAndWaitToLoad();
       // WHEN:
       // I upload valid JSON file
@@ -126,7 +124,7 @@ describe('HeaderComponent', () => {
     });
 
     it('Should display error message if file is wrong or JSON is corrupted', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:header/mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'header/mapping-model.json'}).as('loadProject');
       PrepareSteps.visitPageAndWaitToLoad();
       // WHEN:
       // I upload valid JSON file

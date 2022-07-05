@@ -8,7 +8,7 @@ describe('Nest triples', () => {
   });
 
   it('Should nest triples properly', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:nest-triples/mapping-model.json').as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'nest-triples/mapping-model.json'}).as('loadProject');
     // Given I have created a mapping with multiple nested triples
     // When I load the mapping
     PrepareSteps.visitPageAndWaitToLoad();
@@ -33,7 +33,7 @@ describe('Nest triples', () => {
   });
 
   it('Should nest new triple properly', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:nest-triples/mapping-model.json').as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture:'nest-triples/mapping-model.json'}).as('loadProject');
     // Given I have created a mapping with multiple nested triples
     // When I load the mapping
     PrepareSteps.visitPageAndWaitToLoad();

@@ -30,7 +30,7 @@ class MappingSteps {
     this.type(value, () => MappingSteps.getTripleSubjectValue(index));
     MappingSteps.getTripleSubjectValue(index).then((component) => {
       if (component) {
-        cy.wrap(component).blur();
+        cy.wrap(component).blur({force: true});
       }
     });
   }
@@ -39,7 +39,7 @@ class MappingSteps {
     this.type(value, () => MappingSteps.getTriplePredicateValue(index));
     MappingSteps.getTriplePredicateValue(index).then((component) => {
       if (component) {
-        cy.wrap(component).blur();
+        cy.wrap(component).blur({force: true});
       }
     });
   }
@@ -48,7 +48,7 @@ class MappingSteps {
     MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').focus().type(value, {parseSpecialCharSequences: false});
     MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').then((component) => {
       if (component) {
-        cy.wrap(component).blur();
+        cy.wrap(component).blur({force: true});
       }
     });
   }
@@ -103,7 +103,6 @@ class MappingSteps {
   }
 
   static getTripleSubjectValue(index: any) {
-    // wait for a while to prevent element to be found in detached state
     return MappingSteps.getTripleSubject(index).find('[appCypressData="cell-value"]');
   }
 
@@ -280,12 +279,14 @@ class MappingSteps {
   }
 
   static confirm() {
-    MappingSteps.getConfirmation().find('.confirm-btn').should('be.visible').click();
-    MappingSteps.getConfirmation().should('not.exist');
+    MappingSteps.getConfirmation().should('be.visible');
+    MappingSteps.getConfirmation().find('.mat-dialog-actions').find('.confirm-btn', {timeout: 15000}).contains('Proceed').should('be.visible')
+      .click();
+    MappingSteps.getConfirmation().should('not.exist', {timeout: 10000});
   }
 
   static reject() {
-    return MappingSteps.getConfirmation().find('.cancel-btn').should('be.visible').click();
+    return MappingSteps.getConfirmation().find('.mat-dialog-actions').find('.cancel-btn').should('be.visible').click();
   }
 
   // Notifications
@@ -298,7 +299,8 @@ class MappingSteps {
   }
 
   static getBaseIRI() {
-    return cy.get('[appCypressData="base-iri"]');
+    // Currently returns 3 elements due to GDB address and Repository fields
+    return cy.get('[appCypressData="base-iri"]').first();
   }
 
   static getNamespaces() {
