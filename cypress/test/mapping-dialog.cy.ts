@@ -8,8 +8,8 @@ describe('MapperDialog', () => {
     PrepareSteps.prepareMoviesNamespacesAndColumns();
   });
 
-  xit('should render mapping dialog when drag and drop source', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
+  it('should render mapping dialog when drag and drop source', () => {
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'delete/mapping-model.json'}).as('loadProject');
     PrepareSteps.visitPageAndWaitToLoad();
 
     // WHEN:
@@ -25,8 +25,8 @@ describe('MapperDialog', () => {
     cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('be.visible');
   });
 
-  xit('should render mapping dialog on subject edit button click', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
+  it('should render mapping dialog on subject edit button click', () => {
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'delete/mapping-model.json'}).as('loadProject');
     PrepareSteps.visitPageAndWaitToLoad();
 
     // WHEN:
@@ -53,7 +53,7 @@ describe('MapperDialog', () => {
 
   it('should render mapping dialog and create triple', () => {
     // stub model
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'delete/mapping-model.json'}).as('loadProject');
     PrepareSteps.visitPageAndWaitToLoad();
 
     // WHEN:
@@ -74,9 +74,9 @@ describe('MapperDialog', () => {
 
     // THEN:
     // I see subject created
-    cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.exist');
     cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-2').contains('director_name');
-    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-3').should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-3').should('not.exist');
 
     // WHEN:
     // I click on edit button of the empty triple's predicate
@@ -99,9 +99,9 @@ describe('MapperDialog', () => {
 
     // THEN:
     // I see predicate created
-    cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.exist');
     cy.cypressData(MapperComponentSelectors.PREDICATE_SELECTOR + '-2').contains('constant123');
-    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-3').should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-3').should('not.exist');
 
     // WHEN:
     // I click on edit button of the empty triple's object
@@ -118,8 +118,8 @@ describe('MapperDialog', () => {
     cy.cypressData(MapperComponentSelectors.RECORD_ID).should('be.visible');
     cy.cypressData(MapperComponentSelectors.ROW_INDEX).should('be.visible');
     // When a type is not selected, only GREL transformation is present
-    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_PREFIX).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_RAW_IRI).should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_PREFIX).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_RAW_IRI).should('not.exist');
     cy.cypressData(MapperComponentSelectors.TRANSFORMATION_GREL).should('be.visible').click();
     cy.cypressData(MapperComponentSelectors.TRANSFORMATION_EXPRESSION).should('be.visible');
 
@@ -138,8 +138,8 @@ describe('MapperDialog', () => {
     // Datatype transformations: prefix and grel should be present
     cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_GREL).should('be.visible').click();
     cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_EXPRESSION).should('be.visible');
-    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_PREFIX).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_RAW_IRI).should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_PREFIX).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_RAW_IRI).should('not.exist');
     cy.cypressData(MapperComponentSelectors.TRANSFORMATION_GREL).should('be.visible');
 
     // WHEN:
@@ -151,11 +151,11 @@ describe('MapperDialog', () => {
     cy.cypressData(MapperComponentSelectors.LANGUAGE_COLUMN).should('be.visible');
     cy.cypressData(MapperComponentSelectors.LANGUAGE_CONSTANT).should('be.visible');
     // Language transformations: grel should be present
-    cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_PREFIX).should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_PREFIX).should('not.exist');
     cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_GREL).should('be.visible').click();
     cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_EXPRESSION).should('be.visible');
-    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_PREFIX).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_RAW_IRI).should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_PREFIX).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.TRANSFORMATION_RAW_IRI).should('not.exist');
     cy.cypressData(MapperComponentSelectors.TRANSFORMATION_GREL).should('be.visible');
 
     // WHEN:
@@ -164,22 +164,22 @@ describe('MapperDialog', () => {
 
     // THEN:
     // I can not see LanguageLiteral fields nor DatatypeLiteral fields
-    cy.cypressData(MapperComponentSelectors.LANGUAGE_COLUMN).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.LANGUAGE_CONSTANT).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.LANGUAGE_RECORD_ID).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.LANGUAGE_ROW_INDEX).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_PREFIX).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_GREL).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_EXPRESSION).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.LANGUAGE_SOURCE_ERROR).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.DATATYPE_COLUMN).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.DATATYPE_CONSTANT).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.DATATYPE_RECORD_ID).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.DATATYPE_ROW_INDEX).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_PREFIX).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_GREL).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_EXPRESSION).should('not.be.visible');
-    cy.cypressData(MapperComponentSelectors.DATATYPE_SOURCE_ERROR).should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.LANGUAGE_COLUMN).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.LANGUAGE_CONSTANT).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.LANGUAGE_RECORD_ID).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.LANGUAGE_ROW_INDEX).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_PREFIX).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_GREL).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.LANGUAGE_TRANSFORMATION_EXPRESSION).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.LANGUAGE_SOURCE_ERROR).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.DATATYPE_COLUMN).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.DATATYPE_CONSTANT).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.DATATYPE_RECORD_ID).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.DATATYPE_ROW_INDEX).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_PREFIX).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_GREL).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.DATATYPE_TRANSFORMATION_EXPRESSION).should('not.exist');
+    cy.cypressData(MapperComponentSelectors.DATATYPE_SOURCE_ERROR).should('not.exist');
     cy.cypressData(MapperComponentSelectors.TRANSFORMATION_GREL).should('be.visible');
 
     // WHEN:
@@ -189,7 +189,7 @@ describe('MapperDialog', () => {
 
     // THEN:
     // I see object created
-    cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.be.visible');
+    cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('not.exist');
     cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-2').should('be.visible');
     cy.cypressData(MapperComponentSelectors.OBJECT_SELECTOR + '-2').contains('record_id');
 
@@ -241,7 +241,7 @@ describe('MapperDialog', () => {
 
     // When I clear the field and paste 'https://swapi.co/vocabulary/' in the prefix field
     EditDialogSteps.getTransformationExpressionField().clear()
-        .invoke('val', 'https://swapi.co/vocabulary/');
+      .invoke('val', 'https://swapi.co/vocabulary/');
     EditDialogSteps.getTransformationExpressionField().trigger('input');
     // Then prefix field should get converted to 'rdfs'
     EditDialogSteps.getTransformationExpressionField().should('have.value', 'voc');

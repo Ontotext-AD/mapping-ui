@@ -10,7 +10,7 @@ context('Namespaces', () => {
   });
 
   it('Should show base iri and no default prefixes on empty mapping', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/empty-mapping-model.json').as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'namespaces/empty-mapping-model.json'}).as('loadProject');
 
     // Given I have loaded a mapping
     PrepareSteps.visitPageAndWaitToLoad();
@@ -23,13 +23,11 @@ context('Namespaces', () => {
   });
 
   it('Should make the mapping dirty when namespaces are added', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/base-iri-mapping-model.json').as('loadProject');
-    cy.route({
-      method: 'POST',
-      url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
-      status: 200,
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'namespaces/base-iri-mapping-model.json'}).as('loadProject');
+    cy.intercept('POST','/orefine/command/mapping-editor/save-rdf-mapping/?project=123',{
+      statusCode: 200,
       delay: 1000,
-      response: 'fixture:namespaces/save-mapping-success.json'
+      fixture: 'namespaces/save-mapping-success.json'
     }).as('saveMapping');
 
     // Given I have loaded a mapping
@@ -50,24 +48,21 @@ context('Namespaces', () => {
     HeaderSteps.saveMapping();
     // Then I expect the updated namespaces to be sent for save
     cy.fixture('namespaces/save-mapping-with-new-namespace-request-body').then((saveRequest: string) => {
-      cy.wait('@saveMapping');
-      cy.get('@saveMapping').should((xhr: any) => {
-        expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
-        expect(xhr.method).to.equal('POST');
-        expect(xhr.request.body).to.equal(saveRequest);
+      cy.wait('@saveMapping').then((interceptor)=>{
+        expect(interceptor.request.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
+        expect(interceptor.request.method).to.equal('POST');
+        expect(interceptor.request.body).to.equal(saveRequest);
       });
     });
     HeaderSteps.getSaveMappingButton().should('be.disabled');
   });
 
   it('Should make the mapping dirty when namespaces are removed', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/custom-namespace-mapping-model.json').as('loadProject');
-    cy.route({
-      method: 'POST',
-      url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
-      status: 200,
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'namespaces/custom-namespace-mapping-model.json'}).as('loadProject');
+    cy.intercept('POST','/orefine/command/mapping-editor/save-rdf-mapping/?project=123',{
+      statusCode: 200,
       delay: 1000,
-      response: 'fixture:namespaces/save-mapping-success.json'
+      fixture: 'namespaces/save-mapping-success.json'
     }).as('saveMapping');
 
     // Given I have loaded a mapping
@@ -89,24 +84,21 @@ context('Namespaces', () => {
     HeaderSteps.saveMapping();
     // Then I expect the updated namespaces to be sent for save
     cy.fixture('namespaces/save-mapping-with-removed-namespace-request-body').then((saveRequest: string) => {
-      cy.wait('@saveMapping');
-      cy.get('@saveMapping').should((xhr: any) => {
-        expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
-        expect(xhr.method).to.equal('POST');
-        expect(xhr.request.body).to.equal(saveRequest);
+      cy.wait('@saveMapping').then((interceptor)=>{
+        expect(interceptor.request.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
+        expect(interceptor.request.method).to.equal('POST');
+        expect(interceptor.request.body).to.equal(saveRequest);
       });
     });
     HeaderSteps.getSaveMappingButton().should('be.disabled');
   });
 
   it('Should edit namespace', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/custom-namespace-mapping-model.json').as('loadProject');
-    cy.route({
-      method: 'POST',
-      url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
-      status: 200,
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'namespaces/custom-namespace-mapping-model.json'}).as('loadProject');
+    cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',{
+      statusCode: 200,
       delay: 1000,
-      response: 'fixture:namespaces/save-mapping-success.json'
+      fixture: 'namespaces/save-mapping-success.json'
     }).as('saveMapping');
 
     // Given I have loaded a mapping
@@ -128,18 +120,17 @@ context('Namespaces', () => {
     HeaderSteps.saveMapping();
     // Then I expect the changed namespace to be sent for saving
     cy.fixture('namespaces/save-mapping-with-updated-namespace-request-body').then((saveRequest: string) => {
-      cy.wait('@saveMapping');
-      cy.get('@saveMapping').should((xhr: any) => {
-        expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
-        expect(xhr.method).to.equal('POST');
-        expect(xhr.request.body).to.equal(saveRequest);
+      cy.wait('@saveMapping').then((interceptor)=>{
+        expect(interceptor.request.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
+        expect(interceptor.request.method).to.equal('POST');
+        expect(interceptor.request.body).to.equal(saveRequest);
       });
     });
     HeaderSteps.getSaveMappingButton().should('be.disabled');
   });
 
   it('Should validate namespaces when added', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/base-iri-mapping-model.json').as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'namespaces/base-iri-mapping-model.json'}).as('loadProject');
 
     // Given I have loaded a mapping
     PrepareSteps.visitPageAndWaitToLoad();
@@ -147,29 +138,29 @@ context('Namespaces', () => {
     MappingSteps.addNamespace('PREFIX ga:');
     // THEN I expect to see error
     MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
-    MappingSteps.getNamespace('ga').should('not.be.visible');
+    MappingSteps.getNamespace('ga').should('not.exist');
     MappingSteps.getNamespaceValidationError().should('be.visible');
 
     // I clear the namespace
     MappingSteps.clearNamespace();
-    MappingSteps.getNamespaceValidationError().should('not.be.visible');
+    MappingSteps.getNamespaceValidationError().should('not.exist');
 
     // When I add a prefix with colon inside
     MappingSteps.addNamespace('PREFIX ga:ga: {shift}<http://google/namespace>');
     // THEN I expect to see error
     MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
-    MappingSteps.getNamespace('ga').should('not.be.visible');
+    MappingSteps.getNamespace('ga').should('not.exist');
     MappingSteps.getNamespaceValidationError().should('be.visible');
 
     // I clear the namespace
     MappingSteps.clearNamespace();
-    MappingSteps.getNamespaceValidationError().should('not.be.visible');
+    MappingSteps.getNamespaceValidationError().should('not.exist');
 
     // When I add a prefix with blank namespace
     MappingSteps.addNamespace('PREFIX ga: {shift}<>');
     // THEN I expect to see error
     MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
-    MappingSteps.getNamespace('ga').should('not.be.visible');
+    MappingSteps.getNamespace('ga').should('not.exist');
     MappingSteps.getNamespaceValidationError().should('be.visible');
 
     // When I add a prefix with invalid IRI inside the brackets namespace
@@ -177,7 +168,7 @@ context('Namespaces', () => {
     MappingSteps.addNamespace('PREFIX ga: {shift}<<http://google/namespace>');
     // THEN I expect to see error
     MappingSteps.getNamespaces().find('.mat-chip').should('have.length', 1);
-    MappingSteps.getNamespace('ga').should('not.be.visible');
+    MappingSteps.getNamespace('ga').should('not.exist');
     MappingSteps.getNamespaceValidationError().should('be.visible');
   });
 
@@ -223,7 +214,7 @@ context('Namespaces', () => {
       EditDialogSteps.completeConstant('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
       EditDialogSteps.selectTypeDataTypeLiteral();
       EditDialogSteps.selectDataTypeConstant();
-      EditDialogSteps.completeDataTypeConstant('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+      EditDialogSteps.completeDataTypeConstant('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
       EditDialogSteps.saveConfiguration();
 
       // THEN

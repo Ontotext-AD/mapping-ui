@@ -23,9 +23,6 @@ import './commands';
 // Imports viewport configuration
 import './viewport';
 
-// Import server and stubs
-import './server';
-
 import 'cypress-failed-log';
 
 // WORKAROUND FOR NAVIGATION CONFIRMATION

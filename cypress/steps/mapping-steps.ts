@@ -11,7 +11,7 @@ class MappingSteps {
    * @param fieldAccessorCb a function which must return a field
    */
   static type(value: string, fieldAccessorCb: any) {
-    return fieldAccessorCb().focus().type(value, {force: true});
+    return fieldAccessorCb().type(value, {force: true});
   }
 
   static completeTriple(index: number, subject?: string, predicate?: string, object?: string) {
@@ -30,7 +30,8 @@ class MappingSteps {
     this.type(value, () => MappingSteps.getTripleSubjectValue(index));
     MappingSteps.getTripleSubjectValue(index).then((component) => {
       if (component) {
-        cy.wrap(component).blur();
+        //{force: true} disables checking whether the input is focusable or currently has focus.
+        cy.wrap(component).blur({force: true});
       }
     });
   }
@@ -39,16 +40,18 @@ class MappingSteps {
     this.type(value, () => MappingSteps.getTriplePredicateValue(index));
     MappingSteps.getTriplePredicateValue(index).then((component) => {
       if (component) {
-        cy.wrap(component).blur();
+        //{force: true} disables checking whether the input is focusable or currently has focus.
+        cy.wrap(component).blur({force: true});
       }
     });
   }
 
   static completeObject(index: number, value: string) {
-    MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').focus().type(value, {parseSpecialCharSequences: false});
+    MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').type(value, {parseSpecialCharSequences: false});
     MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').then((component) => {
       if (component) {
-        cy.wrap(component).blur();
+        //{force: true} disables checking whether the input is focusable or currently has focus.
+        cy.wrap(component).blur({force: true});
       }
     });
   }
@@ -77,7 +80,7 @@ class MappingSteps {
   }
 
   static getTriples() {
-    return MappingSteps.getMapping().find('[appCypressData=triple-wrapper]');
+    return MappingSteps.getMapping().find('[appCypressData=triple-wrapper]').should('be.visible');
   }
 
   // triple
@@ -103,7 +106,6 @@ class MappingSteps {
   }
 
   static getTripleSubjectValue(index: any) {
-    // wait for a while to prevent element to be found in detached state
     return MappingSteps.getTripleSubject(index).find('[appCypressData="cell-value"]');
   }
 
@@ -244,7 +246,7 @@ class MappingSteps {
   }
 
   static editTripleObjectWithData(index: number) {
-    return MappingSteps.getTripleObject(index).find('[appCypressData="button-edit-cell"]').click();
+    return MappingSteps.getTripleObject(index).find('[appCypressData="button-edit-cell"]').should('be.visible').click();
   }
 
   static addTripleObjectSibling(index: number) {
@@ -280,12 +282,14 @@ class MappingSteps {
   }
 
   static confirm() {
-    MappingSteps.getConfirmation().find('.confirm-btn').should('be.visible').click();
-    MappingSteps.getConfirmation().should('not.exist');
+    MappingSteps.getConfirmation().should('be.visible');
+    MappingSteps.getConfirmation().find('.mat-dialog-actions').find('.confirm-btn', {timeout: 15000}).contains('Proceed').should('be.visible')
+      .click();
+    MappingSteps.getConfirmation().should('not.exist', {timeout: 10000});
   }
 
   static reject() {
-    return MappingSteps.getConfirmation().find('.cancel-btn').should('be.visible').click();
+    return MappingSteps.getConfirmation().find('.mat-dialog-actions').find('.cancel-btn').should('be.visible').click();
   }
 
   // Notifications

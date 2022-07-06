@@ -5,7 +5,7 @@ describe('End triple with the proper sign', () => {
 
   beforeEach(() => {
     PrepareSteps.prepareMoviesNamespacesAndColumns();
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:add-siblings/mapping-model.json').as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture:'add-siblings/mapping-model.json'}).as('loadProject');
     // Given I have created a mapping with multiple nested triples
     // When I load the mapping
     PrepareSteps.visitPageAndWaitToLoad();

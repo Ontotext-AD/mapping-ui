@@ -10,12 +10,10 @@ context('Download mapping', () => {
   });
 
   it('Should not update JSON mapping when the mapping is not manipulated', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:download-mapping/mapping-model.json').as('loadProject');
-    cy.route({
-      method: 'POST',
-      url: '/rest/rdf-mapper/preview/ontorefine:123',
-      status: 200,
-      response: 'fixture:download-mapping/simple-mapping-model.json',
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'download-mapping/mapping-model.json'}).as('loadProject');
+    cy.intercept('POST', '/rest/rdf-mapper/preview/ontorefine:123',{
+      statusCode: 200,
+      fixture: 'download-mapping/simple-mapping-model.json',
       headers: {
         'Content-Type': 'application/json'
       }

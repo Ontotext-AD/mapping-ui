@@ -11,13 +11,13 @@ describe('Apply prefixes', () => {
 
   context('add and remove prefix', () => {
     it('Should add and remove datatype prefix during edit', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/datatype-literal-mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'apply-prefixes/datatype-literal-mapping-model.json'}).as('loadProject');
       PrepareSteps.visitPageAndWaitToLoad();
 
       // - Try with some non-empty prefix
       // Given I have loaded a mapping with datatype literal object
       MappingSteps.getTriples().should('have.length', 2);
-      MappingSteps.getTripleObjectValueTransformation(0).should('not.be.visible');
+      MappingSteps.getTripleObjectValueTransformation(0).should('not.exist');
       // When I set prefix from the edit dialog
       MappingSteps.editTripleObjectWithData(0);
       EditDialogSteps.completeDataTypeExpression('wine');
@@ -32,7 +32,7 @@ describe('Apply prefixes', () => {
       EditDialogSteps.clearDataTypeExpression();
       EditDialogSteps.saveConfiguration();
       // Then I expect the prefix to not be visible in the object cell
-      MappingSteps.getTripleObjectValueTransformation(0).should('not.be.visible');
+      MappingSteps.getTripleObjectValueTransformation(0).should('not.exist');
 
       // - Try with the empty prefix
       // When I set the empty prefix
@@ -49,11 +49,11 @@ describe('Apply prefixes', () => {
       EditDialogSteps.clearDataTypeExpression();
       EditDialogSteps.saveConfiguration();
       // Then I expect the prefix badge to not be visible
-      MappingSteps.getTripleObjectValueTransformation(0).should('not.be.visible');
+      MappingSteps.getTripleObjectValueTransformation(0).should('not.exist');
     });
 
     it('Should set a prefix on object when type property', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'apply-prefixes/iri-mapping-model.json'}).as('loadProject');
       PrepareSteps.visitPageAndWaitToLoad();
 
       // Try when the property is type property
@@ -66,13 +66,13 @@ describe('Apply prefixes', () => {
     });
 
     it('Should add and remove property prefix during edit', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'apply-prefixes/iri-mapping-model.json'}).as('loadProject');
       PrepareSteps.visitPageAndWaitToLoad();
 
       // - Try with some non-empty prefix
       // Given I have loaded a mapping with IRI object
       MappingSteps.getTriples().should('have.length', 2);
-      MappingSteps.getTripleObjectPropertyTransformation(0).should('not.be.visible');
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('not.exist');
       // When I set prefix from the edit dialog
       MappingSteps.editTripleObjectWithData(0);
       EditDialogSteps.completePrefix('wine');
@@ -87,7 +87,7 @@ describe('Apply prefixes', () => {
       EditDialogSteps.clearPrefix();
       EditDialogSteps.saveConfiguration();
       // Then I expect the prefix to not be visible in the object cell
-      MappingSteps.getTripleObjectPropertyTransformation(0).should('not.be.visible');
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('not.exist');
 
       // - Try with the empty prefix
       // When I set the empty prefix
@@ -104,7 +104,7 @@ describe('Apply prefixes', () => {
       EditDialogSteps.clearPrefix();
       EditDialogSteps.saveConfiguration();
       // Then I expect the prefix badge to not be visible
-      MappingSteps.getTripleObjectPropertyTransformation(0).should('not.be.visible');
+      MappingSteps.getTripleObjectPropertyTransformation(0).should('not.exist');
     });
   });
 
@@ -112,7 +112,7 @@ describe('Apply prefixes', () => {
     beforeEach(() => {
       PrepareSteps.stubEmptyMappingModel();
       PrepareSteps.visitPageAndWaitToLoad();
-    });
+  });
 
     it('Should set prefix expression', () => {
       MappingSteps.getTriples().should('have.length', 1);
@@ -153,13 +153,13 @@ describe('Apply prefixes', () => {
       // And I have created a subject, a predicate and an object
       MappingSteps.completeTriple(0, 'rdf:Actor$row_index', 'rdf:Actor2#@actor_1_name', 'www:Actor/actor_1_name');
       MappingSteps.getNotification().should('be.visible').and('contain', 'Unrecognized prefix');
-      MappingSteps.getNamespace('www').should('not.be.visible');
+      MappingSteps.getNamespace('www').should('not.exist');
     });
   });
 
   context('edit inline empty prefix', () => {
     beforeEach(() => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'apply-prefixes/iri-mapping-model.json'}).as('loadProject');
       PrepareSteps.visitPageAndWaitToLoad();
     });
 
