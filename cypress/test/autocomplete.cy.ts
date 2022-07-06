@@ -73,7 +73,7 @@ describe('Autocomplete mapping', () => {
       MappingSteps.type('w', () => MappingSteps.getTripleSubjectValue(0));
       MappingSteps.getAutocompleteHint().should('be.visible').and('contain', 'Hint: \"ab c\" matches \"abC*\", \"ab c*\" and \"ab-c*\"');
       // Call POST again to load tooltips
-      cy.route('POST', '/graphdb-proxy/repositories/repository_placeholder', 'fixture:autocomplete/autocomplete-iri-description-response.json').as('loadDescr');
+      cy.intercept('POST', '/graphdb-proxy/repositories/repository_placeholder', {fixture: 'autocomplete/autocomplete-iri-description-response.json'}).as('loadDescr');
       // When I hover an autocomplete
       MappingSteps.getSuggestions().first().trigger('mouseover');
       // I expect tho see an IRI description

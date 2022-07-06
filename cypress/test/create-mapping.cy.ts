@@ -14,19 +14,19 @@ describe('Create mapping', () => {
     PrepareSteps.enableAutocompleteWithEmptyResponse();
     PrepareSteps.stubEmptyMappingModel();
     cy.intercept('POST', '/rest/rdf-mapper/preview/ontorefine:123', {fixture: 'create-mapping/preview-response.json'});
-    cy.intercept('POST','/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
+    cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
       statusCode: 200,
       delay: 1000,
       fixture: 'create-mapping/save-mapping-success.json'
     }).as('saveMapping');
 
-    cy.intercept('POST','/rest/rdf-mapper/rdf/ontorefine:123',{
+    cy.intercept('POST', '/rest/rdf-mapper/rdf/ontorefine:123', {
       statusCode: 200,
       delay: 1000,
-      response: ""
+      response: ''
     }).as('loadRdf');
 
-    cy.intercept( 'POST','/rest/rdf-mapper/sparql/ontorefine:123',{
+    cy.intercept('POST', '/rest/rdf-mapper/sparql/ontorefine:123', {
       statusCode: 200,
       delay: 1000,
       fixture: 'create-mapping/load-sparql-response',
@@ -49,7 +49,7 @@ describe('Create mapping', () => {
     HeaderSteps.getSaveIndicator().should('be.visible');
     // And The mapping should be saved
     cy.fixture('create-mapping/save-mapping-request-body').then((saveResponse: string) => {
-      cy.wait('@saveMapping').then(xhr=>{
+      cy.wait('@saveMapping').then(xhr => {
         expect(xhr.request.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
         expect(xhr.request.method).to.equal('POST');
         expect(xhr.request.body).to.equal(saveResponse);
@@ -78,7 +78,7 @@ describe('Create mapping', () => {
     // Then I expect loading indicator
     HeaderSteps.getGenerateSparqlIndicator().should('be.visible');
     // Then I expect sparql to be loaded. The actual download can't be checked
-    cy.wait('@loadSparql').then((interception)=>{
+    cy.wait('@loadSparql').then((interception) => {
       expect(interception.request.url).to.include('/rest/rdf-mapper/sparql/ontorefine:123');
       expect(interception.request.method).to.equal('POST');
     });
@@ -112,7 +112,7 @@ describe('Create mapping', () => {
   });
 
   it('Should render type in a badge inside the cell', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:create-mapping/all-types-mapping-model.json').as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'create-mapping/all-types-mapping-model.json'}).as('loadProject');
     // When I load a mapping containing all type mappings
     PrepareSteps.visitPageAndWaitToLoad();
     // Then I expect to see the types displayed in badge inside the cell
@@ -130,8 +130,8 @@ describe('Create mapping', () => {
   context('Transformation type', () => {
     it('Should render transformation type in a badge in the cell', () => {
       PrepareSteps.enableAutocompleteWithEmptyResponse();
-      cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:create-mapping/preview-response.json');
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:create-mapping/transformation-types-mapping-model.json').as('loadProject');
+      cy.intercept('POST', '/rest/rdf-mapper/preview/ontorefine:123', {fixture: 'create-mapping/preview-response.json'});
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'create-mapping/transformation-types-mapping-model.json'}).as('loadProject');
 
       // Given I have opened the application with an a mapping containing transformation types
       PrepareSteps.visitPageAndWaitToLoad();
@@ -159,7 +159,7 @@ describe('Create mapping', () => {
     it('Should not be able to set prefix transformation when type is not IRI', () => {
       PrepareSteps.stubEmptyMappingModel();
       PrepareSteps.enableAutocompleteWithEmptyResponse();
-      cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:create-mapping/preview-response.json');
+      cy.intercept('POST', '/rest/rdf-mapper/preview/ontorefine:123', {fixture: 'create-mapping/preview-response.json'});
 
       // Given I have opened the application with an empty mapping
       PrepareSteps.visitPageAndWaitToLoad();

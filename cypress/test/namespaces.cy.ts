@@ -94,13 +94,11 @@ context('Namespaces', () => {
   });
 
   it('Should edit namespace', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/custom-namespace-mapping-model.json').as('loadProject');
-    cy.route({
-      method: 'POST',
-      url: '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',
-      status: 200,
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'namespaces/custom-namespace-mapping-model.json'}).as('loadProject');
+    cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',{
+      statusCode: 200,
       delay: 1000,
-      response: 'fixture:namespaces/save-mapping-success.json'
+      fixture: 'namespaces/save-mapping-success.json'
     }).as('saveMapping');
 
     // Given I have loaded a mapping
@@ -122,18 +120,17 @@ context('Namespaces', () => {
     HeaderSteps.saveMapping();
     // Then I expect the changed namespace to be sent for saving
     cy.fixture('namespaces/save-mapping-with-updated-namespace-request-body').then((saveRequest: string) => {
-      cy.wait('@saveMapping');
-      cy.get('@saveMapping').should((xhr: any) => {
-        expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
-        expect(xhr.method).to.equal('POST');
-        expect(xhr.request.body).to.equal(saveRequest);
+      cy.wait('@saveMapping').then((interceptor)=>{
+        expect(interceptor.request.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
+        expect(interceptor.request.method).to.equal('POST');
+        expect(interceptor.request.body).to.equal(saveRequest);
       });
     });
     HeaderSteps.getSaveMappingButton().should('be.disabled');
   });
 
   it('Should validate namespaces when added', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:namespaces/base-iri-mapping-model.json').as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'namespaces/base-iri-mapping-model.json'}).as('loadProject');
 
     // Given I have loaded a mapping
     PrepareSteps.visitPageAndWaitToLoad();

@@ -78,7 +78,7 @@ describe('Delete', () => {
     });
 
     it('Should be able to delete a triple with children and have a warning', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/triple-with-children-mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'delete/triple-with-children-mapping-model.json'}).as('loadProject');
       PrepareSteps.visitPageAndWaitToLoad();
       // Given I have opened a mapping which contains triple with children
       MappingSteps.getTriples().should('have.length', 4);
@@ -103,7 +103,7 @@ describe('Delete', () => {
   context('triple', () => {
     it('Should be able to delete nested triple', () => {
       // stub model
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'delete/mapping-model.json'}).as('loadProject');
 
       // Given I have opened the mapping UI and waited to load the data
       PrepareSteps.visitPageAndWaitToLoad();
@@ -164,7 +164,7 @@ describe('Delete', () => {
     });
 
     it('Should be able to delete all triples on New mapping button click', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'delete/mapping-model.json'}).as('loadProject');
       // Given I have opened the mapping UI
       PrepareSteps.visitPageAndWaitToLoad();
       // And I see two triples + one empty template
@@ -180,7 +180,7 @@ describe('Delete', () => {
   context('subject', () => {
     it('Should be able to delete first triple\'s subject with enabled preview', () => {
       PrepareSteps.stubEmptyMappingModel();
-      cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:delete/preview-response.json').as('loadPreview');
+      cy.intercept('POST', '/rest/rdf-mapper/preview/ontorefine:123', {fixture: 'delete/preview-response.json'}).as('loadPreview');
       // Given I have opened the mapping UI
       PrepareSteps.visitPageAndWaitToLoad();
       // And I see empty mapping
@@ -227,7 +227,7 @@ describe('Delete', () => {
     });
 
     it('Should be able to delete the object in a nested triple', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/object-in-nested-triple-mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'delete/object-in-nested-triple-mapping-model.json'}).as('loadProject');
 
       // Given I have loaded a mapping with a nested triple
       PrepareSteps.visitPageAndWaitToLoad();

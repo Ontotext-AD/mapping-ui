@@ -19,7 +19,7 @@ describe('Edit mapping', () => {
       MappingSteps.getTriples().should('have.length', 1);
       // When I focus the first triple's subject and execute ctrl+enter key combination
       // Add some wait here to prevent finding the input in detached state
-      MappingSteps.getTripleSubjectValue(0).focus().type('{ctrl}{enter}', {
+      MappingSteps.getTripleSubjectValue(0).type('{ctrl}{enter}', {
         parseSpecialCharSequences: true
       });
       // Then I expect the subject edit dialog to be opened
@@ -60,8 +60,8 @@ describe('Edit mapping', () => {
 
   context('Edit IRI', () => {
     it('Should have a warning message in IRI edit dialog when object has children', () => {
-      cy.route('POST', '/rest/rdf-mapper/preview/ontorefine:123', 'fixture:edit-mapping/iri-with-children-model-preview-response.json');
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:edit-mapping/iri-with-children-model.json').as('loadProject');
+      cy.intercept('POST', '/rest/rdf-mapper/preview/ontorefine:123', {fixture: 'edit-mapping/iri-with-children-model-preview-response.json'});
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'edit-mapping/iri-with-children-model.json'}).as('loadProject');
       // Given I have opened a model with triple containing IRI object with some children
       PrepareSteps.visitPageAndWaitToLoad();
       MappingSteps.getTriples().should('have.length', 3);
@@ -585,7 +585,7 @@ describe('Edit mapping', () => {
 
     it('Should change object type and save it properly', () => {
       PrepareSteps.stubEmptyMappingModel();
-      cy.route('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
+      cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
         statusCode: 200,
         delay: 1000,
         fixture: 'edit-mapping/save-mapping-success.json'
@@ -610,12 +610,11 @@ describe('Edit mapping', () => {
 
       // THEN I expect to send the right configuration
       cy.fixture('edit-mapping/save-mapping-request-body').then((saveResponse: string) => {
-        cy.wait('@saveMapping');
-        cy.get('@saveMapping').should((xhr: any) => {
-          expect(xhr.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
-          expect(xhr.method).to.equal('POST');
-          expect(xhr.request.body).to.equal(saveResponse);
-        });
+        cy.wait('@saveMapping').then((interceptor)=>{
+          expect(interceptor.request.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
+          expect(interceptor.request.method).to.equal('POST');
+          expect(interceptor.request.body).to.equal(saveResponse);
+        })
       });
     });
 

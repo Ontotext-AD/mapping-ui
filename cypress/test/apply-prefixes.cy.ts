@@ -9,7 +9,6 @@ describe('Apply prefixes', () => {
     PrepareSteps.enableAutocompleteWithEmptyResponse();
   });
 
-
   context('add and remove prefix', () => {
     it('Should add and remove datatype prefix during edit', () => {
       cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'apply-prefixes/datatype-literal-mapping-model.json'}).as('loadProject');
@@ -54,7 +53,7 @@ describe('Apply prefixes', () => {
     });
 
     it('Should set a prefix on object when type property', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'apply-prefixes/iri-mapping-model.json'}).as('loadProject');
       PrepareSteps.visitPageAndWaitToLoad();
 
       // Try when the property is type property
@@ -67,7 +66,7 @@ describe('Apply prefixes', () => {
     });
 
     it('Should add and remove property prefix during edit', () => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'apply-prefixes/iri-mapping-model.json'}).as('loadProject');
       PrepareSteps.visitPageAndWaitToLoad();
 
       // - Try with some non-empty prefix
@@ -160,7 +159,7 @@ describe('Apply prefixes', () => {
 
   context('edit inline empty prefix', () => {
     beforeEach(() => {
-      cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:apply-prefixes/iri-mapping-model.json').as('loadProject');
+      cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'apply-prefixes/iri-mapping-model.json'}).as('loadProject');
       PrepareSteps.visitPageAndWaitToLoad();
     });
 

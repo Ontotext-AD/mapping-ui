@@ -38,7 +38,9 @@ class PrepareSteps {
     cy.visit('?dataProviderID=ontorefine:123');
     cy.wait(['@loadColumns', '@loadProject']);
     // Ensures the CELL_INPUT element is visible
-    cy.get(`[appCypressData=${MapperComponentSelectors.CELL_INPUT}]`, { timeout: 10000 }).should('be.visible');
+    cy.get(`[appCypressData=${MapperComponentSelectors.CELL_INPUT}]`).should('be.visible');
+    // TODO this is a very ugly solution to a problem caused by detached elements in the DOM
+    cy.wait(300)
   }
 }
 

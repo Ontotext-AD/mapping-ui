@@ -11,7 +11,7 @@ class MappingSteps {
    * @param fieldAccessorCb a function which must return a field
    */
   static type(value: string, fieldAccessorCb: any) {
-    return fieldAccessorCb().focus().type(value, {force: true});
+    return fieldAccessorCb().type(value, {force: true});
   }
 
   static completeTriple(index: number, subject?: string, predicate?: string, object?: string) {
@@ -30,6 +30,7 @@ class MappingSteps {
     this.type(value, () => MappingSteps.getTripleSubjectValue(index));
     MappingSteps.getTripleSubjectValue(index).then((component) => {
       if (component) {
+        //{force: true} disables checking whether the input is focusable or currently has focus.
         cy.wrap(component).blur({force: true});
       }
     });
@@ -39,15 +40,17 @@ class MappingSteps {
     this.type(value, () => MappingSteps.getTriplePredicateValue(index));
     MappingSteps.getTriplePredicateValue(index).then((component) => {
       if (component) {
+        //{force: true} disables checking whether the input is focusable or currently has focus.
         cy.wrap(component).blur({force: true});
       }
     });
   }
 
   static completeObject(index: number, value: string) {
-    MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').focus().type(value, {parseSpecialCharSequences: false});
+    MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').type(value, {parseSpecialCharSequences: false});
     MappingSteps.getTripleObject(index).find('[appCypressData="cell-value"]').then((component) => {
       if (component) {
+        //{force: true} disables checking whether the input is focusable or currently has focus.
         cy.wrap(component).blur({force: true});
       }
     });
@@ -77,7 +80,7 @@ class MappingSteps {
   }
 
   static getTriples() {
-    return MappingSteps.getMapping().find('[appCypressData=triple-wrapper]');
+    return MappingSteps.getMapping().find('[appCypressData=triple-wrapper]').should('be.visible');
   }
 
   // triple
@@ -243,7 +246,7 @@ class MappingSteps {
   }
 
   static editTripleObjectWithData(index: number) {
-    return MappingSteps.getTripleObject(index).find('[appCypressData="button-edit-cell"]').click();
+    return MappingSteps.getTripleObject(index).find('[appCypressData="button-edit-cell"]').should('be.visible').click();
   }
 
   static addTripleObjectSibling(index: number) {
@@ -299,8 +302,7 @@ class MappingSteps {
   }
 
   static getBaseIRI() {
-    // Currently returns 3 elements due to GDB address and Repository fields
-    return cy.get('[appCypressData="base-iri"]').first();
+    return cy.get('[appCypressData="base-iri"]');
   }
 
   static getNamespaces() {

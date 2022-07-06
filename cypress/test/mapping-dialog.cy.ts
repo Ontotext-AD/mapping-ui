@@ -9,7 +9,7 @@ describe('MapperDialog', () => {
   });
 
   it('should render mapping dialog when drag and drop source', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'delete/mapping-model.json'}).as('loadProject');
     PrepareSteps.visitPageAndWaitToLoad();
 
     // WHEN:
@@ -25,8 +25,8 @@ describe('MapperDialog', () => {
     cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR).should('be.visible');
   });
 
-  it.only('should render mapping dialog on subject edit button click', () => {
-    cy.route('GET', '/orefine/command/core/get-models/?project=123', 'fixture:delete/mapping-model.json').as('loadProject');
+  it('should render mapping dialog on subject edit button click', () => {
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'delete/mapping-model.json'}).as('loadProject');
     PrepareSteps.visitPageAndWaitToLoad();
 
     // WHEN:
