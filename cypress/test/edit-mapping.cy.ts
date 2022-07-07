@@ -200,7 +200,7 @@ describe('Edit mapping', () => {
 
     it('Should show error notification when SPARQL generation fails', () => {
       cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'mapping-model.json'}).as('loadProject');
-      cy.intercept('POST', '/rest/rdf-mapper/sparql/ontorefine:123', {
+      cy.intercept('POST', '/rest/rdf-mapper/sparql-url-with-query/ontorefine:123', {
         statusCode: 404,
         fixture: 'edit-mapping/generate-sparql-error',
         headers: {

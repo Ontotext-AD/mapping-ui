@@ -3,14 +3,12 @@ import {MapperComponentSelectors} from "../utils/selectors/mapper-component.sele
 
 class PrepareSteps {
   static prepareMoviesNamespacesAndColumns() {
-    cy.setLocalStorage('com.ontotext.graphdb.repository', 'Movies');
     cy.intercept('GET', '/graphdb-proxy/repositories/repository_placeholder/namespaces', {fixture: 'namespaces.json'});
     cy.intercept('GET', '/rest/rdf-mapper/columns/ontorefine:123', {fixture: 'columns.json'}).as('loadColumns');
     PrepareSteps.setCommonRequests();
   }
 
   static prepareRestaurantsNamespacesAndColumns() {
-    cy.setLocalStorage('com.ontotext.graphdb.repository', 'Restaurants');
     cy.intercept('GET', '/graphdb-proxy/repositories/repository_placeholder/namespaces', {fixture: 'namespaces.json'});
     cy.intercept('GET', '/rest/rdf-mapper/columns/ontorefine:123', {fixture: 'amsterdam/columns.json'}).as('loadColumns');
     PrepareSteps.setCommonRequests();
