@@ -64,7 +64,7 @@ export class MapperService extends RestService {
   }
 
   getSPARQL(mappingDefinition: MappingDefinitionImpl): Observable<string> {
-    return this.getAPIURL('/sparql/').pipe(switchMap((fullUrl) => {
+    return this.getAPIURL('/sparql-url-with-query/').pipe(switchMap((fullUrl) => {
       return this.httpClient.post(fullUrl, mappingDefinition, {headers: this.httpOptions.headers, responseType: 'text'})
           .pipe(catchError((error) => this.handleError('sparql', error)));
     }));

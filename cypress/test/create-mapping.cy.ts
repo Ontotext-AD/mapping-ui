@@ -26,7 +26,7 @@ describe('Create mapping', () => {
       response: ''
     }).as('loadRdf');
 
-    cy.intercept('POST', '/rest/rdf-mapper/sparql/ontorefine:123', {
+    cy.intercept('POST', '/rest/rdf-mapper/sparql-url-with-query/ontorefine:123', {
       statusCode: 200,
       delay: 1000,
       fixture: 'create-mapping/load-sparql-response',
@@ -79,7 +79,7 @@ describe('Create mapping', () => {
     HeaderSteps.getGenerateSparqlIndicator().should('be.visible');
     // Then I expect sparql to be loaded. The actual download can't be checked
     cy.wait('@loadSparql').then((interception) => {
-      expect(interception.request.url).to.include('/rest/rdf-mapper/sparql/ontorefine:123');
+      expect(interception.request.url).to.include('/rest/rdf-mapper/sparql-url-with-query/ontorefine:123');
       expect(interception.request.method).to.equal('POST');
     });
     cy.get('@loadSparql').should((xhr: any) => {
