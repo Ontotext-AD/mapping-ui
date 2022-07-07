@@ -10,8 +10,9 @@
     "lint": "eslint 'src/**'",
     "lint:fix": "eslint --fix 'src/**'",
     "start:ci": "http-server ./dist/rdf-mapping-editor -a localhost -p 4200 -c-1",
-    "cy:ci": "ng build --configuration=cypress-tests && mv dist/rdf-mapping-editor/assets/i18n/en.json dist/rdf-mapping-editor/assets/i18n/en.js && run-p --race start:ci cy:run",
+    "cy:ci": "ng build --configuration=cypress-tests && mv dist/rdf-mapping-editor/assets/i18n/en.json dist/rdf-mapping-editor/assets/i18n/en.js && run-p --race start:ci cy:parallel",
     "cy:open": "cypress open",
+    "cy:parallel": "cypress-parallel -s cy:run -t 4 -d cypress/test/**/*.cy.ts",
     "cy:run": "cypress run --spec cypress/test/**/*.cy.ts"
   },
   "files": [
@@ -87,6 +88,8 @@
     "cypress-failed-log": "^2.7.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-localstorage-commands": "^1.7.0",
+    "cypress-multi-reporters": "^1.6.1",
+    "cypress-parallel": "^0.9.1",
     "eslint": "^7.0.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-html": "^6.0.2",
