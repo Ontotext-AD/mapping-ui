@@ -93,7 +93,7 @@
     "INVALID_MAPPING_ERROR": "Invalid mapping. ",
     "UNRECOGNIZED_PREFIX_ERROR": "Unrecognized prefix.",
     "GREL_NO_PREVIEW": "No GREL preview",
-    "AUTOCOMPLETE_OFF_WARNING": "Autocomplete is OFF. Go to Setup -> Autocomplete"
+    "AUTOCOMPLETE_OFF_WARNING": "Autocomplete is OFF. Please, enable Autocomplete for this repository in GraphDB"
   },
   "DIALOG": {
     "TITLE_CONFIRM": "Confirm",
