@@ -303,7 +303,7 @@
           "uri": "http://schema.org/"
         }
       ],
-      "baseUri": "http://localhost:3333/",
+      "baseUri": "http://localhost:7333/",
       "rootNodes": []
     }
   },

@@ -4,11 +4,11 @@
 
 export const environment = {
   production: false,
-  restApiUrl: 'http://localhost:3333/rest/rdf-mapper',
-  mappingApiUrl: 'http://localhost:3333/orefine/command',
-  repositoryApiUrl: 'http://localhost:3333/graphdb-proxy/repositories',
-  autocompleteApiUrl: 'http://localhost:3333/graphdb-proxy/rest/autocomplete',
-  graphDbResource: 'http://localhost:3333/graphdb-resource',
+  restApiUrl: 'http://localhost:7333/rest/rdf-mapper',
+  mappingApiUrl: 'http://localhost:7333/orefine/command',
+  repositoryApiUrl: 'http://localhost:7333/graphdb-proxy/repositories',
+  autocompleteApiUrl: 'http://localhost:7333/graphdb-proxy/rest/autocomplete',
+  graphDbResource: 'http://localhost:7333/graphdb-resource',
   httpLoaderPrefix: './assets/i18n/',
   httpLoaderSuffix: '.json',
   openRefineVariables: 'https://github.com/OpenRefine/OpenRefine/wiki/Variables',

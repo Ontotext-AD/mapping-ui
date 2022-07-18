@@ -423,7 +423,7 @@
           "uri": "http://xmlns.com/foaf/0.1/"
         }
       ],
-      "baseUri": "http://localhost:3333/",
+      "baseUri": "http://localhost:7333/",
       "rootNodes": []
     }
   },
