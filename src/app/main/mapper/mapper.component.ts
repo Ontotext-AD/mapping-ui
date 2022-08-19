@@ -152,10 +152,36 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   onSPARQL() {
     this.mapperService.getSPARQL(this.mapping)
         .pipe(untilComponentDestroyed(this))
-        .subscribe((fulUrl) => {
+        .subscribe((fullUrl) => {
           this.messageService.publish(ChannelName.SparqlGenerated);
-          window.parent.open(fulUrl);
+          this.handleSparqlRequest(fullUrl)
+          //window.parent.open(fullUrl);
         });
+  }
+
+  private handleSparqlRequest(fullUrl: string) {
+    debugger
+    const urlParts: string[] = fullUrl.split('?query=');
+    let form = document.createElement("form");
+    form.target = "gdb-sparql-editor-view";
+    form.method = "POST";
+    form.action = urlParts[0];
+
+    const params = {
+      "query": urlParts[1]
+    };
+
+    Object.entries(params).forEach(([key, value]) => {
+      let input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = value;
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+    window.open('', 'gdb-sparql-editor-view');
   }
 
   addNamespace(event: MatChipInputEvent): void {
