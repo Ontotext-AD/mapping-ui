@@ -19,6 +19,10 @@ pipeline {
     label 'graphdb-jenkins-node'
   }
 
+  tools {
+    nodejs 'nodejs-14.17.0'
+  }
+
   options {
     disableConcurrentBuilds()
     timeout(time: 15, unit: 'MINUTES')
