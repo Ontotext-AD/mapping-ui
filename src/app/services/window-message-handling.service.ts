@@ -17,9 +17,8 @@ export class WindowMessageHandlingService {
   }
 
   messageHandlerFn = (e) => {
-    // eslint-disable-next-line no-invalid-this
     this.handleMessage(e.data);
-  }
+  };
 
   subscribeToWindowParentMessageEvent() {
     window.parent.addEventListener('message', this.messageHandlerFn);
