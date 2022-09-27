@@ -5,7 +5,7 @@ import {
   Source,
   Type,
 } from '../models/mapping-definition';
-import {classToClass, classToPlain, plainToClass} from 'class-transformer';
+import {instanceToInstance, plainToClass, instanceToPlain} from 'class-transformer';
 import {MappingDefinitionImpl} from 'src/app/models/mapping-definition-impl';
 import {IRIImpl} from 'src/app/models/iri-impl';
 import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
@@ -354,13 +354,13 @@ export class ModelManagementService {
   }
 
   storeModelMapping(mappingDefinition: MappingDefinitionImpl): Observable<void> {
-    const mapping = classToClass(mappingDefinition);
+    const mapping = instanceToInstance(mappingDefinition);
     this.removePreview(mapping);
     return this.mappingDefinitionService.saveMappingDefinition(this.mappingDefinitionToJson(mapping));
   }
 
   getModelMapping(mapping): {} {
-    return classToPlain(mapping);
+    return instanceToPlain(mapping);
   }
 
   mappingDefinitionToJson(mapping: MappingDefinition): JSON {
@@ -490,7 +490,7 @@ export class ModelManagementService {
   }
 
   private checkMappingValidity(checkedMapping: MappingDefinitionImpl) {
-    const mapping = classToClass(checkedMapping);
+    const mapping = instanceToInstance(checkedMapping);
     this.removePreview(mapping);
     Convert.mappingDefinitionToJson(mapping);
   }

@@ -17,7 +17,7 @@ export class ValueMappingImpl implements ValueMapping, MappingBase {
   // 1 - classToPlain - from classes to JSON
   // 2 - classToClass - deep copy of the classes
   // Used to sanitize the preview array when requesting new one
-  @Expose() @Transform((value, obj, type) => {
+  @Expose() @Transform(({value, type}) => {
     if (type === 2) {
       value = [];
     }

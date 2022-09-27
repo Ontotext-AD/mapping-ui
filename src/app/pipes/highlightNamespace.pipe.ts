@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import * as XRegExp from 'xregexp';
+import XRegExp from 'xregexp';
 
 /*
  * Changes color of specific string in text.
@@ -32,12 +32,14 @@ export class HighlightNamespacePipe implements PipeTransform {
     // if so, the highlighted search term is after the semicolon
     // example: rdf:<search term>
     if (semicolonPosition > -1) {
-      searchFor = search.substr(semicolonPosition + 1);
+      searchFor = search.substring(semicolonPosition + 1);
     }
 
-    const highlighted = toHighlight.value.replace(new XRegExp(searchFor, 'gi'), (match) => `<span style="color: #ed4f2f;">${match}</span>`);
-    const highlightedText = toHighlight.index === 0 ? highlighted : text.substr(0, toHighlight.index) + highlighted;
+    const highlighted = toHighlight.value.replace(XRegExp(searchFor, 'gi'), (match) => `<span style="color: #ed4f2f;">${match}</span>`);
+    const highlightedText = toHighlight.index === 0 ? highlighted : text.substring(0, toHighlight.index) + highlighted;
 
+    // TODO: there is a security issue with 'bypassSecurityTrustHtml' which cannot be fixed ATM.
+    // At some point we need to find solution for it.
     return search ? this.sanitized.bypassSecurityTrustHtml(highlightedText) : text;
   }
 }
