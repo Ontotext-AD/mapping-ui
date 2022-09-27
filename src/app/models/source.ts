@@ -2,7 +2,7 @@ import {Helper} from 'src/app/utils/helper';
 
 export class Source {
   title: string;
-  used: boolean
+  used: boolean;
 
   constructor(title) {
     this.title = title;

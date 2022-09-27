@@ -69,7 +69,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
   isConstant: boolean;
   isColumn: boolean;
   isLiteral: boolean;
-  isBnode: boolean
+  isBnode: boolean;
   isDataTypePrefixTransformation: boolean;
   isDataTypeGrelTransformation: boolean;
   isDatatypeConstant: boolean;

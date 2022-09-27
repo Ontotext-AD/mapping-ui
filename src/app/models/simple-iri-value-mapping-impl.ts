@@ -21,7 +21,8 @@ export class SimpleIRIValueMappingImpl implements SimpleIRIValueMapping, Mapping
     }
     return value;
   })
-  preview: string[];
+
+    preview: string[];
 
   constructor(transformation: ValueTransformation, valueSource: Column) {
     this.transformation = transformation;

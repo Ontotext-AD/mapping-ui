@@ -19,7 +19,7 @@ export class HighlightNamespacePipe implements PipeTransform {
   // Matches
   // - everything after latest hash or latest slash or latest semicolon
   // - everything before semicolon if is last character
-  regex = XRegExp(`(?<value> (?:.(?!\\#|\\/|:.))+$)-?`, 'x')
+  regex = XRegExp(`(?<value> (?:.(?!\\#|\\/|:.))+$)-?`, 'x');
 
   constructor(private sanitized: DomSanitizer) {}
 

@@ -23,7 +23,8 @@ export class ValueMappingImpl implements ValueMapping, MappingBase {
     }
     return value;
   })
-  preview: string[];
+
+    preview: string[];
 
   constructor(transformation: ValueTransformationImpl, valueSource: ColumnImpl, valueType: IRI) {
     this.transformation = transformation;
