@@ -679,22 +679,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
     this.mapperForm$
         .pipe(takeUntil(componentDestroyed(this)))
         .subscribe((form) => {
-          const settings = {
-            hasDatatype: this.hasDatatype,
-            hasLanguage: this.hasLanguage,
-            isDatatypeColumn: this.isDatatypeColumn,
-            isDatatypeConstant: this.isDatatypeConstant,
-            isLanguageColumn: this.isLanguageColumn,
-            isLanguageConstant: this.isLanguageConstant,
-            isConstant: this.isConstant,
-            isColumn: this.isColumn,
-            isBnode: this.isBnode,
-            isTransformation: this.isTransformation,
-            isRoot: this.data.mappingData.isRoot,
-            selected: this.data.selected,
-            namespaces: this.data.namespaces,
-            repoNamespaces: this.data.repoNamespaces,
-          };
+          const settings = this.getSettings();
 
           const formValue = form.getRawValue();
           if (this.isGrelTransformation) {
@@ -712,55 +697,15 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
           }
 
           if (this.hasDatatype) {
-            formValue.type = Type.DatatypeLiteral;
-
-            if (this.isDataTypePrefixTransformation) {
-              formValue.datatypeLanguage = Language.Prefix;
-            }
-
-            if (this.isDatatypeRawIri) {
-              formValue.datatypeLanguage = Language.Raw;
-            }
-
-            if (this.isDataTypeGrelTransformation) {
-              formValue.dataTypeValueSource = Source.RowIndex;
-              formValue.datatypeTransformation = formValue.datatypeGrelTransformation;
-              formValue.datatypeLanguage = Language.GREL;
-            }
+            this.handleDatatype(formValue);
           }
 
           if (this.hasLanguage) {
-            formValue.type = Type.LanguageLiteral;
-
-            if (this.isLanguageGrelTransformation) {
-              formValue.languageValueSource = Source.RowIndex;
-              formValue.languageTransformationLanguage = Language.GREL;
-            }
+            this.handleLanguage(formValue);
           }
 
           if (this.isConstant) {
-            const value = formValue.constant;
-            const combinedNamespaces = NamespaceService.mergeNamespaces(settings.repoNamespaces, settings.namespaces);
-            const prefixTransformation = this.modelConstructService.getPrefixTransformation(value, combinedNamespaces);
-            let prefix;
-            if (this.modelConstructService.isValidPrefixTransformation(prefixTransformation, value)) {
-              prefix = prefixTransformation.prefix;
-            }
-
-            if (settings.selected === this.PREDICATE && this.modelConstructService.isTypeMappingPredicate(value, formValue.expression)) {
-              formValue.typeMapping = true;
-              formValue.constant = null;
-              formValue.expression = null;
-              formValue.source = null;
-              formValue.language = null;
-
-              settings.isConstant = false;
-              settings.isTransformation = false;
-            } else if (prefix) {
-              settings.isTransformation = true;
-              formValue.expression = prefix;
-              formValue.language = Language.Prefix;
-            }
+            this.handleConstant(formValue, settings);
           }
 
           if (this.selected) {
@@ -779,6 +724,77 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
             this.modelConstructService.setMappingObjectInTriple(this.selected, formValue, settings, this.data.mappingData);
           }
         });
+  }
+
+  private getSettings() {
+    return {
+      hasDatatype: this.hasDatatype,
+      hasLanguage: this.hasLanguage,
+      isDatatypeColumn: this.isDatatypeColumn,
+      isDatatypeConstant: this.isDatatypeConstant,
+      isLanguageColumn: this.isLanguageColumn,
+      isLanguageConstant: this.isLanguageConstant,
+      isConstant: this.isConstant,
+      isColumn: this.isColumn,
+      isBnode: this.isBnode,
+      isTransformation: this.isTransformation,
+      isRoot: this.data.mappingData.isRoot,
+      selected: this.data.selected,
+      namespaces: this.data.namespaces,
+      repoNamespaces: this.data.repoNamespaces,
+    };
+  }
+
+  private handleDatatype(formValue: any) {
+    formValue.type = Type.DatatypeLiteral;
+
+    if (this.isDataTypePrefixTransformation) {
+      formValue.datatypeLanguage = Language.Prefix;
+    }
+
+    if (this.isDatatypeRawIri) {
+      formValue.datatypeLanguage = Language.Raw;
+    }
+
+    if (this.isDataTypeGrelTransformation) {
+      formValue.dataTypeValueSource = Source.RowIndex;
+      formValue.datatypeTransformation = formValue.datatypeGrelTransformation;
+      formValue.datatypeLanguage = Language.GREL;
+    }
+  }
+
+  private handleLanguage(formValue: any) {
+    formValue.type = Type.LanguageLiteral;
+
+    if (this.isLanguageGrelTransformation) {
+      formValue.languageValueSource = Source.RowIndex;
+      formValue.languageTransformationLanguage = Language.GREL;
+    }
+  }
+
+  private handleConstant(formValue: any, settings: any) {
+    const value = formValue.constant;
+    const combinedNamespaces = NamespaceService.mergeNamespaces(settings.repoNamespaces, settings.namespaces);
+    const prefixTransformation = this.modelConstructService.getPrefixTransformation(value, combinedNamespaces);
+    let prefix;
+    if (this.modelConstructService.isValidPrefixTransformation(prefixTransformation, value)) {
+      prefix = prefixTransformation.prefix;
+    }
+
+    if (settings.selected === this.PREDICATE && this.modelConstructService.isTypeMappingPredicate(value, formValue.expression)) {
+      formValue.typeMapping = true;
+      formValue.constant = null;
+      formValue.expression = null;
+      formValue.source = null;
+      formValue.language = null;
+
+      settings.isConstant = false;
+      settings.isTransformation = false;
+    } else if (prefix) {
+      settings.isTransformation = true;
+      formValue.expression = prefix;
+      formValue.language = Language.Prefix;
+    }
   }
 
   public isSubject(): boolean {

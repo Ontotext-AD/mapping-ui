@@ -33,7 +33,7 @@ import {RepositoryService} from 'src/app/services/rest/repository.service';
 import {ModelConstructService} from 'src/app/services/model-construct.service';
 import {TypeMapping} from 'src/app/models/type-mapping';
 import {TabService} from 'src/app/services/tab.service';
-import * as XRegExp from 'xregexp';
+import XRegExp from 'xregexp';
 import {NotificationService} from 'src/app/services/notification.service';
 import {MatTooltip} from '@angular/material/tooltip';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';

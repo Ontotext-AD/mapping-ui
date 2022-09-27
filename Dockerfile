@@ -1,4 +1,4 @@
-FROM cypress/base:16
+FROM cypress/base:14.19.0
 
 COPY . /mapping-ui/
 

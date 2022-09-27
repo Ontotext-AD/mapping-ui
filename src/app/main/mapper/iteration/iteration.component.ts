@@ -33,13 +33,14 @@ import {SourceService} from 'src/app/services/source.service';
 import {MessageService} from 'src/app/services/message.service';
 import {ChannelName} from 'src/app/services/channel-name.enum';
 import {Helper} from 'src/app/utils/helper';
-import {classToClass, plainToClass} from 'class-transformer';
+import {instanceToInstance, plainToClass} from 'class-transformer';
 import {MapperService} from 'src/app/services/rest/mapper.service';
 import {ViewMode} from 'src/app/services/view-mode.enum';
 import {NotificationService} from 'src/app/services/notification.service';
 import {NamespaceService} from '../../../services/namespace.service';
 import {Namespaces} from '../../../models/namespaces';
 import {TriplesModelService} from '../../../services/triples-model.service';
+
 
 @Component({
   selector: 'app-iteration',
@@ -135,7 +136,7 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
 
   initWithPreview(isDirty?: boolean) {
     if (this.shouldPreview()) {
-      this.mapperService.preview(classToClass(this.mapping))
+      this.mapperService.preview(instanceToInstance(this.mapping))
           .pipe(untilComponentDestroyed(this))
           .subscribe((data) => {
             this.mapping = plainToClass(MappingDefinitionImpl, data);
@@ -334,7 +335,13 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
               this.messageService.publish(ChannelName.UpdateMapping, this.mapping);
             }
 
-            const position = result.selected === this.SUBJECT ? 1 : result.selected === this.PREDICATE ? 2 : 3;
+            let position = 3;
+            if (result.selected === this.SUBJECT) {
+              position = 1;
+            } else if (result.selected === this.PREDICATE) {
+              position = 2;
+            }
+
             this.tabService.selectCommand.emit({index: this.triples.length - 2, position});
           }
         });
@@ -555,10 +562,14 @@ export class IterationComponent extends OnDestroyMixin implements OnInit, AfterV
   }
 
   private getType(selected: string, triple: Triple, value: string, prefix: string) {
-    if (selected === this.OBJECT) {
-      return triple.getPredicate() ? (prefix || Helper.isIRI(value) ? Type.IRI : (Type.Literal)) : TypeMapping.a;
+    if (selected !== this.OBJECT) {
+      return undefined;
     }
-    return undefined;
+
+    if (triple.getPredicate()) {
+      return prefix || Helper.isIRI(value) ? Type.IRI : Type.Literal;
+    }
+    return TypeMapping.a;
   }
 
   private setUsedSources(mapping: MappingBase) {

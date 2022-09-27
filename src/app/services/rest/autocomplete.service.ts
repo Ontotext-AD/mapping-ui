@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ErrorReporterService} from '../error-reporter.service';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {Observable, catchError, map} from 'rxjs';
 import {environment} from 'src/environments/environment';
-import {map} from 'rxjs/internal/operators';
 import {NotificationService} from '../notification.service';
 import {TranslateService} from '@ngx-translate/core';
 

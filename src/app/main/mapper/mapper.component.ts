@@ -11,8 +11,8 @@ import {
   EMPTY_MAPPING,
   MALFORMED_NAMESPACE_KEY,
 } from 'src/app/utils/constants';
-import {classToClass, plainToClass} from 'class-transformer';
-import {MatChipInputEvent} from '@angular/material/chips/chip-input';
+import {instanceToInstance, plainToClass} from 'class-transformer';
+import {MatChipInputEvent} from '@angular/material/chips/';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {ChannelName} from 'src/app/services/channel-name.enum';
 import {MessageService} from 'src/app/services/message.service';
@@ -23,7 +23,7 @@ import {Convert} from 'src/app/models/mapping-definition';
 import {NamespaceService} from '../../services/namespace.service';
 import {Namespaces, Namespace} from '../../models/namespaces';
 import {NamespaceValidator} from '../../validators/namespace.validator';
-import * as XRegExp from 'xregexp';
+import XRegExp from 'xregexp';
 
 
 @Component({
@@ -159,7 +159,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
   }
 
   addNamespace(event: MatChipInputEvent): void {
-    const input = event.input;
+    const input = event.chipInput.inputElement;
     const value = event.value;
     const namespaces = [];
     this.namespaceErrorMessages = [];
@@ -216,7 +216,7 @@ export class MapperComponent extends OnDestroyMixin implements OnInit {
 
   onGetJSON() {
     const link = document.createElement('a');
-    const mapping = classToClass(this.mapping);
+    const mapping = instanceToInstance(this.mapping);
     this.modelManagementService.removePreview(mapping);
     link.setAttribute('class', 'download');
     link.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(Convert.mappingDefinitionToJson(mapping)));
