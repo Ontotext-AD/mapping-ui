@@ -119,7 +119,6 @@ describe('Delete', () => {
       MappingSteps.reject();
       // I expect same triples in the mapping
       MappingSteps.getTriples().should('have.length', 3);
-
       // Delete completed nested triple
       // When I delete the nested triple
       MappingSteps.deleteTriple(1);
@@ -133,18 +132,9 @@ describe('Delete', () => {
       // Delete triple with empty predicate and object
       // When I add new nested triple
       MappingSteps.addNestedTriple(0);
+      // Workaround for stuck tooltip - Add nested triple
+      cy.get('.mat-typography').click(0, 0);
       MappingSteps.getTriples().should('have.length', 3);
-      // And I delete the new nested triple
-      MappingSteps.deleteTriple(1);
-      MappingSteps.confirm();
-      // Then I expect the triple to be deleted
-      MappingSteps.getTriples().should('have.length', 2);
-
-      // Delete triple with empty object: predicate is 'a'
-      // When I add new nested triple
-      MappingSteps.addNestedTriple(0);
-      MappingSteps.getTriples().should('have.length', 3);
-      MappingSteps.completeTriple(1, undefined, 'a');
       // And I delete the new nested triple
       MappingSteps.deleteTriple(1);
       MappingSteps.confirm();
@@ -154,6 +144,8 @@ describe('Delete', () => {
       // Delete triple with empty object: predicate is a constant
       // When I add new nested triple
       MappingSteps.addNestedTriple(0);
+      // Workaround for stuck tooltip - Add nested triple
+      cy.get('.mat-typography').click(0, 0);
       MappingSteps.getTriples().should('have.length', 3);
       MappingSteps.completeTriple(1, undefined, 'predicate');
       // And I delete the new nested triple
