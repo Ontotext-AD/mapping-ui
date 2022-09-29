@@ -11,6 +11,28 @@ describe('Edit mapping', () => {
     PrepareSteps.enableAutocompleteWithEmptyResponse();
   });
 
+  it('Should validate subject edit form', () => {
+    PrepareSteps.stubEmptyMappingModel();
+    PrepareSteps.visitPageAndWaitToLoad();
+    // Given I have created a mapping column-type-constant
+    MappingSteps.getTriples().should('have.length', 1);
+    MappingSteps.completeTriple(0, '@duration', 'a', '123');
+    MappingSteps.getTriples().should('have.length', 2);
+    // When I edit the subject
+    MappingSteps.editTripleSubject(0);
+    // Then I expect the dialog to be opened
+    EditDialogSteps.getDialog().should('be.visible');
+    // And the OK button to be enabled
+    EditDialogSteps.getOkButton().should('be.visible').and('be.enabled');
+    // When I remove the column value
+    EditDialogSteps.getColumnField().should('have.value', 'duration');
+    // No idea why but clearing the column value fails without this wait
+    cy.wait(200);
+    EditDialogSteps.clearColumnValue();
+    // Then I expect the OK button to become disabled because the column value is a mandatory field
+    EditDialogSteps.getOkButton().should('be.visible').and('be.disabled');
+  });
+
   context('Edit and close dialog with hotkeys', () => {
     it('Should open and close the edit dialog with a hotkey', () => {
       PrepareSteps.stubEmptyMappingModel();
@@ -28,7 +50,7 @@ describe('Edit mapping', () => {
       EditDialogSteps.selectConstant();
       EditDialogSteps.completeConstant('1');
       // And execute ctrl+enter key combination while dialog is opened
-      EditDialogSteps.selectConstant().focus().type('{ctrl}{enter}', {
+      EditDialogSteps.selectConstant().type('{ctrl}{enter}', {
         parseSpecialCharSequences: true
       });
       // Then I expect subject mapping configuration to be saved
@@ -109,26 +131,6 @@ describe('Edit mapping', () => {
       EditDialogSteps.getConstantField().should('have.value', 'Wine');
       EditDialogSteps.getTransformationExpressionField().should('have.value', 'wine');
     });
-  });
-
-  it('Should validate subject edit form', () => {
-    PrepareSteps.stubEmptyMappingModel();
-    PrepareSteps.visitPageAndWaitToLoad();
-    // Given I have created a mapping column-type-constant
-    MappingSteps.getTriples().should('have.length', 1);
-    MappingSteps.completeTriple(0, '@duration', 'a', '123');
-    MappingSteps.getTriples().should('have.length', 2);
-    // When I edit the subject
-    MappingSteps.editTripleSubject(0);
-    // Then I expect the dialog to be opened
-    EditDialogSteps.getDialog().should('be.visible');
-    // And the OK button to be enabled
-    EditDialogSteps.getOkButton().should('be.visible').and('be.enabled');
-    // When I remove the column value
-    EditDialogSteps.getColumnField().should('have.value', 'duration');
-    EditDialogSteps.clearColumnValue();
-    // Then I expect the OK button to become disabled because the column value is a mandatory field
-    EditDialogSteps.getOkButton().should('be.visible').and('be.disabled');
   });
 
   // TODO: I add these tests here for now, but later we should distribute them in respective specs with the related operations
