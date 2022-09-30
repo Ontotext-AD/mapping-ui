@@ -100,9 +100,9 @@ class EditDialogSteps {
 
   static completeSourceTypeColumn(value: string) {
     return this.getLiteralTypeSection().find('[appCypressData=datatype-column-input]').should('be.visible')
-        .type(value + '{esc}', {
-          parseSpecialCharSequences: true,
-        }).blur();
+      .type(value + '{esc}', {
+        parseSpecialCharSequences: true,
+      }).blur();
   }
 
   // source section
@@ -117,6 +117,7 @@ class EditDialogSteps {
   static getConstantField() {
     return this.getSourceSection().find('[appCypressData=constant-input]');
   }
+
   static completeConstant(value: string) {
     return this.getConstantField().should('be.visible').type(value).blur();
   }
@@ -197,7 +198,8 @@ class EditDialogSteps {
   }
 
   static completeDataTypeExpression(value: string) {
-    return this.getDataTypeExpressionField().should('be.visible').type(value);
+    // type is invoked with force: true due to the field suggest stealing the focus.
+    return this.getDataTypeExpressionField().should('be.visible').focus().type(value, {force: true});
   }
 
   static getDataTypeGRELPreview() {
@@ -205,7 +207,8 @@ class EditDialogSteps {
   }
 
   static clearDataTypeExpression() {
-    return this.getDataTypeExpressionField().should('be.visible').clear().type('{esc}', {
+    // clear is invoked with force: true due to the field suggest stealing the focus.
+    return this.getDataTypeExpressionField().should('be.visible').clear({force: true}).type('{esc}', {
       parseSpecialCharSequences: true,
     });
   }
@@ -247,14 +250,15 @@ class EditDialogSteps {
   }
 
   static completePrefix(prefix: string) {
-    // emulate [esc] button hit in order to close the autocomplete
-    return this.getTransformationExpressionField().should('be.visible').type(`${prefix}{esc}`, {
+    // type is invoked with force: true due to the field suggest stealing the focus.
+    return this.getTransformationExpressionField().should('be.visible').focus().type(`${prefix}`, {
       parseSpecialCharSequences: true,
+      force: true
     });
   }
 
   static clearPrefix() {
-    return this.getTransformationExpressionField().should('be.visible').clear().type('{esc}', {
+    return this.getTransformationExpressionField().should('be.visible').clear({force: true}).type('{esc}', {
       parseSpecialCharSequences: true,
     });
   }
