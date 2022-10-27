@@ -379,6 +379,9 @@ export class ModelManagementService {
       subject.getTypeMappings().splice(emptyTypeMappingIndex, 1, selected);
     } else {
       subject.getTypeMappings().push(selected);
+      if(subject.getTypeMappings().length === 0) {
+        subject.setTypeMappings([selected]);
+      }
     }
   }
 
