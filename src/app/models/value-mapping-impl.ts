@@ -58,10 +58,14 @@ export class ValueMappingImpl implements ValueMapping, MappingBase {
   }
 
   public getTypeMappings(): SimpleIRIValueMappingImpl[] {
+    // TODO: this should be fixed and the initialization should be removed,
+    // but we need better understanding of the model and its usage in order to do that
     return this.getValueType() && this.getValueType().getTypeMappings() || [];
   }
 
   public getPropertyMappings(): PropertyMappingImpl[] {
+    // TODO: this should be fixed and the initialization should be removed,
+    // but we need better understanding of the model and its usage in order to do that
     return this.getValueType() && this.getValueType().getPropertyMappings() || [];
   }
 
