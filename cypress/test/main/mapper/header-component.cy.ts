@@ -131,7 +131,7 @@ describe('HeaderComponent', () => {
       cy.get('[appCypressData=json-file-input]').attachFile('upload/img.jpg');
       // THEN:
       // A error message pops up
-      MappingSteps.getNotification().should('contain', 'Unexpected token � in JSON at position 0');
+      MappingSteps.getNotification().should('contain', 'Unexpected token');
     });
   });
 });

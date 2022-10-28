@@ -127,6 +127,30 @@ describe('Create mapping', () => {
     MappingSteps.getTripleObjectType(5).should('contain', 'BNode');
   });
 
+  it('Should be able to set rdf:type on blank nodes', () => {
+    PrepareSteps.stubEmptyMappingModel();
+    // When I load application
+    PrepareSteps.visitPageAndWaitToLoad();
+
+    // When I create a mapping
+    MappingSteps.completeTriple(0, 'subject', 'rdf:type', 'Object');
+    MappingSteps.completeTriple(1, 'subject', 'rdf:name', 'Test');
+    MappingSteps.addTriplePredicateSibling(1);
+    MappingSteps.completePredicate(2, 'rdf:node');
+    MappingSteps.editEmptyTripleObject(2);
+    EditDialogSteps.selectValueBnode();
+    EditDialogSteps.selectColumn();
+    EditDialogSteps.completeColumn('color');
+    EditDialogSteps.saveConfiguration();
+    MappingSteps.addNestedTriple(2);
+    MappingSteps.completePredicate(3, 'rdf:type');
+    MappingSteps.completeObject(3, 'BlankNodeType');
+
+    // Then I expect to see the rdf:type of the blank node displayed
+    MappingSteps.getTriplePredicate(3).find('.type-property').should('have.text', 'a');
+    MappingSteps.getTripleObjectSource(3).find('.ng-star-inserted').should('contain', 'BlankNodeType');
+  });
+
   context('Transformation type', () => {
     it('Should render transformation type in a badge in the cell', () => {
       PrepareSteps.enableAutocompleteWithEmptyResponse();

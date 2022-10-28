@@ -369,7 +369,9 @@ export class ModelManagementService {
 
   public setTypeMapping(subject: MappingBase, selected: SimpleIRIValueMappingImpl) {
     let emptyTypeMappingIndex: number;
-    if (!subject.getTypeMappings()) {
+    // the second mighty condition forces proper initialization,
+    // because the getTypeMappings() has weird logic/usage
+    if (!subject.getTypeMappings() || subject.getTypeMappings().length === 0) {
       subject.setTypeMappings([]);
     } else {
       emptyTypeMappingIndex = this.getEmptyTypeMappingIndex(subject);

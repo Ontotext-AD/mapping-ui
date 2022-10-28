@@ -6,83 +6,83 @@ import {PropertyMappingImpl} from 'src/app/models/property-mapping-impl';
 
 export interface MappingBase {
   /**
-   * Get the type mappings for the cell
+   * Get the type mappings for the cell.
    *
    * @return array of type mappings
    */
   getTypeMappings(): SimpleIRIValueMappingImpl[] ;
 
   /**
-   * Setes type mappings array
+   * Sets type mappings array.
    *
    * @param mappings
    */
   setTypeMappings(mappings: SimpleIRIValueMappingImpl[]);
 
   /**
-   * Get the property mappings for the cell
+   * Get the property mappings for the cell.
    *
    * @return array of property mappings
    */
   getPropertyMappings(): PropertyMappingImpl[];
 
   /**
-   * Sets property mappings array
+   * Sets property mappings array.
    *
    * @param mappings
    */
   setPropertyMappings(mappings: PropertyMappingImpl[]);
 
   /**
-   * Get the value source for the cell depending on the cellMapping type
+   * Get the value source for the cell depending on the cellMapping type.
    *
    * @return value source
    */
   getValueSource(): ColumnImpl;
 
   /**
-  * Get the transformation for the cell depending on the cellMapping type
+  * Get the transformation for the cell depending on the cellMapping type.
   *
   * @return value transformation
   */
   getValueTransformation(): ValueTransformationImpl;
 
   /**
-   * Get value Type. Returns the ValueType but only when the cellMapping is a ValueMapping
-   * Only ValueMappings have such a type
+   * Get value Type. Returns the ValueType but only when the cellMapping is a ValueMapping.
+   * Only ValueMappings have such a type. ??? Implementation details ???
    *
    * @return value type
    */
   getValueType(): IRIImpl;
 
   /**
-   * Sets the cell's type
+   * Sets the cell's type.
    */
   setValueType(iri: IRIImpl): void;
 
   /**
-   * Sets the cell's type source
+   * Sets the cell's type source.
    */
   setValueSource(column: ColumnImpl);
 
 
   /**
-   * Sets the cell's type transformation
+   * Sets the cell's type transformation.
    */
   setValueTransformation(transformation: ValueTransformationImpl);
 
   /**
-   * Gets the cell's preview
+   * Gets the cell's preview.
    */
   getPreview(): string[];
 
   /**
-   * Clears the preview metadata
+   * Clears the preview metadata.
    */
   clearPreview(): void;
 
   /**
-   * Clears the cells mapping, not altering type nor property mappings
+   * Clears the cells mapping, not altering type nor property mappings.
    */
   clearMapping(): void;
 }
