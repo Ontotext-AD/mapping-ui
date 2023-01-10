@@ -1,0 +1,12 @@
+<div class="row mb-3">
+  <div class="col-lg-12" appCypressData="sparql-editor">
+    <div class="editor-top-header mb-10">
+      <app-editor-header></app-editor-header>
+      <app-sources [sources]="sources" [disableDrag]="true" (onElementClickEvent)="onColumnNameClick($event)"></app-sources>
+    </div>
+
+    <div class="sparql-editor-container">
+      <ontotext-yasgui #yasgui [config]="config"></ontotext-yasgui>
+    </div>
+  </div>
+</div>

@@ -29,9 +29,7 @@ export class ErrorReporterService {
     } else {
       const errMessage = this.backendError(error, message, notify);
       if (errMessage instanceof Promise) {
-        errMessage.then((err) => {
-          throwError(err);
-        });
+        errMessage.then((err) => throwError(err));
       } else {
         return throwError(errorMessage);
       }

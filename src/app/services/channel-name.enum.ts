@@ -11,4 +11,17 @@ export enum ChannelName {
   DirtyMapping = 'dirty_mapping',
   ProgressCancelled = 'progress_cancelled',
   GetJSONMapping = 'get_json_mapping',
+  DownloadSparql = 'download_sparql',
+  DownloadRdf = 'download_rdf',
+  DownloadCompleted = 'downloaded_completed',
+  GenerateSparql = 'generate_sparql',
+  SparqlGenerationCompleted = 'sparql_generation_completed',
+  SwitchRenderingMode = 'switch_rendering_mode',
+  RenderingModeSwitched = 'rendering_mode_switched',
+  SwitchEditorOrientation = 'switch_editor_orientation',
+  EditorOrientationSwitched = 'editor_orientation_switched',
+  SaveEditorConfiguration = 'save_editor_configurations',
+  EditorConfigurationSaveCompleted = 'editor_configurations_save_completed',
+  OpenInGdb = 'open_in_gdb',
+  EditorConfigurationChanged = 'editor_configuration_changed'
 }

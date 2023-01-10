@@ -1,3 +1,24 @@
-<div class="container-fluid main-container" appCypressData="content">
-  <app-mapper></app-mapper>
-</div>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" preserveContent>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icons material-symbols-outlined">transform</mat-icon>
+      {{"TABS.RDF_MAPPER" | translate}}
+    </ng-template>
+    <ng-template matTabContent>
+    <div class="container-fluid main-container" appCypressData="content">
+      <app-mapper></app-mapper>
+    </div>
+  </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icons material-symbols-outlined icon-sparql"></mat-icon>
+      {{"TABS.SPARQL_EDITOR" | translate}}
+    </ng-template>
+    <ng-template matTabContent>
+    <div class="container-fluid main-container" appCypressData="editor-content">
+      <app-sparql-editor></app-sparql-editor>
+    </div>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

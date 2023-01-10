@@ -8,7 +8,9 @@
            [ngClass]="{
               'used': source.isUsed()
               }"
-           matTooltip="{{source.getTitle()}}">
+           matTooltip="{{source.getTitle()}}"
+           [cdkDragDisabled]="disableDrag"
+           (click)="onClickHandler(source)">
         {{source.getReasonableLongTitle()}}
       </div>
     </div>

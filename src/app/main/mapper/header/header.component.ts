@@ -50,8 +50,16 @@ export class HeaderComponent extends OnDestroyMixin implements OnInit {
     this.messageService.read(ChannelName.DirtyMapping)
         .pipe(untilComponentDestroyed(this))
         .subscribe((event) => {
+          // This is used for communication between iframes. The message is processed by logic in
+          // the scripts of the rdf-mapper-extension.
+          // The purpose is to trigger confirmation dialog, when the user tries to leave the page
+          // and there are some unsaved changes.
+          // Also, this isn't the correct place to do that, because we are in a child component...
+          // It is what it is, I guess.
+
           this.isMappingDirty = event.getMessage();
-          // TODO Replace the wildcard with the domain on which WB is running. See https://ontotext.atlassian.net/browse/GDB-5406
+          // TODO Replace the wildcard with the domain on which WB is running.
+          // See https://ontotext.atlassian.net/browse/GDB-5406
           if (this.isMappingDirty) {
             window.parent.postMessage(DIRTY_MAPPING, '*'); // nosonar
           } else {

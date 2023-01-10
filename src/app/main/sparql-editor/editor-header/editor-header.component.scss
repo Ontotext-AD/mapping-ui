@@ -1,0 +1,42 @@
+.header-component {
+  flex-direction: row;
+  box-sizing: border-box;
+  display: flex;
+  place-content: space-between;
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+  background-color: #ED4F2F;
+  border-color: #ED4F2F;
+}
+
+.template-options,
+.download-options {
+  height: 30px;
+  display: inline-flex;
+}
+
+.yasgui-toolbar {
+  gap: 0;
+}
+
+.yasgui-toolbar .btn-orientation {
+  font-size: x-large;
+}
+
+button.mat-menu-item,
+div button.mat-menu-item {
+  outline: none;
+  height: 2.5em;
+  line-height: 2.5em;
+}
+
+.mat-divider {
+  border-top-width: 2px;
+}
+
+.unsaved-mapping-warn-icon,
+.results-info-icon {
+  color: darkgoldenrod;
+}

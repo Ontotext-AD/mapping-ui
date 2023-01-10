@@ -1,0 +1,127 @@
+<div fxLayout="row" fxLayoutAlign="space-between" appCypressData="header" class="header-component py-2">
+  <div class="yasgui-toolbar" fxLayoutAlign="start end">
+    <button class="yasgui-btn btn-mode-yasqe" 
+            appCypressData="render-yasqe-action"
+            (click)="changeRenderingMode(renderingMode.YASQE)">
+      {{"BUTTONS.YASGUI_EDITOR_ONLY" | translate}}
+    </button>
+
+    <button class="yasgui-btn btn-mode-yasgui btn-selected" 
+            appCypressData="render-yasgui-action"
+            (click)="changeRenderingMode(renderingMode.YASGUI)">
+      {{"BUTTONS.YASGUI_EDITOR_AND_RESULTS" | translate}}
+    </button>
+
+    <button class="yasgui-btn btn-mode-yasr" 
+            appCypressData="render-yasr-action"
+            (click)="changeRenderingMode(renderingMode.YASR)">
+      {{"BUTTONS.YASGUI_RESULTS_ONLY" | translate}}
+    </button>
+
+    <button class="btn-orientation icon-columns red"
+            appCypressData="change-orientation-action"
+            matTooltip="{{ (isEditorVerticallyOriented ? 'TOOLTIPS.YASGUI_SWITCH_ORIENTATION_HORIZONTAL' : 'TOOLTIPS.YASGUI_SWITCH_ORIENTATION_VERTICAL') | translate}}"
+            (click)="changeEditorOrientation()">&nbsp;</button>
+  </div>
+
+  <div class="editor-action-buttons" fxLayoutAlign="end end">
+    <span class="mr-12 unsaved-changes-msg" appCypressData="unsaved-editor-changes-msg">
+      {{editorConfigurationChanged ? ('MESSAGES.EDITOR_CONFIG_IS_DIRTY' | translate) : ('MESSAGES.EDITOR_CONFIG_IS_CLEAN' | translate)}}
+    </span>
+    <button class="mr-12 btn btn-sm btn-primary cursor-pointer save-primary" 
+            (click)="saveEditorConfiguration()"
+            appCypressData="save-editor-config-action"
+            matTooltip="{{'TOOLTIPS.SAVE_EDITOR_CONFIG' | translate}}"
+            [disabled]="savingEditorConfigurationInProgress || !editorConfigurationChanged">
+      {{"BUTTONS.SAVE" | translate}}
+    </button>
+
+    <button class="mr-12 btn btn-sm btn-primary cursor-pointer template-options"
+            appCypressData="generate-query-action"
+            matTooltip="{{'TOOLTIPS.GENERATE_SPARQL' | translate}}"
+            [matMenuTriggerFor]="templateMenu"
+            [disabled]="generatingSparqlInProgress">
+      {{"BUTTONS.GENERATE_QUERY" | translate}}
+      <mat-icon class="ml-1">arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #templateMenu="matMenu" xPosition="before">
+      <button mat-menu-item
+              appCypressData="generate-template-action"
+              (click)="generateSparql(generationSparqlType.STANDARD)"
+              [disabled]="generatingSparqlInProgress">
+        {{"BUTTONS.STANDARD_TEMPLATE" | translate}}
+      </button>
+      <button mat-menu-item
+              appCypressData="generate-template-with-service-action"
+              (click)="generateSparql(generationSparqlType.STANDARD_WITH_SERVICE)"
+              [disabled]="generatingSparqlInProgress">
+        {{"BUTTONS.SERVICE_CLAUSE_TEMPLATE" | translate}}
+      </button>
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item
+              appCypressData="generate-from-mapping-action"
+              (click)="generateSparql(generationSparqlType.MAPPING_BASED)"
+              [disabled]="generatingSparqlInProgress">
+        <mat-icon *ngIf="isMappingUnsaved"
+                   class="unsaved-mapping-warn-icon"
+                   matTooltip="{{'TOOLTIPS.UNSAVED_MAPPING_CHANGES' | translate}}">
+          warning_amber
+        </mat-icon>
+        {{"BUTTONS.FROM_MAPPING" | translate}}
+      </button>
+      <button mat-menu-item
+              appCypressData="generate-from-mapping-with-service-action"
+              (click)="generateSparql(generationSparqlType.MAPPING_BASED_WITH_SERVICE)"
+              [disabled]="generatingSparqlInProgress">
+        <mat-icon *ngIf="isMappingUnsaved"
+                   class="unsaved-mapping-warn-icon"
+                   matTooltip="{{'TOOLTIPS.UNSAVED_MAPPING_CHANGES' | translate}}">
+          warning_amber
+        </mat-icon>
+        {{"BUTTONS.FROM_MAPPING_WITH_SERVICE_CLAUSE" | translate}}
+      </button>
+    </mat-menu>
+
+    <button class="mr-12 btn btn-sm btn-primary cursor-pointer open-gdb-primary"
+            (click)="openInGdb()"
+            appCypressData="open-in-gdb-action"
+            matTooltip="{{'TOOLTIPS.OPEN_GDB_EDITOR' | translate}}">
+      {{"BUTTONS.GDB_SPARQL" | translate}}
+    </button>
+
+    <button class="mr-12 btn btn-sm btn-primary cursor-pointer download-options"
+            appCypressData="download-action"
+            matTooltip="{{'TOOLTIPS.DOWNLOAD_SPARQL' | translate}}"
+            [matMenuTriggerFor]="downloadMenu">
+      {{"BUTTONS.DOWNLOAD" | translate}}
+      <mat-icon class="ml-1">arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #downloadMenu="matMenu" xPosition="before">
+      <button mat-menu-item
+              appCypressData="download-sparql-action"
+              (click)="downloadSparql(downloadSparqlType.DEFAULT)"
+              [disabled]="downloadingInProgress">
+        {{"BUTTONS.QUERY" | translate}}
+      </button>
+      <button mat-menu-item
+              appCypressData="download-sparql-with-service-action"
+              (click)="downloadSparql(downloadSparqlType.SERVICE)"
+              [disabled]="downloadingInProgress">
+        {{"BUTTONS.QUERY_WITH_SERVICE_CLAUSE" | translate}}
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item
+              appCypressData="download-result-action"
+              (click)="downloadRdf()"
+              [disabled]="downloadingInProgress">
+        <mat-icon *ngIf="!isQueryTypeConstruct()"
+                  class="results-info-icon"
+                  matTooltip="{{'TOOLTIPS.DOWNLOAD_QUERY_RESULTS_INFO' | translate}}">
+          warning_amber
+        </mat-icon>
+        {{"BUTTONS.RESULT" | translate}}
+      </button>
+    </mat-menu>
+  </div>
+</div>

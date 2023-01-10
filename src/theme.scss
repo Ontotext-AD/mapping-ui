@@ -265,3 +265,53 @@ $altTheme: mat-dark-theme($theme-primary, $theme-accent, $theme-warn);
     font-family: 'Rubik', sans-serif;
   }
 }
+
+// Tabs styles
+.mat-tab-label-active {
+  color: #ed4f2f;
+  opacity: 1.0 !important;
+}
+
+.tab-icons {
+  padding-right: 27px;
+}
+
+// For some reason the styles for the editor should be applied in here...
+
+.yasqe .yasqe_buttons .yasqe_share,
+.yasr .yasr_btn.select_response,
+.yasgui-host-element .yasr .yasr_header .yasr_btnGroup,
+.yasgui-host-element .yasr .yasr_header .pageSizeWrapper,
+.yasr .errorResult .errorHeader .yasr_tryQuery {
+  display: none;
+}
+
+.editor-top-header .rdfm-column-item {
+  cursor: pointer;
+}
+
+.yasqe .yasqe_buttons svg {
+  fill: #ed4f2f;
+}
+
+.yasgui .tabsList .tab.active a {
+  border-bottom-color:  #ed4f2f;
+  color:  #ed4f2f;
+}
+
+.yasgui .tabsList .tab a:hover {
+  border-bottom-color:  #facac1;
+}
+
+.yasqe .yasqe_buttons {
+  bottom: 10px;
+  top: auto;
+}
+
+.yasqe_queryButton:focus {
+  outline: none;
+}
+
+.yasqe .yasqe_buttons .yasqe_queryButton.query_error .warningIcon {
+  top: -5px;
+}

@@ -1,6 +1,6 @@
 {
   "name": "rdf-mapping-editor",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A webrun component to create a table to RDF data mapping.",
   "scripts": {
     "ng": "ng",
@@ -72,6 +72,7 @@
     "@ngx-translate/http-loader": "^7.0.0",
     "@w11k/ngx-componentdestroyed": "^5.0.2",
     "class-transformer": "^0.5.1",
+    "ontotext-yasgui-web-component": "^0.0.2-TR13",
     "rxjs": "^7.8.0",
     "tslib": "^2.4.1",
     "xregexp": "^4.3.0",
