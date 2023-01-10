@@ -5,7 +5,9 @@
 export const environment = {
   production: false,
   restApiUrl: 'http://localhost:7333/rest/rdf-mapper',
+  restSparqlApiUrl: 'http://localhost:7333/rest/sparql-mapper',
   mappingApiUrl: 'http://localhost:7333/orefine/command',
+  refineVirtualRepositoryUrl: 'http://localhost:7333/repositories/',
   repositoryApiUrl: 'http://localhost:7333/graphdb-proxy/repositories',
   autocompleteApiUrl: 'http://localhost:7333/graphdb-proxy/rest/autocomplete',
   graphDbResource: 'http://localhost:7333/graphdb-resource',

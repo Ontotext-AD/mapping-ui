@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HeaderComponent} from 'src/app/main/mapper/header/header.component';
-import {SourceComponent} from 'src/app/main/mapper/sources/source.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -28,12 +27,13 @@ import {ModelManagementService} from 'src/app/services/model-management.service'
 import {SatPopoverModule} from '@ncstate/sat-popover';
 import {MatCardModule} from '@angular/material/card';
 import {PipesModule} from '../../pipes/pipes.module';
+import {SourceModule} from 'src/app/main/mapper/sources/source.module';
 
+// TODO: some of the components nad modules have to be trimmed as we made SourceModule!
 @NgModule({
   declarations: [
     MapperComponent,
     HeaderComponent,
-    SourceComponent,
     IterationComponent,
     MapperDialogComponent,
   ],
@@ -41,7 +41,6 @@ import {PipesModule} from '../../pipes/pipes.module';
     MapperComponent,
     HeaderComponent,
     IterationComponent,
-    SourceComponent,
   ],
   imports: [
     CommonModule,
@@ -69,6 +68,7 @@ import {PipesModule} from '../../pipes/pipes.module';
     SatPopoverModule,
     MatCardModule,
     PipesModule,
+    SourceModule,
   ],
   providers: [ModelManagementService],
 })

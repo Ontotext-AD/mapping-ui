@@ -204,7 +204,7 @@ export class MapperDialogComponent extends OnDestroyMixin implements OnInit {
 
   private initTransformationModels(isIri: boolean, isDatatype: boolean) {
     // If type is IRI: value transformation can be prefix, raw or grel
-    // If type is datatype literal: value transformation is grel, source transformation can be prefix,raw or grel
+    // If type is datatype literal: value transformation is grel, source transformation can be prefix, raw or grel
     // All other types can have only grel transformation
     if (this.isObject()) {
       if (isIri) {

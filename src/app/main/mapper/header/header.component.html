@@ -21,12 +21,14 @@
     </span>
     <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getJsonMapping()"
             appCypressData="get-json-action"
-            matTooltip="{{'TOOLTIPS.DOWNLOAD_JSON' | translate}}">{{"BUTTONS.DOWNLOAD_JSON" | translate}}
+            matTooltip="{{'TOOLTIPS.DOWNLOAD_JSON' | translate}}">
+        {{"BUTTONS.DOWNLOAD_JSON" | translate}}
     </button>
     <input class="hidden" type="file" (change)="onFileChanged($event)" #fileInput appCypressData="json-file-input">
     <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="fileInput.click()"
             appCypressData="upload-json-action"
-            matTooltip="{{'TOOLTIPS.UPLOAD_JSON' | translate}}">{{"BUTTONS.UPLOAD_JSON" | translate}}
+            matTooltip="{{'TOOLTIPS.UPLOAD_JSON' | translate}}">
+        {{"BUTTONS.UPLOAD_JSON" | translate}}
     </button>
     <span matTooltip="{{'TOOLTIPS.CONVERT_TO_RDF' | translate}}">
       <button class="mr-12 btn btn-sm btn-primary cursor-pointer" [disabled]="!isRdfGenerationAllowed"
@@ -38,7 +40,7 @@
     <button class="mr-12 btn btn-sm btn-primary cursor-pointer" (click)="getSPARQL()"
             appCypressData="generate-sparql-action"
             matTooltip="{{'TOOLTIPS.CONVERT_TO_SPARQL' | translate}}">
-      {{"BUTTONS.SPARQL" | translate}}
+      {{"BUTTONS.GDB_SPARQL" | translate}}
       <mat-spinner *ngIf="isSparqlGenerationInProgress" [diameter]="20"></mat-spinner>
     </button>
     <button class="btn btn-sm btn-primary cursor-pointer" (click)="newMapping()" appCypressData="new-mapping-action"

@@ -19,9 +19,9 @@ export class Helper {
     return !string || string.match(/^\s*$/) !== null;
   }
 
-  public static getReasonableLongWord(word: string, fromStart= 5, fromEnd = 5) {
+  public static getReasonableLongWord(word: string, fromStart = 5, fromEnd = 5) {
     if (word.length > (fromStart + fromEnd + 5)) {
-      return word.substr(0, fromStart) + ' ... ' + word.substr(word.length - fromEnd, fromEnd);
+      return word.substring(0, fromStart) + ' ... ' + word.substring(word.length - fromEnd);
     }
     return word;
   }

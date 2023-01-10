@@ -13,7 +13,8 @@
 
 .rdfm-columns-container {
   max-height: 144px;
-  overflow-y: scroll;
+  overflow-y: auto;
+  overflow-x: none;
 }
 
 @media (max-width: 575px) {

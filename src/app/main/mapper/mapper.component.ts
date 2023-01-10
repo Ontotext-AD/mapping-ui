@@ -24,12 +24,14 @@ import {NamespaceService} from '../../services/namespace.service';
 import {Namespaces, Namespace} from '../../models/namespaces';
 import {NamespaceValidator} from '../../validators/namespace.validator';
 import XRegExp from 'xregexp';
+import {SourceService} from 'src/app/services/source.service';
 
 
 @Component({
   selector: 'app-mapper',
   templateUrl: './mapper.component.html',
   styleUrls: ['./mapper.component.scss'],
+  providers: [SourceService],
 })
 export class MapperComponent extends OnDestroyMixin implements OnInit {
   sources: Array<Source>;

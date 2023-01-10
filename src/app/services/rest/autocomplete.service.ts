@@ -26,10 +26,12 @@ export class AutocompleteService {
   }
 
   autocompleteStatus(): Observable<boolean> {
-    return this.httpClient.get<boolean>(`${this.apiUrl}/enabled`).pipe(map(
-        (status) => this.setAutocompleteStatus(status),
-        catchError((error) => this.errorReporterService.handleError('Autocomplete status check failed.', error)),
-    ));
+    return this.httpClient.get<boolean>(`${this.apiUrl}/enabled`).pipe(
+        map((status) => this.setAutocompleteStatus(status)),
+        catchError((error) => {
+          const msg = 'Autocomplete status check failed.';
+          return this.errorReporterService.handleError(msg, error, false);
+        }));
   }
 
   isAutocompleteEnabled(): boolean {

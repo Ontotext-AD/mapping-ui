@@ -4,14 +4,27 @@
     "DOWNLOAD_JSON": "Download JSON",
     "RDF": "RDF",
     "SPARQL": "SPARQL",
-    "NEW": "New mapping",
+    "GDB_SPARQL": "Open in GraphDB",
+    "NEW": "New Mapping",
     "SAVE": "Save",
     "PREVIEW": "Preview",
     "OK": "Ok",
     "CANCEL": "Cancel",
     "CONFIGURATION": "Configuration",
     "PREVIEW_AND_CONFIGURATION": "Both",
-    "UPLOAD_JSON": "Upload JSON"
+    "UPLOAD_JSON": "Upload JSON",
+    "DOWNLOAD": "Download",
+    "QUERY": "Query",
+    "QUERY_WITH_SERVICE_CLAUSE": "Query with Service Clause",
+    "RESULT": "Result",
+    "GENERATE_QUERY": "Generate Query",
+    "YASGUI_EDITOR_ONLY": "Editor Only",
+    "YASGUI_EDITOR_AND_RESULTS": "Editor and Results",
+    "YASGUI_RESULTS_ONLY" : "Results Only",
+    "STANDARD_TEMPLATE": "Standard Template",
+    "SERVICE_CLAUSE_TEMPLATE": "Service Clause Template",
+    "FROM_MAPPING": "From Mapping",
+    "FROM_MAPPING_WITH_SERVICE_CLAUSE": "From Mapping with Service Clause"
   },
   "TOOLTIPS": {
     "SAVE_VALUE": "Save value",
@@ -36,7 +49,15 @@
     "UPLOAD_JSON": "Click to upload JSON mapping",
     "VIEW_MODE_CONFIGURATION": "Enable mapping configuration mode. Only configuration data will be visible.",
     "VIEW_MODE_PREVIEW": "Enable mapping preview mode. Only data preview will be visible.",
-    "VIEW_MODE_BOTH": "Enable mapping mixed config and preview mode. Both data preview and configurations will be visible."
+    "VIEW_MODE_BOTH": "Enable mapping mixed config and preview mode. Both data preview and configurations will be visible.",
+    "DOWNLOAD_SPARQL": "Download SPARQL query or results as a file",
+    "GENERATE_SPARQL": "Generate query in a new tab",
+    "YASGUI_SWITCH_ORIENTATION_HORIZONTAL": "Switch to horizontal view",
+    "YASGUI_SWITCH_ORIENTATION_VERTICAL": "Switch to vertical view",
+    "SAVE_EDITOR_CONFIG": "Save current editor configurations",
+    "OPEN_GDB_EDITOR": "Go to GraphDB Workbench",
+    "UNSAVED_MAPPING_CHANGES": "The are unsaved RDF mapping changes in the previous tab. The generated query will be based on the saved mapping.",
+    "DOWNLOAD_QUERY_RESULTS_INFO": "Download of results is available only for CONSTRUCT queries."
   },
   "LABELS": {
     "RDF_VALUE": "RDF value",
@@ -93,7 +114,10 @@
     "INVALID_MAPPING_ERROR": "Invalid mapping. ",
     "UNRECOGNIZED_PREFIX_ERROR": "Unrecognized prefix.",
     "GREL_NO_PREVIEW": "No GREL preview",
-    "AUTOCOMPLETE_OFF_WARNING": "Autocomplete is OFF. Please, enable Autocomplete for this repository in GraphDB"
+    "AUTOCOMPLETE_OFF_WARNING": "Autocomplete is OFF. Please, enable Autocomplete for this repository in GraphDB",
+    "EDITOR_CONFIG_SAVED": "Current editor configuration was stored.",
+    "EDITOR_CONFIG_IS_DIRTY": "Editor has unsaved changes",
+    "EDITOR_CONFIG_IS_CLEAN": "All editor changes are saved"
   },
   "DIALOG": {
     "TITLE_CONFIRM": "Confirm",
@@ -108,7 +132,14 @@
     "REQUIRED": "* Required",
     "EMPTY_NAMESPACE": "* Namespace required",
     "COLON_NOT_ALLOWED": "* Colon is not allowed in prefix",
-    "MALFORMED_NAMESPACE": "* Malformed namespace"
+    "MALFORMED_NAMESPACE": "* Malformed namespace",
+    "NO_ACTIVE_EDITOR_TAB": "There is no active tab in the editor at the moment.",
+    "EDITOR_CONFIG_LOADING_FAILED": "Failed to load the editor configuration model.",
+    "NO_PROJECT_IDENTIFIER": "There is no project identifier. Try to refresh the project."
+  },
+  "WARNING": {
+    "UNAVAILABLE_YASGUI_INSTANCE": "There is an issue with the dataset columns functionality.\nThe behavior will be unstable.",
+    "DOWNLOAD_RESULT_AVAILABILITY": "Download of the results is available only for CONSTRUCT queries."
   },
   "TYPE": {
     "DATATYPE_LITERAL": "Datatype",
@@ -125,5 +156,10 @@
     "RAW": "Raw IRI",
     "GREL": "GREL",
     "A": "a"
+  },
+  "TABS": {
+    "RDF_MAPPER": "Visual RDF Mapper",
+    "SPARQL_EDITOR": "SPARQL Query Editor",
+    "GENERATED": "Generated"
   }
 }
