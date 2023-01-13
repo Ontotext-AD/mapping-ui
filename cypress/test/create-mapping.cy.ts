@@ -2,7 +2,6 @@ import MappingSteps from '../steps/mapping-steps';
 import HeaderSteps from '../steps/header-steps';
 import EditDialogSteps from '../steps/edit-dialog-steps';
 import PrepareSteps from '../steps/prepare-steps';
-import {interpretStatements} from "@angular/compiler/src/output/output_interpreter";
 
 describe('Create mapping', () => {
 
@@ -67,7 +66,7 @@ describe('Create mapping', () => {
       expect(interception.request.method).to.equal('POST');
     });
 
-    cy.get('@loadRdf').should((xhr: any) => {
+    cy.get('@loadRdf').then((xhr: any) => {
       cy.fixture('create-mapping/load-rdf-request-body.json').then((mappingData: any) => {
         expect(xhr.request.body).to.deep.equal(mappingData);
       });
@@ -82,7 +81,7 @@ describe('Create mapping', () => {
       expect(interception.request.url).to.include('/rest/rdf-mapper/sparql-url-with-query/ontorefine:123');
       expect(interception.request.method).to.equal('POST');
     });
-    cy.get('@loadSparql').should((xhr: any) => {
+    cy.get('@loadSparql').then((xhr: any) => {
       cy.fixture('create-mapping/load-sparql-request-body.json').then((mappingData: any) => {
         expect(xhr.request.body).to.deep.equal(mappingData);
       });

@@ -2,7 +2,6 @@ import MappingSteps from '../steps/mapping-steps';
 import HeaderSteps from '../steps/header-steps';
 import EditDialogSteps from '../steps/edit-dialog-steps';
 import PrepareSteps from '../steps/prepare-steps';
-import {MapperComponentSelectors} from "../utils/selectors/mapper-component.selectors";
 
 describe('Edit mapping', () => {
 
