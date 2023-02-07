@@ -1,0 +1,725 @@
+<http://example.com/base/subject> <http://example.com/base/name> "Smits Noord-Zuid Hollandsch Koffiehuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Afrikaans Restaurant Kilimanjaro" .
+<http://example.com/base/subject> <http://example.com/base/name> "Akbar Indian Restaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Alfonso's Mexican Restaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café het Paleis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Amstel Bar & Brasserie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Caffe Ristretto - Lunchrestaurant & Café" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Restaurant de Passage" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Stijl" .
+<http://example.com/base/subject> <http://example.com/base/name> "Cinema Paradiso" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Bijenkorf Kitchen" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Kroonprins" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Indrapura" .
+<http://example.com/base/subject> <http://example.com/base/name> "D'Vijf Broers" .
+<http://example.com/base/subject> <http://example.com/base/name> "Madre Maria" .
+<http://example.com/base/subject> <http://example.com/base/name> "Matias" .
+<http://example.com/base/subject> <http://example.com/base/name> "Girassol" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Majestic" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Mercure Amsterdam Airport" .
+<http://example.com/base/subject> <http://example.com/base/name> "Palazzo" .
+<http://example.com/base/subject> <http://example.com/base/name> "Panagia" .
+<http://example.com/base/subject> <http://example.com/base/name> "Patisserie Pompadour" .
+<http://example.com/base/subject> <http://example.com/base/name> "Rain Restaurant Bar Club" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Neva" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Syriana" .
+<http://example.com/base/subject> <http://example.com/base/name> "Rose's Cantina" .
+<http://example.com/base/subject> <http://example.com/base/name> "Tempo Doeloe" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant The College Hotel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Small Talk Restaurant en Coffee Corner" .
+<http://example.com/base/subject> <http://example.com/base/name> "VAKZUID" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hotel Arena - Restaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Indonesisch Restaurant Sama Sebo" .
+<http://example.com/base/subject> <http://example.com/base/name> "Koh-I-Noor Rokin" .
+<http://example.com/base/subject> <http://example.com/base/name> "Koh-I-Noor Westermarkt" .
+<http://example.com/base/subject> <http://example.com/base/name> "La Madonnina" .
+<http://example.com/base/subject> <http://example.com/base/name> "Little Buddha Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Grill Steak House Maya" .
+<http://example.com/base/subject> <http://example.com/base/name> "Van der Valk Hotel Almere" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Hart van Weesp" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hotel Restaurant Het Rechthuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Apollo Hotel Lelystad" .
+<http://example.com/base/subject> <http://example.com/base/name> "Buitenhuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant L'Hirondelle" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant De Wintertuin" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Het Oude Dykhuys" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Gusto" .
+<http://example.com/base/subject> <http://example.com/base/name> "Japans Restaurant Senbazuru" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pancho's Cantina" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Brasserie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Wapen van Aalsmeer" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant BoatHouse" .
+<http://example.com/base/subject> <http://example.com/base/name> "Oude Molen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant de Waegh" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Het Oude Spoorhuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Grand Cafe Applaus" .
+<http://example.com/base/subject> <http://example.com/base/name> "Villa Westend" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Heerenhuis Beemster" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lounge-Bar-Restaurant  &quot:Vijf&quot:" .
+<http://example.com/base/subject> <http://example.com/base/name> "Brasserie DenK" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant 't Dijkhuysje" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bar & Restaurant Puur Saen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant De Gier & De Krijger" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Vrienden van Jacob" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Wapen van Assendelft" .
+<http://example.com/base/subject> <http://example.com/base/name> "Steiger 28" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant De Halve Maen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Himalaya Huis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Tokyo Cafe" .
+<http://example.com/base/subject> <http://example.com/base/name> "Tandoor Indian Restaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lef uit + eten" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Wegwijzer" .
+<http://example.com/base/subject> <http://example.com/base/name> "A la Ferme" .
+<http://example.com/base/subject> <http://example.com/base/name> "A Tavola" .
+<http://example.com/base/subject> <http://example.com/base/name> "Affourtit" .
+<http://example.com/base/subject> <http://example.com/base/name> "Amstelhaven" .
+<http://example.com/base/subject> <http://example.com/base/name> "restaurant BIHP" .
+<http://example.com/base/subject> <http://example.com/base/name> "Arc - tijdelijk gesloten" .
+<http://example.com/base/subject> <http://example.com/base/name> "As" .
+<http://example.com/base/subject> <http://example.com/base/name> "Assagi" .
+<http://example.com/base/subject> <http://example.com/base/name> "Balthazar's Keuken" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bar Waldorf" .
+<http://example.com/base/subject> <http://example.com/base/name> "Beddington's" .
+<http://example.com/base/subject> <http://example.com/base/name> "Blok 4" .
+<http://example.com/base/subject> <http://example.com/base/name> "Beulings" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bicken" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bickers a/d Werf" .
+<http://example.com/base/subject> <http://example.com/base/name> "Blauw" .
+<http://example.com/base/subject> <http://example.com/base/name> "Blauw aan de Wal" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bloem op IJburg" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bloesem" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bond" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bordewijk" .
+<http://example.com/base/subject> <http://example.com/base/name> "Grand-Café - Brasserie Maximiliaan" .
+<http://example.com/base/subject> <http://example.com/base/name> "Burgers Patio" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café George" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Restaurant Edel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Casa di David" .
+<http://example.com/base/subject> <http://example.com/base/name> "Casa Peru" .
+<http://example.com/base/subject> <http://example.com/base/name> "Cedars" .
+<http://example.com/base/subject> <http://example.com/base/name> "Chang-I" .
+<http://example.com/base/subject> <http://example.com/base/name> "Chocolate Bar" .
+<http://example.com/base/subject> <http://example.com/base/name> "Ciel Bleu" .
+<http://example.com/base/subject> <http://example.com/base/name> "D'Antica" .
+<http://example.com/base/subject> <http://example.com/base/name> "Dauphine" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Belhamel" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Cantine" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Luwte" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Pont" .
+<http://example.com/base/subject> <http://example.com/base/name> "Drink & Eetlokaal Het Schoolhuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Dynasty" .
+<http://example.com/base/subject> <http://example.com/base/name> "Envy" .
+<http://example.com/base/subject> <http://example.com/base/name> "Fa. Pekelhaaring" .
+<http://example.com/base/subject> <http://example.com/base/name> "Gauchos Beethovenstraat" .
+<http://example.com/base/subject> <http://example.com/base/name> "Freud" .
+<http://example.com/base/subject> <http://example.com/base/name> "FLO Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hemelse Modder" .
+<http://example.com/base/subject> <http://example.com/base/name> "Herengracht" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hostaria" .
+<http://example.com/base/subject> <http://example.com/base/name> "Incanto" .
+<http://example.com/base/subject> <http://example.com/base/name> "Italiaans Restaurant Pizzeria Pepe" .
+<http://example.com/base/subject> <http://example.com/base/name> "Kantjil en de tijger" .
+<http://example.com/base/subject> <http://example.com/base/name> "Klokspijs" .
+<http://example.com/base/subject> <http://example.com/base/name> "Koevoet" .
+<http://example.com/base/subject> <http://example.com/base/name> "La Oliva" .
+<http://example.com/base/subject> <http://example.com/base/name> "La Rive" .
+<http://example.com/base/subject> <http://example.com/base/name> "La Vallade" .
+<http://example.com/base/subject> <http://example.com/base/name> "Le Hollandais" .
+<http://example.com/base/subject> <http://example.com/base/name> "Le Restaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lof" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Looks" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mamouche" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mantoe" .
+<http://example.com/base/subject> <http://example.com/base/name> "Marius" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mashua" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mayur" .
+<http://example.com/base/subject> <http://example.com/base/name> "Meghna" .
+<http://example.com/base/subject> <http://example.com/base/name> "Momo" .
+<http://example.com/base/subject> <http://example.com/base/name> "Nassau" .
+<http://example.com/base/subject> <http://example.com/base/name> "New Dorrius" .
+<http://example.com/base/subject> <http://example.com/base/name> "Nomads ** GESLOTEN" .
+<http://example.com/base/subject> <http://example.com/base/name> "Orbit" .
+<http://example.com/base/subject> <http://example.com/base/name> "P.King" .
+<http://example.com/base/subject> <http://example.com/base/name> "Peper & Zout" .
+<http://example.com/base/subject> <http://example.com/base/name> "Kapitein Zeppos" .
+<http://example.com/base/subject> <http://example.com/base/name> "Ponte Arcari" .
+<http://example.com/base/subject> <http://example.com/base/name> "Prego" .
+<http://example.com/base/subject> <http://example.com/base/name> "Quattro Gatti" .
+<http://example.com/base/subject> <http://example.com/base/name> "Raïnaraï" .
+<http://example.com/base/subject> <http://example.com/base/name> "Red" .
+<http://example.com/base/subject> <http://example.com/base/name> "Seven seas" .
+<http://example.com/base/subject> <http://example.com/base/name> "Simpel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Sing Sing" .
+<http://example.com/base/subject> <http://example.com/base/name> "Spanjer en van Twist" .
+<http://example.com/base/subject> <http://example.com/base/name> "Stanislavski" .
+<http://example.com/base/subject> <http://example.com/base/name> "Take Thai" .
+<http://example.com/base/subject> <http://example.com/base/name> "Thai & Co" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Colour Kitchen" .
+<http://example.com/base/subject> <http://example.com/base/name> "The French Cafe" .
+<http://example.com/base/subject> <http://example.com/base/name> "The White Elephant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Toscanini" .
+<http://example.com/base/subject> <http://example.com/base/name> "Trattoria de Donna Sofia" .
+<http://example.com/base/subject> <http://example.com/base/name> "Van Harte" .
+<http://example.com/base/subject> <http://example.com/base/name> "Van Puffelen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vapiano" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vasso" .
+<http://example.com/base/subject> <http://example.com/base/name> "Villa Nieuwmarkt" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vinkeles" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vis aan de Schelde" .
+<http://example.com/base/subject> <http://example.com/base/name> "Winkel 43" .
+<http://example.com/base/subject> <http://example.com/base/name> "Yam Yam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Yamazato" .
+<http://example.com/base/subject> <http://example.com/base/name> "Zabayon" .
+<http://example.com/base/subject> <http://example.com/base/name> "Zen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Van De Kaart" .
+<http://example.com/base/subject> <http://example.com/base/name> "Stout!" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Kraai" .
+<http://example.com/base/subject> <http://example.com/base/name> "Yoshi Yoshi" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Keuken van Von" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Tolhuys aan de Zaan" .
+<http://example.com/base/subject> <http://example.com/base/name> "I Gemelli" .
+<http://example.com/base/subject> <http://example.com/base/name> "Da Marcello" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Liefde" .
+<http://example.com/base/subject> <http://example.com/base/name> "Revan" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Ponteneur" .
+<http://example.com/base/subject> <http://example.com/base/name> "Senses" .
+<http://example.com/base/subject> <http://example.com/base/name> "The ART Brasserie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Flinders Café" .
+<http://example.com/base/subject> <http://example.com/base/name> "Gollem's Proeflokaal" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mata Hari" .
+<http://example.com/base/subject> <http://example.com/base/name> "Grandcafe 3&20" .
+<http://example.com/base/subject> <http://example.com/base/name> "Grolsch Cinecafe" .
+<http://example.com/base/subject> <http://example.com/base/name> "A La Ferme" .
+<http://example.com/base/subject> <http://example.com/base/name> "Wissenkerke Sloterdijk" .
+<http://example.com/base/subject> <http://example.com/base/name> "Zazas" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bridges" .
+<http://example.com/base/subject> <http://example.com/base/name> "Ron Gastrobar" .
+<http://example.com/base/subject> <http://example.com/base/name> "Assaggi" .
+<http://example.com/base/subject> <http://example.com/base/name> "East57" .
+<http://example.com/base/subject> <http://example.com/base/name> "Scossa" .
+<http://example.com/base/subject> <http://example.com/base/name> "Barra" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bord'Eau" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Pica Pica" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Kersentuin" .
+<http://example.com/base/subject> <http://example.com/base/name> "Voyager (Sheraton Schiphol)" .
+<http://example.com/base/subject> <http://example.com/base/name> "Aan de Poel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Tanuki" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Jagershuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Broeker Huis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Akitsu" .
+<http://example.com/base/subject> <http://example.com/base/name> "New King" .
+<http://example.com/base/subject> <http://example.com/base/name> "Foodware" .
+<http://example.com/base/subject> <http://example.com/base/name> "Los Pilones" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant de Struisvogel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Jaspers" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Greetje" .
+<http://example.com/base/subject> <http://example.com/base/name> "Le Zinc et les Autres" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hap-Hmm" .
+<http://example.com/base/subject> <http://example.com/base/name> "Stamppotje" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Bloemers" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Eetkamer van de Jordaan" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Knijp" .
+<http://example.com/base/subject> <http://example.com/base/name> "Izakaya" .
+<http://example.com/base/subject> <http://example.com/base/name> "Nepalese Restaurant Mt. Everest" .
+<http://example.com/base/subject> <http://example.com/base/name> "Brasserie Café Oevers" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant De Chinese Muur" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant De Vier Seizoenen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Strandpaviljoen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Thais Restaurant LemonLeaf" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mykonos" .
+<http://example.com/base/subject> <http://example.com/base/name> "NRC Restaurant Café" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Vandaag" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Bonsai" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pannenkoekenboerderij Onder Plantanen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lastage" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Vermeer" .
+<http://example.com/base/subject> <http://example.com/base/name> "Uit de Keuken" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het wapen van Middelie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Saskia?s huiskamerrestaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Caro Kookt" .
+<http://example.com/base/subject> <http://example.com/base/name> "Eten bij mij" .
+<http://example.com/base/subject> <http://example.com/base/name> "Marits huiskamerrestaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Marleen kookt" .
+<http://example.com/base/subject> <http://example.com/base/name> "Sla" .
+<http://example.com/base/subject> <http://example.com/base/name> "Julius Bar&Grill" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Dutch Co." .
+<http://example.com/base/subject> <http://example.com/base/name> "De IJ-keuken" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Uitvreter" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Stedelijk" .
+<http://example.com/base/subject> <http://example.com/base/name> "Grand Cafe Il Gusto Ristorante" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vondelpark3" .
+<http://example.com/base/subject> <http://example.com/base/name> "Greenwoods" .
+<http://example.com/base/subject> <http://example.com/base/name> "Omelegg" .
+<http://example.com/base/subject> <http://example.com/base/name> "Trust" .
+<http://example.com/base/subject> <http://example.com/base/name> "Dijkers eten & drinken" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Vier Seizoenen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Orangerie Elswout" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Mastenbar" .
+<http://example.com/base/subject> <http://example.com/base/name> "Sazanka" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Sinne" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pho 91" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vinnies" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Gastro.bar" .
+<http://example.com/base/subject> <http://example.com/base/name> "Salsa Shop" .
+<http://example.com/base/subject> <http://example.com/base/name> "Brasserie Nacional" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pata Negra" .
+<http://example.com/base/subject> <http://example.com/base/name> "Brasserie Bark" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Silveren Spiegel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bar Brandstof" .
+<http://example.com/base/subject> <http://example.com/base/name> "BUFFET van Odette" .
+<http://example.com/base/subject> <http://example.com/base/name> "Maslow" .
+<http://example.com/base/subject> <http://example.com/base/name> "THT" .
+<http://example.com/base/subject> <http://example.com/base/name> "T eten & drinken" .
+<http://example.com/base/subject> <http://example.com/base/name> "STEK" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Spelt" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bojo" .
+<http://example.com/base/subject> <http://example.com/base/name> "Rijsel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Rosa & Rita" .
+<http://example.com/base/subject> <http://example.com/base/name> "63graden Foodbar" .
+<http://example.com/base/subject> <http://example.com/base/name> "Morlang" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Red" .
+<http://example.com/base/subject> <http://example.com/base/name> "Aan de Amstel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lazagne" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Ysbreeker" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hummbar" .
+<http://example.com/base/subject> <http://example.com/base/name> "BAUT Zuid" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Fat Dog" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant As" .
+<http://example.com/base/subject> <http://example.com/base/name> "Instock" .
+<http://example.com/base/subject> <http://example.com/base/name> "Little Collins" .
+<http://example.com/base/subject> <http://example.com/base/name> "Citroën Restaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mother India" .
+<http://example.com/base/subject> <http://example.com/base/name> "Voldaan" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pinxobar" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Kiebêrt" .
+<http://example.com/base/subject> <http://example.com/base/name> "BAK" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hendrix" .
+<http://example.com/base/subject> <http://example.com/base/name> "MOS Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Dophert" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vijfnulvijf" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Modern" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bistro Zuidlande" .
+<http://example.com/base/subject> <http://example.com/base/name> "Ron Gastrobar Oriental" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Harbour Club Kitchen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Terpentijn" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hannekes Boom" .
+<http://example.com/base/subject> <http://example.com/base/name> "DWDD pop-up restaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Pantry" .
+<http://example.com/base/subject> <http://example.com/base/name> "Gustafson Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lion Noir" .
+<http://example.com/base/subject> <http://example.com/base/name> "Guts & Glory" .
+<http://example.com/base/subject> <http://example.com/base/name> "Rolling Rock Kitchen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Roomservice at Olof's" .
+<http://example.com/base/subject> <http://example.com/base/name> "Kaagman & Kortekaas" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mossel & Gin" .
+<http://example.com/base/subject> <http://example.com/base/name> "Moon" .
+<http://example.com/base/subject> <http://example.com/base/name> "Fou Fow Ramen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hummus Bistro d&a" .
+<http://example.com/base/subject> <http://example.com/base/name> "Zouthaven" .
+<http://example.com/base/subject> <http://example.com/base/name> "Waterkant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Castell" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café DS" .
+<http://example.com/base/subject> <http://example.com/base/name> "Eastside Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Ibis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant CHI" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Bidou" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mozo" .
+<http://example.com/base/subject> <http://example.com/base/name> "Nam Kee" .
+<http://example.com/base/subject> <http://example.com/base/name> "Huis aan de Amstel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Thrill Grill" .
+<http://example.com/base/subject> <http://example.com/base/name> "Geflipt" .
+<http://example.com/base/subject> <http://example.com/base/name> "Burgerbar" .
+<http://example.com/base/subject> <http://example.com/base/name> "Cannibale Royale" .
+<http://example.com/base/subject> <http://example.com/base/name> "Frits" .
+<http://example.com/base/subject> <http://example.com/base/name> "World of Food" .
+<http://example.com/base/subject> <http://example.com/base/name> "Breda" .
+<http://example.com/base/subject> <http://example.com/base/name> "SNCKBR" .
+<http://example.com/base/subject> <http://example.com/base/name> "Jansz" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant DS" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bar Basquiat" .
+<http://example.com/base/subject> <http://example.com/base/name> "Supermercado" .
+<http://example.com/base/subject> <http://example.com/base/name> "ICHI-E" .
+<http://example.com/base/subject> <http://example.com/base/name> "Badhuis Javaplein" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Japanner" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Heerenhuis Beemster(kopie)" .
+<http://example.com/base/subject> <http://example.com/base/name> "Janz." .
+<http://example.com/base/subject> <http://example.com/base/name> "Mchi Mood Food & Drinks" .
+<http://example.com/base/subject> <http://example.com/base/name> "Van 't Spit" .
+<http://example.com/base/subject> <http://example.com/base/name> "DIS" .
+<http://example.com/base/subject> <http://example.com/base/name> "Braai" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bajesdorp" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bistro Baret" .
+<http://example.com/base/subject> <http://example.com/base/name> "Happyhappyjoyjoy East" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Gerard van Es" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lute" .
+<http://example.com/base/subject> <http://example.com/base/name> "Eat Your Heart Out" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Pool" .
+<http://example.com/base/subject> <http://example.com/base/name> "John Dory" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Meets" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hangar" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pension Homeland" .
+<http://example.com/base/subject> <http://example.com/base/name> "Louie Louie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Dok" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bo Cinq" .
+<http://example.com/base/subject> <http://example.com/base/name> "Snappers" .
+<http://example.com/base/subject> <http://example.com/base/name> "Luitenant Cornelis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Vissershaven - andere eigenaar (input komt nog)" .
+<http://example.com/base/subject> <http://example.com/base/name> "Wilde Westen Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Magnolia's Hampshire Golfhotel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Taqueria Tacobar" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café de Paris" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Seafood Market" .
+<http://example.com/base/subject> <http://example.com/base/name> "Meneer Nieges" .
+<http://example.com/base/subject> <http://example.com/base/name> "La Cantinetta Wine&Pasta" .
+<http://example.com/base/subject> <http://example.com/base/name> "Ctaste - Dining in the dark" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Partycentrum De Jagersplas" .
+<http://example.com/base/subject> <http://example.com/base/name> "Grand Café Hannes" .
+<http://example.com/base/subject> <http://example.com/base/name> "Strandzuid" .
+<http://example.com/base/subject> <http://example.com/base/name> "CornelisZ" .
+<http://example.com/base/subject> <http://example.com/base/name> "REM Eiland" .
+<http://example.com/base/subject> <http://example.com/base/name> "Razmataz" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant C" .
+<http://example.com/base/subject> <http://example.com/base/name> "Smokin' Barrels" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Panache" .
+<http://example.com/base/subject> <http://example.com/base/name> "Happyhappyjoyjoy West" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Rotisserie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Spaghetteria" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Brooklyn" .
+<http://example.com/base/subject> <http://example.com/base/name> "Peperwortel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café-restaurant De Plantage" .
+<http://example.com/base/subject> <http://example.com/base/name> "Grand café de Tropen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hotel de Goudfazant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Noara's Restaurant en Lounge" .
+<http://example.com/base/subject> <http://example.com/base/name> "Elkaar" .
+<http://example.com/base/subject> <http://example.com/base/name> "Il Pecorino" .
+<http://example.com/base/subject> <http://example.com/base/name> "Brasserie Nobel" .
+<http://example.com/base/subject> <http://example.com/base/name> "GIN Neo Bistro & Wines(kopie)" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Butcher" .
+<http://example.com/base/subject> <http://example.com/base/name> "CT Coffee & Coconuts" .
+<http://example.com/base/subject> <http://example.com/base/name> "manamana" .
+<http://example.com/base/subject> <http://example.com/base/name> "Dim Sum Now" .
+<http://example.com/base/subject> <http://example.com/base/name> "Calle Ocho" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant van den Hogen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Havenrestaurant De Lunch" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mr Porter" .
+<http://example.com/base/subject> <http://example.com/base/name> "Carter Bar & Kitchen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Renato's Osteria" .
+<http://example.com/base/subject> <http://example.com/base/name> "Oma Ietje" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pont 13" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant 1e Klas & 1e Klas Pub" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Jopenkerk" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Verkeerde Wereld" .
+<http://example.com/base/subject> <http://example.com/base/name> "Testrestaurant Kristel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Gin Neo" .
+<http://example.com/base/subject> <http://example.com/base/name> "Herberg Hooghoudt" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Blue" .
+<http://example.com/base/subject> <http://example.com/base/name> "Van der Valk Hotel Volendam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hof van Holland" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant IJmond" .
+<http://example.com/base/subject> <http://example.com/base/name> "Healthfood Restaurant De Bolhoed" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Italiaan" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Het Veerhuys" .
+<http://example.com/base/subject> <http://example.com/base/name> "Betty's" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bar James" .
+<http://example.com/base/subject> <http://example.com/base/name> "Westeinder Paviljoen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Nevel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Thijs" .
+<http://example.com/base/subject> <http://example.com/base/name> "Meatless District" .
+<http://example.com/base/subject> <http://example.com/base/name> "YAY Health Store & More" .
+<http://example.com/base/subject> <http://example.com/base/name> "Samhoud Places" .
+<http://example.com/base/subject> <http://example.com/base/name> "Stork" .
+<http://example.com/base/subject> <http://example.com/base/name> "Rotisserie East" .
+<http://example.com/base/subject> <http://example.com/base/name> "Seafood Bar Van Baerlestraat" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bistro Belle" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mazzo" .
+<http://example.com/base/subject> <http://example.com/base/name> "DeShima" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mystique" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lotti's Bar and Grill" .
+<http://example.com/base/subject> <http://example.com/base/name> "Merkelbach" .
+<http://example.com/base/subject> <http://example.com/base/name> "TonTon Club Westergasfabriek" .
+<http://example.com/base/subject> <http://example.com/base/name> "Toko Boemboe Bali" .
+<http://example.com/base/subject> <http://example.com/base/name> "NaangNuan" .
+<http://example.com/base/subject> <http://example.com/base/name> "Los del Puerto" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Four Seasons" .
+<http://example.com/base/subject> <http://example.com/base/name> "Graham's Kitchen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hoofdstad Brasserie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Meneer De Wit Heeft Honger" .
+<http://example.com/base/subject> <http://example.com/base/name> "Yokiyo" .
+<http://example.com/base/subject> <http://example.com/base/name> "Visbar Beet" .
+<http://example.com/base/subject> <http://example.com/base/name> "Wolf Atelier" .
+<http://example.com/base/subject> <http://example.com/base/name> "Burgermeester" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Kleine Valk" .
+<http://example.com/base/subject> <http://example.com/base/name> "Librije?s Zusje" .
+<http://example.com/base/subject> <http://example.com/base/name> "Ter Marsch & Co" .
+<http://example.com/base/subject> <http://example.com/base/name> "Saravana Bhavan" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Zwaantje" .
+<http://example.com/base/subject> <http://example.com/base/name> "Al Argentino Restaurant Steakhouse" .
+<http://example.com/base/subject> <http://example.com/base/name> "Graceland BAR-B-Q" .
+<http://example.com/base/subject> <http://example.com/base/name> "Brasserie van Baerle" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Lieve" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Fabriek" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bulls and Dogs" .
+<http://example.com/base/subject> <http://example.com/base/name> "Suitehotel | Restaurant Posthoorn" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Odessa" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Fish Toko" .
+<http://example.com/base/subject> <http://example.com/base/name> "NEST" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Culinaire Werkplaats" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Hoop Op d'Swarte Walvis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Casablanca Variété" .
+<http://example.com/base/subject> <http://example.com/base/name> "Da Portare Via" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Pannekoekkelder" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant & Brasserie Luden" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant De Kas" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant d'Vijff Vlieghen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Haesje Claes" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lucius Visrestaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Fifteen Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Moeders" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Los Argentinos" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pasta e Basta" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vegetarisch Restaurant De Waaghals" .
+<http://example.com/base/subject> <http://example.com/base/name> "Guadalupe" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hard Rock Cafe Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Humphrey's" .
+<http://example.com/base/subject> <http://example.com/base/name> "La Madonna" .
+<http://example.com/base/subject> <http://example.com/base/name> "Le Rendez-Vous" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café-Restaurant Land en Zeezicht" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant De Vijfde Smaak" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Koperen Bel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Rancho Argentinian Grill" .
+<http://example.com/base/subject> <http://example.com/base/name> "Le Garage" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Kop van Haven" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Dolce Vita" .
+<http://example.com/base/subject> <http://example.com/base/name> "NeL" .
+<http://example.com/base/subject> <http://example.com/base/name> "Old School" .
+<http://example.com/base/subject> <http://example.com/base/name> "Flair Culinair Cook & Dine Concept" .
+<http://example.com/base/subject> <http://example.com/base/name> "La Cage Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Puri Mas" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant-Café In de Waag" .
+<http://example.com/base/subject> <http://example.com/base/name> "Supperclub" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Nieuwe Kafe Restaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Sea Palace" .
+<http://example.com/base/subject> <http://example.com/base/name> "St. George" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bazar Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Noordwest" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant WestergasTerras" .
+<http://example.com/base/subject> <http://example.com/base/name> "Wagamama Max Euweplein" .
+<http://example.com/base/subject> <http://example.com/base/name> "Wagamama Rembrandtplein" .
+<http://example.com/base/subject> <http://example.com/base/name> "Wagamama Centraal" .
+<http://example.com/base/subject> <http://example.com/base/name> "NEIGHBOURS" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Villa Maria" .
+<http://example.com/base/subject> <http://example.com/base/name> "Toro Dorado Quality Steaks" .
+<http://example.com/base/subject> <http://example.com/base/name> "Herberg De Compagnie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Cafe Collette" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mr. & Mrs." .
+<http://example.com/base/subject> <http://example.com/base/name> "Specktakel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Staal" .
+<http://example.com/base/subject> <http://example.com/base/name> "Table 24" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Louisiana" .
+<http://example.com/base/subject> <http://example.com/base/name> "Truffels" .
+<http://example.com/base/subject> <http://example.com/base/name> "Blue Pepper" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Happy Pig Pancake Shop" .
+<http://example.com/base/subject> <http://example.com/base/name> "'t Heerenhuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Jacobsz" .
+<http://example.com/base/subject> <http://example.com/base/name> "Swych" .
+<http://example.com/base/subject> <http://example.com/base/name> "Auberge Jean & Marie" .
+<http://example.com/base/subject> <http://example.com/base/name> "L ?invite le Restaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Restaurant Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Taiko" .
+<http://example.com/base/subject> <http://example.com/base/name> "Oriental City" .
+<http://example.com/base/subject> <http://example.com/base/name> "Goodies" .
+<http://example.com/base/subject> <http://example.com/base/name> "La Falote" .
+<http://example.com/base/subject> <http://example.com/base/name> "La Perla" .
+<http://example.com/base/subject> <http://example.com/base/name> "The White Room" .
+<http://example.com/base/subject> <http://example.com/base/name> "Scheepskameel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Salsa Shop CS" .
+<http://example.com/base/subject> <http://example.com/base/name> "Ramses" .
+<http://example.com/base/subject> <http://example.com/base/name> "Huis van Lopez" .
+<http://example.com/base/subject> <http://example.com/base/name> "Salmuera" .
+<http://example.com/base/subject> <http://example.com/base/name> "Conservatorium Brasserie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Chiapas Taco Kartel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Poké Perfect" .
+<http://example.com/base/subject> <http://example.com/base/name> "Skek" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Pizzabakkers" .
+<http://example.com/base/subject> <http://example.com/base/name> "Adam & Siam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Tunes Restaurant and Bar by Schilo" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Boffert familierestaurant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vuurtoreneiland" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant VandeMarkt & Wine Wijn" .
+<http://example.com/base/subject> <http://example.com/base/name> "Midtown grill" .
+<http://example.com/base/subject> <http://example.com/base/name> "Kookerij de Singel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bistro Bij Ons" .
+<http://example.com/base/subject> <http://example.com/base/name> "'t Beemster Spijshuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Wilde Zwijnen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Restaurant Classico" .
+<http://example.com/base/subject> <http://example.com/base/name> "IJ-Kantine" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Blauwe Theehuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café het Paleis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Schiller" .
+<http://example.com/base/subject> <http://example.com/base/name> "Caffe Ristretto - Lunchrestaurant & Café" .
+<http://example.com/base/subject> <http://example.com/base/name> "Eet- en Bierencafé De Beiaard" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Restaurant de Passage" .
+<http://example.com/base/subject> <http://example.com/base/name> "KinderkookKafé" .
+<http://example.com/base/subject> <http://example.com/base/name> "Eetcafé de Zeilhoek" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bloem" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café 't Blaauwhooft" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café De Pijp" .
+<http://example.com/base/subject> <http://example.com/base/name> "Caffe Milo" .
+<http://example.com/base/subject> <http://example.com/base/name> "Caffe Oslo" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Smoeshaan" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Toog" .
+<http://example.com/base/subject> <http://example.com/base/name> "Festina Lente" .
+<http://example.com/base/subject> <http://example.com/base/name> "Golden Brown" .
+<http://example.com/base/subject> <http://example.com/base/name> "Dulac" .
+<http://example.com/base/subject> <http://example.com/base/name> "Langendijk" .
+<http://example.com/base/subject> <http://example.com/base/name> "Fidelio" .
+<http://example.com/base/subject> <http://example.com/base/name> "Louter" .
+<http://example.com/base/subject> <http://example.com/base/name> "Polder" .
+<http://example.com/base/subject> <http://example.com/base/name> "Luxembourg" .
+<http://example.com/base/subject> <http://example.com/base/name> "Wilhelmina Dok" .
+<http://example.com/base/subject> <http://example.com/base/name> "'t Kalfje" .
+<http://example.com/base/subject> <http://example.com/base/name> "Eetcafé - jachthaven 't Swaentje" .
+<http://example.com/base/subject> <http://example.com/base/name> "Grand Cafe Batavia" .
+<http://example.com/base/subject> <http://example.com/base/name> "Sarphaat" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Marie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Groot Melkhuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Eetcafé de Jachtclub" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bar Spek" .
+<http://example.com/base/subject> <http://example.com/base/name> "Eetcafé de Oude School" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vondeltuin" .
+<http://example.com/base/subject> <http://example.com/base/name> "Anne&Max" .
+<http://example.com/base/subject> <http://example.com/base/name> "Moods Coffee Corner" .
+<http://example.com/base/subject> <http://example.com/base/name> "Toastable" .
+<http://example.com/base/subject> <http://example.com/base/name> "Roots" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Maxwell" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Loetje" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bar Baarsch" .
+<http://example.com/base/subject> <http://example.com/base/name> "Gent aan de Schinkel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Testrestaurant Kristel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Viscafe de Gouden Hoek" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Marker Veerhuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Koperen Vis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Grand Café Amstelhoeck" .
+<http://example.com/base/subject> <http://example.com/base/name> "Brasserie Harkema (GESLOTEN)" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Prins" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Fabriek" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hoi" .
+<http://example.com/base/subject> <http://example.com/base/name> "Taverne De Visscher" .
+<http://example.com/base/subject> <http://example.com/base/name> "Café Lennep" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pannekoekschip Wormerveer" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Zaanse pannenkoekenpaleis" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Pannenkoekenhoek" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pannekoekenpaviljoen De Carrousel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pannenkoekenboot" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pancakes! Prins Hendrikkade" .
+<http://example.com/base/subject> <http://example.com/base/name> "Testrestaurant Kristel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pannenkoekenhuis De Witte Swaen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pancakes! Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Pancake Bakery" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mook Pancakes" .
+<http://example.com/base/subject> <http://example.com/base/name> "'t Beemster Spijshuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Paviljoen Noordzee" .
+<http://example.com/base/subject> <http://example.com/base/name> "Paviljoen Zeezicht" .
+<http://example.com/base/subject> <http://example.com/base/name> "Paviljoen Nova Zembla" .
+<http://example.com/base/subject> <http://example.com/base/name> "Zandvoort Beach Clubs" .
+<http://example.com/base/subject> <http://example.com/base/name> "Woodstock 69" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bloomingdale" .
+<http://example.com/base/subject> <http://example.com/base/name> "Fuel" .
+<http://example.com/base/subject> <http://example.com/base/name> "San Blas" .
+<http://example.com/base/subject> <http://example.com/base/name> "Republiek Bloemendaal" .
+<http://example.com/base/subject> <http://example.com/base/name> "Havana" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mango?s Beach Bar" .
+<http://example.com/base/subject> <http://example.com/base/name> "George No 5 ? Mer du Nord" .
+<http://example.com/base/subject> <http://example.com/base/name> "Safari Club" .
+<http://example.com/base/subject> <http://example.com/base/name> "Sandy Hill" .
+<http://example.com/base/subject> <http://example.com/base/name> "Skyline & First Wave" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vooges" .
+<http://example.com/base/subject> <http://example.com/base/name> "Zout" .
+<http://example.com/base/subject> <http://example.com/base/name> "Ajuma" .
+<http://example.com/base/subject> <http://example.com/base/name> "Rapa Nui" .
+<http://example.com/base/subject> <http://example.com/base/name> "Tent 6" .
+<http://example.com/base/subject> <http://example.com/base/name> "Tijn Akersloot" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Spot" .
+<http://example.com/base/subject> <http://example.com/base/name> "Aloha Beach" .
+<http://example.com/base/subject> <http://example.com/base/name> "Zilt aan zee" .
+<http://example.com/base/subject> <http://example.com/base/name> "Beach Club Far Out" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Haven van Zandvoort" .
+<http://example.com/base/subject> <http://example.com/base/name> "Testrestaurant Kristel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Beach Inn" .
+<http://example.com/base/subject> <http://example.com/base/name> "Strandpaviljoen Timboektoe" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vroeger" .
+<http://example.com/base/subject> <http://example.com/base/name> "Eetsalon van Dobben de Pijp" .
+<http://example.com/base/subject> <http://example.com/base/name> "Cora Delicatessen & Broodjes" .
+<http://example.com/base/subject> <http://example.com/base/name> "Jonk Haringhandel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Vlaamsch Broodhuys" .
+<http://example.com/base/subject> <http://example.com/base/name> "Koffiehuis De Hoek" .
+<http://example.com/base/subject> <http://example.com/base/name> "Eetsalon van Dobben B.V." .
+<http://example.com/base/subject> <http://example.com/base/name> "Het wapen van Middelie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Häagen-Dazs IJssalon" .
+<http://example.com/base/subject> <http://example.com/base/name> "Frozen Yoghurt Company" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het IJspaleis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Mezzo ijssalon en lunchroom" .
+<http://example.com/base/subject> <http://example.com/base/name> "Jordino" .
+<http://example.com/base/subject> <http://example.com/base/name> "Koel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lanskroon" .
+<http://example.com/base/subject> <http://example.com/base/name> "Monte Pelmo" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pisa IJs" .
+<http://example.com/base/subject> <http://example.com/base/name> "Venetië IJs" .
+<http://example.com/base/subject> <http://example.com/base/name> "IJscuypje" .
+<http://example.com/base/subject> <http://example.com/base/name> "Metropolitan" .
+<http://example.com/base/subject> <http://example.com/base/name> "IJsboutique" .
+<http://example.com/base/subject> <http://example.com/base/name> "Frozz" .
+<http://example.com/base/subject> <http://example.com/base/name> "Theehuis Cruquius" .
+<http://example.com/base/subject> <http://example.com/base/name> "Harar Coffee" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het Weeshuis" .
+<http://example.com/base/subject> <http://example.com/base/name> "Theetuin en Fluisterbootverhuur Overleek" .
+<http://example.com/base/subject> <http://example.com/base/name> "Het wapen van Middelie" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Verkeerde Wereld" .
+<http://example.com/base/subject> <http://example.com/base/name> "Toko Boemboe Bali" .
+<http://example.com/base/subject> <http://example.com/base/name> "Latei" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lunchroom Ab Müller" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Koffiezaak" .
+<http://example.com/base/subject> <http://example.com/base/name> "Brasserie Bel Ami" .
+<http://example.com/base/subject> <http://example.com/base/name> "Gartine" .
+<http://example.com/base/subject> <http://example.com/base/name> "Boterham" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bakers & Roasters" .
+<http://example.com/base/subject> <http://example.com/base/name> "LAVINIA Good Food" .
+<http://example.com/base/subject> <http://example.com/base/name> "Venkel Salades" .
+<http://example.com/base/subject> <http://example.com/base/name> "Sugarless" .
+<http://example.com/base/subject> <http://example.com/base/name> "Petit Gâteau" .
+<http://example.com/base/subject> <http://example.com/base/name> "Scandinavian Embassy" .
+<http://example.com/base/subject> <http://example.com/base/name> "Hofje zonder Zorgen" .
+<http://example.com/base/subject> <http://example.com/base/name> "Sugar & Spice" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lebkov & Sons" .
+<http://example.com/base/subject> <http://example.com/base/name> "Beter & Leuk" .
+<http://example.com/base/subject> <http://example.com/base/name> "@7" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bakhuys Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Dr. Blend" .
+<http://example.com/base/subject> <http://example.com/base/name> "LITE/DARK" .
+<http://example.com/base/subject> <http://example.com/base/name> "Two for Joy" .
+<http://example.com/base/subject> <http://example.com/base/name> "Singel 404" .
+<http://example.com/base/subject> <http://example.com/base/name> "Yoghurt Barn" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bedford-Stuyvesant" .
+<http://example.com/base/subject> <http://example.com/base/name> "Nielsen" .
+<http://example.com/base/subject> <http://example.com/base/name> "My Little Patisserie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Back to Black" .
+<http://example.com/base/subject> <http://example.com/base/name> "Biologische Snackbar 't Wethoudertje" .
+<http://example.com/base/subject> <http://example.com/base/name> "Betty Blue" .
+<http://example.com/base/subject> <http://example.com/base/name> "Gs Amsterdam" .
+<http://example.com/base/subject> <http://example.com/base/name> "Pluk 9 Straatjes" .
+<http://example.com/base/subject> <http://example.com/base/name> "The Breakfast Club" .
+<http://example.com/base/subject> <http://example.com/base/name> "Toki" .
+<http://example.com/base/subject> <http://example.com/base/name> "De Bakkerswinkel" .
+<http://example.com/base/subject> <http://example.com/base/name> "Koffie Academie" .
+<http://example.com/base/subject> <http://example.com/base/name> "Salad & the City" .
+<http://example.com/base/subject> <http://example.com/base/name> "Coffee Room" .
+<http://example.com/base/subject> <http://example.com/base/name> "George W.P.A." .
+<http://example.com/base/subject> <http://example.com/base/name> "De Drie Graefjes" .
+<http://example.com/base/subject> <http://example.com/base/name> "Occo" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bagels & Beans" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lunchroom Lastig" .
+<http://example.com/base/subject> <http://example.com/base/name> "WIJS WEST" .
+<http://example.com/base/subject> <http://example.com/base/name> "Rein" .
+<http://example.com/base/subject> <http://example.com/base/name> "Bagels & Beans Amsterdam Oud West" .
+<http://example.com/base/subject> <http://example.com/base/name> "Lokaal Spaanders" .
+<http://example.com/base/subject> <http://example.com/base/name> "Twentyfiveseven" .

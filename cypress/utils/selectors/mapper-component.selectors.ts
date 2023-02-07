@@ -56,6 +56,4 @@ export class MapperComponentSelectors {
   static readonly TYPE_LITERAL = 'type-literal';
   static readonly TYPE_UNIQUE_BNODE = 'type-unique_bnode';
   static readonly TYPE_VALUE_BNODE = 'type-value_bnode';
-
-
 }

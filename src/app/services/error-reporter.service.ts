@@ -25,16 +25,16 @@ export class ErrorReporterService {
     let errorMessage = message;
     if (error.error instanceof ErrorEvent) {
       errorMessage = this.clientError(error, notify);
-      throwError(errorMessage);
+      throwError(() => new Error(errorMessage));
     } else {
       const errMessage = this.backendError(error, message, notify);
       if (errMessage instanceof Promise) {
-        errMessage.then((err) => throwError(err));
+        errMessage.then((err) => throwError(() => new Error(err)));
       } else {
-        return throwError(errorMessage);
+        return throwError(() => new Error(errorMessage));
       }
     }
-    return throwError(errorMessage);
+    return throwError(() => new Error(errorMessage));
   }
 
   clientError(error: any, notify: boolean) {
@@ -62,7 +62,7 @@ export class ErrorReporterService {
       } else {
         errorMessage = error.message;
       }
-      this.notify(notify, errorMessage);
+      this.notify(notify, errorMessage || message);
       return errorMessage;
     }
   }

@@ -1,0 +1,29 @@
+BASE <http://example.com/base/>
+SELECT * 
+WHERE {
+  BIND( ?c_Trcid AS ?Trcid ) .
+  BIND( ?c_Title AS ?Title ) .
+  BIND( ?c_Shortdescription AS ?Shortdescription ) .
+  BIND( ?c_Longdescription AS ?Longdescription ) .
+  BIND( ?c_Calendarsummary AS ?Calendarsummary ) .
+  BIND( ?c_TitleEN AS ?TitleEN ) .
+  BIND( ?c_ShortdescriptionEN AS ?ShortdescriptionEN ) .
+  BIND( ?c_LongdescriptionEN AS ?LongdescriptionEN ) .
+  BIND( ?c_CalendarsummaryEN AS ?CalendarsummaryEN ) .
+  BIND( ?c_Types AS ?Types ) .
+  BIND( ?c_Ids AS ?Ids ) .
+  BIND( ?c_Locatienaam AS ?Locatienaam ) .
+  BIND( ?c_City AS ?City ) .
+  BIND( ?c_Adres AS ?Adres ) .
+  BIND( ?c_Zipcode AS ?Zipcode ) .
+  BIND( ?c_Latitude AS ?Latitude ) .
+  BIND( ?c_Longitude AS ?Longitude ) .
+  BIND( ?c_Urls AS ?Urls ) .
+  BIND( ?c_Media AS ?Media ) .
+  BIND( ?c_Thumbnail AS ?Thumbnail ) .
+  BIND( ?c_Datepattern_startdate AS ?Datepattern_startdate ) .
+  BIND( ?c_Datepattern_enddate AS ?Datepattern_enddate ) .
+  BIND( ?c_Singledates AS ?Singledates ) .
+  BIND( ?c_Type1 AS ?Type1 ) .
+  BIND( ?c_Column AS ?Column ) .
+}

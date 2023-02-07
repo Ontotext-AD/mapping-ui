@@ -1,0 +1,226 @@
+{
+  "namespace": "triply",
+  "val": {
+    "endpointHistory": [],
+    "tabs": [
+      "tnfzr",
+      "xn5jxw",
+      "002sj8",
+      "odh0q",
+      "twbizo"
+    ],
+    "active": "002sj8",
+    "tabConfig": {
+      "tnfzr": {
+        "yasqe": {
+          "value": "BASE <http://example.com/base/>\n\nSELECT * WHERE {\n  ?s ?p ?o .\n} LIMIT 100"
+        },
+        "yasr": {
+          "settings": {
+            "selectedPlugin": "table",
+            "pluginsConfig": {}
+          }
+        },
+        "requestConfig": {
+          "endpoint": "http://localhost:7333/repositories/ontorefine:123",
+          "method": "POST",
+          "acceptHeaderGraph": "application/n-triples,*/*;q=0.9",
+          "acceptHeaderSelect": "application/sparql-results+json,*/*;q=0.9",
+          "acceptHeaderUpdate": "text/plain,*/*;q=0.9",
+          "namedGraphs": [],
+          "defaultGraphs": [],
+          "args": [
+            {
+              "name": "dataProviderID",
+              "value": "ontorefine:123"
+            }
+          ],
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "withCredentials": false,
+          "adjustQueryBeforeRequest": false
+        },
+        "id": "tnfzr",
+        "name": "Unnamed"
+      },
+      "xn5jxw": {
+        "yasqe": {
+          "value": "BASE <http://example.com/base/>\n\nSELECT * WHERE {\n  ?s ?p ?o .\n} LIMIT 100"
+        },
+        "yasr": {
+          "settings": {
+            "selectedPlugin": "table",
+            "pluginsConfig": {}
+          }
+        },
+        "requestConfig": {
+          "endpoint": "http://localhost:7333/repositories/ontorefine:123",
+          "method": "POST",
+          "acceptHeaderGraph": "application/n-triples,*/*;q=0.9",
+          "acceptHeaderSelect": "application/sparql-results+json,*/*;q=0.9",
+          "acceptHeaderUpdate": "text/plain,*/*;q=0.9",
+          "namedGraphs": [],
+          "defaultGraphs": [],
+          "args": [
+            {
+              "name": "dataProviderID",
+              "value": "ontorefine:123"
+            }
+          ],
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "withCredentials": false,
+          "adjustQueryBeforeRequest": false
+        },
+        "id": "xn5jxw",
+        "name": "My new tab"
+      },
+      "002sj8": {
+        "yasqe": {
+          "value": "BASE <http://example.com/base/>\nSELECT * \nWHERE {\n  BIND( ?c_MC AS ?MC ) .\n  BIND( ?c_correct AS ?correct ) .\n  BIND( ?c_incorrect AS ?incorrect ) .\n}"
+        },
+        "yasr": {
+          "response": {
+            "contentType": "application/sparql-results+json;charset=UTF-8",
+            "data": "{\n  \"head\": {\n    \"vars\": [\n      \"MC\",\n      \"correct\",\n      \"incorrect\"\n    ]\n  },\n  \"results\": {\n    \"bindings\": [\n      {\n        \"MC\": {\n          \"type\": \"literal\",\n          \"value\": \"MA\"\n        }\n      },\n      {\n        \"MC\": {\n          \"type\": \"literal\",\n          \"value\": \"TF\"\n        }\n      },\n      {\n        \"MC\": {\n          \"type\": \"literal\",\n          \"value\": \"ESS\"\n        }\n      },\n      {\n        \"correct\": {\n          \"type\": \"literal\",\n          \"value\": \"Exponents\"\n        },\n        \"incorrect\": {\n          \"type\": \"literal\",\n          \"value\": \"Addition\"\n        },\n        \"MC\": {\n          \"type\": \"literal\",\n          \"value\": \"ORD\"\n        }\n      },\n      {\n        \"correct\": {\n          \"type\": \"literal\",\n          \"value\": \"dollars for students enrolled in\"\n        },\n        \"incorrect\": {\n          \"type\": \"literal\",\n          \"value\": \"units or more,\"\n        },\n        \"MC\": {\n          \"type\": \"literal\",\n          \"value\": \"FIB\"\n        }\n      },\n      {\n        \"correct\": {\n          \"type\": \"literal\",\n          \"value\": \"Λ\"\n        },\n        \"incorrect\": {\n          \"type\": \"literal\",\n          \"value\": \"γ\"\n        },\n        \"MC\": {\n          \"type\": \"literal\",\n          \"value\": \"MAT\"\n        }\n      }\n    ]\n  }\n}",
+            "status": 200,
+            "executionTime": 135,
+            "queryStartedTime": 1676380895969
+          },
+          "settings": {
+            "selectedPlugin": "table",
+            "pluginsConfig": {}
+          }
+        },
+        "requestConfig": {
+          "endpoint": "http://localhost:7333/repositories/ontorefine:123",
+          "method": "POST",
+          "acceptHeaderGraph": "application/n-triples,*/*;q=0.9",
+          "acceptHeaderSelect": "application/sparql-results+json,*/*;q=0.9",
+          "acceptHeaderUpdate": "text/plain,*/*;q=0.9",
+          "namedGraphs": [],
+          "defaultGraphs": [],
+          "args": [
+            {
+              "name": "dataProviderID",
+              "value": "ontorefine:123"
+            }
+          ],
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "withCredentials": false,
+          "adjustQueryBeforeRequest": false
+        },
+        "id": "002sj8",
+        "name": "Generated 1"
+      },
+      "odh0q": {
+        "yasqe": {
+          "value": "BASE <http://example.com/base/>\nSELECT * \nWHERE {\n  SERVICE <http://localhost:7333/repositories/ontorefine:2315541518351> {\n    BIND( ?c_MC AS ?MC ) .\n    BIND( ?c_What is 2+2? AS ?What is 2+2? ) .\n    BIND( ?c_4.0 AS ?4.0 ) .\n    BIND( ?c_correct AS ?correct ) .\n    BIND( ?c_3.0 AS ?3.0 ) .\n    BIND( ?c_incorrect AS ?incorrect ) .\n    BIND( ?c_Column 7 AS ?Column 7 ) .\n    BIND( ?c_Column 8 AS ?Column 8 ) .\n    BIND( ?c_Column 9 AS ?Column 9 ) .\n   }\n}"
+        },
+        "yasr": {
+          "settings": {
+            "selectedPlugin": "table",
+            "pluginsConfig": {}
+          }
+        },
+        "requestConfig": {
+          "endpoint": "http://localhost:7333/repositories/ontorefine:123",
+          "method": "POST",
+          "acceptHeaderGraph": "application/n-triples,*/*;q=0.9",
+          "acceptHeaderSelect": "application/sparql-results+json,*/*;q=0.9",
+          "acceptHeaderUpdate": "text/plain,*/*;q=0.9",
+          "namedGraphs": [],
+          "defaultGraphs": [],
+          "args": [
+            {
+              "name": "dataProviderID",
+              "value": "ontorefine:123"
+            }
+          ],
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "withCredentials": false,
+          "adjustQueryBeforeRequest": false
+        },
+        "id": "odh0q",
+        "name": "Generated 2"
+      },
+      "twbizo": {
+        "yasqe": {
+          "value": "BASE <http://example.com/base/>\n\nSELECT * WHERE {\n  ?s ?p ?o .\n} LIMIT 100"
+        },
+        "yasr": {
+          "settings": {
+            "selectedPlugin": "table",
+            "pluginsConfig": {}
+          }
+        },
+        "requestConfig": {
+          "endpoint": "http://localhost:7333/repositories/ontorefine:123",
+          "method": "POST",
+          "acceptHeaderGraph": "application/n-triples,*/*;q=0.9",
+          "acceptHeaderSelect": "application/sparql-results+json,*/*;q=0.9",
+          "acceptHeaderUpdate": "text/plain,*/*;q=0.9",
+          "namedGraphs": [],
+          "defaultGraphs": [],
+          "args": [
+            {
+              "name": "dataProviderID",
+              "value": "ontorefine:123"
+            }
+          ],
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "withCredentials": false,
+          "adjustQueryBeforeRequest": false
+        },
+        "id": "twbizo",
+        "name": "default query"
+      }
+    },
+    "lastClosedTab": {
+      "index": 2,
+      "tab": {
+        "yasqe": {
+          "value": "BASE <http://example.com/base/>\n\nSELECT * WHERE {\n  ?s ?p ?o .\n} LIMIT 100"
+        },
+        "yasr": {
+          "settings": {
+            "selectedPlugin": "table",
+            "pluginsConfig": {}
+          }
+        },
+        "requestConfig": {
+          "endpoint": "http://localhost:7333/repositories/ontorefine:123",
+          "method": "POST",
+          "acceptHeaderGraph": "application/n-triples,*/*;q=0.9",
+          "acceptHeaderSelect": "application/sparql-results+json,*/*;q=0.9",
+          "acceptHeaderUpdate": "text/plain,*/*;q=0.9",
+          "namedGraphs": [],
+          "defaultGraphs": [],
+          "args": [
+            {
+              "name": "dataProviderID",
+              "value": "ontorefine:123"
+            }
+          ],
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "withCredentials": false,
+          "adjustQueryBeforeRequest": false
+        },
+        "id": "pffdf",
+        "name": "Unnamed 1"
+      }
+    }
+  },
+  "exp": 2592000,
+  "time": 1676380896.107
+}

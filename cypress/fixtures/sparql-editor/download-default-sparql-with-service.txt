@@ -1,0 +1,6 @@
+BASE <http://example.com/base/>
+SELECT * WHERE {
+  SERVICE <http://localhost:4200/repositories/ontorefine:123> {
+    ?s ?p ?o .
+  }
+} LIMIT 100
