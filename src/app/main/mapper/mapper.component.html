@@ -6,14 +6,14 @@
     </div>
 
     <div class="content">
-      <div class="mr-12">
+      <div>
         <mat-form-field appearance="fill">
           <mat-label>{{'LABELS.BASE_IRI' | translate}}</mat-label>
           <input matInput [ngModel]="getBaseIRI()" (ngModelChange)="setBaseIRI($event)" appCypressData="base-iri">
         </mat-form-field>
       </div>
 
-      <div class="mr-12">
+      <div>
         <mat-form-field>
           <mat-chip-list #namespaces area-label="Namespaces management" appCypressData="namespace-wrapper" [selectable]="true">
             <mat-chip *ngFor="let namespace of getNamespaces() | keyvalue" (removed)="removeNamespace(namespace.key)"

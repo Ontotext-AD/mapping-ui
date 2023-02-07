@@ -381,7 +381,7 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
 
     sparql = this.tryToFormat(sparql, true);
 
-    const column = source.getTitle().replace(/\s+/g, '_');
+    const column = source.getTitle();
     const updatedSparql = this.insetColumnBinding(sparql, column);
 
     const newEditorConfig = {...this.getCurrentYasguiConfig()};

@@ -1,5 +1,6 @@
 import 'cypress-localstorage-commands';
-import {MapperComponentSelectors} from "../utils/selectors/mapper-component.selectors";
+import {MapperComponentSelectors} from '../utils/selectors/mapper-component.selectors';
+import {SparqlEditorComponentSelectors} from '../utils/selectors/sparql-editor-component.selectors';
 
 class PrepareSteps {
   static prepareMoviesNamespacesAndColumns() {
@@ -32,13 +33,40 @@ class PrepareSteps {
     });
   }
 
-  static visitPageAndWaitToLoad() {
+  static prepareQueriesGenerationResponses(): void {
+    cy.intercept('GET', '/rest/sparql-mapper/query?project=ontorefine:123&type=standard', {
+      fixture: 'sparql-editor/standard-query-generation'
+    });
+    cy.intercept('GET', '/rest/sparql-mapper/query?project=ontorefine:123&type=standard_with_service', {
+      fixture: 'sparql-editor/standard-with-service-query-generation'
+    });
+    cy.intercept('GET', '/rest/sparql-mapper/query?project=ontorefine:123&type=mapping_based', {
+      fixture: 'sparql-editor/mapping-based-query-generation'
+    });
+    cy.intercept('GET', '/rest/sparql-mapper/query?project=ontorefine:123&type=mapping_based_with_service', {
+      fixture: 'sparql-editor/mapping-based-with-service-query-generation'
+    });
+  }
+
+  static prepareEmptyEditorConfigurations(): void {
+    cy.intercept('GET', '/rest/sparql-mapper/editor-config?project=123', {
+      statusCode: 204
+    });
+  }
+
+  static visitPageAndWaitToLoad(): void {
     cy.visit('?dataProviderID=ontorefine:123');
     cy.wait(['@loadColumns', '@loadProject']);
     // Ensures the CELL_INPUT element is visible
     cy.get(`[appCypressData=${MapperComponentSelectors.CELL_INPUT}]`).should('be.visible');
     // TODO this is a very ugly solution to a problem caused by detached elements in the DOM
-    cy.wait(300)
+    cy.wait(300);
+  }
+
+  static visitPageAndOpenSparqlEditor(): void {
+    this.visitPageAndWaitToLoad();
+    cy.get(SparqlEditorComponentSelectors.TAB_ID).click();
+    cy.get(SparqlEditorComponentSelectors.YASGUI).should('be.visible');
   }
 }
 

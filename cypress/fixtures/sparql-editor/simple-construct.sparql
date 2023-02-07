@@ -1,0 +1,10 @@
+BASE <http://example.com/base/>
+PREFIX mapper: <http://www.ontotext.com/mapper/>
+CONSTRUCT {
+  ?s1 <name> ?o_name .
+} WHERE {
+  SERVICE <http://localhost:4200/repositories/ontorefine:123>  {
+    BIND(<subject> as ?s1)
+    BIND(STR(?c_Title) as ?o_name)
+  }
+}

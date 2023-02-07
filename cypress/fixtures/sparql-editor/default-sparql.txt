@@ -1,0 +1,5 @@
+BASE <http://example.com/base/>
+
+SELECT * WHERE {
+  ?s ?p ?o .
+} LIMIT 100

@@ -44,7 +44,7 @@
       {{"BUTTONS.GENERATE_QUERY" | translate}}
       <mat-icon class="ml-1">arrow_drop_down</mat-icon>
     </button>
-    <mat-menu #templateMenu="matMenu" xPosition="before">
+    <mat-menu #templateMenu="matMenu" xPosition="before" class="queries-template-menu">
       <button mat-menu-item
               appCypressData="generate-template-action"
               (click)="generateSparql(generationSparqlType.STANDARD)"
@@ -97,7 +97,7 @@
       {{"BUTTONS.DOWNLOAD" | translate}}
       <mat-icon class="ml-1">arrow_drop_down</mat-icon>
     </button>
-    <mat-menu #downloadMenu="matMenu" xPosition="before">
+    <mat-menu #downloadMenu="matMenu" xPosition="before" class="download-menu">
       <button mat-menu-item
               appCypressData="download-sparql-action"
               (click)="downloadSparql(downloadSparqlType.DEFAULT)"

@@ -1,0 +1,1 @@
+http://localhost:7200/sparql?query=BASE%20%3Chttp:%2F%2Fexample.com%2Fbase%2F%3E%0ASELECT%20*%20WHERE%20%7B%0A%20%20SERVICE%20%3Chttp:%2F%2Flocalhost:7333%2Frepositories%2Fontorefine:2463516846806%3E%20%7B%0A%20%20%20%20%3Fs%20%3Fp%20%3Fo%20.%0A%20%20%7D%0A%7D
