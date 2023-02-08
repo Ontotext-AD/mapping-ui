@@ -221,7 +221,7 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
 
     const areTabsDifferent = !this.compare(this.latestSavedEditorConfig.val.tabs, currentConfig.val.tabs);
     const isActiveTabConfigDifferent = !this.compare(latestActiveTabConfig, currentActiveTabConfig);
-    const areQueriesDifferent = latestActiveTabConfig.yasqe.value !== currentActiveTabConfig.yasqe.value;
+    const areQueriesDifferent = latestActiveTabConfig.yasqe?.value !== currentActiveTabConfig.yasqe?.value;
 
     if (areTabsDifferent || isActiveTabConfigDifferent || areQueriesDifferent) {
       this.messageService.publish(ChannelName.EditorConfigurationChanged);
@@ -327,6 +327,9 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
    * Handles the switching of the rendering mode of the editor.
    */
   private onRenderingModeSwitch(mode: RenderingMode): void {
+    if (mode !== RenderingMode.YASGUI) {
+      VisualizationUtils.toggleLayoutOrientation(this.editor.nativeElement, true);
+    }
     VisualizationUtils.changeRenderMode(this.editor.nativeElement, mode);
     this.messageService.publish(ChannelName.RenderingModeSwitched, mode);
   }
@@ -346,7 +349,7 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
    * query which will be appended to a URL leading to the connected GraphDB as query parameter.
    * The method will open the Workbench in new browser tab.
    */
-  private onOpenGdbWorkbench() {
+  private onOpenGdbWorkbench(): void {
     const sparql = this.getActiveTabConfig().yasqe.value;
     this.editorService.getGraphDbQueryUrl(this.tryToFormat(sparql))
         .pipe(untilComponentDestroyed(this))
@@ -361,7 +364,7 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
    * it is not updated when the editor content is edited.
    * The method updates the editor by replacing the entire query that is displayed.
    */
-  onColumnNameClick(source: Source) {
+  onColumnNameClick(source: Source): void {
     let sparql = this.getActiveTabConfig().yasqe.value;
 
     sparql = this.tryToFormat(sparql, true);
@@ -378,7 +381,7 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
    * Tries to format the query by using the static methods from the Yasqe object, which should be
    * available in the window object.
    */
-  private tryToFormat(sparql: string, notify: boolean = false) {
+  private tryToFormat(sparql: string, notify: boolean = false): string {
     // @ts-ignore
     if (!window.Yasgui && !this.unstableColumnsFuncWarnGiven) {
       if (notify) {
@@ -416,7 +419,7 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
    * The logic in the method relies that the query string will be formatted and in certain
    * situations where it is not, the logic may behave in a weird way.
    */
-  private calculateInsertionPosition(sparqlLines: string[], bracketsLevel: 1 | 2) {
+  private calculateInsertionPosition(sparqlLines: string[], bracketsLevel: 1 | 2): number {
     let currentBracketsLevel = 1;
     let position = 0;
     for (let i = sparqlLines.length - 1; i >= 0; i--) {
