@@ -24,6 +24,6 @@ export class EditorUtils {
 
     // @ts-ignore
     const activeQueryType: string = activeCmElement.CodeMirror.getQueryType();
-    return activeQueryType.toLowerCase() === type;
+    return activeQueryType && activeQueryType.toLowerCase() === type;
   }
 }
