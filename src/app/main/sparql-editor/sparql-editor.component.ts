@@ -210,6 +210,12 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
     }
 
     const activeTab = currentConfig.val.active;
+    const latestActiveTab = this.latestSavedEditorConfig.val.active;
+    if (activeTab !== latestActiveTab) {
+      this.messageService.publish(ChannelName.EditorConfigurationChanged);
+      return;
+    }
+
     const latestActiveTabConfig = this.latestSavedEditorConfig.val.tabConfig[activeTab];
     const currentActiveTabConfig = currentConfig.val.tabConfig[activeTab];
 
