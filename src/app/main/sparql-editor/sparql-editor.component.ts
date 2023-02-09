@@ -13,10 +13,11 @@ import {TabConfig, YasguiStorageConfig} from 'src/app/models/sparql-editor/yasgu
 import {VisualizationUtils} from './lib-utils-copy/visualization-utils';
 import {RenderingMode} from './lib-utils-copy/rendering-mode.enum';
 import {DownloadSparqlType, GenerationSparqlType} from 'src/app/models/sparql-editor/sparql-query-type.enum';
-import {LocalStorageService, STORAGE_CHANGE_EVENT_NAME} from 'src/app/services/local-storage.service';
+import {ChangeEventDetails, LocalStorageService, STORAGE_CHANGE_EVENT_NAME} from 'src/app/services/local-storage.service';
 import {SourceService} from 'src/app/services/source.service';
 import {RefineRepositoryService} from 'src/app/services/rest/refine-repository.service';
 import {EditorUtils} from './utils/editor-utils';
+import {CopyUtils} from './utils/copy-utils';
 
 
 /**
@@ -164,7 +165,7 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
     });
 
     this.storageService.set(this.getStorageKey(), JSON.stringify(editorConfig));
-    this.latestSavedEditorConfig = editorConfig;
+    this.latestSavedEditorConfig = CopyUtils.copy(editorConfig);
   }
 
   /**
@@ -190,10 +191,15 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
   }
 
   /**
-   * Calculates whether there is a significant change in the editor in order to enable the save button.
+   * Calculates whether there is a significant change in the editor in order to enable the save
+   * button.
    */
-  private calculateEditorConfigState(): void {
-    const currentConfig = this.getCurrentYasguiConfig(false);
+  private calculateEditorConfigState(event: CustomEvent<ChangeEventDetails>): void {
+    if (event.detail.key !== this.getStorageKey()) {
+      return;
+    }
+
+    const currentConfig = JSON.parse(event.detail.value) || CopyUtils.copy(this.getCurrentYasguiConfig(false));
     if (!currentConfig) {
       return;
     }
@@ -209,19 +215,24 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
       return;
     }
 
-    const activeTab = currentConfig.val.active;
-    const latestActiveTab = this.latestSavedEditorConfig.val.active;
-    if (activeTab !== latestActiveTab) {
+    if (currentConfig.val.active !== this.latestSavedEditorConfig.val.active) {
       this.messageService.publish(ChannelName.EditorConfigurationChanged);
       return;
     }
 
-    const latestActiveTabConfig = this.latestSavedEditorConfig.val.tabConfig[activeTab];
+    this.compareConfigs(this.latestSavedEditorConfig, currentConfig);
+  }
+
+  private compareConfigs(
+      latestCached: YasguiStorageConfig,
+      currentConfig: YasguiStorageConfig): void {
+    const activeTab = currentConfig.val.active;
+    const latestActiveTabConfig = latestCached.val.tabConfig[activeTab];
     const currentActiveTabConfig = currentConfig.val.tabConfig[activeTab];
 
-    const areTabsDifferent = !this.compare(this.latestSavedEditorConfig.val.tabs, currentConfig.val.tabs);
+    const areTabsDifferent = !this.compare(latestCached.val.tabs, currentConfig.val.tabs);
     const isActiveTabConfigDifferent = !this.compare(latestActiveTabConfig, currentActiveTabConfig);
-    const areQueriesDifferent = latestActiveTabConfig.yasqe?.value !== currentActiveTabConfig.yasqe?.value;
+    const areQueriesDifferent = latestActiveTabConfig?.yasqe?.value !== currentActiveTabConfig?.yasqe?.value;
 
     if (areTabsDifferent || isActiveTabConfigDifferent || areQueriesDifferent) {
       this.messageService.publish(ChannelName.EditorConfigurationChanged);
@@ -239,7 +250,7 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
    * Saves the current configuration of the editor as a part of the project metadata.
    */
   private onSaveEditorConfiguration(): void {
-    const currentEditorConfig = this.getCurrentYasguiConfig();
+    const currentEditorConfig = CopyUtils.copy(this.getCurrentYasguiConfig());
     this.editorService.saveEditorConfigurations(currentEditorConfig)
         .pipe(
             untilComponentDestroyed(this),
