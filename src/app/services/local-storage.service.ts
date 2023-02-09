@@ -1,6 +1,11 @@
 import {Injectable} from '@angular/core';
 
 export const STORAGE_CHANGE_EVENT_NAME = 'storage_change_event';
+export type ChangeEventDetails = {
+  key: string,
+  value?: any,
+  type: 'set' | 'remove'| 'clear'
+};
 
 /**
  * Service wrapping the Storage functionality. Additionally the service creates a Proxy over the
@@ -57,9 +62,10 @@ export class LocalStorageService {
   private proxySetItem(): void {
     Storage.prototype.setItem = new Proxy(Storage.prototype.setItem, {
       apply(target, thisArg, argumentList) {
-        const event = new CustomEvent(STORAGE_CHANGE_EVENT_NAME, {
+        const event = new CustomEvent<ChangeEventDetails>(STORAGE_CHANGE_EVENT_NAME, {
           detail: {
             key: argumentList[0],
+            value: argumentList[1],
             type: 'set',
           },
         });
@@ -72,7 +78,7 @@ export class LocalStorageService {
   private proxyRemoveItem(): void {
     Storage.prototype.removeItem = new Proxy(Storage.prototype.removeItem, {
       apply(target, thisArg, argumentList) {
-        const event = new CustomEvent(STORAGE_CHANGE_EVENT_NAME, {
+        const event = new CustomEvent<ChangeEventDetails>(STORAGE_CHANGE_EVENT_NAME, {
           detail: {
             key: argumentList[0],
             type: 'remove',
@@ -87,7 +93,7 @@ export class LocalStorageService {
   private proxyClear(): void {
     Storage.prototype.clear = new Proxy(Storage.prototype.clear, {
       apply(target, thisArg, argumentList) {
-        const event = new CustomEvent(STORAGE_CHANGE_EVENT_NAME, {
+        const event = new CustomEvent<ChangeEventDetails>(STORAGE_CHANGE_EVENT_NAME, {
           detail: {
             key: '__all__',
             type: 'clear',
