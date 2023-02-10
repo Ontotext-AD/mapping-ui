@@ -36,7 +36,7 @@ export class RefineRepositoryService extends RestService {
         },
         responseType: 'text' as 'text',
       };
-      return this.httpClient.post(data.refineRepoUrl, sparql, httpOpts)
+      return this.httpClient.post(data.refineRepoUrl.relative, sparql, httpOpts)
           .pipe(catchError((error) => {
             const msg = 'Failed to execute the provided query.';
             return this.errorReporterService.handleError(msg, error);
