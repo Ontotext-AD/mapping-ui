@@ -18,6 +18,7 @@ import {SourceService} from 'src/app/services/source.service';
 import {RefineRepositoryService} from 'src/app/services/rest/refine-repository.service';
 import {EditorUtils} from './utils/editor-utils';
 import {CopyUtils} from './utils/copy-utils';
+import {ProjectInfo} from 'src/app/services/rest/rest.service';
 
 
 /**
@@ -143,10 +144,10 @@ export class SparqlEditorComponent extends OnDestroyMixin implements OnInit {
   /**
    * Initializes the configurations that is passed to the YASGUI editor.
    */
-  private initDefaultEditorConfiguration(info: any): void {
+  private initDefaultEditorConfiguration(info: ProjectInfo): void {
     this.config = {
       ...this.config,
-      endpoint: info.refineRepoUrl,
+      endpoint: info.refineRepoUrl.absolute,
       componentId: info.projectId,
     };
   }

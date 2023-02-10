@@ -4,17 +4,26 @@ import {ActivatedRoute, Params} from '@angular/router';
 import {Observable, of, EMPTY} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
+export type ProjectInfo = {
+  refineRepoUrl: {
+    relative: string,
+    absolute: string
+  },
+  project: string,
+  projectId: string
+};
+
 export class RestService {
   dataProviderID: Observable<string>;
   apiUrl = environment.restApiUrl;
 
-  private refineRepoUrl: string;
+  private refineRepoUrlConfig: string;
 
   constructor(protected route: ActivatedRoute) {
     this.dataProviderID = this.route.queryParams.pipe(switchMap((params: Params) => {
       return (params.dataProviderID) ? of(params.dataProviderID) : EMPTY;
     }));
-    this.refineRepoUrl = environment.refineVirtualRepositoryUrl;
+    this.refineRepoUrlConfig = environment.refineVirtualRepositoryUrl;
   }
 
   httpHeaders = new HttpHeaders({
@@ -36,14 +45,17 @@ export class RestService {
    * @param idPrefix prefix for the project identifier. It is required for the virtual repo URL
    * @returns observable object containing information about the current project
    */
-  getCurrentProjectInfo(): Observable<any> {
+  getCurrentProjectInfo(): Observable<ProjectInfo> {
     return this.dataProviderID.pipe(switchMap((dataProviderID) => {
       if (!dataProviderID) {
         return EMPTY;
       }
 
       return of({
-        refineRepoUrl: `${this.refineRepoUrl}${dataProviderID}`,
+        refineRepoUrl: {
+          relative: `${this.refineRepoUrlConfig}${dataProviderID}`,
+          absolute: `${location.origin}${this.refineRepoUrlConfig.substring(8)}${dataProviderID}`,
+        },
         project: dataProviderID,
         projectId: dataProviderID.split(':')[1],
       });
