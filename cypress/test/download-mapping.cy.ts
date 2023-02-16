@@ -11,12 +11,12 @@ context('Download mapping', () => {
 
   it('Should not update JSON mapping when the mapping is not manipulated', () => {
     cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'download-mapping/mapping-model.json'}).as('loadProject');
-    cy.intercept('POST', '/rest/rdf-mapper/preview/ontorefine:123',{
+    cy.intercept('POST', '/rest/rdf-mapper/preview/ontorefine:123', {
       statusCode: 200,
       fixture: 'download-mapping/simple-mapping-model.json',
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     // When I load application
@@ -26,7 +26,7 @@ context('Download mapping', () => {
 
     // When I click get JSON button
     // THEN the mapping should not be updated.
-    cy.fixture('download-mapping/update-mapping1.json').then(updated => {
+    cy.fixture('download-mapping/update-mapping1.json').then((updated) => {
       HeaderSteps.getJSON().should('deep.equal', updated);
     });
   });
@@ -45,7 +45,7 @@ context('Download mapping', () => {
 
     // When I click get JSON button
     // THEN the mapping should be updated.
-    cy.fixture('download-mapping/update-mapping2.json').then(updated => {
+    cy.fixture('download-mapping/update-mapping2.json').then((updated) => {
       HeaderSteps.getJSON().should('deep.equal', updated);
     });
   });

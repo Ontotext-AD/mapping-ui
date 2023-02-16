@@ -1,7 +1,6 @@
 import {AppComponentSelectors} from '../../cypress/utils/selectors/app-component.selectors';
 
 describe('AppComponent', () => {
-
   it('should render title', () => {
     // GIVEN:
     // I visit home page

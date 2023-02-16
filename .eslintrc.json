@@ -2,7 +2,8 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": true
+    "node": true,
+    "cypress/globals": true
   },
   "extends": [
     "eslint:recommended",
@@ -19,7 +20,8 @@
   },
   "plugins": [
     "@typescript-eslint",
-    "html"
+    "html",
+    "cypress"
   ],
   "rules": {
     "max-len": "off",

@@ -4,7 +4,6 @@ import PrepareSteps from '../steps/prepare-steps';
 import {MapperComponentSelectors} from '../utils/selectors/mapper-component.selectors';
 
 describe('Autocomplete mapping', () => {
-
   beforeEach(() => {
     PrepareSteps.prepareMoviesNamespacesAndColumns();
     PrepareSteps.enableAutocompleteWithEmptyResponse();
@@ -18,7 +17,7 @@ describe('Autocomplete mapping', () => {
       MappingSteps.completeTriple(0, 's', 'p');
       MappingSteps.getAutocompleteHint().should('not.exist');
       MappingSteps.type('w', () => MappingSteps.getTripleObjectValue(0));
-      MappingSteps.getAutocompleteHint().should('be.visible').and('contain', 'Hint: \"ab c\" matches \"abC*\", \"ab c*\" and \"ab-c*\"');
+      MappingSteps.getAutocompleteHint().should('be.visible').and('contain', 'Hint: "ab c" matches "abC*", "ab c*" and "ab-c*"');
       MappingSteps.getSuggestions().should('have.length', 5);
       MappingSteps.getSuggestions().first().should('contain', 'wgs:').then((option) => {
         cy.wrap(option).trigger('click');
@@ -32,9 +31,9 @@ describe('Autocomplete mapping', () => {
     it('Should autocomplete column after prefix in the table', () => {
       MappingSteps.getTriples().should('have.length', 1);
       MappingSteps.completeTriple(0, 's', 'p');
-      MappingSteps.getAutocompleteHint().should('not.exist')
+      MappingSteps.getAutocompleteHint().should('not.exist');
       MappingSteps.type('rdf:@', () => MappingSteps.getTripleObjectValue(0));
-      MappingSteps.getAutocompleteHint().should('be.visible').and('contain', 'Hint: \"ab c\" matches \"abC*\", \"ab c*\" and \"ab-c*\"');
+      MappingSteps.getAutocompleteHint().should('be.visible').and('contain', 'Hint: "ab c" matches "abC*", "ab c*" and "ab-c*"');
       MappingSteps.getSuggestions().should('have.length', 28);
       MappingSteps.getSuggestions().first().should('contain', 'color').then((option) => {
         cy.wrap(option).trigger('click');
@@ -71,7 +70,7 @@ describe('Autocomplete mapping', () => {
       MappingSteps.getAutocompleteHint().should('not.exist');
       // I type a letter to show autocomplete
       MappingSteps.type('w', () => MappingSteps.getTripleSubjectValue(0));
-      MappingSteps.getAutocompleteHint().should('be.visible').and('contain', 'Hint: \"ab c\" matches \"abC*\", \"ab c*\" and \"ab-c*\"');
+      MappingSteps.getAutocompleteHint().should('be.visible').and('contain', 'Hint: "ab c" matches "abC*", "ab c*" and "ab-c*"');
       // Call POST again to load tooltips
       cy.intercept('POST', '/graphdb-proxy/repositories/repository_placeholder', {fixture: 'autocomplete/autocomplete-iri-description-response.json'}).as('loadDescr');
       // When I hover an autocomplete

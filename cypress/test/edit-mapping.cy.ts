@@ -4,7 +4,6 @@ import EditDialogSteps from '../steps/edit-dialog-steps';
 import PrepareSteps from '../steps/prepare-steps';
 
 describe('Edit mapping', () => {
-
   beforeEach(() => {
     PrepareSteps.prepareMoviesNamespacesAndColumns();
     PrepareSteps.enableAutocompleteWithEmptyResponse();
@@ -41,7 +40,7 @@ describe('Edit mapping', () => {
       // When I focus the first triple's subject and execute ctrl+enter key combination
       // Add some wait here to prevent finding the input in detached state
       MappingSteps.getTripleSubjectValue(0).type('{ctrl}{enter}', {
-        parseSpecialCharSequences: true
+        parseSpecialCharSequences: true,
       });
       // Then I expect the subject edit dialog to be opened
       EditDialogSteps.getDialogTitle().should('contain', 'Subject RDF Value Mapping');
@@ -50,7 +49,7 @@ describe('Edit mapping', () => {
       EditDialogSteps.completeConstant('1');
       // And execute ctrl+enter key combination while dialog is opened
       EditDialogSteps.selectConstant().type('{ctrl}{enter}', {
-        parseSpecialCharSequences: true
+        parseSpecialCharSequences: true,
       });
       // Then I expect subject mapping configuration to be saved
       MappingSteps.getTripleSubjectValuePreview(0).should('contain', '1');
@@ -137,7 +136,7 @@ describe('Edit mapping', () => {
     it('Should show error notification when model could not be loaded', () => {
       cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {
         statusCode: 500,
-        fixture: 'edit-mapping/load-mapping-error.json'
+        fixture: 'edit-mapping/load-mapping-error.json',
       }).as('loadProject');
 
       PrepareSteps.visitPageAndWaitToLoad();
@@ -151,7 +150,7 @@ describe('Edit mapping', () => {
       PrepareSteps.stubEmptyMappingModel();
       cy.intercept('GET', '/graphdb-proxy/repositories/repository_placeholder/namespaces', {
         statusCode: 404,
-        fixture: 'edit-mapping/load-namespaces-error'
+        fixture: 'edit-mapping/load-namespaces-error',
       });
 
       cy.visit('?dataProviderID=ontorefine:123').then(() => {
@@ -166,7 +165,7 @@ describe('Edit mapping', () => {
       PrepareSteps.stubEmptyMappingModel();
       cy.intercept('GET', '/rest/rdf-mapper/columns/ontorefine:123', {
         statusCode: 404,
-        fixture: 'edit-mapping/load-columns-error'
+        fixture: 'edit-mapping/load-columns-error',
       }).as('loadColumns');
 
       PrepareSteps.visitPageAndWaitToLoad();
@@ -174,7 +173,7 @@ describe('Edit mapping', () => {
       MappingSteps.getTriples().should('have.length', 1);
       // And I expect notification message
       MappingSteps.getNotification().should('be.visible')
-        .and('contain', 'Tabular data provider not found: ontorefine:2216295245917sd (HTTP status 404)');
+          .and('contain', 'Tabular data provider not found: ontorefine:2216295245917sd (HTTP status 404)');
     });
 
     it('Should show error notification when RDF generation fails', () => {
@@ -183,9 +182,9 @@ describe('Edit mapping', () => {
         statusCode: 404,
         fixture: 'edit-mapping/generate-rdf-error',
         headers: {
-          Accept: 'text/turtle',
-          'Content-Type': 'application/json'
-        }
+          'Accept': 'text/turtle',
+          'Content-Type': 'application/json',
+        },
       });
 
       // When I load application
@@ -196,7 +195,7 @@ describe('Edit mapping', () => {
       HeaderSteps.generateRdf();
       // Then I expect error notification
       MappingSteps.getNotification().should('be.visible')
-        .and('contain', 'Tabular data provider not found: ontorefine:123 (HTTP status 404)');
+          .and('contain', 'Tabular data provider not found: ontorefine:123 (HTTP status 404)');
     });
 
     it('Should show error notification when SPARQL generation fails', () => {
@@ -205,8 +204,8 @@ describe('Edit mapping', () => {
         statusCode: 404,
         fixture: 'edit-mapping/generate-sparql-error',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
 
       // When I load application
@@ -217,7 +216,7 @@ describe('Edit mapping', () => {
       HeaderSteps.generateSparql();
       // Then I expect error notification
       MappingSteps.getNotification().should('be.visible')
-        .and('contain', 'Tabular data provider not found: ontorefine:123 (HTTP status 404)');
+          .and('contain', 'Tabular data provider not found: ontorefine:123 (HTTP status 404)');
     });
   });
 
@@ -227,8 +226,8 @@ describe('Edit mapping', () => {
         statusCode: 200,
         body: response,
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       }).as('loadGrelPreview');
       PrepareSteps.stubEmptyMappingModel();
     }
@@ -294,14 +293,14 @@ describe('Edit mapping', () => {
       EditDialogSteps.completeGREL('alue');
       // Then I expect preview results to be rendered in the popover
       EditDialogSteps.getGRELPreview().find('[appCypressData=grel-preview]')
-        .should('have.length', 4).first().should('contain', 'James Cameron');
+          .should('have.length', 4).first().should('contain', 'James Cameron');
       // When There completed expression is invalid
       cy.wait('@loadGrelPreview');
       mockPreview('[{"error":"Parsing error at offset 6: Expecting something more at end of expression"},{"error":"Parsing error at offset 6: Expecting something more at end of expression"}]');
       EditDialogSteps.completeGREL('+');
       // Then I expect error message to appear in the popover
       EditDialogSteps.getGRELPreview().find('[appCypressData=grel-preview]')
-        .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
+          .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
       // When I complete a valid expression, close edit dialog and open it again
       cy.wait('@loadGrelPreview');
       mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
@@ -312,7 +311,7 @@ describe('Edit mapping', () => {
       // Then I expect the grel preview to be properly loaded again
       EditDialogSteps.getTransformationExpressionField().focus();
       EditDialogSteps.getGRELPreview().find('[appCypressData=grel-preview]')
-        .should('have.length', 4).first().should('contain', 'James Cameron');
+          .should('have.length', 4).first().should('contain', 'James Cameron');
       EditDialogSteps.saveConfiguration();
 
       // Verify language GREL transformation preview
@@ -334,14 +333,14 @@ describe('Edit mapping', () => {
       EditDialogSteps.completeLanguageGREL('alue');
       // Then I expect preview results to be rendered in the popover
       EditDialogSteps.getLanguageGRELPreview().find('[appCypressData=language-grel-preview]')
-        .should('have.length', 4).first().should('contain', 'James Cameron');
+          .should('have.length', 4).first().should('contain', 'James Cameron');
       // When There completed expression is invalid
       cy.wait('@loadGrelPreview');
       mockPreview('[{"error":"Parsing error at offset 6: Expecting something more at end of expression"},{"error":"Parsing error at offset 6: Expecting something more at end of expression"}]');
       EditDialogSteps.completeLanguageGREL('+');
       // Then I expect error message to appear in the popover
       EditDialogSteps.getLanguageGRELPreview().find('[appCypressData=language-grel-preview]')
-        .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
+          .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
       EditDialogSteps.clearLanguageGREL();
       // When I complete a valid expression, close edit dialog and open it again
       cy.wait('@loadGrelPreview');
@@ -353,7 +352,7 @@ describe('Edit mapping', () => {
       // Then I expect the grel preview to be properly loaded again
       EditDialogSteps.getLanguageTransformationExpressionField().focus();
       EditDialogSteps.getLanguageGRELPreview().find('[appCypressData=language-grel-preview]')
-        .should('have.length', 4).first().should('contain', 'James Cameron');
+          .should('have.length', 4).first().should('contain', 'James Cameron');
       EditDialogSteps.saveConfiguration();
 
       // Verify datatype GREL transformation preview
@@ -377,14 +376,14 @@ describe('Edit mapping', () => {
       EditDialogSteps.completeDataTypeExpression('alue');
       // Then I expect preview results to be rendered in the popover
       EditDialogSteps.getDataTypeGRELPreview().find('[appCypressData=datatype-grel-preview]')
-        .should('have.length', 4).first().should('contain', 'James Cameron');
+          .should('have.length', 4).first().should('contain', 'James Cameron');
       // When There completed expression is invalid
       cy.wait('@loadGrelPreview');
       mockPreview('[{"error":"Parsing error at offset 6: Expecting something more at end of expression"},{"error":"Parsing error at offset 6: Expecting something more at end of expression"}]');
       EditDialogSteps.completeDataTypeExpression('+');
       // Then I expect error message to appear in the popover
       EditDialogSteps.getDataTypeGRELPreview().find('[appCypressData=datatype-grel-preview]')
-        .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
+          .should('have.length', 1).first().should('contain', 'Parsing error at offset 6: Expecting something more at end of expression');
       // When I complete a valid expression, close edit dialog and open it again
       cy.wait('@loadGrelPreview');
       mockPreview('["James Cameron","Gore Verbinski","Sam Mendes","Christopher Nolan"]');
@@ -395,7 +394,7 @@ describe('Edit mapping', () => {
       // Then I expect the grel preview to be properly loaded again
       EditDialogSteps.getDataTypeExpressionField().focus();
       EditDialogSteps.getDataTypeGRELPreview().find('[appCypressData=datatype-grel-preview]')
-        .should('have.length', 4).first().should('contain', 'James Cameron');
+          .should('have.length', 4).first().should('contain', 'James Cameron');
       EditDialogSteps.saveConfiguration();
     });
   });
@@ -479,10 +478,10 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleSubjectPreview(0).contains('<constantIRI>');
     // Should be a link and uri should be baseURI + constant
     MappingSteps.getTripleSubjectPreview(0).find('a').should('have.attr', 'href')
-      .and('contain', 'resource?resource=http://example.com/base/constantIRI');
+        .and('contain', 'resource?resource=http://example.com/base/constantIRI');
     MappingSteps.getTriplePredicatePreview(0).contains('<pred>');
     MappingSteps.getTriplePredicatePreview(0).find('a').should('have.attr', 'href')
-      .and('contain', 'resource?resource=http://example.com/base/pred');
+        .and('contain', 'resource?resource=http://example.com/base/pred');
 
     // A literal
     MappingSteps.getTripleObjectPreview(0).contains('"literalObj"');
@@ -493,7 +492,7 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleSubjectPreview(1).contains('<http://example.com/base/rawConstantIRI>');
     // Should be a link and uri should be baseURI + constant
     MappingSteps.getTripleSubjectPreview(1).find('a').should('have.attr', 'href')
-      .and('contain', 'resource?resource=http://example.com/base/rawConstantIRI');
+        .and('contain', 'resource?resource=http://example.com/base/rawConstantIRI');
 
     // A type mapping ('a' or 'rdf:type')
     MappingSteps.getTriplePredicatePreview(1).contains('a');
@@ -502,13 +501,13 @@ describe('Edit mapping', () => {
 
     MappingSteps.getTripleObjectPreview(1).contains('<constantIRI>');
     MappingSteps.getTripleObjectPreview(1).find('a').should('have.attr', 'href')
-      .and('contain', 'resource?resource=http://example.com/base/constantIRI');
+        .and('contain', 'resource?resource=http://example.com/base/constantIRI');
 
     // A raw IRI that is a URI
     MappingSteps.getTripleSubjectPreview(2).contains('<http://constant>');
     // Should be a link and URI should be it's own
     MappingSteps.getTripleSubjectPreview(2).find('a').should('have.attr', 'href')
-      .and('contain', 'resource?resource=http://constant');
+        .and('contain', 'resource?resource=http://constant');
 
     MappingSteps.getTriplePredicatePreview(2).contains('a');
     MappingSteps.getTriplePredicatePreview(2).find('a').should('not.be', 'visible');
@@ -517,7 +516,7 @@ describe('Edit mapping', () => {
     MappingSteps.getTripleObjectPreview(2).contains('schema:Thing');
     // Should be a link and URI should have the namespace URI + constant
     MappingSteps.getTripleObjectPreview(2).find('a').should('have.attr', 'href')
-      .and('contain', 'resource?resource=http://schema.org/Thing');
+        .and('contain', 'resource?resource=http://schema.org/Thing');
   });
 
   context('Edit and save', () => {
@@ -525,7 +524,7 @@ describe('Edit mapping', () => {
       cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'edit-mapping/mapping-model-with-preview.json'}).as('loadProject');
       cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
         statusCode: 200,
-        delay: 1000
+        delay: 1000,
       }).as('saveMapping');
       // Given I have opened the application
       PrepareSteps.visitPageAndWaitToLoad();
@@ -549,7 +548,7 @@ describe('Edit mapping', () => {
       // And I save the mapping
       HeaderSteps.saveMapping();
       // And The mapping should be saved
-      cy.fixture('create-mapping/save-mapping-request-body').then((saveResponse: string) => {
+      cy.fixture('create-mapping/save-mapping-request-body').then(() => {
         cy.wait('@saveMapping');
         MappingSteps.getTripleSubjectPreview(0).contains('<James%20Cameron>');
         MappingSteps.getTripleObjectPreview(0).contains('person');
@@ -589,7 +588,7 @@ describe('Edit mapping', () => {
       cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
         statusCode: 200,
         delay: 1000,
-        fixture: 'edit-mapping/save-mapping-success.json'
+        fixture: 'edit-mapping/save-mapping-success.json',
       }).as('saveMapping');
       // Given I have opened the application
       PrepareSteps.visitPageAndWaitToLoad();
@@ -615,10 +614,9 @@ describe('Edit mapping', () => {
           expect(interceptor.request.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
           expect(interceptor.request.method).to.equal('POST');
           expect(interceptor.request.body).to.equal(saveResponse);
-        })
+        });
       });
     });
-
   });
 
   context('Edit base IRI', () => {
@@ -627,7 +625,7 @@ describe('Edit mapping', () => {
       cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
         statusCode: 200,
         delay: 1000,
-        fixture: 'edit-mapping/save-mapping-success.json'
+        fixture: 'edit-mapping/save-mapping-success.json',
       }).as('saveMapping');
       // Given I have loaded a mapping
       PrepareSteps.visitPageAndWaitToLoad();

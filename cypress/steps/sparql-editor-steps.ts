@@ -1,4 +1,4 @@
-import { SparqlEditorComponentSelectors } from "../utils/selectors/sparql-editor-component.selectors";
+import {SparqlEditorComponentSelectors} from '../utils/selectors/sparql-editor-component.selectors';
 
 const BE_VISIBLE = 'be.visible';
 
@@ -7,11 +7,10 @@ export type DownloadOption = 'query' | 'query-with-service' | 'result';
 
 /**
  * Contains steps related to SPARQL Query Editor component.
- * 
+ *
  * @author A. Kunchev
  */
 export default class SparqlEditorSteps {
-
   static getEditorHostElement(): Cypress.Chainable {
     return cy.get(SparqlEditorComponentSelectors.YASGUI_HOST);
   }
@@ -58,14 +57,14 @@ export default class SparqlEditorSteps {
 
   static getActiveTabContent(): Cypress.Chainable {
     return cy.get(SparqlEditorComponentSelectors.ACTIVE_CODE_MIRROR)
-      // @ts-ignore
-      .then(($cm) => $cm.get(0).CodeMirror.getValue());
+    // @ts-ignore
+        .then(($cm) => $cm.get(0).CodeMirror.getValue());
   }
 
   static setActiveTabContent(content: string): void {
     cy.get(SparqlEditorComponentSelectors.ACTIVE_CODE_MIRROR)
-      // @ts-ignore
-      .then(($cm) => $cm.get(0).CodeMirror.setValue(content));
+    // @ts-ignore
+        .then(($cm) => $cm.get(0).CodeMirror.setValue(content));
   }
 
   static getActiveTabElement(): Cypress.Chainable {
@@ -74,10 +73,10 @@ export default class SparqlEditorSteps {
 
   static renameActiveTab(name: string): void {
     cy.get(`${SparqlEditorComponentSelectors.YASGUI} .tab.active`)
-      .should(BE_VISIBLE)
-      .dblclick()
-      .type('{selectall}{backspace}')
-      .type(`${name}{enter}`);
+        .should(BE_VISIBLE)
+        .dblclick()
+        .type('{selectall}{backspace}')
+        .type(`${name}{enter}`);
   }
 
   /**
@@ -117,8 +116,8 @@ export default class SparqlEditorSteps {
    */
   static getColumnNameElementAt(index: number): Cypress.Chainable {
     return cy.get(SparqlEditorComponentSelectors.DATASET_COLUMNS_CONTAINER)
-      .cypressData(`source-${index}`)
-      .should(BE_VISIBLE);
+        .cypressData(`source-${index}`)
+        .should(BE_VISIBLE);
   }
 
   private static getOptionSelector(option: QueryOption | DownloadOption): string {

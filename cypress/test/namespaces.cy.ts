@@ -24,10 +24,10 @@ context('Namespaces', () => {
 
   it('Should make the mapping dirty when namespaces are added', () => {
     cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'namespaces/base-iri-mapping-model.json'}).as('loadProject');
-    cy.intercept('POST','/orefine/command/mapping-editor/save-rdf-mapping/?project=123',{
+    cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
       statusCode: 200,
       delay: 1000,
-      fixture: 'namespaces/save-mapping-success.json'
+      fixture: 'namespaces/save-mapping-success.json',
     }).as('saveMapping');
 
     // Given I have loaded a mapping
@@ -59,10 +59,10 @@ context('Namespaces', () => {
 
   it('Should make the mapping dirty when namespaces are removed', () => {
     cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'namespaces/custom-namespace-mapping-model.json'}).as('loadProject');
-    cy.intercept('POST','/orefine/command/mapping-editor/save-rdf-mapping/?project=123',{
+    cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
       statusCode: 200,
       delay: 1000,
-      fixture: 'namespaces/save-mapping-success.json'
+      fixture: 'namespaces/save-mapping-success.json',
     }).as('saveMapping');
 
     // Given I have loaded a mapping
@@ -95,10 +95,10 @@ context('Namespaces', () => {
 
   it('Should edit namespace', () => {
     cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'namespaces/custom-namespace-mapping-model.json'}).as('loadProject');
-    cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123',{
+    cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
       statusCode: 200,
       delay: 1000,
-      fixture: 'namespaces/save-mapping-success.json'
+      fixture: 'namespaces/save-mapping-success.json',
     }).as('saveMapping');
 
     // Given I have loaded a mapping

@@ -1,12 +1,11 @@
-import PrepareSteps from "../../steps/prepare-steps";
-import SparqlEditorSteps from "../../steps/sparql-editor-steps";
-import { SparqlEditorComponentSelectors } from "../../utils/selectors/sparql-editor-component.selectors";
+import PrepareSteps from '../../steps/prepare-steps';
+import SparqlEditorSteps from '../../steps/sparql-editor-steps';
+import {SparqlEditorComponentSelectors} from '../../utils/selectors/sparql-editor-component.selectors';
 
 const BE_VISIBLE = 'be.visible';
 const NOT_BE_VISIBLE = 'not.be.visible';
 
 describe('SPARQL Query Editor: Display Modes', () => {
-
   beforeEach(() => {
     PrepareSteps.prepareRestaurantsNamespacesAndColumns();
     PrepareSteps.stubEmptyMappingModel();
@@ -14,7 +13,6 @@ describe('SPARQL Query Editor: Display Modes', () => {
   });
 
   it('Should switch to editor only mode', () => {
-
     // Given the SPARQL Query Editor is opened
     PrepareSteps.visitPageAndOpenSparqlEditor();
 
@@ -38,7 +36,6 @@ describe('SPARQL Query Editor: Display Modes', () => {
   });
 
   it('Should switch to results only mode', () => {
-
     // Given the SPARQL Query Editor is opened
     PrepareSteps.visitPageAndOpenSparqlEditor();
 
@@ -62,7 +59,6 @@ describe('SPARQL Query Editor: Display Modes', () => {
   });
 
   it('Should switch to editor and results mode', () => {
-
     // Given the SPARQL Query Editor is opened
     PrepareSteps.visitPageAndOpenSparqlEditor();
 
@@ -88,7 +84,6 @@ describe('SPARQL Query Editor: Display Modes', () => {
   });
 
   it('Should change the orientation of the editor', () => {
-
     // Given the SPARQL Query Editor is opened
     PrepareSteps.visitPageAndOpenSparqlEditor();
 
@@ -116,7 +111,6 @@ describe('SPARQL Query Editor: Display Modes', () => {
   });
 
   it('Should change the orientation of the editor and switch the rendering mode to default', () => {
-
     // Given the SPARQL Query Editor is opened
     PrepareSteps.visitPageAndOpenSparqlEditor();
 

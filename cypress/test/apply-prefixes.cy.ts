@@ -3,7 +3,6 @@ import EditDialogSteps from '../steps/edit-dialog-steps';
 import PrepareSteps from '../steps/prepare-steps';
 
 describe('Apply prefixes', () => {
-
   beforeEach(() => {
     PrepareSteps.prepareMoviesNamespacesAndColumns();
     PrepareSteps.enableAutocompleteWithEmptyResponse();
@@ -112,7 +111,7 @@ describe('Apply prefixes', () => {
     beforeEach(() => {
       PrepareSteps.stubEmptyMappingModel();
       PrepareSteps.visitPageAndWaitToLoad();
-  });
+    });
 
     it('Should set prefix expression', () => {
       MappingSteps.getTriples().should('have.length', 1);
@@ -178,7 +177,6 @@ describe('Apply prefixes', () => {
       MappingSteps.getTripleObjectPropertyTransformation(1).should('have.text', ':#');
       MappingSteps.getTripleObjectSourceType(1).should('have.text', ' @ ');
       MappingSteps.getTripleObjectSource(1).should('have.text', ' @  actor_1_name ');
-
     });
 
     it('Should add inline empty prefix with constant', () => {
@@ -192,7 +190,6 @@ describe('Apply prefixes', () => {
       MappingSteps.getTripleObjectPropertyTransformation(1).should('have.text', ':');
       MappingSteps.getTripleObjectSourceType(1).should('have.text', ' C ');
       MappingSteps.getTripleObjectSource(1).should('have.text', ' C  Class ');
-
     });
 
     it('Should set extended empty prefix expressions inline', () => {

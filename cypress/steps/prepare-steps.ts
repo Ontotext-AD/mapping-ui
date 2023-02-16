@@ -29,28 +29,28 @@ class PrepareSteps {
     cy.intercept('POST', '/graphdb-proxy/repositories/repository_placeholder', {fixture: 'empty-autocomplete-response.json'});
     cy.intercept('GET', '/graphdb-proxy/rest/autocomplete/enabled', {
       statusCode: 200,
-      body: "true"
+      body: 'true',
     });
   }
 
   static prepareQueriesGenerationResponses(): void {
     cy.intercept('GET', '/rest/sparql-mapper/query?project=ontorefine:123&type=standard', {
-      fixture: 'sparql-editor/standard-query-generation'
+      fixture: 'sparql-editor/standard-query-generation',
     });
     cy.intercept('GET', '/rest/sparql-mapper/query?project=ontorefine:123&type=standard_with_service', {
-      fixture: 'sparql-editor/standard-with-service-query-generation'
+      fixture: 'sparql-editor/standard-with-service-query-generation',
     });
     cy.intercept('GET', '/rest/sparql-mapper/query?project=ontorefine:123&type=mapping_based', {
-      fixture: 'sparql-editor/mapping-based-query-generation'
+      fixture: 'sparql-editor/mapping-based-query-generation',
     });
     cy.intercept('GET', '/rest/sparql-mapper/query?project=ontorefine:123&type=mapping_based_with_service', {
-      fixture: 'sparql-editor/mapping-based-with-service-query-generation'
+      fixture: 'sparql-editor/mapping-based-with-service-query-generation',
     });
   }
 
   static prepareEmptyEditorConfigurations(): void {
     cy.intercept('GET', '/rest/sparql-mapper/editor-config?project=123', {
-      statusCode: 204
+      statusCode: 204,
     });
   }
 

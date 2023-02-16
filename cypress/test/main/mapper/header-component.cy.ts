@@ -74,7 +74,7 @@ describe('HeaderComponent', () => {
       cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
         statusCode: 200,
         delay: 1000,
-        fixture: 'save-mapping-success.json'
+        fixture: 'save-mapping-success.json',
       });
       // I see header content
       cy.cypressData(MapperComponentSelectors.MAPPER_SELECTOR).should('be.visible');
