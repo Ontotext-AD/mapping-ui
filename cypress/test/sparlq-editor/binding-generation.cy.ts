@@ -1,5 +1,5 @@
-import PrepareSteps from "../../steps/prepare-steps";
-import SparqlEditorSteps from "../../steps/sparql-editor-steps";
+import PrepareSteps from '../../steps/prepare-steps';
+import SparqlEditorSteps from '../../steps/sparql-editor-steps';
 
 // NOTE: would not work from columns which name is shortened
 function clickAndCheck(index: number): void {
@@ -15,7 +15,6 @@ function clickAndCheck(index: number): void {
 }
 
 describe('SPARQL Query Editor: Bindings from Dataset Columns', () => {
-
   beforeEach(() => {
     PrepareSteps.prepareRestaurantsNamespacesAndColumns();
     PrepareSteps.stubEmptyMappingModel();
@@ -23,7 +22,6 @@ describe('SPARQL Query Editor: Bindings from Dataset Columns', () => {
   });
 
   it('Should generate binding when column name is selected from sources component', () => {
-
     // Given the editor is opens
     PrepareSteps.visitPageAndOpenSparqlEditor();
 
@@ -48,7 +46,6 @@ describe('SPARQL Query Editor: Bindings from Dataset Columns', () => {
   });
 
   it('Should generate binding when column name is selected for query with SERVICE clause', () => {
-
     // Given the editor is opens
     PrepareSteps.visitPageAndOpenSparqlEditor();
 

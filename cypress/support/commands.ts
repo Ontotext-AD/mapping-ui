@@ -16,6 +16,7 @@ declare global {
   }
 }
 
+// @ts-ignore
 Cypress.Commands.add('cypressData', (dataTestValue: string) => {
   return cy.get('[appCypressData=' + dataTestValue + ']');
 });

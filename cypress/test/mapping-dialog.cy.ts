@@ -16,9 +16,9 @@ describe('MapperDialog', () => {
     // I drag and drop the first source in the subject holder
     cy.cypressData(MapperComponentSelectors.FIRST_SOURCE_SELECTOR).trigger('mousedown', {button: 0});
     cy.cypressData(MapperComponentSelectors.SUBJECT_SELECTOR + '-2')
-      .trigger('mousemove')
-      .click()
-      .trigger(('mouseup'));
+        .trigger('mousemove')
+        .click()
+        .trigger(('mouseup'));
 
     // THEN:
     // I see popup dialog
@@ -36,8 +36,8 @@ describe('MapperDialog', () => {
     // THEN:
     // I see popup dialog
     cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR)
-      .should('be.visible')
-      .contains('Subject RDF Value Mapping');
+        .should('be.visible')
+        .contains('Subject RDF Value Mapping');
     cy.cypressData(MapperComponentSelectors.COLUMN).should('be.visible');
     cy.cypressData(MapperComponentSelectors.CONSTANT).should('be.visible');
     cy.cypressData(MapperComponentSelectors.RECORD_ID).should('be.visible');
@@ -47,8 +47,8 @@ describe('MapperDialog', () => {
 
     // OK button is disabled
     cy.cypressData(MapperComponentSelectors.OK_MAPPING_BUTTON_SELECTOR)
-      .should('be.visible')
-      .should('be.enabled');
+        .should('be.visible')
+        .should('be.enabled');
   });
 
   it('should render mapping dialog and create triple', () => {
@@ -63,8 +63,8 @@ describe('MapperDialog', () => {
     // THEN:
     // I see popup dialog
     cy.cypressData(MapperComponentSelectors.MAPPER_DIALOG_TITLE_SELECTOR)
-      .should('be.visible')
-      .contains('Subject RDF Value Mapping');
+        .should('be.visible')
+        .contains('Subject RDF Value Mapping');
 
     // WHEN:
     // I choose column, fill column name and press OK button
@@ -241,7 +241,7 @@ describe('MapperDialog', () => {
 
     // When I clear the field and paste 'https://swapi.co/vocabulary/' in the prefix field
     EditDialogSteps.getTransformationExpressionField().clear()
-      .invoke('val', 'https://swapi.co/vocabulary/');
+        .invoke('val', 'https://swapi.co/vocabulary/');
     EditDialogSteps.getTransformationExpressionField().trigger('input');
     // Then prefix field should get converted to 'rdfs'
     EditDialogSteps.getTransformationExpressionField().should('have.value', 'voc');

@@ -1,6 +1,6 @@
 /**
  * Contains constants with selectors for the SPARQL Query Editor.
- * 
+ *
  * @author A. Kunchev
  */
 export class SparqlEditorComponentSelectors {

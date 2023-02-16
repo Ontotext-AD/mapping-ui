@@ -2,7 +2,6 @@
  * Common mapping steps.
  */
 class MappingSteps {
-
   /**
    * Type the value string one character at a time with a bit of delay giving a chance to
    * REST calls to complete: e.g. autocomplete
@@ -284,7 +283,7 @@ class MappingSteps {
   static confirm() {
     MappingSteps.getConfirmation().should('be.visible');
     MappingSteps.getConfirmation().find('.mat-dialog-actions').find('.confirm-btn', {timeout: 15000}).contains('Proceed').should('be.visible')
-      .click();
+        .click();
     MappingSteps.getConfirmation().should('not.exist', {timeout: 10000});
   }
 
@@ -328,9 +327,9 @@ class MappingSteps {
 
   static clearNamespace() {
     return this.getNamespaces().find('[appCypressData="namespaces-field"]')
-      .should('be.visible')
-      .clear()
-      .blur();
+        .should('be.visible')
+        .clear()
+        .blur();
   }
 
   static removeNamespace(namespace: string) {

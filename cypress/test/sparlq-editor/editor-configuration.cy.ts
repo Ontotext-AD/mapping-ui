@@ -1,19 +1,16 @@
-import NotificationSteps from "../../steps/notification-steps";
-import PrepareSteps from "../../steps/prepare-steps";
-import SparqlEditorSteps from "../../steps/sparql-editor-steps";
-import { SparqlEditorComponentSelectors } from "../../utils/selectors/sparql-editor-component.selectors";
+import NotificationSteps from '../../steps/notification-steps';
+import PrepareSteps from '../../steps/prepare-steps';
+import SparqlEditorSteps from '../../steps/sparql-editor-steps';
+import {SparqlEditorComponentSelectors} from '../../utils/selectors/sparql-editor-component.selectors';
 
 describe('SPARQL Query Editor: Editor Configuration', () => {
-
   beforeEach(() => {
     PrepareSteps.prepareRestaurantsNamespacesAndColumns();
     PrepareSteps.stubEmptyMappingModel();
   });
 
   context('Load Configuration', () => {
-
     it('Should use the default configurations when there are not any stored on the server', () => {
-
       // Given there are not configurations from the server
       PrepareSteps.prepareEmptyEditorConfigurations();
 
@@ -38,10 +35,9 @@ describe('SPARQL Query Editor: Editor Configuration', () => {
     });
 
     it('Should use the configurations returned from the server', () => {
-
       // Given there are configurations from the server
       cy.intercept('GET', '/rest/sparql-mapper/editor-config?project=123', {
-        fixture: 'sparql-editor/non-default-editor-configuration'
+        fixture: 'sparql-editor/non-default-editor-configuration',
       });
 
       // When the editor tab is opened
@@ -65,10 +61,9 @@ describe('SPARQL Query Editor: Editor Configuration', () => {
     });
 
     it('Should show an error notification when the server returns status 500', () => {
-
       // Given there are configurations from the server
       cy.intercept('GET', '/rest/sparql-mapper/editor-config?project=123', {
-        statusCode: 500
+        statusCode: 500,
       });
 
       // When the editor tab is opened
@@ -96,12 +91,10 @@ describe('SPARQL Query Editor: Editor Configuration', () => {
   });
 
   context('Save Configurations', () => {
-
     it('Should save successfully the editor configuration', () => {
-
       // returns OK for the save request
       cy.intercept('POST', '/rest/sparql-mapper/editor-config', {
-        statusCode: 200
+        statusCode: 200,
       });
 
       // Given there are not configurations from the server
@@ -109,7 +102,7 @@ describe('SPARQL Query Editor: Editor Configuration', () => {
 
       // When the editor tab is opened
       PrepareSteps.visitPageAndOpenSparqlEditor();
-      
+
       // Then the save button should be enabled
       cy.get(SparqlEditorComponentSelectors.SAVE_BTN).should('be.enabled');
 
@@ -124,10 +117,9 @@ describe('SPARQL Query Editor: Editor Configuration', () => {
     });
 
     it('Should show notification when there is an server error during configuration saving', () => {
-
       // returns OK for the save request
       cy.intercept('POST', '/rest/sparql-mapper/editor-config', {
-        statusCode: 500
+        statusCode: 500,
       });
 
       // Given there are not configurations from the server
@@ -135,7 +127,7 @@ describe('SPARQL Query Editor: Editor Configuration', () => {
 
       // When the editor tab is opened
       PrepareSteps.visitPageAndOpenSparqlEditor();
-      
+
       // Then the save button should be enabled
       cy.get(SparqlEditorComponentSelectors.SAVE_BTN).should('be.enabled');
 

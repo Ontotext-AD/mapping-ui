@@ -4,7 +4,6 @@ import {HeaderComponentSelectors} from '../utils/selectors/header-component.sele
  * Common header steps.
  */
 class HeaderSteps {
-
   static getHeader() {
     return cy.cypressData(HeaderComponentSelectors.HEADER_SELECTOR);
   }
@@ -72,29 +71,29 @@ class HeaderSteps {
   static getJSON() {
     HeaderSteps.getGetJSONButton().click();
     return cy.get('a[download]')
-      .then((anchor) => (
-        new Cypress.Promise((resolve, reject) => {
+        .then((anchor) => (
+          new Cypress.Promise((resolve: any) => {
           // Use XHR to get the blob that corresponds to the object URL.
-          const xhr = new XMLHttpRequest();
-          xhr.open('GET', anchor.prop('href'), true);
-          xhr.responseType = 'blob';
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', anchor.prop('href'), true);
+            xhr.responseType = 'blob';
 
-          // Once loaded, use FileReader to get the string back from the blob.
-          xhr.onload = () => {
-            if (xhr.status === 200) {
-              const blob = xhr.response;
-              const reader = new FileReader();
-              reader.onload = () => {
+            // Once loaded, use FileReader to get the string back from the blob.
+            xhr.onload = () => {
+              if (xhr.status === 200) {
+                const blob = xhr.response;
+                const reader = new FileReader();
+                reader.onload = () => {
                 // Once we have a string, resolve the promise as JSON to let
                 // the Cypress chain continue, e.g. to assert on the result.
-                resolve(JSON.parse(reader.result as string));
-              };
-              reader.readAsText(blob);
-            }
-          };
-          xhr.send();
-        })
-      ));
+                  resolve(JSON.parse(reader.result as string));
+                };
+                reader.readAsText(blob);
+              }
+            };
+            xhr.send();
+          })
+        ));
   }
 
   static getConfigurationButton() {

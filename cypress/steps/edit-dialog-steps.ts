@@ -100,9 +100,9 @@ class EditDialogSteps {
 
   static completeSourceTypeColumn(value: string) {
     return this.getLiteralTypeSection().find('[appCypressData=datatype-column-input]').should('be.visible')
-      .type(value + '{esc}', {
-        parseSpecialCharSequences: true,
-      }).blur();
+        .type(value + '{esc}', {
+          parseSpecialCharSequences: true,
+        }).blur();
   }
 
   // source section
@@ -253,7 +253,7 @@ class EditDialogSteps {
     // type is invoked with force: true due to the field suggest stealing the focus.
     return this.getTransformationExpressionField().should('be.visible').focus().type(`${prefix}`, {
       parseSpecialCharSequences: true,
-      force: true
+      force: true,
     });
   }
 

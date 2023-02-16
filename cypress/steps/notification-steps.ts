@@ -1,4 +1,4 @@
-import { AppComponentSelectors } from "../utils/selectors/app-component.selectors";
+import {AppComponentSelectors} from '../utils/selectors/app-component.selectors';
 
 /**
  * Defines steps for the notifications during the functionality execution.
@@ -6,7 +6,6 @@ import { AppComponentSelectors } from "../utils/selectors/app-component.selector
  * @author A. Kunchev
  */
 export default class NotificationSteps {
-
   static getErrorNotification(): Cypress.Chainable {
     return cy.get(AppComponentSelectors.ERROR_NOTIFICATION);
   }

@@ -4,7 +4,6 @@ import EditDialogSteps from '../../cypress/steps/edit-dialog-steps';
 import PrepareSteps from '../steps/prepare-steps';
 
 describe('Create Amsterdam restaurants mapping', () => {
-
   beforeEach(() => {
     PrepareSteps.prepareRestaurantsNamespacesAndColumns();
     PrepareSteps.enableAutocompleteWithEmptyResponse();
@@ -15,9 +14,9 @@ describe('Create Amsterdam restaurants mapping', () => {
     cy.intercept('POST', '/rest/rdf-mapper/grel/ontorefine:123?limit=10', {
       status: 200,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      response
+      response,
     }).as('loadGrelPreview');
   }
 
@@ -132,7 +131,7 @@ describe('Create Amsterdam restaurants mapping', () => {
 
     // THEN
     // I expect to have completed the Amsterdam mappings
-    cy.fixture('amsterdam/amsterdam.json').then(amsterdamJson => {
+    cy.fixture('amsterdam/amsterdam.json').then((amsterdamJson) => {
       HeaderSteps.getJSON().should('deep.equal', amsterdamJson);
     });
   });

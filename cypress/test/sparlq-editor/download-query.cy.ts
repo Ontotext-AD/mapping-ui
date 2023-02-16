@@ -1,11 +1,10 @@
-import { join } from "path";
-import NotificationSteps from "../../steps/notification-steps";
-import PrepareSteps from "../../steps/prepare-steps";
-import SparqlEditorSteps from "../../steps/sparql-editor-steps";
+import {join} from 'path';
+import NotificationSteps from '../../steps/notification-steps';
+import PrepareSteps from '../../steps/prepare-steps';
+import SparqlEditorSteps from '../../steps/sparql-editor-steps';
 
 describe('SPARQL Query Editor: Download Query', () => {
-
-  const downloadsFolder = Cypress.config('downloadsFolder')
+  const downloadsFolder = Cypress.config('downloadsFolder');
 
   beforeEach(() => {
     PrepareSteps.prepareRestaurantsNamespacesAndColumns();
@@ -21,12 +20,12 @@ describe('SPARQL Query Editor: Download Query', () => {
 
     // And select query
     SparqlEditorSteps.clickDownloadMenuOption('query');
-    
+
     // Then the file should get the name of the active tab
     const file = join(downloadsFolder, 'Unnamed.sparql');
 
     // Then file download should be triggered
-    cy.readFile(file, { timeout: 2000 }).then((content) => {
+    cy.readFile(file, {timeout: 2000}).then((content) => {
       // And the file content should be same as the one in the editor tab
       cy.fixture('sparql-editor/download-default-sparql').then((expected: string) => {
         expect(content).to.equal(expected);
@@ -36,7 +35,7 @@ describe('SPARQL Query Editor: Download Query', () => {
 
   it('Should download file containing the SPARQL from the current tab with SERVICE clause', () => {
     cy.intercept('POST', '/rest/sparql-mapper/set-service', {
-      fixture: 'sparql-editor/default-sparql-with-service'
+      fixture: 'sparql-editor/default-sparql-with-service',
     });
 
     PrepareSteps.visitPageAndOpenSparqlEditor();
@@ -51,8 +50,7 @@ describe('SPARQL Query Editor: Download Query', () => {
     const file = join(downloadsFolder, 'Unnamed.sparql');
 
     // Then file download should be triggered
-    cy.readFile(file, { timeout: 2000 }).then((content) => {
-
+    cy.readFile(file, {timeout: 2000}).then((content) => {
       // And the file content should be same as the one in the editor tab
       cy.fixture('sparql-editor/download-default-sparql-with-service').then((expected: string) => {
         expect(content).to.equal(expected);
@@ -62,7 +60,7 @@ describe('SPARQL Query Editor: Download Query', () => {
 
   it('Should show error message when there is an service error and the file should not be download', () => {
     cy.intercept('POST', '/rest/sparql-mapper/set-service', {
-      statusCode: 500
+      statusCode: 500,
     });
 
     PrepareSteps.visitPageAndOpenSparqlEditor();

@@ -2,7 +2,6 @@ import MappingSteps from '../steps/mapping-steps';
 import PrepareSteps from '../steps/prepare-steps';
 
 describe('Nest triples', () => {
-
   beforeEach(() => {
     PrepareSteps.prepareMoviesNamespacesAndColumns();
   });
@@ -33,7 +32,7 @@ describe('Nest triples', () => {
   });
 
   it('Should nest new triple properly', () => {
-    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture:'nest-triples/mapping-model.json'}).as('loadProject');
+    cy.intercept('GET', '/orefine/command/core/get-models/?project=123', {fixture: 'nest-triples/mapping-model.json'}).as('loadProject');
     // Given I have created a mapping with multiple nested triples
     // When I load the mapping
     PrepareSteps.visitPageAndWaitToLoad();

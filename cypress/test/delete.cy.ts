@@ -4,7 +4,6 @@ import EditDialogSteps from '../steps/edit-dialog-steps';
 import PrepareSteps from '../steps/prepare-steps';
 
 describe('Delete', () => {
-
   beforeEach(() => {
     PrepareSteps.prepareMoviesNamespacesAndColumns();
     PrepareSteps.enableAutocompleteWithEmptyResponse();

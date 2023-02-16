@@ -1,11 +1,10 @@
-import { join } from "path";
-import NotificationSteps from "../../steps/notification-steps";
-import PrepareSteps from "../../steps/prepare-steps";
-import SparqlEditorSteps from "../../steps/sparql-editor-steps";
+import {join} from 'path';
+import NotificationSteps from '../../steps/notification-steps';
+import PrepareSteps from '../../steps/prepare-steps';
+import SparqlEditorSteps from '../../steps/sparql-editor-steps';
 
 describe('SPARQL Query Editor: Download Query Results', () => {
-
-  const downloadsFolder = Cypress.config('downloadsFolder')
+  const downloadsFolder = Cypress.config('downloadsFolder');
 
   beforeEach(() => {
     PrepareSteps.prepareRestaurantsNamespacesAndColumns();
@@ -15,7 +14,7 @@ describe('SPARQL Query Editor: Download Query Results', () => {
 
   it('Should download file with RDF results when there is correct CONSTRUCT query', () => {
     cy.intercept('POST', 'repositories/ontorefine:123', {
-      fixture: 'sparql-editor/download-query-results.ttl'
+      fixture: 'sparql-editor/download-query-results.ttl',
     });
 
     PrepareSteps.visitPageAndOpenSparqlEditor();
@@ -41,8 +40,7 @@ describe('SPARQL Query Editor: Download Query Results', () => {
     const file = join(downloadsFolder, `${tabName}.ttl`);
 
     // Then file download should be triggered
-    cy.readFile(file, { timeout: 2000 }).then((content) => {
-
+    cy.readFile(file, {timeout: 2000}).then((content) => {
       // And the file content should be
       cy.fixture('sparql-editor/download-query-results.ttl').then((expected: string) => {
         expect(content).to.equal(expected);
@@ -66,7 +64,7 @@ describe('SPARQL Query Editor: Download Query Results', () => {
     SparqlEditorSteps.clickDownloadMenuOption('result');
 
     NotificationSteps.getWarnNotificationContent()
-      .contains('Download of the results is available only for CONSTRUCT queries.');
+        .contains('Download of the results is available only for CONSTRUCT queries.');
 
     // Then the file should get the name of the active tab
     const file = join(downloadsFolder, `${tabName}.ttl`);
@@ -94,7 +92,7 @@ describe('SPARQL Query Editor: Download Query Results', () => {
     SparqlEditorSteps.clickDownloadMenuOption('result');
 
     NotificationSteps.getWarnNotificationContent()
-      .contains('Download of the results is available only for CONSTRUCT queries.');
+        .contains('Download of the results is available only for CONSTRUCT queries.');
 
     // Then the file should get the name of the active tab
     const file = join(downloadsFolder, `${tabName}.ttl`);
@@ -105,7 +103,7 @@ describe('SPARQL Query Editor: Download Query Results', () => {
 
   it('Should show error message when there is an error while executing the query on the server', () => {
     cy.intercept('POST', 'repositories/ontorefine:123', {
-      statusCode: 500
+      statusCode: 500,
     });
 
     PrepareSteps.visitPageAndOpenSparqlEditor();

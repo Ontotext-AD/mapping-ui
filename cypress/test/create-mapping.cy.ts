@@ -4,7 +4,6 @@ import EditDialogSteps from '../steps/edit-dialog-steps';
 import PrepareSteps from '../steps/prepare-steps';
 
 describe('Create mapping', () => {
-
   beforeEach(() => {
     PrepareSteps.prepareMoviesNamespacesAndColumns();
   });
@@ -16,13 +15,13 @@ describe('Create mapping', () => {
     cy.intercept('POST', '/orefine/command/mapping-editor/save-rdf-mapping/?project=123', {
       statusCode: 200,
       delay: 1000,
-      fixture: 'create-mapping/save-mapping-success.json'
+      fixture: 'create-mapping/save-mapping-success.json',
     }).as('saveMapping');
 
     cy.intercept('POST', '/rest/rdf-mapper/rdf/ontorefine:123', {
       statusCode: 200,
       delay: 1000,
-      response: ''
+      response: '',
     }).as('loadRdf');
 
     cy.intercept('POST', '/rest/rdf-mapper/sparql-url-with-query/ontorefine:123', {
@@ -30,8 +29,8 @@ describe('Create mapping', () => {
       delay: 1000,
       fixture: 'create-mapping/load-sparql-response',
       headers: {
-        Accept: 'application/json'
-      }
+        Accept: 'application/json',
+      },
     }).as('loadSparql');
 
     // Given I have opened the application
@@ -48,7 +47,7 @@ describe('Create mapping', () => {
     HeaderSteps.getSaveIndicator().should('be.visible');
     // And The mapping should be saved
     cy.fixture('create-mapping/save-mapping-request-body').then((saveResponse: string) => {
-      cy.wait('@saveMapping').then(xhr => {
+      cy.wait('@saveMapping').then((xhr) => {
         expect(xhr.request.url).to.include('/orefine/command/mapping-editor/save-rdf-mapping/?project=123');
         expect(xhr.request.method).to.equal('POST');
         expect(xhr.request.body).to.equal(saveResponse);
@@ -61,7 +60,7 @@ describe('Create mapping', () => {
     // Then I expect rdf to be loaded.
     // The actual download can be checked if we verify the dynamically created download link href attribute but it needs to be appended to
     // the DOM. As long it's not we can't find and test it.
-    cy.wait('@loadRdf').then(interception => {
+    cy.wait('@loadRdf').then((interception) => {
       expect(interception.request.url).to.include('/rest/rdf-mapper/rdf/ontorefine:123');
       expect(interception.request.method).to.equal('POST');
     });
